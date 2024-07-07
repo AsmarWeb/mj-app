@@ -1,11 +1,11 @@
 <x-main-layout>
-    <x-slot name="header">
+    {{-- <x-slot name="header">
         <x-main-header></x-main-header>
-    </x-slot>
+    </x-slot> --}}
     <section>
         <x-main-hero></x-main-hero>
     </section>
-    <section>
+    {{-- <section>
         <x-main-section></x-main-section>
         <x-main-featured></x-main-featured>
         <x-main-recomend></x-main-recomend>
@@ -14,5 +14,5 @@
         <x-main-intro></x-main-intro>
         <x-main-blog></x-main-blog>
     </section>
-    <x-main-footer></x-main-footer>
+    <x-main-footer></x-main-footer> --}}
 </x-main-layout>
