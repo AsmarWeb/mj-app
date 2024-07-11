@@ -1,7 +1,7 @@
 <x-main-layout>
     <x-slot name="header">
         <x-main-header></x-main-header>
-    </x-slot> 
+    </x-slot>
 
     <div class="container px-6 py-10 mx-auto">
         <h1 class="text-2xl font-semibold text-center text-gray-800 capitalize lg:text-3xl dark:text-white">

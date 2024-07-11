@@ -1,9 +1,9 @@
 <x-main-layout>
+    <x-slot name="header">
+        <x-main-header></x-main-header>
+    </x-slot>
     <div class="pt-4">
         <div class="min-h-screen flex flex-col items-center pt-6 sm:pt-0">
-            <div>
-                <x-authentication-card-logo />
-            </div>
 
             <div class="w-full sm:max-w-2xl mt-6 p-6 shadow-md overflow-hidden sm:rounded-lg prose">
                 <div class="container px-6 py-12 mx-auto">
@@ -43,4 +43,5 @@
             </div>
         </div>
     </div>
+    <x-main-footer></x-main-footer>
 </x-main-layout>
