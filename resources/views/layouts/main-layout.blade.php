@@ -14,7 +14,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- FAVICON -->
-    <link rel="icon" href="{{ asset('assets/images/favicon.png') }}">
+    <link rel="icon" href="{{ asset('favicon.png') }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])

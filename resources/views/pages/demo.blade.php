@@ -7,10 +7,8 @@
             <div class="mx-auto max-w-2xl sm:text-center">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl">Create Your
                     Free Online Shop</h2>
-                <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-200">Distinctio et nulla eum soluta et
-                    neque labore
-                    quibusdam.
-                    Saepe et quasi iusto modi velit ut non voluptas in. Explicabo id ut laborum.</p>
+                <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-200">Try the experience of creating an
+                    online shop and adding products, or search for property, jobs and more in the world.</p>
             </div>
             <header class="space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
                 <form class="group relative">
