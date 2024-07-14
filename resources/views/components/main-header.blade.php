@@ -86,8 +86,12 @@
                                     {{ __('Manage Account') }}
                                 </div>
 
+                                <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
+                                    {{ __('My Profile') }}
+                                </x-dropdown-link>
+
                                 <x-dropdown-link href="{{ route('profile.show') }}">
-                                    {{ __('Profile') }}
+                                    {{ __('Edit Profile') }}
                                 </x-dropdown-link>
 
                                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
