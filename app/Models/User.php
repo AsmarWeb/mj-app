@@ -11,6 +11,8 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Contracts\LaratrustUser;
 use Laratrust\Traits\HasRolesAndPermissions;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class User extends Authenticatable implements LaratrustUser
 {
@@ -20,6 +22,7 @@ class User extends Authenticatable implements LaratrustUser
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRolesAndPermissions;
+    use HasSlug;
 
     /**
      * The attributes that are mass assignable.
@@ -64,5 +67,12 @@ class User extends Authenticatable implements LaratrustUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('username');
     }
 }
