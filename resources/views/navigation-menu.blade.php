@@ -11,11 +11,23 @@
                 </div>
 
                 <!-- Navigation Links -->
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                        {{ __('Home') }}
+                    </x-nav-link>
+                </div>
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
                         {{ __('Shop') }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                        {{ __('Products') }}
+                    </x-nav-link>
+                </div> --}}
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -106,13 +118,13 @@
                                 {{ __('Manage Account') }}
                             </div>
 
-                            <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
+                            {{-- <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
                                 {{ __('My Profile') }}
                             </x-dropdown-link>
 
                             <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
                                 {{ __('My Shop') }}
-                            </x-dropdown-link>
+                            </x-dropdown-link> --}}
 
                             <x-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Edit Profile') }}
@@ -158,9 +170,13 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
-                {{ __('Shop') }}
+            <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                {{ __('Home') }}
             </x-responsive-nav-link>
+
+            {{-- <x-responsive-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
+                {{ __('Shop') }}
+            </x-responsive-nav-link> --}}
         </div>
 
         <!-- Responsive Settings Options -->

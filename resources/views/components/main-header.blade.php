@@ -1,5 +1,5 @@
 <div>
-    <nav class="md:flex md:items-center md:justify-between" aria-label="Global">
+    <nav class="relative md:flex md:items-center md:justify-between" aria-label="Global">
         <div class="flex items-center justify-between">
             <button x-cloak @click="isOpen = !isOpen"
                 class="text-gray-500 md:hidden dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none">
@@ -26,6 +26,10 @@
 
         <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
             class="absolute inset-x-0 z-20 w-full px-6 py-8 mt-8 space-y-6 transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 top-16 md:bg-transparent md:dark:bg-transparent md:mt-0 md:p-0 md:top-0 md:relative md:w-auto md:opacity-100 md:translate-x-0 md:space-y-0 md:-mx-6 md:flex md:items-center">
+            <a href="{{ route('home') }}"
+                class="block text-gray-600 transition-colors duration-300 dark:text-white md:px-6 hover:text-blue-500 dark:hover:text-blue-400">
+                Home
+            </a>
             <a href="{{ route('demo') }}"
                 class="block text-gray-600 transition-colors duration-300 dark:text-white md:px-6 hover:text-blue-500 dark:hover:text-blue-400">
                 Demo
@@ -52,6 +56,8 @@
                         fill-rule="evenodd" clip-rule="evenodd"></path>
                 </svg>
             </button>
+
+            <hr class="border-gray-200 dark:border-gray-700 ">
 
             @if (Route::has('login'))
                 @auth
@@ -90,13 +96,13 @@
                                         {{ __('Dashboard') }}
                                     </x-dropdown-link>
                                 @else
-                                    <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
+                                    {{-- <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
                                         {{ __('My Profile') }}
                                     </x-dropdown-link>
 
                                     <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
                                         {{ __('My Shop') }}
-                                    </x-dropdown-link>
+                                    </x-dropdown-link> --}}
 
                                     <x-dropdown-link href="{{ route('profile.show') }}">
                                         {{ __('Edit Profile') }}

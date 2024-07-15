@@ -16,7 +16,7 @@ Route::resource('users', ProfileController::class);
 Route::middleware([
     'auth:sanctum', config('jetstream.auth_session'), 'verified',
 ])->group(function () {
-    Route::get('/u/{user}/shop', function () {
+    Route::get('/{user}/shop', function () {
         return view('dashboard');
     })->name('dashboard');
 });
