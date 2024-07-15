@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,15 @@ Route::resource('users', ProfileController::class);
 Route::middleware([
     'auth:sanctum', config('jetstream.auth_session'), 'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/u/{user}/shop', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/dashboard', function () {
+            return view('index');
+        })->name('admin.dashboard');
+    });
 });

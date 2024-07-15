@@ -85,15 +85,23 @@
                                 <div class="block px-4 py-2 text-xs text-gray-400">
                                     {{ __('Manage Account') }}
                                 </div>
+                                @if (Auth::check() && Auth::user()->hasRole('superadministrator|administrator'))
+                                    <x-dropdown-link href="{{ route('admin.dashboard') }}">
+                                        {{ __('Dashboard') }}
+                                    </x-dropdown-link>
+                                @else
+                                    <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
+                                        {{ __('My Profile') }}
+                                    </x-dropdown-link>
 
-                                <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
-                                    {{ __('My Profile') }}
-                                </x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
+                                        {{ __('My Shop') }}
+                                    </x-dropdown-link>
 
-                                <x-dropdown-link href="{{ route('profile.show') }}">
-                                    {{ __('Edit Profile') }}
-                                </x-dropdown-link>
-
+                                    <x-dropdown-link href="{{ route('profile.show') }}">
+                                        {{ __('Edit Profile') }}
+                                    </x-dropdown-link>
+                                @endif
                                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                     <x-dropdown-link href="{{ route('api-tokens.index') }}">
                                         {{ __('API Tokens') }}
