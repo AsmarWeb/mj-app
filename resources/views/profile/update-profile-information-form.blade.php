@@ -85,16 +85,6 @@
                 @endif
             @endif
         </div>
-
-        <!-- Bio -->
-        <div class="col-span-6 sm:col-span-4">
-            <label class="block text-sm font-medium text-gray-700">Bio
-            </label>
-            <textarea type="text" name="bio" id="bio" rows="3" cols="50" maxlength="50"
-                wire:model="state.bio"
-                class="bg-transparent block w-full px-4 h-32 text-gray-700 bg-white border border-gray-200 rounded-lg focus:border-primary focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-20 mt-2">
-            </textarea>
-        </div>
     </x-slot>
 
     <x-slot name="actions">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,9 +10,13 @@ Route::view('about', 'pages.about')->name('about');
 Route::view('services', 'pages.services')->name('services');
 Route::view('demo', 'pages.demo')->name('demo');
 
+Route::view('create', 'shop.create')->name('shop.create');
+
+
 Route::get('/{user}', [ProfileController::class, 'show'])->name('profile');
 
 Route::resource('users', ProfileController::class);
+
 
 Route::middleware([
     'auth:sanctum', config('jetstream.auth_session'), 'verified',
@@ -27,4 +32,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
             return view('index');
         })->name('admin.dashboard');
     });
+});
+
+Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage', 'middleware' => ['role:superadministrator|administrator']], function () {
+    Route::resource('user', UserController::class);
 });

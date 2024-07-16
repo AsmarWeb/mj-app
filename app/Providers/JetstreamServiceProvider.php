@@ -27,11 +27,11 @@ class JetstreamServiceProvider extends ServiceProvider
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
 
-        Route::bind('user', function (string $value) {
-            return User::where('username', $value)
-                ->orWhere('id', $value)
-                ->firstOrFail();
-        });
+        // Route::bind('user', function (string $value) {
+        //     return User::where('username', $value)
+        //         ->orWhere('id', $value)
+        //         ->firstOrFail();
+        // });
     }
 
     /**
