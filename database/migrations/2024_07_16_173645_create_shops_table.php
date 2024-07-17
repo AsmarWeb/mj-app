@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->string('location');
+            $table->string('thumbnail')->nullable();
+            $table->datetime('published_at');
             $table->foreignIdFor(User::class, 'user_id')->nullable();
             $table->foreignIdFor(User::class, 'updated_by')->nullable();
             $table->softDeletes();

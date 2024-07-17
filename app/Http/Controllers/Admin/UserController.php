@@ -18,6 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $users = (new User)->newQuery();
+        $userCount = User::count();
 
         if (request()->has('search')) {
             $users->where('name', 'Like', '%' . request()->input('search') . '%');
@@ -37,7 +38,7 @@ class UserController extends Controller
 
         $users = $users->paginate(5);
 
-        return view('admin.user.index', compact('users'));
+        return view('admin.user.index', compact('users', 'userCount'));
     }
 
     /**

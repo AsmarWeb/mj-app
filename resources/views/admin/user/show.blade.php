@@ -1,5 +1,4 @@
-@extends('layouts.admin')
-@section('content')
+<x-admin>
     <slot name="title">
         {{ __('View Users') }}
     </slot>
@@ -58,4 +57,4 @@
             </table>
         </div>
     </div>
-@endsection
+</x-admin>
