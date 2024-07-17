@@ -61,13 +61,26 @@
                                         <span>62 Products</span>
                                     </button>
                                 </div>
-                                <button
-                                    class="mb-2 md:mb-0 bg-gray-900 px-5 py-2 shadow-sm tracking-wider text-white rounded-full hover:bg-gray-800"
-                                    type="button" aria-label="like">Edit Shop</button>
+                                @if (Route::has('login'))
+                                    @auth
+                                        <button
+                                            class="mb-2 md:mb-0 bg-gray-900 px-5 py-2 shadow-sm tracking-wider text-white rounded-full hover:bg-gray-800"
+                                            type="button" aria-label="like">
+                                            Edit Shop
+                                        </button>
+                                    @else
+                                        <button
+                                            class="mb-2 md:mb-0 bg-gray-900 px-5 py-2 shadow-sm tracking-wider text-white rounded-full hover:bg-gray-800"
+                                            type="button" aria-label="like">
+                                            <a href="{{ route('register') }}" class="mx-1 text-sm text-white">
+                                                Join me
+                                            </a>
+                                        </button>
+                                    @endif
+                                @endauth
                             </div>
                         </div>
                     </div>
-
                 </div>
             @endforeach
         @else

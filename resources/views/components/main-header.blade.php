@@ -127,8 +127,8 @@
                     <button
                         class="w-full px-5 py-3 transition-colors duration-300 bg-gray-100 rounded-md dark:bg-gray-800 md:w-auto md:mx-6 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <div class="flex items-center justify-center -mx-1">
-                            <a href="{{ route('register') }}" class="mx-1 text-sm text-gray-600 dark:text-white">Join
-                                me</a>
+                            <a href="{{ route('register') }}" class="mx-1 text-sm text-gray-600 dark:text-white">
+                                Join me</a>
 
                             {{-- <svg class="w-6 h-6 mx-1 fill-gray-600 dark:fill-white" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 384 512">
