@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('location');
             $table->string('phone_number');
+            $table->bigInteger('shop_id')->unsigned()->nullable();
             $table->bigInteger('section_id')->unsigned()->nullable();
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->bigInteger('subcategory_id')->unsigned()->nullable();
@@ -39,7 +40,6 @@ return new class extends Migration
             $table->bigInteger('state_id')->unsigned()->nullable();
             $table->string('price_condition');
             $table->string('condition');
-            $table->string('listing_category');
             $table->boolean('featured')->default(false);
             $table->enum('status', ['active', 'pending', 'approved'])->default('active');
             $table->enum('type', ['standard', 'premium'])->default('standard');
@@ -48,6 +48,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreignIdFor(User::class, 'deleted_by')->nullable();
             $table->timestamps();
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('sub_categories')->onDelete('cascade');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
