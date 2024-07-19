@@ -17,7 +17,7 @@ class ShopSeeder extends Seeder
             'name' => "Murwaj",
             'slug' => "murwaj",
             'location' => "Dubai,UAE",
-            'thumbnail' => "murwaj.jpg",
+            'image' => "murwaj.jpg",
             'published_at' => "2024-07-17 12:36:30",
             'user_id' => "1",
         );

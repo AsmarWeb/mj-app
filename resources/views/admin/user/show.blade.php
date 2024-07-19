@@ -1,23 +1,12 @@
 <x-admin>
-    <slot name="title">
-        {{ __('View Users') }}
-    </slot>
+    <x-slot name="title">
+        {{ __('Users') }}
+    </x-slot>
 
-    <div class="d-print-none with-border">
-        <a href="{{ route('user.index') }}" title="{{ __('View user') }}">{{ __('<< Back to all users') }}
-        </a>
-    </div>
     <div class="w-full py-2">
-        <div class="min-w-full border-b border-gray-300 shadow">
-            @if (session()->has('message'))
-                <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
-                    <span class="font-medium">
-                        {{ session()->get('message') }}
-                    </span>
-                </div>
-            @endif
+        <div class="min-w-full border-base-200 shadow">
             <table class="table-fixed w-full text-sm">
-                <tbody class="bg-gray-900">
+                <tbody>
                     <tr>
                         <td class="border-b border-slate-100 p-4 pl-8 text-slate-500">{{ __('Name') }}</td>
                         <td class="border-b border-slate-100 p-4 text-slate-500">{{ $user->name }}</td>
@@ -51,7 +40,8 @@
                     </tr>
                     <tr>
                         <td class="border-b border-slate-100 p-4 pl-8 text-slate-500">{{ __('Created') }}</td>
-                        <td class="border-b border-slate-100 p-4 text-slate-500">{{ $user->created_at }}</td>
+                        <td class="border-b border-slate-100 p-4 text-slate-500">
+                            {{ $user->created_at->toDateTimeString() }}</td>
                     </tr>
                 </tbody>
             </table>

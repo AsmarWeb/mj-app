@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="flex items-center mt-4 gap-x-3">
-                    <a href="{{ route('shop.create') }}"
+                    <a href="{{ route('shops.create') }}"
                         class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-5 h-5">
@@ -61,7 +61,15 @@
                                 <tr>
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        #</th>
+                                        #
+                                    </th>
+                                    <th
+                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                        @include('admin.includes.sort-link', [
+                                            'label' => 'User Name',
+                                            'attribute' => 'username',
+                                        ])
+                                    </th>
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                         @include('admin.includes.sort-link', [
@@ -107,6 +115,12 @@
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
+                                                <a class="text-sm leading-5 text-gray-800">
+                                                    {{ $shop->author->name }}</a>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 border-b border-blue-gray-50">
+                                            <div class="flex items-center gap-3">
                                                 <a href="#"
                                                     class="no-underline hover:underline text-cyan-600">{{ $shop->name }}</a>
                                             </div>
@@ -123,8 +137,8 @@
                                             </div>
                                         </td>
                                         <td>
-                                            @if ($shop->thumbnail)
-                                                <img src="{{ asset('storage/shop-suggest/' . $shop->thumbnail) }}"
+                                            @if ($shop->image)
+                                                <img src="{{ asset('storage/shop-suggest/' . $shop->image) }}"
                                                     class="img-fluid" style="max-width:80px" alt="#">
                                             @else
                                                 <img src="https://images.unsplash.com/photo-1622180203374-9524a54b734d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"

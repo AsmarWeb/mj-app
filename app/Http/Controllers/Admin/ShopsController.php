@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreShopRequest;
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Sluggable\SlugOptions;
 
 class ShopsController extends Controller
 {
@@ -23,15 +27,33 @@ class ShopsController extends Controller
      */
     public function create()
     {
-        //
+        $shops = Shop::all();
+        return view('admin.shops.create', compact('shops'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreShopRequest $request)
     {
-        //
+        $request->all();
+
+        $shop = Shop::create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
+        $shop->name = $request->name;
+        $shop->location = $request->location;
+
+
+        if ($request->hasFile('image')) {
+            $uploadPath = 'public/shop-suggest';
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $path = $request->file('image')->storeAs($uploadPath, $imageName);
+            $shop['image'] = $imageName;
+        }
+
+        $shop->save();
+
+        return redirect()->route('shops.index')->with('message', 'Shop Added Successfully');
     }
 
     /**
@@ -39,7 +61,7 @@ class ShopsController extends Controller
      */
     public function show(Shop $shop)
     {
-        //
+        return view('admin.shops.show');
     }
 
     /**
@@ -47,7 +69,7 @@ class ShopsController extends Controller
      */
     public function edit(Shop $shop)
     {
-        //
+        return view('admin.shops.edit');
     }
 
     /**

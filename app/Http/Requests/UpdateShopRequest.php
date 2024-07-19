@@ -11,7 +11,7 @@ class UpdateShopRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdateShopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|max:255',
+            'thumbnail' => 'nullable', 'mimes:png,jpg,jpeg,gif', 'max:2048',
         ];
     }
 }
