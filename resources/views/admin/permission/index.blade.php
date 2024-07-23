@@ -119,7 +119,7 @@
                         </table>
 
                         <div class="py-8">
-                            {{ $permissions->links('pagination::bootstrap-5') }}
+                            {{ $permissions->links() }}
                         </div>
                     </div>
                 </div>

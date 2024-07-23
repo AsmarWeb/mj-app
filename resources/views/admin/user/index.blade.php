@@ -130,7 +130,7 @@
                         </table>
 
                         <div class="py-8">
-                            {{ $users->links('pagination::bootstrap-5') }}
+                            {{ $users->links() }}
                         </div>
                     </div>
                 </div>

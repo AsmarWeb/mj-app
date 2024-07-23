@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
@@ -13,7 +14,8 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+        $brands = Brand::paginate(5);
+        return view('admin.brands.index', compact('brands'));
     }
 
     /**
@@ -21,7 +23,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.brands.create');
     }
 
     /**
@@ -37,7 +39,7 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        //
+        return view('admin.brands.show');
     }
 
     /**
@@ -45,7 +47,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        //
+        return view('admin.brands.edit');
     }
 
     /**

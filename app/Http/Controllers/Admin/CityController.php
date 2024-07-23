@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreSectionRequest;
-use App\Http\Requests\UpdateSectionRequest;
-use App\Models\Section;
+use App\Http\Controllers\Controller;
 
-class SectionController extends Controller
+use App\Http\Requests\StoreCityRequest;
+use App\Http\Requests\UpdateCityRequest;
+use App\Models\City;
+
+class CityController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('admin.cities.index');
     }
 
     /**
@@ -21,13 +23,13 @@ class SectionController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.cities.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSectionRequest $request)
+    public function store(StoreCityRequest $request)
     {
         //
     }
@@ -35,23 +37,23 @@ class SectionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Section $section)
+    public function show(City $city)
     {
-        //
+        return view('admin.cities.show');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Section $section)
+    public function edit(City $city)
     {
-        //
+        return view('admin.cities.edit');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSectionRequest $request, Section $section)
+    public function update(UpdateCityRequest $request, City $city)
     {
         //
     }
@@ -59,7 +61,7 @@ class SectionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Section $section)
+    public function destroy(City $city)
     {
         //
     }

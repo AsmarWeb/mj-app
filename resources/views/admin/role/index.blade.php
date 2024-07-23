@@ -118,7 +118,7 @@
                         </table>
 
                         <div class="py-8">
-                            {{ $roles->links('pagination::bootstrap-5') }}
+                            {{ $roles->links() }}
                         </div>
                     </div>
                 </div>

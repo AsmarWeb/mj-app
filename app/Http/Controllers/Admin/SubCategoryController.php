@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StoreSubCategoryRequest;
 use App\Http\Requests\UpdateSubCategoryRequest;
@@ -13,7 +15,8 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $subcategories = SubCategory::paginate(5);
+        return view('admin.subcategories.index', compact('subcategories'));
     }
 
     /**
@@ -21,7 +24,7 @@ class SubCategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.subcategories.create');
     }
 
     /**
@@ -37,7 +40,7 @@ class SubCategoryController extends Controller
      */
     public function show(SubCategory $subCategory)
     {
-        //
+        return view('admin.subcategories.show');
     }
 
     /**
@@ -45,7 +48,7 @@ class SubCategoryController extends Controller
      */
     public function edit(SubCategory $subCategory)
     {
-        //
+        return view('admin.subcategories.edit');
     }
 
     /**

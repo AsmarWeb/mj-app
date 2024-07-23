@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StoreStateRequest;
 use App\Http\Requests\UpdateStateRequest;
@@ -13,7 +15,7 @@ class StateController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.states.index');
     }
 
     /**
@@ -21,7 +23,7 @@ class StateController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.states.create');
     }
 
     /**
@@ -37,7 +39,7 @@ class StateController extends Controller
      */
     public function show(State $state)
     {
-        //
+        return view('admin.states.show');
     }
 
     /**
@@ -45,7 +47,7 @@ class StateController extends Controller
      */
     public function edit(State $state)
     {
-        //
+        return view('admin.states.edit');
     }
 
     /**

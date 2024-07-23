@@ -165,7 +165,7 @@
                         </table>
 
                         <div class="py-8">
-                            {{ $shops->links('pagination::bootstrap-5') }}
+                            {{ $shops->links() }}
                         </div>
                     </div>
                 </div>

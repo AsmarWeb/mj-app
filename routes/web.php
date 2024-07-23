@@ -1,11 +1,20 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\ShopsController;
+use App\Http\Controllers\Admin\StateController;
+use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\ProfileController;
+use App\Livewire\Admin\Listing\CreateComponent;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'pages.home')->name('home');
@@ -37,10 +46,25 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
     });
 });
 
+Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {
+    Route::get('/create', CreateComponent::class)->name('admin.create');
+});
+
+
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage', 'middleware' => ['role:superadministrator|administrator']], function () {
     Route::resource('user', UserController::class);
     Route::resource('permission', PermissionController::class);
     Route::resource('role', RoleController::class);
 
     Route::resource('shops', ShopsController::class);
+    Route::resource('listings', ListingController::class);
+
+    Route::resource('sections', SectionController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('subcategories', SubCategoryController::class);
+    Route::resource('brands', BrandController::class);
+
+    Route::resource('countries', CountryController::class);
+    Route::resource('states', StateController::class);
+    Route::resource('cities', CityController::class);
 });

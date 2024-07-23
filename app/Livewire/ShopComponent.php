@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Listing;
 use App\Models\Shop;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 
@@ -20,6 +22,7 @@ class ShopComponent extends Component
 
     public function render()
     {
-        return view('livewire.shop-component');
+        $listings = Listing::where('user_id')->count();
+        return view('livewire.shop-component', ['listings' => $listings]);
     }
 }

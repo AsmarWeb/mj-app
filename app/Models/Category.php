@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Category extends Model
 {
@@ -13,30 +12,41 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    public $orderable = [
-        'id', 'code', 'category_name',
-    ];
-
     protected $fillable = [
-        'code',
         'category_name',
         'category_name_ar',
         'slug',
-        'section_name',
         'image',
+        'cover',
+        'bg_color',
         'parent_id',
         'section_id',
     ];
 
-    public function __construct(array $attributes = [])
+    public static function tree()
     {
-        $this->setRawAttributes([
-            'code' => Str::random(8),
-        ], true);
-        parent::__construct($attributes);
+        $allCategories = Category::where('parent_id', 0)->where('status', 'active')->get();
+
+
+        $rootCategories = $allCategories->whereNull('parent_id');
+
+        self::formatTree($rootCategories, $allCategories);
+
+        return $rootCategories;
     }
 
-    public function sub_categories(): HasMany
+    public static function formatTree($categories, $allCategories)
+    {
+        foreach ($categories as $Category) {
+            $Category->children = $allCategories->where('parent_id', $Category->id)->values();
+
+            if ($Category->children->isNotEmpty()) {
+                self::formatTree($Category->children, $allCategories);
+            }
+        }
+    }
+
+    public function subcategories(): HasMany
     {
         return $this->hasMany(SubCategory::class, 'category_id', 'id'); //Relación uno a muchos
     }
@@ -50,5 +60,17 @@ class Category extends Model
     public function listing(): HasMany
     {
         return $this->hasMany(Listing::class, 'category_id', 'id');
+    }
+
+    public function color()
+    {
+        return ['red', 'green', 'yellow', 'blue', 'purple'][$this->id % 5];
+    }
+
+    public function getThumbnailUrl()
+    {
+        $isUrl = str_contains($this->thumbnail, 'http');
+
+        return ($isUrl) ? $this->thumbnail : url($this->thumbnail);
     }
 }

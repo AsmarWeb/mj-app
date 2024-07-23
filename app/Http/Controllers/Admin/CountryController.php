@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StoreCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
@@ -13,7 +15,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.countries.index');
     }
 
     /**
@@ -21,7 +23,7 @@ class CountryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.countries.create');
     }
 
     /**
@@ -37,7 +39,7 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
-        //
+        return view('admin.countries.show');
     }
 
     /**
@@ -45,7 +47,7 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        //
+        return view('admin.countries.edit');
     }
 
     /**

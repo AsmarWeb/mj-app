@@ -16,6 +16,14 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call(LaratrustSeeder::class);
         $this->call(ShopSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(SubCategorySeeder::class);
+        $this->call(SectionSeeder::class);
+        $this->call(CountrySeeder::class);
+        $this->call(StateSeeder::class);
+        $this->call(CitySeeder::class);
+        $this->call(BrandSeeder::class);
+
 
         // User::factory()->create([
         //     'name' => 'Test User',
