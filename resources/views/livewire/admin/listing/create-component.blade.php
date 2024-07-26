@@ -305,7 +305,7 @@
                     <label for="subcategory" class="block text-sm font-medium leading-6 text-gray-900">Product
                         SubCategory</label>
                     <div class="mt-2">
-                        <select wire:model="subcategory_id" id="subcategory"
+                        <select wire:model="subcategory_id" wire:change="changeBrand" id="subcategory"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
                             <option value="" selected>Select One...</option>
                             @foreach ($subcategories as $subcategory)
@@ -314,6 +314,23 @@
                             @endforeach
                         </select>
                         @error('subcategory_id')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="brand" class="block text-sm font-medium leading-6 text-gray-900">Product
+                        Brand</label>
+                    <div class="mt-2">
+                        <select wire:model="brand_id" id="brand"
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                            <option value="" selected>Select One...</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('brand_id')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>

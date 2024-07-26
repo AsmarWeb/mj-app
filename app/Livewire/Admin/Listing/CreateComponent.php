@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Listing;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Country;
@@ -70,6 +71,10 @@ class CreateComponent extends Component
         $this->images = '';
         $this->price_condition = '';
         $this->condition = '';
+        $this->brand_id = '';
+        $this->section_id = '';
+        $this->category_id = '';
+        $this->subcategory_id = '';
     }
 
     public function updated($fields)
@@ -135,6 +140,7 @@ class CreateComponent extends Component
             $listing->images = $imagesname;
         }
 
+        $listing->brand_id = $this->brand_id;
         $listing->section_id = $this->section_id;
         $listing->category_id = $this->category_id;
         if ($this->subcategory_id) {
@@ -157,17 +163,24 @@ class CreateComponent extends Component
         $this->category_id = 0;
     }
 
+    public function changeBrand()
+    {
+        $this->brand_id = 0;
+    }
+
 
     public function render()
     {
         $sections = Section::all();
         $categories = Category::where('section_id', $this->section_id)->get();
         $subcategories = SubCategory::where('category_id', $this->category_id)->get();
+        $brands = Brand::where('subcategory_id', $this->subcategory_id)->get();
 
         return view('livewire.admin.listing.create-component', [
             'categories' => $categories,
             'subcategories' => $subcategories,
-            'sections' => $sections
+            'sections' => $sections,
+            'brands' => $brands
         ])->layout('components.layouts.app');
     }
 

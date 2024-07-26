@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
+use App\Models\SubCategory;
 
 class BrandController extends Controller
 {
@@ -31,7 +32,19 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request)
     {
-        //
+
+        $subcategory_name = SubCategory::where('id', $request->subcategory_id)->value('subcategory_name');
+
+        $brand = new Brand;
+        $brand->brand_name = $request->brand_name;
+        $brand->brand_name_ar = $request->brand_name_ar;
+        $brand->slug = strtolower(str_replace(' ', '-', $request->brand_name));
+        $brand->subcategory_id = $request->subcategory_id;
+        $brand->subcategory_name = $subcategory_name;
+
+        $brand->save();
+
+        return redirect()->route('brands.index')->with('message', 'Brand Added Successfully');
     }
 
     /**
@@ -45,17 +58,29 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Brand $brand)
+    public function edit($id)
     {
-        return view('admin.brands.edit');
+        $brand_info = Brand::findOrFail($id);
+        return view('admin.brands.edit', compact('brand_info'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrandRequest $request, Brand $brand)
+    public function update(UpdateBrandRequest $request, $id)
     {
-        //
+        $subcategory_name = SubCategory::where('id', $request->subcategory_id)->value('subcategory_name');
+
+        $brand = Brand::find($id);
+        $brand->brand_name = $request->brand_name;
+        $brand->brand_name_ar = $request->brand_name_ar;
+        $brand->slug = strtolower(str_replace(' ', '-', $request->brand_name));
+        $brand->subcategory_id = $request->subcategory_id;
+        $brand->subcategory_name = $subcategory_name;
+
+        $brand->update();
+
+        return redirect()->route('brands.index')->with('message', 'Brand Updated Successfully');
     }
 
     /**
@@ -63,6 +88,7 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        $brand->delete();
+        return redirect()->route('brands.index')->with('message', 'Brand deleted Successfully');
     }
 }

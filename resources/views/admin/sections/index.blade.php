@@ -65,10 +65,6 @@
                                     </th>
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Code
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                         @include('admin.includes.sort-link', [
                                             'label' => 'Name',
                                             'attribute' => 'name',
@@ -96,11 +92,6 @@
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
-                                                <a class="text-sm leading-5 text-gray-800">{{ $section->code }}</a>
-                                            </div>
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
                                                 <a href="{{ route('sections.show', $section->id) }}"
                                                     class="no-underline hover:underline text-cyan-600">{{ $section->name }}</a>
                                             </div>
@@ -112,8 +103,7 @@
                                             </div>
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
-                                            <form action="{{ route('sections.destroy', $section->id) }}"
-                                                method="POST">
+                                            <form action="{{ route('sections.destroy', $section->id) }}" method="POST">
                                                 <a href="{{ route('sections.edit', $section->id) }}"
                                                     class="btn btn-info btn-sm">
                                                     {{ __('Edit') }}
