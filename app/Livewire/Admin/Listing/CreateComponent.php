@@ -17,78 +17,65 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Validate;
 
 class CreateComponent extends Component
 {
     use WithFileUploads;
 
-    public $title;
-    public $title_ar;
-    public $slug;
-    public $description;
-    public $keywords;
-    public $price;
-    public $quantity;
-    public $featured;
-    public $image;
-    public $images;
+    public $title,
+        $description,
+        $title_ar,
+        $price,
+        $quantity,
+        $keywords,
+        $image,
+        $images,
+        $price_condition = [],
+        $condition = [],
+        $brand_id,
+        $section_id,
+        $category_id,
+        $subcategory_id,
+        $addListing = false;
 
-    public $price_condition = [];
-    public $condition = [];
-
-    public $name;
-    public $email;
-    public $phone_number;
-    public $location;
-
-    public $country_id;
-    public $state_id;
-    public $city_id;
-
-
-    public $shop_id;
-    public $brand_id;
-
-    public $sectionID;
-    public $categoryID;
-    public $subcategoryID;
-
-    public $listing;
-
-    public $selectedSection = '';
-    public $selectedCategory = '';
-    public $selectedSubCategory = '';
-
-    public function updatedSelectedSection()
-    {
-        dd('ok');
-    }
-
+    /**
+     * List of add/edit form rules
+     */
     protected $rules = [
         'listing.code'              => 'required|string|max:255',
-        'country_id'                => 'required',
-        'state_id'                  => 'required',
-        'city_id'                   => 'nullable',
+        'title' => 'required',
+        'description' => 'required'
     ];
 
     public function mount(): void
     {
-        $this->featured = 0;
-        $user = User::find(Auth::user()->id);
-        $this->name = $user->name;
-        $this->email = $user->email;
+        //
     }
 
-    public function generateSlug()
+    /**
+     * Reseting all inputted fields
+     * @return void
+     */
+    public function resetFields()
     {
-        $this->slug = Str::slug($this->title, '-');
+        $this->title = '';
+        $this->title_ar = '';
+        $this->price = '';
+        $this->quantity = '';
+        $this->description = '';
+        $this->keywords = '';
+        $this->image = '';
+        $this->images = '';
+        $this->price_condition = '';
+        $this->condition = '';
     }
 
     public function updated($fields)
     {
         $this->validateOnly($fields, [
             'title' => 'required',
-            'slug' => 'required|unique:listings',
             'description' => 'required',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
@@ -99,16 +86,15 @@ class CreateComponent extends Component
             ],
             'price_condition' => 'required',
             'condition' => 'required',
-            'sectionId' => 'required',
-            'categoryId' => 'required'
+            'section_id' => 'required',
+            'category_id' => 'required'
         ]);
     }
 
-    public function createlisting()
+    public function save()
     {
         $this->validate([
             'title' => 'required',
-            'slug' => 'required|unique:listings',
             'description' => 'required',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
@@ -119,86 +105,89 @@ class CreateComponent extends Component
             ],
             'price_condition' => 'required',
             'condition' => 'required',
-            'sectionId' => 'required',
-            'categoryId' => 'required'
+            'section_id' => 'required',
+            'category_id' => 'required'
         ]);
 
         $listing = new Listing();
         $user = Auth::user();
-        $shop = Shop::shop();
         $listing->user_id = $user->id;
-        $listing->shop_id = $shop->id;
         $listing->title = $this->title;
         $listing->title_ar = $this->title_ar;
-        $listing->slug = $this->slug;
         $listing->description = $this->description;
         $listing->keywords = $this->keywords;
         $listing->price = $this->price;
-        $listing->featured = $this->featured;
         $listing->quantity = $this->quantity;
-        $listing->brand_id = $this->brand_id;
         $listing->price_condition = implode('', $this->price_condition);
         $listing->condition = implode('', $this->condition);
-        $listing->name = $this->name;
-        $listing->email = $this->email;
 
         $imageName = Carbon::now()->timestamp . '.' . $this->image->extension();
-        $this->image->storeAs('product', $imageName);
+        $this->image->storeAs('products', $imageName, 'public');
         $listing->image = $imageName;
 
         if ($this->images) {
             $imagesname = '';
             foreach ($this->images as $key => $image) {
                 $imgName = Carbon::now()->timestamp . $key . '.' . $image->extension();
-                $image->storeAs('product', $imgName);
+                $image->storeAs('products', $imgName, 'public');
                 $imagesname = $imagesname . ',' . $imgName;
             }
             $listing->images = $imagesname;
         }
 
-
-        $listing->country_id = $this->country_id;
-        $listing->state_id = $this->state_id;
-        $listing->city_id = $this->city_id;
-
-        $listing->sectionID = $this->sectionID;
-        $listing->categoryID = $this->categoryID;
-        if ($this->subcategoryID) {
-            $listing->subcategoryID = $this->subcategoryID;
+        $listing->section_id = $this->section_id;
+        $listing->category_id = $this->category_id;
+        if ($this->subcategory_id) {
+            $listing->subcategory_id = $this->subcategory_id;
         }
 
         $listing->save();
-        session()->flash('message', 'Listing created successfully!');
+        session()->flash('success', 'Listing Created Successfully!!');
+        $this->resetFields();
+        $this->addListing = false;
     }
 
-    #[Computed()]
-    public function sections()
+    public function changeSubCategory()
     {
-        return Section::all();
+        $this->subcategory_id = 0;
     }
 
-    #[Computed()]
-    public function categories()
+    public function changeCategory()
     {
-        return Category::where('section_id', $this->sectionID)->get();
+        $this->category_id = 0;
     }
 
-    #[Computed()]
-    public function subcategories()
-    {
-        return SubCategory::where('category_id', $this->categoryID)->get();
-    }
 
     public function render()
     {
-        $countries = Country::all();
-        $states =  State::where('country_id', $this->country_id)->get();
-        $cities = City::where('state_id', $this->state_id)->get();
+        $sections = Section::all();
+        $categories = Category::where('section_id', $this->section_id)->get();
+        $subcategories = SubCategory::where('category_id', $this->category_id)->get();
 
         return view('livewire.admin.listing.create-component', [
-            'countries' => $countries,
-            'states' => $states,
-            'cities' => $cities
-        ])->layout('layouts.admin');
+            'categories' => $categories,
+            'subcategories' => $subcategories,
+            'sections' => $sections
+        ])->layout('components.layouts.app');
+    }
+
+    /**
+     * Open Add Post form
+     * @return void
+     */
+    public function addListing()
+    {
+        $this->resetFields();
+        $this->addListing = true;
+    }
+
+    /**
+     * Cancel Add/Edit form and redirect to post listing page
+     * @return void
+     */
+    public function cancelListing()
+    {
+        $this->addListing = false;
+        $this->resetFields();
     }
 }

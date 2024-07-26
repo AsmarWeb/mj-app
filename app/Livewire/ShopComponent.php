@@ -22,7 +22,7 @@ class ShopComponent extends Component
 
     public function render()
     {
-        $listings = Listing::where('user_id')->count();
+        $listings = Listing::latest();
         return view('livewire.shop-component', ['listings' => $listings]);
     }
 }

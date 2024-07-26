@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SubCategory extends Model
@@ -29,8 +28,8 @@ class SubCategory extends Model
     }
 
     //Al recoger solo un dato pongo el nombre de la funcion en singular
-    public function category(): BelongsTo
+    public function category()
     {
-        return $this->belongsTo(Category::class); //Relacion uno a muchos inversa.
+        return $this->belongsTo(Category::class, 'category_id'); //Relacion uno a muchos inversa.
     }
 }

@@ -14,10 +14,12 @@ class SectionSeeder extends Seeder
     public function run(): void
     {
         $sectionRecords = [
-            ['id' => 1, 'code' => '122',  'name'   => 'Sale',       'name_ar' => 'مبيعات',       'status' => 'active'],
-            ['id' => 2, 'code' => '133',  'name'   => 'Rent',       'name_ar' => 'للايجار',       'status' => 'active'],
-            ['id' => 3, 'code' => '144',  'name'   => 'Booking',    'name_ar' => 'حجوزات',       'status' => 'active'],
+            ['id' => 1, 'name_ar' => 'مبيعات', 'name' => 'Sales',   'slug' => 'sales',  'image' => '',  'status' => 'active'],
+            ['id' => 2, 'name_ar' => 'تأجير', 'name' => 'Rental',   'slug' => 'rental',  'image' => '',  'status' => 'active'],
+            ['id' => 3, 'name_ar' => 'الحجز', 'name' => 'Booking',   'slug' => 'booking',  'image' => '',  'status' => 'active'],
         ];
+
+
         Section::insert($sectionRecords);
     }
 }

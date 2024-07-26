@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('brand_name_ar');
             $table->string('slug');
             $table->string('status')->default('active');
+            $table->bigInteger('subcategory_id')->unsigned()->nullable();
+            $table->string('subcategory_name');
             $table->timestamps();
+            $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
         });
     }
 

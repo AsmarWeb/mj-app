@@ -7,7 +7,7 @@
                         <h2 class="text-lg font-medium text-gray-800 dark:text-white">Listings</h2>
 
                         <span
-                            class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">2
+                            class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">{{ $listings->count() }}
                             listings</span>
                     </div>
                 </div>

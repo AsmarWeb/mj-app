@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+
 
 class Listing extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    use HasSlug;
+
 
     protected $dates = ['deleted_at'];
     protected $table = 'listings';
@@ -40,16 +45,16 @@ class Listing extends Model
     protected $fillable = [
         'title',
         'title_ar',
-        'featured',
         'code',
         'slug',
+        'price',
+        'quantity',
         'description',
         'keywords',
-        'section_id',
-        'category_id',
-        'subcategory_id',
-        'price',
-        'quantity'
+        'image',
+        'images',
+        'price_condition',
+        'condition'
     ];
 
     protected $guarded = ['id', 'created_at', 'update_at'];
@@ -92,7 +97,7 @@ class Listing extends Model
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
-    public function sub_categories(): BelongsTo
+    public function subcategories(): BelongsTo
     {
         return $this->belongsTo(Subcategory::class, 'subcategory_id');
     }
@@ -141,5 +146,12 @@ class Listing extends Model
     public function scopeActive($query)
     {
         $query->where('status', 1);
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
     }
 }

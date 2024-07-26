@@ -15,15 +15,16 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('parent_id')->unsigned()->nullable();
-            $table->foreignIdFor(Section::class)->index();
+            $table->bigInteger('section_id')->unsigned()->nullable();
+            $table->string('code')->unique();
             $table->string('category_name');
             $table->string('category_name_ar');
             $table->string('section_name');
-            $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->string('cover')->nullable();
-            $table->string('bg_color')->nullable();
+            $table->string('slug');
             $table->string('status')->default('active');
+            $table->string('bg_color')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
