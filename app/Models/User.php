@@ -78,7 +78,7 @@ class User extends Authenticatable implements LaratrustUser
             ->saveSlugsTo('username');
     }
 
-    public function shops(): HasMany
+    public function shop(): HasMany
     {
         return $this->hasMany(Shop::class);
     }
@@ -88,7 +88,7 @@ class User extends Authenticatable implements LaratrustUser
         return $this->belongsTo(Role::class);
     }
 
-    public function listings(): HasMany
+    public function listing(): HasMany
     {
         return $this->hasMany(Listing::class)->latest();
     }

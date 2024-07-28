@@ -11,7 +11,7 @@ class StoreSectionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|unique:sections',
+            'name_ar' => 'required',
+            'image' => 'nullable', 'mimes:png,jpg,jpeg,gif', 'max:2048',
         ];
     }
 }

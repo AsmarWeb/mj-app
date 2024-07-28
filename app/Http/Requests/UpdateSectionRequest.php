@@ -11,7 +11,7 @@ class UpdateSectionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'name_ar' => 'required',
+            'image' => 'nullable', 'mimes:png,jpg,jpeg,gif', 'max:2048',
         ];
     }
 }

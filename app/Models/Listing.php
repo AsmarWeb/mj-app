@@ -45,7 +45,7 @@ class Listing extends Model
     protected $fillable = [
         'title',
         'title_ar',
-        'code',
+        'sku',
         'slug',
         'price',
         'quantity',
@@ -62,7 +62,7 @@ class Listing extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
+            'sku' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }

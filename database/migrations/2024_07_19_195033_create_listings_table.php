@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique()->nullable();
+            $table->string('sku')->unique()->nullable();
             $table->string('title');
             $table->string('title_ar');
             $table->string('slug');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->text('images')->nullable();
             $table->string('price_condition');
             $table->string('condition');
+            $table->bigInteger('shop_id')->unsigned()->nullable();
             $table->bigInteger('section_id')->unsigned()->nullable();
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->bigInteger('subcategory_id')->unsigned()->nullable();
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreignIdFor(User::class, 'deleted_by')->nullable();
             $table->timestamps();
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');

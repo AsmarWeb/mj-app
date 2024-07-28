@@ -36,6 +36,7 @@ class CreateComponent extends Component
         $price_condition = [],
         $condition = [],
         $brand_id,
+        $shop_id,
         $section_id,
         $category_id,
         $subcategory_id,
@@ -45,7 +46,7 @@ class CreateComponent extends Component
      * List of add/edit form rules
      */
     protected $rules = [
-        'listing.code'              => 'required|string|max:255',
+        'listing.sku'              => 'required|string|max:255',
         'title' => 'required',
         'description' => 'required'
     ];
@@ -117,6 +118,7 @@ class CreateComponent extends Component
         $listing = new Listing();
         $user = Auth::user();
         $listing->user_id = $user->id;
+        $listing->shop_id = $user->id;
         $listing->title = $this->title;
         $listing->title_ar = $this->title_ar;
         $listing->description = $this->description;
@@ -180,7 +182,7 @@ class CreateComponent extends Component
             'categories' => $categories,
             'subcategories' => $subcategories,
             'sections' => $sections,
-            'brands' => $brands
+            'brands' => $brands,
         ])->layout('components.layouts.app');
     }
 

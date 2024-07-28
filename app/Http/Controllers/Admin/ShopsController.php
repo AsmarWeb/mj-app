@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreShopRequest;
+use App\Models\Listing;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +62,7 @@ class ShopsController extends Controller
      */
     public function show(Shop $shop)
     {
-        return view('admin.shops.show');
+        return view('admin.shops.show', compact('shop'));
     }
 
     /**

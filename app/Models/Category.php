@@ -27,7 +27,6 @@ class Category extends Model
         'image',
         'parent_id',
         'section_id',
-        'cover',
         'bg_color'
     ];
 

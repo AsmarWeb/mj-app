@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('category_name_ar');
             $table->string('section_name');
             $table->string('image')->nullable();
-            $table->string('cover')->nullable();
             $table->string('slug');
             $table->string('status')->default('active');
             $table->string('bg_color')->nullable();

@@ -65,6 +65,10 @@
                                     </th>
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                        Image
+                                    </th>
+                                    <th
+                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                         @include('admin.includes.sort-link', [
                                             'label' => 'Name',
                                             'attribute' => 'name',
@@ -83,6 +87,15 @@
                                             <div class="flex items-center gap-3">
                                                 <a class="text-sm leading-5 text-gray-800">{{ $listing->id }}</a>
                                             </div>
+                                        </td>
+                                        <td>
+                                            @if ($listing->image)
+                                                <img src="{{ asset('storage/products/' . $listing->image) }}"
+                                                    class="img-fluid" style="max-width:80px" alt="#">
+                                            @else
+                                                <img src="https://images.unsplash.com/photo-1622180203374-9524a54b734d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
+                                                    class="img-fluid" style="max-width:80px" alt="shop">
+                                            @endif
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">

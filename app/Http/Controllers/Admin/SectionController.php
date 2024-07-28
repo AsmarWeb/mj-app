@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StoreSectionRequest;
 use App\Http\Requests\UpdateSectionRequest;
+use Illuminate\Support\Facades\File;
 use App\Models\Section;
 
 class SectionController extends Controller
@@ -39,7 +40,22 @@ class SectionController extends Controller
      */
     public function store(StoreSectionRequest $request)
     {
-        //
+        $section = new Section;
+        $section->name = $request->name;
+        $section->name_ar = $request->name_ar;
+        $section->slug = strtolower(str_replace(' ', '-', $request->name));
+
+        if ($request->hasFile('image')) {
+            $uploadPath = 'public/section-suggest';
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $path = $request->file('image')->storeAs($uploadPath, $imageName);
+            $section['image'] = $imageName;
+        }
+
+        $section->save();
+
+        return redirect()->route('sections.index')->with('message', 'Sections Added Successfully');
     }
 
     /**
@@ -53,17 +69,36 @@ class SectionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Section $section)
+    public function edit($id)
     {
-        return view('admin.sections.edit');
+        $section_info = Section::findOrFail($id);
+        return view('admin.sections.edit', compact('section_info'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSectionRequest $request, Section $section)
+    public function update(UpdateSectionRequest $request, $id)
     {
-        //
+        $section = Section::find($id);
+        $section->name = $request->name;
+        $section->name_ar = $request->name_ar;
+        $section->slug = strtolower(str_replace(' ', '-', $request->name));
+
+        if ($request->hasFile('image')) {
+            $uploadPath = 'storage/section-suggest/' . $section->image;
+            if (File::exists($uploadPath)) {
+                unlink($uploadPath);
+            }
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $image->move('storage/section-suggest/', $imageName);
+            $section['image'] = $imageName;
+        }
+
+        $section->update();
+
+        return redirect()->route('sections.index')->with('message', 'Sections Updated Successfully');
     }
 
     /**
@@ -71,6 +106,7 @@ class SectionController extends Controller
      */
     public function destroy(Section $section)
     {
-        //
+        $section->delete();
+        return redirect()->route('sections.index')->with('message', 'Section deleted Successfully');
     }
 }

@@ -121,7 +121,7 @@
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
-                                                <a href="#"
+                                                <a href="{{ route('shops.show', $shop->id) }}"
                                                     class="no-underline hover:underline text-cyan-600">{{ $shop->name }}</a>
                                             </div>
                                         </td>

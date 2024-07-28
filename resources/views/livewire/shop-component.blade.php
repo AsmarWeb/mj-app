@@ -58,7 +58,7 @@
                                                 </path>
                                             </svg>
                                         </span>
-                                        <span>{{ $listings->count() }} Products</span>
+                                        <span>{{ $shop->listing->count() }} Products</span>
                                     </button>
                                 </div>
                                 @if (Route::has('login'))
