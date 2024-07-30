@@ -14,7 +14,7 @@
             </h1>
 
             <p class="max-w-3xl mx-auto mt-6 text-lg text-center text-gray-700 dark:text-white md:text-xl">
-                Platform to Buy and sell everything from used cars to mobile phones and computers.
+                {{ $setting->description }}
             </p>
 
             <div class="flex flex-col mt-8 space-y-3 sm:-mx-2 sm:flex-row sm:justify-center sm:space-y-0">
@@ -28,8 +28,7 @@
                 </button>
             </div>
 
-            <p class="mt-8 text-center text-gray-700 dark:text-white text-md md:text-xl">Notify me when App is
-                launched :)</p>
+            <p class="mt-8 text-center text-gray-700 dark:text-white text-md md:text-xl"> {{ $setting->short_des }}</p>
         </div>
     </section>
 </div>

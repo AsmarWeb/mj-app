@@ -9,21 +9,26 @@ use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShopsController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\ProfileController;
 use App\Livewire\Admin\Listing\CreateComponent;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'pages.home')->name('home');
-Route::view('about', 'pages.about')->name('about');
-Route::view('services', 'pages.services')->name('services');
-Route::view('demo', 'pages.demo')->name('demo');
+Route::controller(HomeController::class)->group(function () {
+    Route::view('/', 'pages.home')->name('home');
+    Route::view('about', 'pages.about')->name('about');
+    Route::view('services', 'pages.services')->name('services');
+    Route::view('demo', 'pages.demo')->name('demo');
+    Route::view('contact-us', 'pages.contact')->name('contact');
+});
 
 Route::view('create', 'shop.create')->name('shop.create');
-
 
 Route::get('/{user}', [ProfileController::class, 'show'])->name('profile');
 
@@ -67,4 +72,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     Route::resource('countries', CountryController::class);
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
+
+    Route::resource('settings', SettingController::class);
 });

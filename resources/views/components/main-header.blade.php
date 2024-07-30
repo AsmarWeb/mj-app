@@ -20,7 +20,7 @@
             </button>
 
             <a href="{{ route('home') }}">
-                <img class="w-auto h-6 sm:h-7" src="{{ asset('logo.png') }}" alt="">
+                <img class="w-auto h-6 sm:h-7" src="{{ $setting->logo }}" alt="">
             </a>
         </div>
 

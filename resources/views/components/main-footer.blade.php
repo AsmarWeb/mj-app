@@ -2,7 +2,7 @@
     <footer class="container px-6 py-8 mx-auto">
         <div class="flex flex-col items-center text-center">
             <a href="{{ route('home') }}">
-                <img class="w-auto h-7" src="{{ asset('logo.png') }}" alt="">
+                <img class="w-auto h-7" src="{{ $setting->logo }}" alt="">
             </a>
 
             <div class="flex flex-wrap justify-center mt-6 -mx-4">
@@ -10,9 +10,9 @@
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
                     aria-label="Reddit"> Home </a>
 
-                <a target="_blank" href="{{ route('about') }}"
+                <a target="_blank" href="{{ route('contact') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
-                    aria-label="Reddit"> About </a>
+                    aria-label="Reddit"> Contact Us </a>
 
                 <a target="_blank" href="{{ route('terms.show') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
@@ -36,16 +36,20 @@
 
             <div class="flex -mx-2 py-4">
 
-                <a href="#"
+                <a href="{{ $setting->facebook }}"
                     class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
-                    Facebook</a>
+                    Facebook
+                </a>
 
-                <a href="#"
-                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">Instagram</a>
-
-                <a href="#"
+                <a href="{{ $setting->instagram }}"
                     class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
-                    Telegram</a>
+                    Instagram
+                </a>
+
+                <a href="{{ $setting->telegram }}"
+                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
+                    Telegram
+                </a>
 
             </div>
         </div>

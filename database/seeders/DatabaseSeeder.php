@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(StateSeeder::class);
         $this->call(CitySeeder::class);
         $this->call(BrandSeeder::class);
-
+        $this->call(SettingSeeder::class);
 
         // User::factory()->create([
         //     'name' => 'Test User',

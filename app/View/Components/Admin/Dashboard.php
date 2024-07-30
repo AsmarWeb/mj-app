@@ -2,6 +2,9 @@
 
 namespace App\View\Components\Admin;
 
+use App\Models\Listing;
+use App\Models\Shop;
+use App\Models\User;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -13,6 +16,13 @@ class Dashboard extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.admin.dashboard');
+        $userCount = User::count();
+        $shopCount = Shop::count();
+        $listingCount = Listing::count();
+        return view('components.admin.dashboard', [
+            'userCount' => $userCount,
+            'shopCount' => $shopCount,
+            'listingCount' => $listingCount
+        ]);
     }
 }
