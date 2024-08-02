@@ -39,11 +39,15 @@ class ContactComponent extends Component
 
         $contact->save();
 
-        Mail::to($contact->email)->send(new ContactMail($contact));
-
+        $this->sendContactConfirmationMail($contact);
         session()->flash('message', 'Thanks, Your message has been sent successfully!');
         return $this->redirect('/contact-us');
         $this->resetFields();
+    }
+
+    public function sendContactConfirmationMail($contact)
+    {
+        Mail::to($contact->email)->send(new ContactMail($contact));
     }
 
     public function render()
