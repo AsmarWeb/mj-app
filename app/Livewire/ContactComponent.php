@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Mail\ContactMail;
+use App\Mail\ContactMailable;
 use App\Models\Contact;
 use App\Models\Country;
 use Illuminate\Support\Facades\Mail;
@@ -47,7 +47,7 @@ class ContactComponent extends Component
 
     public function sendContactConfirmationMail($contact)
     {
-        Mail::to($contact->email)->send(new ContactMail($contact));
+        Mail::to($contact->email)->send(new ContactMailable($contact));
     }
 
     public function render()

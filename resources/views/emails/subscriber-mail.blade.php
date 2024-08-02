@@ -1,12 +1,10 @@
 <x-mail::message>
-# Introduction
+    # Welcome!
 
-The body of your message.
+    Thank you for subscribing
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+    You'll be the first to hear about out new update, special offers,
+    private events, upcoming sales and all the latest news.
 
-Thanks,<br>
-{{ config('app.name') }}
+    Thanks - {{ config('app.name') }}
 </x-mail::message>
