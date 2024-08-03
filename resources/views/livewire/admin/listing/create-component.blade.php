@@ -1,12 +1,7 @@
 <div class="bg-white border rounded-lg px-8 py-6 mx-auto my-8 max-w-2xl">
     @if (session()->has('success'))
-        <div class="text-green-700 bg-green-100" role="alert">
+        <div class="text-green-700 bg-teal-100 border-t-4 border-teal-500 rounded-b px-4 py-3 shadow-md" role="alert">
             {{ session()->get('success') }}
-        </div>
-    @endif
-    @if (session()->has('error'))
-        <div class="text-red-700 bg-red-100" role="alert">
-            {{ session()->get('error') }}
         </div>
     @endif
     <form enctype="multipart/form-data" wire:submit="save">

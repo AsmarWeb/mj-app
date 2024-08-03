@@ -41,7 +41,6 @@ class ContactComponent extends Component
 
         $this->sendContactConfirmationMail($contact);
         session()->flash('message', 'Thanks, Your message has been sent successfully!');
-        return $this->redirect('/contact-us');
         $this->resetFields();
     }
 

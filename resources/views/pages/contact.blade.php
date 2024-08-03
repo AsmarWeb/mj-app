@@ -112,22 +112,6 @@
                             class="w-full px-8 py-10 mx-auto overflow-hidden bg-white shadow-2xl rounded-xl dark:bg-gray-900 lg:max-w-xl">
                             <h1 class="text-xl font-medium text-gray-700 dark:text-gray-200">Contact form</h1>
 
-                            <p class="mt-2 text-gray-500 dark:text-gray-400">
-                                Ask us everything and we would love
-                                to hear from you
-                            </p>
-
-                            @if (Session::has('message'))
-                                <div class="text-green-700 bg-green-100" role="alert">{{ Session::get('message') }}
-                                </div>
-                            @endif
-
-                            @if (session()->has('error'))
-                                <div class="text-red-700 bg-red-100" role="alert">
-                                    {{ session()->get('error') }}
-                                </div>
-                            @endif
-
                             @livewire('contact-component')
                         </div>
                     </div>

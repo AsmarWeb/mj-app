@@ -1,3 +1,8 @@
+@if (Session::has('message'))
+    <div class="text-green-700 bg-teal-100 border-t-4 border-teal-500 rounded-b px-4 py-3 shadow-md" role="alert">
+        {{ Session::get('message') }}
+    </div>
+@endif
 <form wire:submit.prevent="sendMessage" class="mt-6">
     <div class="flex-1">
         <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Full Name</label>

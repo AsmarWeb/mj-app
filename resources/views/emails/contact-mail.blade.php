@@ -7,7 +7,7 @@
 
     Message: {{ $contactMessage['message'] }}
 
-    Your messages will be answered as quickly as possible.
+    Your messages will be answered as soon as possible.
 
     Thanks - {{ config('app.name') }}
 </x-mail::message>

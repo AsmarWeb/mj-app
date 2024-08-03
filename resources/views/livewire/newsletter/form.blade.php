@@ -3,11 +3,6 @@
         {{ session()->get('success') }}
     </div>
 @endif
-@error('email')
-    <span
-        class="bg-red-100 border font-medium tracking-wide border-red-400 text-red-700 px-6 py-3 rounded relative focus:outline-none sm:mx-2"
-        role="alert">{{ $message }}</span>
-@enderror
 <form wire:submit.prevent="formSubmit">
     <div class="flex flex-col mt-8 space-y-3 sm:-mx-2 sm:flex-row sm:justify-center sm:space-y-0">
         <button wire:loading disabled type="button"
@@ -24,6 +19,11 @@
             </svg>
             Loading...
         </button>
+        @error('email')
+            <span
+                class="bg-red-100 border font-medium tracking-wide border-red-400 text-red-700 px-6 py-3 rounded relative focus:outline-none sm:mx-2"
+                role="alert">{{ $message }}</span>
+        @enderror
         <input id="email" type="email" wire:model="email"
             class="px-6 py-3 text-gray-700 bg-white border rounded-md dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring sm:mx-2"
             placeholder="Email Address" />

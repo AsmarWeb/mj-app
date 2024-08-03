@@ -5,10 +5,13 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\ListingController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShopsController;
 use App\Http\Controllers\Admin\StateController;
@@ -49,6 +52,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
             return view('index');
         })->name('admin.dashboard');
     });
+
+    Route::post('page/delete/{id}', [PageController::class, 'delete'])->name('page.delete');
+
+    Route::post('page/deleteImage', [PageController::class, 'deleteImage'])->name('page.deleteImage');
 });
 
 Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {
@@ -74,4 +81,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     Route::resource('cities', CityController::class);
 
     Route::resource('settings', SettingController::class);
+
+    Route::resource('features', FeatureController::class);
+
+    Route::resource('services', ServiceController::class);
+
+    Route::resource('pages', PageController::class);
 });

@@ -32,6 +32,16 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('services.index') }}" :active="request()->routeIs('services.index')">
+                        {{ __('Services') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('features.index') }}" :active="request()->routeIs('features.index')">
+                        {{ __('Features') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('shops.index') }}" :active="request()->routeIs('shops.index')">
                         {{ __('Shops') }}
                     </x-nav-link>
@@ -74,6 +84,9 @@
                             </x-dropdown-link>
                             <x-dropdown-link href="{{ route('subcategories.index') }}" :active="request()->routeIs('subcategories.index')">
                                 {{ __('SubCategories') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link href="{{ route('pages.index') }}" :active="request()->routeIs('pages.index')">
+                                {{ __('Pages') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
@@ -230,6 +243,14 @@
 
             <x-responsive-nav-link href="{{ route('user.index') }}" :active="request()->routeIs('user.index')">
                 {{ __('User') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('services.index') }}" :active="request()->routeIs('services.index')">
+                {{ __('Services') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('features.index') }}" :active="request()->routeIs('features.index')">
+                {{ __('Features') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link href="{{ route('shops.index') }}" :active="request()->routeIs('shops.index')">

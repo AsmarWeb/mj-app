@@ -38,7 +38,7 @@ class Form extends Component
         Mail::to($this->email)
             ->send(new SubscriberMailable($data));
 
-        session()->flash('success', 'You are subscribed!');
+        session()->flash('success', 'You are subscribed successfully!');
 
         $this->reset();
     }

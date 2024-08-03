@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CitySeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(SettingSeeder::class);
+        $this->call(ServiceSeeder::class);
+        $this->call(PageSeeder::class);
 
         // User::factory()->create([
         //     'name' => 'Test User',
