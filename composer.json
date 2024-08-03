@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "santigarcor/laratrust": "^8.3",
+        "spatie/laravel-cookie-consent": "^3.3",
         "spatie/laravel-newsletter": "^5.2",
         "spatie/laravel-sluggable": "^3.6"
     },
