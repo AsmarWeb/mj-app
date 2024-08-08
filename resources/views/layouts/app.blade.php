@@ -6,7 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ !empty($meta_title) ? $meta_title : '' }}</title>
+
+    @if (!@empty($meta_description))
+        <meta name="description" content="{{ $meta_description }}">
+    @endif
+
+    @if (!@empty($meta_keywords))
+        <meta name="keywords" content="{{ $meta_keywords }}">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

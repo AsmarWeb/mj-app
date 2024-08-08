@@ -23,13 +23,14 @@ use App\Livewire\Admin\Listing\CreateComponent;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(HomeController::class)->group(function () {
-    Route::view('/', 'pages.home')->name('home');
-    Route::view('about', 'pages.about')->name('about');
-    Route::view('services', 'pages.services')->name('services');
-    Route::view('demo', 'pages.demo')->name('demo');
-    Route::view('contact-us', 'pages.contact')->name('contact');
-});
+Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('about', [HomeController::class, 'about'])->name('about');
+
+// Route::view('/', 'pages.home')->name('home');
+// Route::view('about', 'pages.about')->name('about');
+Route::view('services', 'pages.services')->name('services');
+Route::view('demo', 'pages.demo')->name('demo');
+Route::view('contact-us', 'pages.contact')->name('contact');
 
 Route::view('create', 'shop.create')->name('shop.create');
 

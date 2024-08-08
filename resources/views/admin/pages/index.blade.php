@@ -49,9 +49,13 @@
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                         @include('admin.includes.sort-link', [
-                                            'label' => 'Title',
-                                            'attribute' => 'title',
+                                            'label' => 'Name',
+                                            'attribute' => 'name',
                                         ])
+                                    </th>
+                                    <th
+                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                        Title
                                     </th>
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
@@ -82,7 +86,12 @@
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
                                                 <a href="#"
-                                                    class="no-underline hover:underline text-cyan-600">{{ $page->title }}</a>
+                                                    class="no-underline hover:underline text-cyan-600">{{ $page->name }}</a>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 border-b border-blue-gray-50">
+                                            <div class="flex items-center gap-3">
+                                                <a class="text-sm leading-5 text-gray-800">{{ $page->title }}</a>
                                             </div>
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
@@ -94,10 +103,13 @@
                                             {{ date('d/m/Y', strtotime($page->created_at)) }}
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
-                                            @if ($page->status == 1)
-                                                <span class="badge bg-success">Active</span>
+                                            @if ($page->status == 'active')
+                                                <span
+                                                    class="mr-2 bg-green-600 text-white p-2 rounded  leading-none items-center">Active</span>
                                             @else
-                                                <span class="badge bg-success">Block</span>
+                                                <span
+                                                    class="mr-2 bg-red-600 text-white p-2 rounded  leading-none items-center">Not
+                                                    Active</span>
                                             @endif
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">

@@ -14,6 +14,7 @@ class PageSeeder extends Seeder
     public function run(): void
     {
         $data = array(
+            'name' => "About Us",
             'title' => "About Murwaj",
             'subtitle' => "Our mission",
             'slug' => "about",
@@ -26,6 +27,9 @@ class PageSeeder extends Seeder
             'developer' => "AsmarTechniq",
             'image' => "",
             'url' => "https://asmartechniq.vercel.app/",
+            'meta_title' => "",
+            'meta_keywords' => "",
+            'meta_description' => "",
         );
         DB::table('pages')->insert($data);
     }

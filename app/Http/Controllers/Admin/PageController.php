@@ -42,6 +42,7 @@ class PageController extends Controller
 
         $page = new Page;
         $page->slug = $request->slug;
+        $page->name = $request->name;
         $page->title = $request->title;
         $page->subtitle = $request->subtitle;
         $page->short_des = $request->short_des;
@@ -50,6 +51,10 @@ class PageController extends Controller
         $page->developer = $request->developer;
         $page->status = $request->status;
         $page->url = $request->url;
+
+        $page->meta_title = $request->meta_title;
+        $page->meta_keywords = $request->meta_keywords;
+        $page->meta_description = $request->meta_description;
 
 
         if ($request->hasFile('image')) {
@@ -102,6 +107,7 @@ class PageController extends Controller
 
         $page = Page::find($id);
         $page->slug = $request->slug;
+        $page->name = $request->name;
         $page->title = $request->title;
         $page->subtitle = $request->subtitle;
         $page->short_des = $request->short_des;
@@ -110,6 +116,10 @@ class PageController extends Controller
         $page->developer = $request->developer;
         $page->status = $request->status;
         $page->url = $request->url;
+
+        $page->meta_title = $request->meta_title;
+        $page->meta_keywords = $request->meta_keywords;
+        $page->meta_description = $request->meta_description;
 
         if ($request->hasFile('image')) {
 
