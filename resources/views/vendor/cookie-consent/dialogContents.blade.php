@@ -6,7 +6,9 @@
                     <h2 class="font-semibold text-gray-800 dark:text-white">🍪 Cookie Notice</h2>
                     <p class="md:ml-3 text-sm text-gray-600 dark:text-gray-300 cookie-consent__message">
                         {!! trans('cookie-consent::texts.message') !!}
-                        <a href="#" class="text-blue-500 hover:underline">Read cookies policies</a>.
+                        <a target="_blank" href="{{ route('policy.show') }}" class="text-blue-500 hover:underline">
+                            Read cookies policies
+                        </a>.
                     </p>
                 </div>
                 <div class="mt-2 flex-shrink-0 w-full sm:mt-0 sm:w-auto flex items-center justify-between">

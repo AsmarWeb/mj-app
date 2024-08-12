@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Artesaos\SEOTools\Facades\SEOMeta;
 use App\Models\Page;
 use Illuminate\Http\Request;
 
@@ -9,11 +10,12 @@ class HomeController extends Controller
 {
     public function home()
     {
-        $data['meta_title'] = 'Murwaj';
-        $data['meta_description'] = '';
-        $data['meta_keywords'] = '';
+        SEOMeta::setTitle('Home');
+        // $data['meta_title'] = 'Murwaj';
+        // $data['meta_description'] = '';
+        // $data['meta_keywords'] = '';
 
-        return view('pages.home', $data);
+        return view('pages.home');
     }
 
     public function about()
