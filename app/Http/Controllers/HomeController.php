@@ -23,9 +23,13 @@ class HomeController extends Controller
         $getPage = Page::getSlug('about');
         $data['getPage'] = $getPage;
 
-        $data['meta_title'] = $getPage->meta_title;
-        $data['meta_description'] = $getPage->meta_description;
-        $data['meta_keywords'] = $getPage->meta_keywords;
+        SEOMeta::setTitle($getPage->meta_title);
+        SEOMeta::setDescription($getPage->meta_description);
+        SEOMeta::setKeywords($getPage->meta_keywords);
+
+        // $data['meta_title'] = $getPage->meta_title;
+        // $data['meta_description'] = $getPage->meta_description;
+        // $data['meta_keywords'] = $getPage->meta_keywords;
 
         return view('pages.about', $data);
     }

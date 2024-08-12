@@ -23,6 +23,11 @@ use App\Livewire\Admin\Listing\CreateComponent;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/lang/{locale}', function ($locale) {
+    session()->put('locale', $locale);
+    return redirect()->back();
+})->name('locale');
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 
