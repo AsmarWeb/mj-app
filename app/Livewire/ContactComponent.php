@@ -39,7 +39,7 @@ class ContactComponent extends Component
 
         $contact->save();
 
-        $this->sendContactConfirmationMail($contact);
+        // $this->sendContactConfirmationMail($contact);
         session()->flash('message', 'Thanks, Your message has been sent successfully!');
         $this->resetFields();
     }
