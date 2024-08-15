@@ -31,12 +31,12 @@ class Subscribe extends Component
             'token' => $token,
         ]);
 
-        if (!Newsletter::isSubscribed($this->email)) {
-            Newsletter::subscribe($this->email, ['TOKEN' => $token]);
-        }
+        // if (!Newsletter::isSubscribed($this->email)) {
+        //     Newsletter::subscribe($this->email, ['TOKEN' => $token]);
+        // }
 
-        Mail::to($this->email)
-            ->send(new SubscriberMailable($data));
+        // Mail::to($this->email)
+        //     ->send(new SubscriberMailable($data));
 
         session()->flash('success', 'You are subscribed successfully!');
 
