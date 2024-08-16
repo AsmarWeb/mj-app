@@ -71,8 +71,8 @@
             </div>
 
             <div class="mb-4">
-                <label for="description" class="block text-gray-700 font-medium mb-2">Enter Description Ar</label>
-                <textarea id="description" name="description"
+                <label for="description_ar" class="block text-gray-700 font-medium mb-2">Enter Description Ar</label>
+                <textarea id="description_ar" name="description_ar"
                     class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" rows="5">{{ $setting->description_ar }}</textarea>
             </div>
 
