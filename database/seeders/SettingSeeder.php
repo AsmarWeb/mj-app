@@ -14,20 +14,20 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $data = array(
-            'description' => " Platform to Buy and sell everything from used cars to mobile phones and computers.",
-            'short_des' => "Notify me when App is
-                launched :)",
+            'description' => "Platform to Buy and sell everything from used cars to mobile phones and computers.",
+            'short_des'   => "Notify me when App is launched :)",
             'logo' => "logo.png",
+            'favicon' => "favicon.png",
             'address' => "NO. 342 - London Oxford Street, 012 United Kingdom",
-            'email' => "murwajcom@gmail.com",
-            'phone' => "+060 (800) 801-582",
-            'phone2' => '+971 50 555 55',
+            'email'   => "murwajcom@gmail.com",
+            'phone'   => "+060 (800) 801-582",
+            'phone2'  => '+971 50 555 55',
             'map' => "",
             'facebook' => "",
             'instagram' => "",
             'telegram' => "",
             'tiktok' => "",
-        ); 
+        );
         DB::table('settings')->insert($data);
     }
 }

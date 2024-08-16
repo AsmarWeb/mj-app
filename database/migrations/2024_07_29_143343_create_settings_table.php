@@ -16,6 +16,7 @@ return new class extends Migration
             $table->longText('description');
             $table->text('short_des');
             $table->string('logo');
+            $table->string('favicon');
             $table->string('email');
             $table->string('phone');
             $table->string('phone2');

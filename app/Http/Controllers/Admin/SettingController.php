@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\File;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
+        $setting = Setting::find(1);
+        return view('admin.settings.index', compact('setting'));
     }
 
     /**
@@ -22,7 +24,7 @@ class SettingController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.settings.create');
     }
 
     /**
@@ -38,7 +40,7 @@ class SettingController extends Controller
      */
     public function show(Setting $setting)
     {
-        //
+        return view('admin.settings.show');
     }
 
     /**
@@ -46,15 +48,56 @@ class SettingController extends Controller
      */
     public function edit(Setting $setting)
     {
-        //
+        return view('admin.settings.edit', compact('setting'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Setting $setting)
+    public function update(Request $request, $id)
     {
-        //
+        $request->all();
+
+        $setting = Setting::find($id);
+
+        $setting->phone = $request->phone;
+        $setting->phone2 = $request->phone2;
+        $setting->email = $request->email;
+        $setting->address = $request->address;
+        $setting->short_des = $request->short_des;
+        $setting->description = $request->description;
+
+        $setting->facebook = $request->facebook;
+        $setting->instagram = $request->instagram;
+        $setting->telegram = $request->telegram;
+        $setting->tiktok = $request->tiktok;
+
+        $setting->map = $request->map;
+
+        if ($request->hasFile('logo')) {
+            $uploadPath = 'storage/setting-suggest/' . $setting->logo;
+            if (File::exists($uploadPath)) {
+                unlink($uploadPath);
+            }
+            $image = $request->file('logo');
+            $imageName = $image->getClientOriginalName();
+            $image->move('storage/setting-suggest/', $imageName);
+            $setting['logo'] = $imageName;
+        }
+
+        if ($request->hasFile('favicon')) {
+            $uploadPath = 'storage/setting-suggest/' . $setting->favicon;
+            if (File::exists($uploadPath)) {
+                unlink($uploadPath);
+            }
+            $image = $request->file('favicon');
+            $imageName = $image->getClientOriginalName();
+            $image->move('storage/setting-suggest/', $imageName);
+            $setting['favicon'] = $imageName;
+        }
+
+        $setting->update();
+        return redirect()->route('settings.index')->with('message', 'Setting updated successfully.');
     }
 
     /**
