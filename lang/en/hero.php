@@ -16,4 +16,9 @@ return [
     'coming' => "Coming",
     'soon' => "Soon",
 
+    'form' => [
+        "button" => "Notify Me",
+        "placeholder"=>"Email Address"
+    ],
+
 ];
