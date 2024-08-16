@@ -54,10 +54,26 @@
                     required>
             </div>
 
+            <div class="mb-4 text-end">
+                <label for="short_des_ar" class="block text-sm font-medium leading-6 text-gray-900 text-right">
+                    أدخل الاسم بالغة العربية
+                </label>
+                <div class="mt-2">
+                    <input type="text" id="short_des_ar" name="short_des_ar" value="{{ $setting->short_des_ar }}"
+                        class="text-right block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+            </div>
+
             <div class="mb-4">
                 <label for="description" class="block text-gray-700 font-medium mb-2">Enter Description</label>
                 <textarea id="description" name="description"
                     class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" rows="5">{{ $setting->description }}</textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="description" class="block text-gray-700 font-medium mb-2">Enter Description Ar</label>
+                <textarea id="description" name="description"
+                    class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400" rows="5">{{ $setting->description_ar }}</textarea>
             </div>
 
             <div class="mb-4">

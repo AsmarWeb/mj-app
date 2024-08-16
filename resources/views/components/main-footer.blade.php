@@ -8,19 +8,19 @@
             <div class="flex flex-wrap justify-center mt-6 -mx-4">
                 <a href="{{ route('home') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
-                    aria-label="Reddit"> Home </a>
+                    aria-label="Reddit"> {{ __('footer.main.home') }} </a>
 
                 <a target="_blank" href="{{ route('contact') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
-                    aria-label="Reddit"> Contact Us </a>
+                    aria-label="Reddit"> {{ __('footer.main.contact') }} </a>
 
                 <a target="_blank" href="{{ route('terms.show') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
-                    aria-label="Reddit"> Teams </a>
+                    aria-label="Reddit"> {{ __('footer.main.terms') }} </a>
 
                 <a target="_blank" href="{{ route('policy.show') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
-                    aria-label="Reddit"> Privacy </a>
+                    aria-label="Reddit"> {{ __('footer.main.policy') }} </a>
             </div>
 
         </div>

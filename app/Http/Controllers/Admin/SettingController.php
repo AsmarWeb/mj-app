@@ -65,7 +65,9 @@ class SettingController extends Controller
         $setting->email = $request->email;
         $setting->address = $request->address;
         $setting->short_des = $request->short_des;
+        $setting->short_des_ar = $request->short_des_ar;
         $setting->description = $request->description;
+        $setting->description_ar = $request->description_ar;
 
         $setting->facebook = $request->facebook;
         $setting->instagram = $request->instagram;

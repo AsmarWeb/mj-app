@@ -27,15 +27,15 @@
         class="absolute inset-x-0 z-20 w-full px-6 py-8 mt-8 space-y-6 transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 top-16 md:bg-transparent md:dark:bg-transparent md:mt-0 md:p-0 md:top-0 md:relative md:w-auto md:opacity-100 md:translate-x-0 md:space-y-0 md:-mx-6 md:flex md:items-center">
         <a href="{{ route('demo') }}"
             class="block text-gray-600 transition-colors duration-300 dark:text-white md:px-6 hover:text-blue-500 dark:hover:text-blue-400">
-            Demo
+            {{ __('header.main.demo') }}
         </a>
         <a href="{{ route('services') }}"
             class="block text-gray-600 transition-colors duration-300 dark:text-white md:px-6 hover:text-blue-500 dark:hover:text-blue-400">
-            Services
+            {{ __('header.main.services') }}
         </a>
         <a href="{{ route('about') }}"
             class="block text-gray-600 transition-colors duration-300 dark:text-white md:px-6 hover:text-blue-500 dark:hover:text-blue-400">
-            About
+            {{ __('header.main.about') }}
         </a>
 
         <div class="flex items-center justify-center px-4 py-2">
@@ -64,7 +64,7 @@
                         <button type="button"
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white dark:border-gray-700/40 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
 
-                            Locale
+                            {{ __('header.locale') }}
 
                             <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -165,7 +165,8 @@
                     class="w-full px-5 py-3 transition-colors duration-300 bg-gray-100 rounded-md dark:bg-gray-800 md:w-auto md:mx-6 hover:bg-gray-200 dark:hover:bg-gray-700">
                     <div class="flex items-center justify-center -mx-1">
                         <a href="{{ route('register') }}" class="mx-1 text-sm text-gray-600 dark:text-white">
-                            Join me</a>
+                            {{ __('header.user.login') }}
+                        </a>
 
                         {{-- <svg class="w-6 h-6 mx-1 fill-gray-600 dark:fill-white" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 384 512">

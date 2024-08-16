@@ -15,7 +15,9 @@ class SettingSeeder extends Seeder
     {
         $data = array(
             'description' => "Platform to Buy and sell everything from used cars to mobile phones and computers.",
+            'description_ar' => "منصة حيث يمكنك شراء وبيع كل شيء من السيارات المستعملة إلى الهواتف المحمولة وأجهزة الكمبيوتر",
             'short_des'   => "Notify me when App is launched :)",
+            'short_des_ar'   => " (: أعلمني عندما يكون التطبيق جاهزا",
             'logo' => "logo.png",
             'favicon' => "favicon.png",
             'address' => "NO. 342 - London Oxford Street, 012 United Kingdom",
