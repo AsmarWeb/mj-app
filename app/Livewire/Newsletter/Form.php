@@ -35,8 +35,8 @@ class Form extends Component
         //     Newsletter::subscribe($this->email, ['TOKEN' => $token]);
         // }
 
-        // Mail::to($this->email)
-        //     ->send(new SubscriberMailable($data));
+        Mail::to($this->email)
+            ->send(new SubscriberMailable($data));
 
         session()->flash('success', 'You are subscribed successfully!');
 
