@@ -1,4 +1,8 @@
 <x-main-layout>
+    @section('title', "Murwaj | $getPage->meta_title")
+    @section('meta_description', "$getPage->meta_description")
+    @section('meta_keywords', "$getPage->meta_keywords")
+
     <x-slot name="header">
         <x-main-header></x-main-header>
     </x-slot>

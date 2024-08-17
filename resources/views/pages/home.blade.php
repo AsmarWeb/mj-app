@@ -1,4 +1,9 @@
 <x-main-layout>
+    @section('title', 'Murwaj | Home')
+    @section('description', "$description")
+    @section('keywords', "$keywords")
+
+
     <x-slot name="header">
         <x-main-header></x-main-header>
     </x-slot>

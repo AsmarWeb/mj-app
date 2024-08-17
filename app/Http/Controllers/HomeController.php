@@ -10,22 +10,18 @@ class HomeController extends Controller
 {
     public function home()
     {
-        SEOMeta::setTitle('Home');
-        // $data['meta_title'] = 'Murwaj';
-        // $data['meta_description'] = '';
-        // $data['meta_keywords'] = '';
 
-        return view('pages.home');
+        $title = 'Murwaj';
+        $description = 'Murwaj is an advertising group, to help your business grow through digital marketing.';
+        $keywords = 'Murwaj.com. buy electronics, computers, apparel, fashion accessories, shoes, watches, furniture, home and kitchen goods, beauty, personal care, grocery, gourmet food.';
+
+        return view('pages.home')->with(compact('title', 'description', 'keywords'));
     }
 
     public function about()
     {
         $getPage = Page::getSlug('about');
         $data['getPage'] = $getPage;
-
-        SEOMeta::setTitle($getPage->meta_title);
-        SEOMeta::setDescription($getPage->meta_description);
-        SEOMeta::setKeywords($getPage->meta_keywords);
 
         // $data['meta_title'] = $getPage->meta_title;
         // $data['meta_description'] = $getPage->meta_description;

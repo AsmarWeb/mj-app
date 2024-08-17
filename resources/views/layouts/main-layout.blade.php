@@ -7,8 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {!! SEOMeta::generate() !!}
+    @if (!@empty($meta_title))
+        <title>{{ $meta_title }}</title>
+    @else
+        <title>@yield('title', 'Murwaj')</title>
+    @endif
 
+    @if (!@empty($meta_description))
+        <meta name="meta_description" content="@yield('meta_description')">
+    @else
+        <meta name="description" content="@yield('description')">
+    @endif
+    @if (!@empty($meta_keywords))
+        <meta name="meta_keywords" content="@yield('meta_keywords')">
+    @else
+        <meta name="keywords" content="@yield('keywords')">
+    @endif
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

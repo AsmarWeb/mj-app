@@ -20,7 +20,7 @@ class PageSeeder extends Seeder
             'subtitle' => "Our mission",
             'subtitle_ar' => "مهمتنا",
             'slug' => "about",
-            'short_des' => "Murooj is an advertising group, to help your
+            'short_des' => "Murwaj is an advertising group, to help your
                             business grow through digital marketing.",
             'short_des_ar' => ".مُروَّج.كم هي مجموعة إعلانية، لمساعدة أعمالك على النمو من خلال التسويق الرقمي",
             'content' => "Is to provide the most effective digital marketing solutions in the industry,
@@ -32,9 +32,9 @@ class PageSeeder extends Seeder
             'developer' => "AsmarTechniq",
             'image' => "",
             'url' => "https://asmartechniq.vercel.app/",
-            'meta_title' => "",
-            'meta_keywords' => "",
-            'meta_description' => "",
+            'meta_title' => "About Us",
+            'meta_keywords' => "Murwaj.com. buy electronics, computers, apparel, fashion accessories, shoes, watches, furniture, home and kitchen goods, beauty, personal care, grocery, gourmet food.",
+            'meta_description' => "Murwaj is an advertising group, to help your business grow through digital marketing.",
         );
         DB::table('pages')->insert($data);
     }
