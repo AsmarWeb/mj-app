@@ -11,7 +11,7 @@
                     class="text-transparent bg-gradient-to-tr bg-clip-text from-blue-500 via-pink-500 to-red-500 dark:from-sky-300 dark:via-pink-300 dark:to-red-500">
                     {{ __('hero.soon') }}
                 </span>
-            </h1> 
+            </h1>
 
             @if (app()->getLocale() == 'ar')
                 <p class="max-w-3xl mx-auto mt-6 text-lg text-center text-gray-700 dark:text-white md:text-xl">
