@@ -10,23 +10,47 @@
             <div class="w-full sm:max-w-2xl mt-6 p-6 shadow-md overflow-hidden sm:rounded-lg prose">
                 <div class="container px-6 py-12 mx-auto">
                     <div class="text-center">
-                        <h1 class="mt-2 text-2xl font-semibold text-gray-800 md:text-3xl dark:text-white">
-                            {{ $page->title }}
-                        </h1>
+                        @if (app()->getLocale() == 'ar')
+                            <h1 class="mt-2 text-2xl font-semibold text-gray-800 md:text-3xl dark:text-white">
+                                {{ $page->title_ar }}
+                            </h1>
+                        @else
+                            <h1 class="mt-2 text-2xl font-semibold text-gray-800 md:text-3xl dark:text-white">
+                                {{ $page->title }}
+                            </h1>
+                        @endif
                     </div>
 
                     <div class="mt-10">
-                        <p class="mt-3 text-gray-500 dark:text-gray-400">
-                            {{ $page->short_des }}
-                        </p>
+                        @if (app()->getLocale() == 'ar')
+                            <p class="mt-3 text-gray-500 dark:text-gray-400 text-right">
+                                {{ $page->short_des_ar }}
+                            </p>
+                        @else
+                            <p class="mt-3 text-gray-500 dark:text-gray-400">
+                                {{ $page->short_des }}
+                            </p>
+                        @endif
 
-                        <h1 class="text-2xl font-semibold text-gray-800 capitalize dark:text-white lg:text-3xl">
-                            {{ $page->subtitle }}
-                        </h1>
+                        @if (app()->getLocale() == 'ar')
+                            <h1 class="text-right font-semibold text-gray-800 capitalize dark:text-white lg:text-3xl">
+                                {{ $page->subtitle_ar }}
+                            </h1>
+                        @else
+                            <h1 class="text-2xl font-semibold text-gray-800 capitalize dark:text-white lg:text-3xl">
+                                {{ $page->subtitle }}
+                            </h1>
+                        @endif
 
-                        <p class="mt-4 text-gray-500 dark:text-gray-400">
-                            {!! $page->content !!}
-                        </p>
+                        @if (app()->getLocale() == 'ar')
+                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-right">
+                                {!! $page->content_ar !!}
+                            </p>
+                        @else
+                            <p class="mt-4 text-gray-500 dark:text-gray-400">
+                                {!! $page->content !!}
+                            </p>
+                        @endif
 
                         <div class="mt-12 md:mt-0">
                             @if ($page->image != null)
@@ -37,11 +61,22 @@
 
                         <div class="text-center">
                             <h4>
-                                <p class="mt-2 text-gray-500 dark:text-gray-400">
-                                    {{ $page->created_by }}
-                                    <br> by <a class="underline decoration-blue-500 dark:text-white" target="_blank"
-                                        href="{{ $page->url }}">{{ $page->developer }}</a>
-                                </p>
+                                @if (app()->getLocale() == 'ar')
+                                    <p class="mt-2 text-gray-500 dark:text-gray-400">
+                                        {{ $page->created_by_ar }}
+                                        <br>
+                                        <a class="underline decoration-blue-500 dark:text-white" target="_blank"
+                                            href="{{ $page->url }}">{{ $page->developer }}</a>
+                                        {{ __('about.by') }}
+                                    </p>
+                                @else
+                                    <p class="mt-2 text-gray-500 dark:text-gray-400">
+                                        {{ $page->created_by }}
+                                        <br> {{ __('about.by') }}
+                                        <a class="underline decoration-blue-500 dark:text-white" target="_blank"
+                                            href="{{ $page->url }}">{{ $page->developer }}</a>
+                                    </p>
+                                @endif
                             </h4>
                         </div>
                     </div>

@@ -13,8 +13,8 @@
         @endforeach
     @else
         <tr>
-            <td colspan="5" style="text-align: center;"> No Result
-                found!
+            <td colspan="5" style="text-align: center;">
+                {{ __('create.expect.td') }}
             </td>
         </tr>
     @endif

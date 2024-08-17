@@ -11,7 +11,7 @@ class Service extends Model
 
     protected $table = 'services';
 
-    protected $fillable = ['title', 'description', 'bg_color'];
+    protected $fillable = ['title', 'title_ar', 'description', 'description_ar', 'bg_color'];
 
     public function color()
     {

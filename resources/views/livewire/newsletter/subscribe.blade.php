@@ -48,10 +48,10 @@
     <div class="flex items-center">
         <input type="email" id="email" wire:model="email"
             class="bg-gray-100 mr-3 py-2 px-4 w-full rounded-md focus:outline-none focus:bg-white"
-            placeholder="Enter your email">
+            placeholder="{{ __('create.subscribe.email') }}">
         <button type="submit"
             class="bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50">
-            Subscribe
+            {{ __('create.subscribe.subscribe') }}
         </button>
     </div>
 </form>

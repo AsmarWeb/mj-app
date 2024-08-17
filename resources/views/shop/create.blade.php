@@ -9,9 +9,10 @@
         <section class="py-20">
             <div class="container mx-auto px-4">
                 <div class="max-w-2xl mx-auto text-center">
-                    <h1 class="text-4xl font-bold mb-6 dark:text-white">We're launching soon</h1>
-                    <p class="text-gray-600 mb-12 dark:text-gray-400">Enter your email to be the first to know when we
-                        launch.</p>
+                    <h1 class="text-4xl font-bold mb-6 dark:text-white">{{ __('create.main.title') }}</h1>
+                    <p class="text-gray-600 mb-12 dark:text-gray-400">
+                        {{ __('create.main.subtitle') }}
+                    </p>
                     <livewire:newsletter.subscribe />
                 </div>
             </div>
@@ -21,10 +22,9 @@
         <section class="py-20">
             <div class="container mx-auto px-4">
                 <div class="max-w-2xl mx-auto text-center">
-                    <h2 class="text-3xl font-bold mb-6 dark:text-white">What to expect</h2>
+                    <h2 class="text-3xl font-bold mb-6 dark:text-white">{{ __('create.expect.title') }}</h2>
                     <p class="text-gray-600 mb-12 dark:text-gray-400">
-                        Learn how to start an online store,
-                        from picking a business structure to designing your shop, this guide has you covered.
+                        {{ __('create.expect.subtitle') }}
                     </p>
                 </div>
                 <livewire:feature.features-section />

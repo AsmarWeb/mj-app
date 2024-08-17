@@ -16,10 +16,15 @@ return new class extends Migration
             $table->string('name', 255)->nullable();
             $table->string('slug', 255)->nullable();
             $table->string('title')->nullable();
+            $table->string('title_ar')->nullable();
             $table->string('subtitle')->nullable();
+            $table->string('subtitle_ar')->nullable();
             $table->text('short_des')->nullable();
+            $table->text('short_des_ar')->nullable();
             $table->mediumText('content')->nullable();
+            $table->mediumText('content_ar')->nullable();
             $table->string('created_by')->nullable();
+            $table->string('created_by_ar')->nullable();
             $table->string('developer')->nullable();
             $table->string('image')->nullable();
             $table->string('status')->default('active');
