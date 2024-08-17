@@ -25,6 +25,7 @@
 
     <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
         class="absolute inset-x-0 z-20 w-full px-6 py-8 mt-8 space-y-6 transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 top-16 md:bg-transparent md:dark:bg-transparent md:mt-0 md:p-0 md:top-0 md:relative md:w-auto md:opacity-100 md:translate-x-0 md:space-y-0 md:-mx-6 md:flex md:items-center">
+
         <a href="{{ route('demo') }}"
             class="block text-gray-600 transition-colors duration-300 dark:text-white md:px-6 hover:text-blue-500 dark:hover:text-blue-400">
             {{ __('header.main.demo') }}
@@ -38,7 +39,7 @@
             {{ __('header.main.about') }}
         </a>
 
-        <div class="flex items-center justify-center px-4 py-2">
+        <div class="flex items-center justify-center px-5 py-2">
             <button id="theme-toggle" type="button" x-cloak x-on:click="darkMode = !darkMode;"
                 class="group flex max-w-[2.25rem] border border-gray-200/40 dark:border-gray-700/40 bg-gray-100/20 dark:bg-gray-800/20 rounded-lg h-9 w-9 items-center justify-center"><svg
                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -94,7 +95,7 @@
 
         @if (Route::has('login'))
             @auth
-                <div class="flex items-center justify-center -mx-1 w-full px-5 py-3">
+                <div class="flex items-center justify-center -mx-1 px-5 py-2">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())

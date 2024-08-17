@@ -13,6 +13,8 @@ return [
     |
     */
 
+    "services" => "Services",
+
     'main' => [
         "title" => "Services",
         "subtitle" => "Here is a few of the awesome Services we provide.",
