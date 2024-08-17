@@ -11,11 +11,11 @@
                 <div class="flex-1 lg:flex lg:items-center lg:-mx-6">
                     <div class="text-white lg:w-1/2 lg:mx-6">
                         <h1 class="text-2xl font-semibold capitalize lg:text-3xl text-gray-800 dark:text-white">
-                            Contact Us
+                            {{ __('contact.main.title') }}
                         </h1>
 
                         <p class="max-w-xl mt-6 text-gray-500 dark:text-gray-400">
-                            Ask us everything and we would love to hear from you.
+                            {{ __('contact.main.subtitle') }}
                         </p>
 
                         <div class="mt-6 space-y-8 md:mt-8">
@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="mt-6 md:mt-8">
-                            <h3 class="text-gray-800 dark:text-white">Follow us</h3>
+                            <h3 class="text-gray-800 dark:text-white">{{ __('contact.main.follow') }}</h3>
 
                             <div class="flex mt-4 -mx-1.5 ">
                                 <a class="mx-1.5 text-gray-500 transition-colors duration-300 transform hover:text-blue-500"
@@ -110,7 +110,9 @@
                     <div class="mt-8 lg:w-1/2 lg:mx-6">
                         <div
                             class="w-full px-8 py-10 mx-auto overflow-hidden bg-white shadow-2xl rounded-xl dark:bg-gray-900 lg:max-w-xl">
-                            <h1 class="text-xl font-medium text-gray-700 dark:text-gray-200">Contact form</h1>
+                            <h1 class="text-xl font-medium text-gray-700 dark:text-gray-200">
+                                {{ __('contact.main.form') }}
+                            </h1>
 
                             @livewire('contact-component')
                         </div>
