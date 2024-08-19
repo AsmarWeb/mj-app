@@ -4,6 +4,7 @@ namespace App\View\Components\Admin;
 
 use App\Models\Listing;
 use App\Models\Shop;
+use App\Models\Subscriber;
 use App\Models\User;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -19,10 +20,12 @@ class Dashboard extends Component
         $userCount = User::count();
         $shopCount = Shop::count();
         $listingCount = Listing::count();
+        $subscriberCount = Subscriber::count();
         return view('components.admin.dashboard', [
             'userCount' => $userCount,
             'shopCount' => $shopCount,
-            'listingCount' => $listingCount
+            'listingCount' => $listingCount,
+            'subscriberCount' => $subscriberCount
         ]);
     }
 }

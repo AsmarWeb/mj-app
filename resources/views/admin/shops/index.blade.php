@@ -150,6 +150,21 @@
                                                 {{ $shop->published_at }}
                                             </div>
                                         </td>
+                                        <td class="p-4 border-b border-blue-gray-50">
+                                            <form action="{{ route('shops.destroy', $shop->id) }}" method="POST">
+                                                <a href="{{ route('shops.edit', $shop->id) }}"
+                                                    class="btn btn-info btn-sm">
+                                                    {{ __('Edit') }}
+                                                </a>
+
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('{{ __('Are you sure you want to delete?') }}')">
+                                                    {{ __('Delete') }}
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 @if ($shops->isEmpty())

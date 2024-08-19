@@ -86,6 +86,7 @@ class ShopsController extends Controller
      */
     public function destroy(Shop $shop)
     {
-        //
+        $shop->delete();
+        return redirect()->route('shops.index')->with('message', 'Shop deleted Successfully');
     }
 }

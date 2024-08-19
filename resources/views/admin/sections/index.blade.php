@@ -21,7 +21,7 @@
                                 d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
 
-                        <span>{{ __('Add User') }}</span>
+                        <span>{{ __('Add Section') }}</span>
                     </a>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                                 <input type="text" name="search" id="table-search"
                                     value="{{ request()->input('search') }}"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Search for user">
+                                    placeholder="Search for section">
                             </div>
                         </form>
                         <table
