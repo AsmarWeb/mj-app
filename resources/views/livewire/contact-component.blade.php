@@ -15,7 +15,7 @@
 
     <div class="col-span-6 sm:col-span-4">
         <x-label for="fullname" value="{{ __('contact.form.fullname') }}" />
-        <x-input id="fullname" type="text" class="mt-1 block w-full" wire:model="state.fullname" required
+        <x-input id="fullname" type="text" class="mt-1 block w-full" wire:model="fullname" required
             autocomplete="fullname" placeholder="Sherlock Holmes" />
         <x-input-error for="fullname" class="mt-2" />
     </div>
@@ -32,7 +32,7 @@
 
     <div class="col-span-6 sm:col-span-4">
         <x-label for="email" value="{{ __('contact.form.email') }}" />
-        <x-input id="email" type="email" class="mt-1 block w-full" wire:model="state.email" required
+        <x-input id="email" type="email" class="mt-1 block w-full" wire:model="email" required
             autocomplete="email" placeholder="holmes@example.com" />
         <x-input-error for="email" class="mt-2" />
     </div>
@@ -48,7 +48,7 @@
 
     <div class="col-span-6 sm:col-span-4">
         <x-label for="phone" value="{{ __('contact.form.phone') }}" />
-        <x-input id="phone" type="text" class="mt-1 block w-full" wire:model="state.phone" required
+        <x-input id="phone" type="text" class="mt-1 block w-full" wire:model="phone" required
             autocomplete="phone" placeholder="+1 240-824-1243" />
         <x-input-error for="phone" class="mt-2" />
     </div>
