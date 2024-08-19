@@ -17,7 +17,7 @@ class ContactComponent extends Component
 
     protected $rules = [
         'fullname' => 'required',
-        'email' => 'required|email',
+        'email' => 'required|string|regex:/^([a-z0-9+-]+)(.[a-z0-9+-]+)*@([a-z0-9-]+.)+[a-z]{2,6}$/ix|email:rfc,dns,filter|max:255',
         'phone' => 'required',
         'message' => 'required'
     ];

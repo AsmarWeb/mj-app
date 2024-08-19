@@ -13,7 +13,7 @@ class Form extends Component
     public string $email = '';
 
     protected $rules = [
-        'email' => 'required|email|unique:subscribers',
+        'email' => 'required|string|regex:/^([a-z0-9+-]+)(.[a-z0-9+-]+)*@([a-z0-9-]+.)+[a-z]{2,6}$/ix|email:rfc,dns,filter|max:255|unique:subscribers',
     ];
 
     public function formSubmit()
