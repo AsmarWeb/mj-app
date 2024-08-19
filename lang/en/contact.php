@@ -25,6 +25,7 @@ return [
         "email" => "Email address",
         "phone" => "Phone number",
         "message" => "Message",
+        "submit" => "get in touch"
     ]
 
 ];
