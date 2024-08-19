@@ -110,7 +110,7 @@
 
                     <div class="mt-8 lg:w-1/2 lg:mx-6">
                         <div
-                            class="w-full px-8 py-10 mx-auto overflow-hidden bg-white shadow-2xl rounded-xl dark:bg-gray-900 lg:max-w-xl">
+                            class="w-full px-5 py-10 mx-auto overflow-hidden bg-white shadow-2xl rounded-xl dark:bg-gray-900 lg:max-w-xl">
                             <h1 class="text-xl font-medium text-gray-700 dark:text-gray-200">
                                 {{ __('contact.main.form') }}
                             </h1>
