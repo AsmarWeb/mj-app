@@ -1,5 +1,5 @@
 <x-main-layout>
-    @section('title', "Murwaj | $getPage->meta_title")
+    @section('title', "$getPage->meta_title | Murwaj")
     @section('meta_description', "$getPage->meta_description")
     @section('meta_keywords', "$getPage->meta_keywords")
 
