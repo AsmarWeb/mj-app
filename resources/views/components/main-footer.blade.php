@@ -7,19 +7,19 @@
 
             <div class="flex flex-wrap justify-center mt-6 -mx-4">
                 <a href="{{ route('home') }}"
-                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
+                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
                     aria-label="Reddit"> {{ __('footer.main.home') }} </a>
 
                 <a target="_blank" href="{{ route('contact') }}"
-                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
+                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
                     aria-label="Reddit"> {{ __('footer.main.contact') }} </a>
 
                 <a target="_blank" href="{{ route('terms.show') }}"
-                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
+                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
                     aria-label="Reddit"> {{ __('footer.main.terms') }} </a>
 
                 <a target="_blank" href="{{ route('policy.show') }}"
-                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400"
+                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
                     aria-label="Reddit"> {{ __('footer.main.policy') }} </a>
             </div>
 
@@ -33,17 +33,17 @@
             <div class="flex -mx-2 py-4">
 
                 <a href="{{ $setting->facebook }}"
-                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
+                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400">
                     Facebook
                 </a>
 
                 <a href="{{ $setting->instagram }}"
-                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
+                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400">
                     Instagram
                 </a>
 
                 <a href="{{ $setting->telegram }}"
-                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
+                    class="px-4 text-gray-700 transition-colors duration-300 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400">
                     Telegram
                 </a>
 

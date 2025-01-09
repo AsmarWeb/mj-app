@@ -15,7 +15,9 @@ class Category extends Model
     protected $table = 'categories';
 
     public $orderable = [
-        'id', 'code', 'category_name',
+        'id',
+        'code',
+        'category_name',
     ];
 
     protected $fillable = [

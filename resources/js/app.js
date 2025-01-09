@@ -1,5 +1,14 @@
 import './bootstrap';
 
+import { createApp } from "vue";
+import LanguageSwitcher from "./components/LanguageSwitcher.vue";
+
+const app = createApp();
+
+app.component("language-switcher", LanguageSwitcher);
+
+app.mount("#app");
+
 
 var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');

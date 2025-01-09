@@ -69,7 +69,7 @@
                                     <p class="mt-2 text-gray-500 dark:text-gray-400">
                                         {{ $page->created_by_ar }}
                                         <br>
-                                        <a class="underline decoration-blue-500 dark:text-white" target="_blank"
+                                        <a class="underline decoration-orange-500 dark:text-white" target="_blank"
                                             href="{{ $page->url }}">{{ $page->developer }}</a>
                                         {{ __('about.by') }}
                                     </p>
@@ -77,7 +77,7 @@
                                     <p class="mt-2 text-gray-500 dark:text-gray-400">
                                         {{ $page->created_by }}
                                         <br> {{ __('about.by') }}
-                                        <a class="underline decoration-blue-500 dark:text-white" target="_blank"
+                                        <a class="underline decoration-orange-500 dark:text-white" target="_blank"
                                             href="{{ $page->url }}">{{ $page->developer }}</a>
                                     </p>
                                 @endif

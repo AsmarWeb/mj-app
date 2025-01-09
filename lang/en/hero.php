@@ -18,7 +18,12 @@ return [
 
     'form' => [
         "button" => "Notify Me",
-        "placeholder"=>"Email Address"
+        "placeholder" => "Email Address"
+    ],
+
+    'main' => [
+        "title" => "Explore the latest trending shops.",
+        "subtitle" => "Try the experience of creating an online shop and adding products, or search for property, jobs and more in the world."
     ],
 
 ];

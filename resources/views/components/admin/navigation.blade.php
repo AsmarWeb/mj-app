@@ -294,6 +294,10 @@
                 {{ __('User') }}
             </x-responsive-nav-link>
 
+            <x-responsive-nav-link href="{{ route('subscribers.index') }}" :active="request()->routeIs('subscribers.index')">
+                {{ __('Subscribers') }}
+            </x-responsive-nav-link>
+
             <x-responsive-nav-link href="{{ route('services.index') }}" :active="request()->routeIs('services.index')">
                 {{ __('services.services') }}
             </x-responsive-nav-link>
@@ -324,6 +328,10 @@
 
             <x-responsive-nav-link href="{{ route('subcategories.index') }}" :active="request()->routeIs('subcategories.index')">
                 {{ __('SubCategories') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('pages.index') }}" :active="request()->routeIs('pages.index')">
+                {{ __('Pages') }}
             </x-responsive-nav-link>
 
             {{-- <x-responsive-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
