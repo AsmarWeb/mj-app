@@ -42,9 +42,9 @@
                             </select>
                             <div class="flex">
                                 <input type="text" placeholder="Search for anything"
-                                    class="w-full md:w-80 px-3 h-10 rounded-l border-2 text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:border-yellow-600 dark:focus:border-yellow-400 focus:ring-yellow-400">
+                                    class="w-full md:w-80 px-3 h-10 rounded-l border-2 text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:border-gray-600 dark:focus:border-gray-400 focus:ring-gray-400">
                                 <button type="submit"
-                                    class="bg-yellow-500 hover:bg-yellow-600 focus:bg-yellow-600 text-white rounded-r px-2 md:px-3 py-0 md:py-1">
+                                    class="bg-gray-500 hover:bg-gray-600 focus:bg-gray-600 text-white rounded-r px-2 md:px-3 py-0 md:py-1">
                                     <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
