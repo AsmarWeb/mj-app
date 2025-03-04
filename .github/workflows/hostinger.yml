@@ -35,9 +35,8 @@ jobs:
           script: |
             cd domains
             cd murwaj.com
-            cd public_html
             git pull
-            php composer install
+            php composer.phar install
             php artisan migrate --force
       - name: Install SSH key
         run: |
