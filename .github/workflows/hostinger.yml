@@ -35,6 +35,7 @@ jobs:
           script: |
             cd domains
             cd murwaj.com
+            cd public_html
             git pull
             php composer install
             php artisan migrate --force
