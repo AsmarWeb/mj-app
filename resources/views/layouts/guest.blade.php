@@ -22,6 +22,19 @@
     @livewireStyles
 </head>
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EFEE07R6NT"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-EFEE07R6NT');
+</script>
+
 <body>
     <div class="font-sans text-gray-900 antialiased">
         {{ $slot }}
