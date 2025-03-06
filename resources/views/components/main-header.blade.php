@@ -17,6 +17,19 @@
                     <img class="w-auto h-6 sm:h-7" src="{{ $setting->logo }}" alt="">
                 </a>
 
+                <div class="hidden mx-auto md:block">
+                    <div class="flex flex-col md:flex-row md:mx-2.5">
+                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
+                            href="#">Explore</a>
+                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
+                            href="{{ route('demo') }}">{{ __('header.main.demo') }}</a>
+                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
+                            href="{{ route('services') }}">{{ __('header.main.services') }}</a>
+                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
+                            href="{{ route('about') }}">{{ __('header.main.about') }}</a>
+                    </div>
+                </div>
+
                 <!-- Search input on desktop screen -->
                 <div class="hidden mx-9 md:block">
                     <div class="relative">
@@ -44,7 +57,7 @@
                                 <input type="text" placeholder="Search for anything"
                                     class="w-full md:w-80 px-3 h-10 rounded-l border-2 text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:border-gray-600 dark:focus:border-gray-400 focus:ring-gray-400">
                                 <button type="submit"
-                                    class="bg-gray-500 hover:bg-gray-600 focus:bg-gray-600 text-white rounded-r px-2 md:px-3 py-0 md:py-1">
+                                    class="bg-orange-500 hover:bg-orange-600 focus:bg-orange-600 text-white rounded-r px-2 md:px-3 py-0 md:py-1">
                                     <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -53,19 +66,6 @@
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                <div class="hidden mx-auto md:block">
-                    <div class="flex flex-col md:flex-row md:mx-2.5">
-                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
-                            href="{{ route('demo') }}">{{ __('header.main.demo') }}</a>
-                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
-                            href="{{ route('services') }}">{{ __('header.main.services') }}</a>
-                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
-                            href="{{ route('about') }}">{{ __('header.main.about') }}</a>
-                        <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0"
-                            href="#">Explore</a>
                     </div>
                 </div>
 
