@@ -446,7 +446,7 @@
             @endforeach
         </div>
 
-        <div class="mt-4 flex items-center justify-between">
+        <div class="mt-4 flex items-center justify-between hidden md:flex">
             <div class="flex gap-x-2 py-1 px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-200"
                     viewBox="0 0 20 20" fill="currentColor">
