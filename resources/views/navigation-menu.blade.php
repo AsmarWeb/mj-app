@@ -11,9 +11,15 @@
                 </div>
 
                 <!-- Navigation Links -->
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Home') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('profile', [Auth::user()->username]) }}" :active="request()->routeIs('profile')">
+                        {{ __('Profile') }}
                     </x-nav-link>
                 </div>
 
@@ -25,9 +31,9 @@
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
-                        {{ __('Products') }}
+                        {{ __('Products list') }}
                     </x-nav-link>
-                </div> --}}
+                </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -174,9 +180,17 @@
                 {{ __('Home') }}
             </x-responsive-nav-link>
 
-            {{-- <x-responsive-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
-                {{ __('Shop') }}
-            </x-responsive-nav-link> --}}
+            <x-responsive-nav-link href="{{ route('profile', [Auth::user()->username]) }}" :active="request()->routeIs('profile')">
+                {{ __('My Profile') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
+                {{ __('My Shop') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('home', [Auth::user()->username]) }}" :active="request()->routeIs('home')">
+                {{ __('Products list') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

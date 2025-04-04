@@ -40,10 +40,19 @@ Route::view('contact-us', 'pages.contact')->name('contact');
 
 Route::view('create', 'shop.create')->name('shop.create');
 
-Route::get('/{user}', [ProfileController::class, 'show'])->name('profile');
+// Route::get('/{users}/show', [ProfileController::class, 'show'])->name('profile');
 
-Route::resource('users', ProfileController::class);
+// Route::resource('users', ProfileController::class);
 
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/{user}', function () {
+        return view('profile');
+    })->name('profile');
+});
 
 Route::middleware([
     'auth:sanctum',

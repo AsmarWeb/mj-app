@@ -17,7 +17,7 @@ return [
         "login" => "join me",
     ],
 
-    'locale' => "Locale",
+    'locale' => "English",
 
     'main' => [
         "demo" => "Demo",

@@ -15,7 +15,7 @@
                         Desk and Office
                     </a>
                 </h3>
-                <p class="text-base font-semibold text-gray-900">Work from home accessories</p>
+                <p class="text-base font-semibold text-gray-900 dark:text-white">Work from home accessories</p>
             </div>
             <div class="group relative">
                 <img src="https://tailwindui.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg"
@@ -27,7 +27,7 @@
                         Desk and Office
                     </a>
                 </h3>
-                <p class="text-base font-semibold text-gray-900">Work from home accessories</p>
+                <p class="text-base font-semibold text-gray-900 dark:text-white">Work from home accessories</p>
             </div>
             <div class="group relative">
                 <img src="https://tailwindui.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg"
@@ -39,7 +39,7 @@
                         Desk and Office
                     </a>
                 </h3>
-                <p class="text-base font-semibold text-gray-900">Work from home accessories</p>
+                <p class="text-base font-semibold text-gray-900 dark:text-white">Work from home accessories</p>
             </div>
             <div class="group relative">
                 <img src="https://tailwindui.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg"
@@ -51,7 +51,7 @@
                         Desk and Office
                     </a>
                 </h3>
-                <p class="text-base font-semibold text-gray-900">Work from home accessories</p>
+                <p class="text-base font-semibold text-gray-900 dark:text-white">Work from home accessories</p>
             </div>
             <div class="group relative">
                 <img src="https://tailwindui.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg"
@@ -63,7 +63,7 @@
                         Desk and Office
                     </a>
                 </h3>
-                <p class="text-base font-semibold text-gray-900">Work from home accessories</p>
+                <p class="text-base font-semibold text-gray-900 dark:text-white">Work from home accessories</p>
             </div>
         </div>
 

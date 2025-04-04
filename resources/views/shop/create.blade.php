@@ -1,9 +1,6 @@
-<x-main-layout>
-    <x-slot name="header">
-        <x-main-header></x-main-header>
-    </x-slot>
+<x-app-layout>
 
-    <div class="font-sans leading-normal tracking-normal">
+    {{-- <div class="font-sans leading-normal tracking-normal">
 
         <!-- Hero section -->
         <section class="py-20">
@@ -30,7 +27,20 @@
                 <livewire:feature.features-section />
             </div>
         </section>
+    </div> --}}
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Profile') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <x-welcome />
+            </div>
+        </div>
     </div>
 
-    <x-main-footer></x-main-footer>
-</x-main-layout>
+</x-app-layout>

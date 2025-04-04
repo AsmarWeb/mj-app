@@ -173,13 +173,13 @@
                                                 {{ __('Dashboard') }}
                                             </x-dropdown-link>
                                         @else
-                                            {{-- <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
-                                            {{ __('My Profile') }}
-                                        </x-dropdown-link>
+                                            <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
+                                                {{ __('My Profile') }}
+                                            </x-dropdown-link>
 
-                                        <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
-                                            {{ __('My Shop') }}
-                                        </x-dropdown-link> --}}
+                                            <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
+                                                {{ __('My Shop') }}
+                                            </x-dropdown-link>
 
                                             <x-dropdown-link href="{{ route('profile.show') }}">
                                                 {{ __('Edit Profile') }}
@@ -358,13 +358,13 @@
                                         {{ __('Dashboard') }}
                                     </x-dropdown-link>
                                 @else
-                                    {{-- <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
-                                {{ __('My Profile') }}
-                            </x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
+                                        {{ __('My Profile') }}
+                                    </x-dropdown-link>
 
-                            <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
-                                {{ __('My Shop') }}
-                            </x-dropdown-link> --}}
+                                    <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
+                                        {{ __('My Shop') }}
+                                    </x-dropdown-link>
 
                                     <x-dropdown-link href="{{ route('profile.show') }}">
                                         {{ __('Edit Profile') }}
@@ -444,6 +444,46 @@
                     @endif
                 @endif
             @endforeach
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+            <div class="flex gap-x-2 py-1 px-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-200"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm font-medium dark:text-gray-200">Dubai</span>
+            </div>
+
+            <div class="flex gap-x-5 overflow-y-auto whitespace-nowrap scroll-hidden">
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Best
+                    seller</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">New
+                    Releases</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Books</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Computers</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Fashion</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Health</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Pharmacy</span>
+                <span
+                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Toys
+                    &
+                    Games</span>
+            </div>
+
+            <span
+                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Becoma
+                a
+                seller</span>
         </div>
     </div>
 </nav>
