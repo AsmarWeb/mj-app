@@ -458,26 +458,17 @@
             </div>
 
             <div class="flex gap-x-5 overflow-y-auto whitespace-nowrap scroll-hidden">
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Best
-                    seller</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">New
-                    Releases</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Books</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Computers</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Fashion</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Health</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Pharmacy</span>
-                <span
-                    class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">Toys
-                    &
-                    Games</span>
+                @foreach ($categories as $category)
+                    @if (count($category['subcategories']) > 0)
+                        @if (app()->getLocale() == 'ar')
+                            <span
+                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $category->category_name_ar }}</span>
+                        @else
+                            <span
+                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $category->category_name }}</span>
+                        @endif
+                    @endif
+                @endforeach
             </div>
 
             <span

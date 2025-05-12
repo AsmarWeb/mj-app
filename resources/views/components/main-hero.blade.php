@@ -1,40 +1,40 @@
 <section>
-    {{-- <div class="flex flex-col w-full ">
-            <h1 class="text-5xl font-extrabold text-center lg:text-7xl 2xl:text-8xl">
-                <span
-                    class="text-transparent bg-gradient-to-br bg-clip-text from-teal-500 via-indigo-500 to-sky-500 dark:from-teal-200 dark:via-indigo-300 dark:to-sky-500">
-                    {{ __('hero.coming') }}
-                </span>
+    <div class="flex flex-col w-full mx-auto mt-10 mb-10 max-w-6xl text-center p-6">
+        <h1 class="text-5xl font-extrabold text-center lg:text-7xl 2xl:text-8xl">
+            <span
+                class="text-transparent bg-gradient-to-br bg-clip-text from-teal-500 via-indigo-500 to-sky-500 dark:from-teal-200 dark:via-indigo-300 dark:to-sky-500">
+                {{ __('hero.coming') }}
+            </span>
 
-                <span
-                    class="text-transparent bg-gradient-to-tr bg-clip-text from-blue-500 via-pink-500 to-red-500 dark:from-sky-300 dark:via-pink-300 dark:to-red-500">
-                    {{ __('hero.soon') }}
-                </span>
-            </h1>
+            <span
+                class="text-transparent bg-gradient-to-tr bg-clip-text from-blue-500 via-pink-500 to-red-500 dark:from-sky-300 dark:via-pink-300 dark:to-red-500">
+                {{ __('hero.soon') }}
+            </span>
+        </h1>
 
-            @if (app()->getLocale() == 'ar')
-                <p class="max-w-3xl mx-auto mt-6 text-lg text-center text-gray-700 dark:text-white md:text-xl">
-                    {{ $setting->description_ar }}
-                </p>
-            @else
-                <p class="max-w-3xl mx-auto mt-6 text-lg text-center text-gray-700 dark:text-white md:text-xl">
-                    {{ $setting->description }}
-                </p>
-            @endif
+        @if (app()->getLocale() == 'ar')
+            <p class="max-w-3xl mx-auto mt-6 text-lg text-center text-gray-700 dark:text-white md:text-xl">
+                {{ $setting->description_ar }}
+            </p>
+        @else
+            <p class="max-w-3xl mx-auto mt-6 text-lg text-center text-gray-700 dark:text-white md:text-xl">
+                {{ $setting->description }}
+            </p>
+        @endif
 
 
-            <livewire:newsletter.form />
+        <livewire:newsletter.form />
 
-            @if (app()->getLocale() == 'ar')
-                <p class="mt-8 text-center text-gray-700 dark:text-white text-md md:text-xl">
-                    {{ $setting->short_des_ar }}
-                </p>
-            @else
-                <p class="mt-8 text-center text-gray-700 dark:text-white text-md md:text-xl"> {{ $setting->short_des }}
-                </p>
-            @endif
-        </div> --}}
-    <div class="mx-auto mt-10 mb-10 max-w-6xl text-center p-6">
+        @if (app()->getLocale() == 'ar')
+            <p class="mt-8 text-center text-gray-700 dark:text-white text-md md:text-xl">
+                {{ $setting->short_des_ar }}
+            </p>
+        @else
+            <p class="mt-8 text-center text-gray-700 dark:text-white text-md md:text-xl"> {{ $setting->short_des }}
+            </p>
+        @endif
+    </div>
+    {{-- <div class="mx-auto mt-10 mb-10 max-w-6xl text-center p-6">
         <div class="mx-auto max-w-2xl sm:text-center my-2">
             <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl">
                 {{ __('hero.main.title') }}
@@ -68,5 +68,5 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> --}}
 </section>

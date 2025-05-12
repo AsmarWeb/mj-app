@@ -87,10 +87,19 @@
                                     class="text-5xl font-bold tracking-tight text-gray-900">{{ __('demo.card.free') }}</span>
                                 <span class="text-sm font-semibold leading-6 tracking-wide text-gray-600"></span>
                             </p>
-                            <a href="{{ route('shop.create') }}"
-                                class="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                {{ __('demo.card.started') }}
-                            </a>
+                            @if (Route::has('login'))
+                                @auth
+                                    <a href="{{ route('shop.create') }}"
+                                        class="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                        {{ __('demo.card.started') }}
+                                    </a>
+                                @else
+                                    <a href="{{ route('login') }}"
+                                        class="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                        {{ __('demo.card.started') }}
+                                    </a>
+                                @endif
+                            @endauth
                             <p class="mt-6 text-xs leading-5 text-gray-600">
                                 {{ __('demo.card.opens') }}
                             </p>
