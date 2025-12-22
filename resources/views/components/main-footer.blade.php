@@ -28,7 +28,7 @@
         <hr class="my-6 border-gray-200 md:my-10 dark:border-gray-700" />
 
         <div class="flex flex-col items-center sm:flex-row sm:justify-between">
-            <p class="text-sm text-gray-500 dark:text-gray-300">© Copyright 2024. All Rights Reserved.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300">© murwaj 2025 - Crafted with love and coffee in Dubai.</p>
 
             <div class="flex -mx-2 py-4">
 
