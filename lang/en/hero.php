@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'coming' => "Coming",
-    'soon' => "Soon",
+    'coming' => "murwaj.com",
+    'soon' => "soon",
 
     'form' => [
         "button" => "Notify Me",

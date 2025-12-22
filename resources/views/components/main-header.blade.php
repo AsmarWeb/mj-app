@@ -70,9 +70,9 @@
                             <select id="pricingType" name="pricingType"
                                 class="w-36 h-10 border-2 border-gray-500 focus:outline-none focus:border-gray-600 dark:focus:border-gray-300 focus:ring-gray-300 text-gray-700 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
                                 <option value="All" selected="">All</option>
-                                <option value="Freemium">Freemium</option>
+                                {{-- <option value="Freemium">Freemium</option>
                                 <option value="Free">Free</option>
-                                <option value="Paid">Paid</option>
+                                <option value="Paid">Paid</option> --}}
                             </select>
                             <div class="flex">
                                 <input type="text" placeholder="Search for anything"
@@ -469,7 +469,7 @@
         </div>
 
 
-        <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
+        {{-- <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
             @foreach ($categories as $category)
                 @if (count($category['subcategories']) > 0)
                     @if (app()->getLocale() == 'ar')
@@ -486,9 +486,9 @@
                     @endif
                 @endif
             @endforeach
-        </div>
+        </div> --}}
 
-        <div class="mt-4 flex items-center justify-between hidden md:flex">
+        {{-- <div class="mt-4 flex items-center justify-between hidden md:flex">
             <div class="flex gap-x-2 py-1 px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-200"
                     viewBox="0 0 20 20" fill="currentColor">
@@ -515,6 +515,6 @@
 
             <span
                 class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">Become a seller</span>
-        </div>
+        </div> --}}
     </div>
 </nav>
