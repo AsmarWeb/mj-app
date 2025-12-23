@@ -14,7 +14,7 @@ return [
     */
 
     'user' => [
-        "login" => "join me",
+        "login" => "Join me",
     ],
 
     'locale' => "English",
