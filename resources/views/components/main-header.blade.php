@@ -20,7 +20,7 @@
                 <div class="hidden mx-auto md:block">
                     <div class="flex flex-col md:flex-row md:mx-2.5">
                         <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
-                            href="#">
+                            href="/">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -483,71 +483,73 @@
         </div>
 
 
-        <<<<<<< HEAD {{-- <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
+        {{-- <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
             @foreach ($categories as $category)
                 @if (count($category['subcategories']) > 0)
-=======
-        <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
-            @foreach ($sections as $section)
-                @if (count($section['categories']) > 0)
->>>>>>> 351becd (update)
-                    @if (app()->getLocale() == 'ar')
-                        <a class="mx-4 text-sm text-right leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:my-0"
-                            href="#">
-                            {{ $section->name_ar }}
-                        </a>
-                    @else
-                        <a class="mx-4 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:my-0"
-                            href="#">
+                    =======
+                    <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
+                        @foreach ($sections as $section)
+                            @if (count($section['categories']) > 0)
+                                >>>>>>> 351becd (update)
+                                @if (app()->getLocale() == 'ar')
+                                    <a class="mx-4 text-sm text-right leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:my-0"
+                                        href="#">
+                                        {{ $section->name_ar }}
+                                    </a>
+                                @else
+                                    <a class="mx-4 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:my-0"
+                                        href="#">
 
-                            {{ $section->name }}
-                        </a>
-                    @endif
-                @endif
-            @endforeach
-        </div> --}} {{-- <div class="mt-4 items-center justify-between hidden md:flex">
-            <div class="flex gap-x-2 py-1 px-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-200"
-                    viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                        clip-rule="evenodd" />
-                </svg>
-                <a href="#" class="text-sm font-medium dark:text-gray-200">Dubai</a>
-            </div>
+                                        {{ $section->name }}
+                                    </a>
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+                    <div class="mt-4 items-center justify-between hidden md:flex">
+                        <div class="flex gap-x-2 py-1 px-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-200"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <a href="#" class="text-sm font-medium dark:text-gray-200">Dubai</a>
+                        </div>
 
-            <div class="flex gap-x-5 overflow-y-auto whitespace-nowrap scroll-hidden">
-                @foreach ($sections as $section)
-                    @if (count($section['categories']) > 0)
-                        @if (app()->getLocale() == 'ar')
-<<<<<<< HEAD
-                            <span
-                                class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">{{ $category->category_name_ar }}</span>
-                        @else
-                            <span
-                                class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">{{ $category->category_name }}</span>
-=======
-                            <a href="#"
-                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $section->name_ar }}
-                            </a>
-                        @else
-                            <a href="#"
-                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $section->name }}
-                            </a>
->>>>>>> 351becd (update)
-                        @endif
-                    @endif
-                @endforeach
-            </div>
+                        <div class="flex gap-x-5 overflow-y-auto whitespace-nowrap scroll-hidden">
+                            @foreach ($sections as $section)
+                                @if (count($section['categories']) > 0)
+                                    @if (app()->getLocale() == 'ar')
+                                        <<<<<<< HEAD <span
+                                            class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">
+                                            {{ $category->category_name_ar }}</span>
+                                        @else
+                                            <span
+                                                class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">{{ $category->category_name }}</span>
+                                            =======
+                                            <a href="#"
+                                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $section->name_ar }}
+                                            </a>
+                                        @else
+                                            <a href="#"
+                                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $section->name }}
+                                            </a>
+                                    @endif
+                                @endif
+                            @endforeach
+                        </div>
 
-<<<<<<< HEAD
-            <span
-                class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">Become a seller</span>
-        </div> --}}=======<a href="#"
-            class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">
-            List your shop
-            </a>
-    </div>
-    >>>>>>> 351becd (update)
+
+                        <span
+                            class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">Become
+                            a seller</span>
+                    </div>
+                    <a href="#"
+                        class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">
+                        List your shop
+                    </a>
+        </div> --}}
+
     </div>
 </nav>
