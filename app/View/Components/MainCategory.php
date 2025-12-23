@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Category;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -13,6 +14,7 @@ class MainCategory extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.main-category');
+        $categories = Category::orderBy('category_name', 'ASC')->where('status', 'active')->inRandomOrder()->get()->take(12);
+        return view('components.main-category', ['categories' => $categories]);
     }
 }

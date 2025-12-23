@@ -38,7 +38,7 @@
                         <option value="{{ $section->id }}">{{ $section->name }}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> 
             <div class="mb-4">
                 <div class="form-group">
                     <strong>Image:</strong>

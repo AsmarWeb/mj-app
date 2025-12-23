@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\ProfileController;
 use App\Livewire\Admin\Listing\CreateComponent;
@@ -31,6 +33,8 @@ Route::get('/lang/{locale}', function ($locale) {
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('about', [HomeController::class, 'about'])->name('about');
+Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
+Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');

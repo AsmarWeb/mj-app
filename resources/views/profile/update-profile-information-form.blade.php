@@ -59,6 +59,22 @@
             <x-input-error for="name" class="mt-2" />
         </div>
 
+        <!-- Username -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="username" value="{{ __('Username') }}" />
+            <x-input id="username" type="text" class="mt-1 block w-full" wire:model="state.username" required
+                autocomplete="username" />
+            <x-input-error for="username" class="mt-2" />
+        </div>
+
+        <!-- Phone -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="phone" value="{{ __('Phone Number') }}" />
+            <x-input id="phone" type="tel" class="mt-1 block w-full" wire:model="state.phone" required
+                autocomplete="tel" maxlength="10" placeholder="0500000000" />
+            <x-input-error for="phone" class="mt-2" />
+        </div>
+
         <!-- Email -->
         <div class="col-span-6 sm:col-span-4">
             <x-label for="email" value="{{ __('Email') }}" />

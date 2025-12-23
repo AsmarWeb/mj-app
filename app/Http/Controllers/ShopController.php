@@ -22,7 +22,7 @@ class ShopController extends Controller
     public function create()
     {
         return view('shop.create');
-    }
+    } 
 
     /**
      * Store a newly created resource in storage.
@@ -37,7 +37,7 @@ class ShopController extends Controller
      */
     public function show(Shop $shop)
     {
-        //
+        return view('shop.show',compact('shop'));
     }
 
     /**

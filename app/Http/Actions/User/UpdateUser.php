@@ -11,6 +11,7 @@ class UpdateUser
     {
         $user->update([
             'name' => $data->name,
+            'username' => $data->username,
             'email' => $data->email,
         ]);
 

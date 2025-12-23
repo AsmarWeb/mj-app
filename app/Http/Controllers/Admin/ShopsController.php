@@ -71,7 +71,7 @@ class ShopsController extends Controller
     public function edit(Shop $shop)
     {
         return view('admin.shops.edit');
-    }
+    } 
 
     /**
      * Update the specified resource in storage.

@@ -68,7 +68,7 @@
                         placeholder="Search"> --}}
                         <form class="flex flex-col md:flex-row gap-2">
                             <select id="pricingType" name="pricingType"
-                                class="w-36 h-10 border-2 border-gray-500 focus:outline-none focus:border-gray-600 dark:focus:border-gray-300 focus:ring-gray-300 text-gray-700 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                                class="w-36 h-10 border-1 border-gray-500 focus:outline-none focus:border-gray-600 dark:bg-gray-800 dark:focus:border-gray-300 focus:ring-gray-300 text-gray-700 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
                                 <option value="All" selected="">All</option>
                                 {{-- <option value="Freemium">Freemium</option>
                                 <option value="Free">Free</option>
@@ -76,7 +76,7 @@
                             </select>
                             <div class="flex">
                                 <input type="text" placeholder="Search for anything"
-                                    class="w-full md:w-80 px-3 h-10 rounded-l border-2 text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:border-gray-600 dark:focus:border-gray-400 focus:ring-gray-400">
+                                    class="w-full md:w-80 px-3 h-10 rounded-l border-1 text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:border-gray-600 dark:focus:border-gray-400 focus:ring-gray-400">
                                 <button type="submit"
                                     class="bg-orange-500 hover:bg-orange-600 focus:bg-orange-600 text-white rounded-r px-2 md:px-3 py-0 md:py-1">
                                     <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"
@@ -469,19 +469,25 @@
         </div>
 
 
+<<<<<<< HEAD
         {{-- <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
             @foreach ($categories as $category)
                 @if (count($category['subcategories']) > 0)
+=======
+        <div class="py-3 mt-3 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden md:hidden">
+            @foreach ($sections as $section)
+                @if (count($section['categories']) > 0)
+>>>>>>> 351becd (update)
                     @if (app()->getLocale() == 'ar')
                         <a class="mx-4 text-sm text-right leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:my-0"
                             href="#">
-                            {{ $category->category_name_ar }}
+                            {{ $section->name_ar }}
                         </a>
                     @else
                         <a class="mx-4 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:my-0"
                             href="#">
 
-                            {{ $category->category_name }}
+                            {{ $section->name }}
                         </a>
                     @endif
                 @endif
@@ -496,25 +502,43 @@
                         d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                         clip-rule="evenodd" />
                 </svg>
-                <span class="text-sm font-medium dark:text-gray-200">Dubai</span>
+                <a href="#" class="text-sm font-medium dark:text-gray-200">Dubai</a>
             </div>
 
             <div class="flex gap-x-5 overflow-y-auto whitespace-nowrap scroll-hidden">
-                @foreach ($categories as $category)
-                    @if (count($category['subcategories']) > 0)
+                @foreach ($sections as $section)
+                    @if (count($section['categories']) > 0)
                         @if (app()->getLocale() == 'ar')
+<<<<<<< HEAD
                             <span
                                 class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">{{ $category->category_name_ar }}</span>
                         @else
                             <span
                                 class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">{{ $category->category_name }}</span>
+=======
+                            <a href="#"
+                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $section->name_ar }}
+                            </a>
+                        @else
+                            <a href="#"
+                                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">{{ $section->name }}
+                            </a>
+>>>>>>> 351becd (update)
                         @endif
                     @endif
                 @endforeach
             </div>
 
+<<<<<<< HEAD
             <span
                 class="cursor-pointer rounded-md py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors duration-200">Become a seller</span>
         </div> --}}
+=======
+            <a href="#"
+                class="cursor-pointer rounded-sm py-1 px-2 text-sm font-medium dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400">
+                List your shop
+            </a>
+        </div>
+>>>>>>> 351becd (update)
     </div>
 </nav>
