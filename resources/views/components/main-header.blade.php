@@ -14,14 +14,14 @@
             <!-- Navigation Links -->
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 md:flex">
                 <div class="flex flex-col md:flex-row md:mx-2.5">
-                    <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
+                    {{-- <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
                         href="/">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                         Explore
-                    </a>
+                    </a> --}}
                     <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
                         href="{{ route('demo') }}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -303,14 +303,14 @@
                 </svg>
                 {{ __('header.main.about') }}
             </a>
-            <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-2"
+            {{-- <a class="my-2 text-sm leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-2"
                 href="#">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
                 Explore
-            </a>
+            </a> --}}
         </div>
 
         <div class="flex items-center justify-center px-5 py-2 my-2">
