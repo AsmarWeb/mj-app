@@ -104,8 +104,8 @@
                     </span>
 
                     <input type="text"
-                        class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-orange-400 dark:focus:border-orange-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-orange-300"
-                        placeholder="Search for anything">
+                        class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-o-400 dark:focus:border-o-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-o-300"
+                        placeholder="Search">
                 </div>
             </div>
 
@@ -281,7 +281,7 @@
                             </div>
                         @else
                             <button
-                                class="w-full px-5 py-3 transition-colors duration-300 bg-gray-100 rounded-md dark:bg-gray-800 md:w-auto md:mx-6 hover:bg-gray-200 dark:hover:bg-gray-700">
+                                class="inline-flex items-center px-3 py-2 border transition-colors duration-300 bg-gray-100 rounded-md dark:bg-gray-800 md:w-auto md:mx-6 hover:bg-gray-200 dark:hover:bg-gray-700">
                                 <div class="flex items-center justify-center -mx-1">
                                     <a href="{{ route('register') }}" class="mx-1 text-sm text-gray-600 dark:text-white">
                                         {{ __('header.user.login') }}
