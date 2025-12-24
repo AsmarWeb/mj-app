@@ -30,7 +30,7 @@ class ContactMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Thank you for contacting Murwaj.com',
+            subject: 'Thank you for contacting murwaj.com',
         );
     }
 
