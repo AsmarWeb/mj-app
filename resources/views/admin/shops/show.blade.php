@@ -13,9 +13,9 @@
         </div>
         <div class="border-b-2 border-gray-300 pb-8 mb-8">
             <h2 class="text-2xl font-bold mb-4">Belong To:</h2>
-            <div class="text-gray-700 mb-2">{{ $shop->author->name }}</div>
+            <div class="text-gray-700 mb-2">{{ $shop->user->name }}</div>
             <div class="text-gray-700 mb-2"> {{ $shop->location }}</div>
-            <div class="text-gray-700">{{ $shop->author->email }}</div>
+            <div class="text-gray-700">{{ $shop->user->email }}</div>
         </div>
         <table class="w-full text-left mb-8">
             <thead>

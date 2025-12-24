@@ -4,63 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 
 class ShopController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return view('shop.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('shop.create');
-    } 
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreShopRequest $request)
-    {
-        //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Shop $shop)
+    public function store(Request $request)
     {
-        return view('shop.show',compact('shop'));
-    }
+        $request->all();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Shop $shop)
-    {
-        //
-    }
+        if ($request->user()->shop) {
+        return redirect()->back()
+            ->withErrors('You already have a shop.');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateShopRequest $request, Shop $shop)
-    {
-        //
-    }
+        $shop = Shop::create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
+        $shop->name = $request->name;
+        $shop->location = $request->location;
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Shop $shop)
-    {
-        //
+
+        if ($request->hasFile('image')) {
+            $uploadPath = 'public/shop-suggest';
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $path = $request->file('image')->storeAs($uploadPath, $imageName);
+            $shop['image'] = $imageName;
+        }
+
+        $shop->save();
+
+        return redirect()->route('dashboard', $shop)->with('message', 'Shop Added Successfully');
     }
 }

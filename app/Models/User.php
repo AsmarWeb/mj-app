@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -80,9 +81,9 @@ class User extends Authenticatable implements LaratrustUser
             ->saveSlugsTo('username');
     }
 
-    public function shop(): HasMany
+    public function shop(): HasOne
     {
-        return $this->hasMany(Shop::class);
+        return $this->hasOne(Shop::class);
     }
 
     public function role()

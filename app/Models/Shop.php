@@ -25,7 +25,7 @@ class Shop extends Model
         'published_at' => 'datetime',
     ];
 
-    public function author(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

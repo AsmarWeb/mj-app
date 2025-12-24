@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('location');
             $table->string('image')->nullable();
             $table->datetime('published_at');
-            $table->foreignIdFor(User::class, 'user_id')->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->unique();
             $table->foreignIdFor(User::class, 'updated_by')->nullable();
             $table->softDeletes();
             $table->foreignIdFor(User::class, 'deleted_by')->nullable();

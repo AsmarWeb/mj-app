@@ -34,7 +34,12 @@ Route::get('/lang/{locale}', function ($locale) {
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
-Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
+// Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/shop/create', [ShopController::class, 'create']);
+    Route::post('/shop', [ShopController::class, 'store']);
+});
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');

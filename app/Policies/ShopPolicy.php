@@ -4,10 +4,22 @@ namespace App\Policies;
 
 use App\Models\Shop;
 use App\Models\User;
+
 use Illuminate\Auth\Access\Response;
 
 class ShopPolicy
 {
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        if ($user->shops()->exists()) {
+            abort(403, 'You already have a shop.');
+        }
+        return true;
+    }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -20,14 +32,6 @@ class ShopPolicy
      * Determine whether the user can view the model.
      */
     public function view(User $user, Shop $shop): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
     {
         //
     }
@@ -53,7 +57,10 @@ class ShopPolicy
      */
     public function restore(User $user, Shop $shop): bool
     {
-        //
+        if ($request->user()->shops()->exists()) {
+            abort(403, 'You already have a shop.');
+        }
+        return true;
     }
 
     /**

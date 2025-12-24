@@ -3,7 +3,7 @@
     <x-slot name="header">
         <x-main-header></x-main-header>
     </x-slot>
-    <div class="py-24 sm:py-32"> 
+    <div class="py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto max-w-2xl sm:text-center">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl">
@@ -89,10 +89,12 @@
                             </p>
                             @if (Route::has('login'))
                                 @auth
-                                    <a href="{{ route('shop.create') }}"
-                                        class="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                        {{ __('demo.card.started') }}
-                                    </a>
+                                    @if (!auth()->user()->shop)
+                                        <a href="{{ route('shop.create') }}"
+                                            class="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            {{ __('demo.card.started') }}
+                                        </a>
+                                    @endif
                                 @else
                                     <a href="{{ route('login') }}"
                                         class="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">

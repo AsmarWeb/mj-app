@@ -116,7 +116,7 @@
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
                                                 <a class="text-sm leading-5 text-gray-800">
-                                                    {{ $shop->author->name }}</a>
+                                                    {{ $shop->user->name }}</a>
                                             </div>
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
