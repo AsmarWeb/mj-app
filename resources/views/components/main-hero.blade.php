@@ -1,5 +1,5 @@
 <section>
-    <div class="flex flex-col w-full ">
+    <div class="flex flex-col w-full items-center justify-center px-4 pt-20 pb-16 sm:px-6 lg:px-8 lg:pt-32">
         <h1 class="text-5xl font-extrabold text-center lg:text-7xl 2xl:text-8xl">
             <span
                 class="text-transparent bg-gradient-to-br bg-clip-text from-teal-500 via-indigo-500 to-sky-500 dark:from-teal-200 dark:via-indigo-300 dark:to-sky-500">

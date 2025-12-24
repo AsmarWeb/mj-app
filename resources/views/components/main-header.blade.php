@@ -479,3 +479,12 @@
     </div>
 
 </header>
+
+<!-- SECONDARY NAV -->
+{{-- <nav class="bg-orange-600 border-b backdrop-blur-sm xl:fixed xl:w-full xl:top-16 xl:left-0 xl:z-30 hidden md:block">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex space-x-6 h-10 items-center">
+
+        </div>
+    </div>
+</nav> --}}
