@@ -39,7 +39,7 @@
 </head>
 
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EFEE07R6NT"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XN13ZF6K6"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -48,7 +48,7 @@
     }
     gtag('js', new Date());
 
-    gtag('config', 'G-EFEE07R6NT');
+    gtag('config', 'G-6XN13ZF6K6');
 </script>
 
 <body class="font-sans antialiased leading-normal tracking-normal">
