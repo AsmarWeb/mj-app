@@ -24,7 +24,7 @@
                 class="bg-red-100 border font-medium tracking-wide border-red-400 text-red-700 px-6 py-3 rounded relative focus:outline-none sm:mx-2"
                 role="alert">{{ $message }}</span>
         @enderror
-        <input id="email" type="email" wire:model="email"
+        <input id="email" type="email" wire:model="email" required
             class="px-6 py-3 text-gray-700 bg-white border rounded-md dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring sm:mx-2"
             placeholder="{{ __('hero.form.placeholder') }}" />
 

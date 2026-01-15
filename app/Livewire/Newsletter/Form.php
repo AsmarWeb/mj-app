@@ -16,7 +16,7 @@ class Form extends Component
         'email' => 'required|string|regex:/^([a-z0-9+-]+)(.[a-z0-9+-]+)*@([a-z0-9-]+.)+[a-z]{2,6}$/ix|email:rfc,dns,filter|max:255|unique:subscribers',
     ];
 
-    public function formSubmit()
+    public function formSubmit() 
     {
         $this->validate();
 
@@ -31,9 +31,9 @@ class Form extends Component
             'token' => $token,
         ]);
 
-        // if (!Newsletter::isSubscribed($this->email)) {
-        //     Newsletter::subscribe($this->email, ['TOKEN' => $token]);
-        // }
+        if (!Newsletter::isSubscribed($this->email)) {
+            Newsletter::subscribe($this->email, ['TOKEN' => $token]);
+        }
 
         Mail::to($this->email)
             ->send(new SubscriberMailable($data));
