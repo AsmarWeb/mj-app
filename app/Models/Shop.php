@@ -17,9 +17,9 @@ class Shop extends Model
 
     protected $table = 'shops';
 
-    protected $fillable = ['name', 'slug', 'location', 'image', 'published_at', 'user_id'];
+    protected $fillable = ['name', 'slug', 'country_id', 'state_id', 'city_id', 'image', 'published_at', 'user_id'];
 
-    protected $dates = ['published_at'];
+    protected $dates = ['published_at']; 
 
     protected $casts = [
         'published_at' => 'datetime',
@@ -56,4 +56,20 @@ class Shop extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
+
+    public function country()
+{
+    return $this->belongsTo(Country::class);
+}
+
+public function state()
+{
+    return $this->belongsTo(State::class);
+}
+
+public function city()
+{
+    return $this->belongsTo(City::class);
+}
+
 }
