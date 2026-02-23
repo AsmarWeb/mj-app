@@ -10,6 +10,18 @@
                     <img width="100" src="{{ $setting->logo }}" alt="murwaj" class="block h-9 w-auto">
                 </a>
 
+                <div class="flex items-center gap-4 md:gap-8">
+                    {{-- <div class="text-2xl font-bold tracking-tight z-50 relative">Metro<span
+                            class="font-normal italic font-serif-italic">Ride</span></div> --}}
+
+                    <div
+                        class="hidden sm:flex items-center gap-2 border border-gray-200 rounded-full px-4 py-1.5 text-xs text-gray-600 dark:text-gray-200">
+                        <span>Local Time</span>
+                        <div class="w-1 h-1 bg-black rounded-full"></div>
+                        <span id="clock">12:32:04 pm</span>
+                    </div>
+                </div>
+
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 md:flex">
                     <div class="flex flex-col md:flex-row md:mx-2.5">
@@ -33,6 +45,30 @@
                             href="{{ route('about') }}">
                             {{ __('header.main.about') }}
                         </a>
+                        {{-- <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open"
+                                class="hover:text-orange-600 transition flex items-center font-medium">
+                                Experiences
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                x-transition:enter-end="opacity-100 transform translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 transform translate-y-0"
+                                x-transition:leave-end="opacity-0 transform -translate-y-2" @click.away="open = false"
+                                class="absolute mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-lg py-3 z-50">
+                                <a href="#" class="block px-6 py-3 text-base hover:bg-gray-100">Great Barrier
+                                    Reef</a>
+                                <a href="#" class="block px-6 py-3 text-base hover:bg-gray-100">Outback
+                                    Adventures</a>
+                                <a href="#" class="block px-6 py-3 text-base hover:bg-gray-100">Wine Tasting</a>
+                            </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

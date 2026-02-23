@@ -23,6 +23,7 @@
     @else
         <meta name="keywords" content="@yield('keywords')">
     @endif
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -77,6 +78,51 @@
             {{ $slot }}
         </main>
     </div>
+
+    <script>
+        // Reloj
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Lógica del Menú Móvil
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = menuBtn.querySelector('svg path');
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('open');
+                // Cambiar icono a X
+                menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+            } else {
+                mobileMenu.classList.remove('open');
+                // Cambiar icono a Hamburguesa
+                menuIcon.setAttribute('d', 'M4 6h16M4 12h16m-7 6h7');
+            }
+        });
+
+        // Efecto scroll en Navbar
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+            } else {
+                navbar.classList.remove('shadow-sm');
+            }
+        });
+    </script>
 
     @stack('modals')
 
