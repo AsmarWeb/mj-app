@@ -16,6 +16,9 @@ class ShopSeeder extends Seeder
         $data = array(
             'name' => "Murwaj",
             'slug' => "murwaj",
+            'type' => "freelance",
+            'phone' => "0555555555",
+            'email' => "murwaj@example.com",
             'location' => "Dubai,UAE",
             'image' => "murwaj.jpg",
             'published_at' => "2024-07-17 12:36:30",

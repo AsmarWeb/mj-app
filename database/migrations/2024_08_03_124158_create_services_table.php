@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('shop_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('title_ar');
             $table->longText('description')->nullable();
             $table->longText('description_ar')->nullable();
             $table->string('bg_color')->nullable();
+            $table->integer('delivery_days')->nullable();
             $table->timestamps();
         });
     }

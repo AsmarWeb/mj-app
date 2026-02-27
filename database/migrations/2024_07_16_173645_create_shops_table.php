@@ -16,6 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->enum('type', ['freelance', 'local']);
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->string('location');
             $table->string('image')->nullable();
             $table->datetime('published_at');
