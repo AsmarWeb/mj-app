@@ -34,8 +34,8 @@
                         Explore
                     </a> --}}
                         <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
-                            href="{{ route('demo') }}">
-                            {{ __('header.main.demo') }}
+                            href="{{ route('discover') }}">
+                            {{ __('header.main.discover') }}
                         </a>
                         <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
                             href="{{ route('services') }}">
@@ -79,6 +79,11 @@
             <div class="hidden md:flex items-center space-x-6">
                 {{-- <a href="#" class="text-gray-600 hover:text-orange-600">Docs</a>
                 <a href="#" class="text-gray-600 hover:text-orange-600">Support</a> --}}
+
+                <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
+                    href="{{ route('sell') }}">
+                    {{ __('header.main.sell') }}
+                </a>
 
                 <button id="theme-toggle" type="button" x-cloak x-on:click="darkMode = !darkMode;"
                     class="group flex max-w-[2.25rem] border border-gray-200/40 dark:border-gray-700/40 bg-gray-100/20 dark:bg-gray-800/20 rounded-lg h-9 w-9 items-center justify-center">
@@ -232,7 +237,7 @@
                                             {{ __('My Profile') }}
                                         </x-dropdown-link>
 
-                                        <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
+                                        <x-dropdown-link href="#">
                                             {{ __('My Shop') }}
                                         </x-dropdown-link>
 
@@ -298,8 +303,8 @@
         class="hidden sm:hidden absolute inset-x-0 z-20 w-full px-5 py-2 transition-all duration-300 ease-in-out bg-white top-24 dark:bg-gray-800 md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:hidden md:items-center">
         <div class="flex flex-col md:flex-row md:mx-1">
             <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-2"
-                href="{{ route('demo') }}">
-                {{ __('header.main.demo') }}
+                href="{{ route('discover') }}">
+                {{ __('header.main.discover') }}
             </a>
             <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-2"
                 href="{{ route('services') }}">
@@ -379,6 +384,15 @@
 
         <hr class="border-gray-200 dark:border-gray-700 my-2">
 
+        <button
+            class="w-full px-5 py-3 my-2 transition-colors duration-300 bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-60 rounded-md dark:bg-gray-800 md:w-auto md:mx-6 dark:hover:bg-yellow-400">
+            <div class="flex items-center justify-center -mx-1">
+                <a href="{{ route('sell') }}" class="mx-1 text-sm text-gray-600 dark:text-white">
+                    {{ __('header.main.sell') }}
+                </a>
+            </div>
+        </button>
+
         @if (Route::has('login'))
             @auth
                 <div class="flex items-center justify-center -mx-1 px-5 py-2 my-2">
@@ -420,7 +434,7 @@
                                     {{ __('My Profile') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
+                                <x-dropdown-link href="#">
                                     {{ __('My Shop') }}
                                 </x-dropdown-link>
 

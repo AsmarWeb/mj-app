@@ -1,6 +1,6 @@
 <section>
     <div class="container px-6 py-10 mx-auto">
-        <h1 class="text-2xl font-semibold text-gray-800 capitalize lg:text-3xl dark:text-white">featured
+        <h1 class="text-2xl font-semibold text-gray-800 capitalize lg:text-3xl dark:text-white">Trending
             <span class="underline decoration-orange-500">Products</span>
         </h1>
 

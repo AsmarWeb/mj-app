@@ -17,10 +17,11 @@ return [
         "login" => "انضم إلي",
     ],
 
-    'locale' => "العربية",
+    'locale' => "English",
 
     'main' => [
-        "demo" => "تجريبي",
+        "discover" => "اكتشف",
+        "sell" => "ابدأ البيع",
         "services" => "الخدمات",
         "about" => "نبذة عنا",
     ]

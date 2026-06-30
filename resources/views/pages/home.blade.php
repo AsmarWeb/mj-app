@@ -1,5 +1,5 @@
 <x-main-layout>
-    @section('title', 'Home | Murwaj')
+    @section('title', 'Home | murwaj')
     @section('description', "$description")
     @section('keywords', "$keywords")
 

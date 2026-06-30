@@ -6,7 +6,7 @@ murwaj – Connecting Creative Talent with Clients in Dubai\*\*
 
 Last Updated: Nov-2025
 
-Murwaj (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, mobile applications, website, or any related services (collectively, the “Services”).
+murwaj (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, mobile applications, website, or any related services (collectively, the “Services”).
 By accessing or using Murwaj, you agree to the practices described in this Privacy Policy.
 
 Information We Collect

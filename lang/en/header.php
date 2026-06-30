@@ -17,10 +17,11 @@ return [
         "login" => "Join me",
     ],
 
-    'locale' => "English",
+    'locale' => "العربية",
 
     'main' => [
-        "demo" => "Demo",
+        "discover" => "Discover",
+        "sell" => "Start selling",
         "services" => "Services",
         "about" => "About"
     ]

@@ -1,5 +1,5 @@
 <x-main-layout>
-    @section('title', 'Services | Murwaj')
+    @section('title', 'Services | murwaj')
     <x-slot name="header">
         <x-main-header></x-main-header>
     </x-slot>

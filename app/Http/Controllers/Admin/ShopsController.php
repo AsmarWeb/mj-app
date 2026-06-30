@@ -44,13 +44,21 @@ class ShopsController extends Controller
         $shop->location = $request->location;
 
 
-        if ($request->hasFile('image')) {
+         if ($request->hasFile('logo')) {
             $uploadPath = 'public/shop-suggest';
-            $image = $request->file('image');
-            $imageName = $image->getClientOriginalName();
-            $path = $request->file('image')->storeAs($uploadPath, $imageName);
-            $shop['image'] = $imageName;
+            $logo = $request->file('logo');
+            $logoImage = $logo->getClientOriginalName();
+            $path = $request->file('logo')->storeAs($uploadPath, $logoImage);
+            $shop['logo'] = $logoImage;
         }
+
+        if ($request->hasFile('banner')) {
+            $uploadPath = 'public/shop-suggest';
+            $banner = $request->file('banner');
+            $bannerImage = $banner->getClientOriginalName();
+            $path = $request->file('banner')->storeAs($uploadPath, $bannerImage);
+            $shop['banner'] = $bannerImage;
+        } 
 
         $shop->save();
 

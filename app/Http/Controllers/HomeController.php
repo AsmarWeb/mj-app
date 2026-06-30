@@ -11,8 +11,8 @@ class HomeController extends Controller
     public function home()
     {
 
-        $title = 'Murwaj';
-        $description = 'Murwaj is an advertising group, to help your business grow through digital marketing.';
+        $title = 'murwaj';
+        $description = 'murwaj is an advertising group, to help your business grow through digital marketing.';
         $keywords = 'murwaj.com. buy electronics, computers, apparel, fashion accessories, shoes, watches, furniture, home and kitchen goods, beauty, personal care, grocery, gourmet food.';
 
         return view('pages.home')->with(compact('title', 'description', 'keywords'));

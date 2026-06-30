@@ -14,8 +14,10 @@ return [
     */
 
     'main' => [
-        "title" => "Create Your Free Online Shop",
-        "subtitle" => "Try the experience of creating an online shop and adding products, or search for property, jobs and more in the world."
+        "title" => "Build Your Online Shop in Minutes",
+        "subtitle" => "Create your own store, upload products, receive orders,
+                            and grow your business with an elegant storefront.
+                            No technical skills required.",
     ],
 
     'membership' => [

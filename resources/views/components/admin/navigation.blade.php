@@ -36,6 +36,11 @@
                         {{ __('Subscribers') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('contacts.index') }}" :active="request()->routeIs('contacts.index')">
+                        {{ __('Leads') }}
+                    </x-nav-link>
+                </div>
                 <div class="hidden sm:flex sm:items-center sm:ml-6 pt-1">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -296,6 +301,10 @@
 
             <x-responsive-nav-link href="{{ route('subscribers.index') }}" :active="request()->routeIs('subscribers.index')">
                 {{ __('Subscribers') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('contacts.index') }}" :active="request()->routeIs('contacts.index')">
+                {{ __('Leads') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link href="{{ route('services.index') }}" :active="request()->routeIs('services.index')">

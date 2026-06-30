@@ -6,7 +6,7 @@
     </h1>
 
     <p class="mt-6 text-gray-500 leading-relaxed">
-        Murwaj provides a beautiful, robust starting point for your next Murwaj shop. Murwaj is
+        murwaj provides a beautiful, robust starting point for your next murwaj shop. murwaj is
         designed
         to help you build your audience and attract more potential customers, powerful, and enjoyable. We
         believe

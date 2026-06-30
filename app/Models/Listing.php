@@ -43,6 +43,7 @@ class Listing extends Model
     }
 
     protected $fillable = [
+        'shop_id',
         'title',
         'title_ar',
         'sku',

@@ -9,7 +9,7 @@
     @if (!@empty($meta_title))
         <title>{{ $meta_title }}</title>
     @else
-        <title>@yield('title', 'Murwaj')</title>
+        <title>@yield('title', 'murwaj')</title>
     @endif
 
     @if (!@empty($meta_description))

@@ -41,7 +41,7 @@ class ShopPolicy
      */
     public function update(User $user, Shop $shop): bool
     {
-        //
+        return $shop->user_id === $user->id;
     }
 
     /**

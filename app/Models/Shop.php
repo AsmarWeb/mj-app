@@ -17,12 +17,28 @@ class Shop extends Model
 
     protected $table = 'shops';
 
-    protected $fillable = ['name', 'slug', 'country_id', 'state_id', 'city_id', 'image', 'published_at', 'user_id'];
+    protected $fillable = [
+        'name',
+        'slug',
+        'logo',
+        'banner',
+        'type',
+        'description',
+        'location',
+        'section_id',
+        'country_id',
+        'state_id',
+        'city_id',
+        'rating',
+        'published_at',
+        'user_id'
+    ];
 
     protected $dates = ['published_at']; 
 
     protected $casts = [
         'published_at' => 'datetime',
+        'rating' => 'float',
     ];
 
     public function user(): BelongsTo
@@ -57,19 +73,24 @@ class Shop extends Model
             ->saveSlugsTo('slug');
     }
 
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
+    }
+
     public function country()
-{
-    return $this->belongsTo(Country::class);
-}
+    {
+    return $this->belongsTo(Country::class, 'country_id');
+    }
 
-public function state()
-{
-    return $this->belongsTo(State::class);
-}
+    public function state()
+    {
+    return $this->belongsTo(State::class, 'state_id');
+    }
 
-public function city()
-{
-    return $this->belongsTo(City::class);
-}
+    public function city()
+    {
+    return $this->belongsTo(City::class, 'city_id');
+    }
 
 }

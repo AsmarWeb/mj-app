@@ -23,7 +23,9 @@ class StoreShopRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'image' => 'nullable', 'mimes:png,jpg,jpeg,gif', 'max:2048',
+            'type' => 'required|in:freelance,local',
+            'location' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
         ];
     }
 }

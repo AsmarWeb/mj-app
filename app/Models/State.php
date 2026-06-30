@@ -29,4 +29,9 @@ class State extends Model
     {
         return $this->hasMany(Listing::class, 'state_id', 'id');
     }
+
+    public function shops(): HasMany
+    {
+        return $this->hasMany(Shop::class);
+    }
 }

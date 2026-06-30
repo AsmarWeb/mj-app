@@ -95,4 +95,9 @@ class User extends Authenticatable implements LaratrustUser
     {
         return $this->hasMany(Listing::class)->latest();
     }
+
+    public function businessCards(): HasMany
+    {
+        return $this->hasMany(BusinessCard::class);
+    }
 }

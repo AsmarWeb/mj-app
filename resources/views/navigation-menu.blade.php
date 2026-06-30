@@ -24,12 +24,6 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Shop') }}
-                    </x-nav-link>
-                </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Products list') }}
                     </x-nav-link>
@@ -124,14 +118,6 @@
                                 {{ __('Manage Account') }}
                             </div>
 
-                            {{-- <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
-                                {{ __('My Profile') }}
-                            </x-dropdown-link>
-
-                            <x-dropdown-link href="{{ route('dashboard', [Auth::user()->username]) }}">
-                                {{ __('My Shop') }}
-                            </x-dropdown-link> --}}
-
                             <x-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Edit Profile') }}
                             </x-dropdown-link>
@@ -182,10 +168,6 @@
 
             <x-responsive-nav-link href="{{ route('profile', [Auth::user()->username]) }}" :active="request()->routeIs('profile')">
                 {{ __('My Profile') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('dashboard', [Auth::user()->username]) }}" :active="request()->routeIs('dashboard')">
-                {{ __('My Shop') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link href="{{ route('home', [Auth::user()->username]) }}" :active="request()->routeIs('home')">

@@ -26,7 +26,7 @@
 
             @php
                 $sections = App\Models\Section::where('status', 'active')->get();
-            @endphp
+            @endphp 
 
             <div class="mb-4">
                 <label for="section_id" class="block text-gray-700 font-medium mb-2">Select Section</label>

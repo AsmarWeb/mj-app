@@ -1,6 +1,6 @@
 # Terms of Service
 
-Murwaj Terms of Service
+murwaj Terms of Service
 Last Updated: August 2025
 
 Welcome to murwaj.com (the “Platform”, “we”, “us”, or “our”). These Terms of Service (“Terms”) govern your use of our online platform and related services, available via www.murwaj.com and our mobile applications (collectively, the “Services”). By accessing or using our Services in Dubai, United Arab Emirates (“UAE”), you agree to comply with and be bound by these Terms.
@@ -77,6 +77,6 @@ We reserve the right to modify these Terms at any time. Changes will be posted o
 
 For any questions or concerns regarding these Terms, contact us at:
 
-Murwaj
+murwaj
 Email: support@murwaj.com
 Address: Trade Centre 1, Dubai, UAE

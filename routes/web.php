@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\ListingController;
@@ -18,6 +19,8 @@ use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BusinessCardController;
+use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
@@ -32,6 +35,7 @@ Route::get('/lang/{locale}', function ($locale) {
 })->name('locale');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
@@ -39,12 +43,13 @@ Route::resource('users', UsersController::class)->only('show','edit','update')->
 Route::middleware('auth')->group(function () {
     Route::get('/shop/create', [ShopController::class, 'create']);
     Route::post('/shop', [ShopController::class, 'store']);
+    Route::get('/shop/{shop}', [ShopController::class, 'show'])->name('shop');
 });
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');
 Route::view('services', 'pages.services')->name('services');
-Route::view('demo', 'pages.demo')->name('demo');
+Route::view('sell', 'pages.sell')->name('sell');
 Route::view('contact-us', 'pages.contact')->name('contact');
 
 Route::view('create', 'shop.create')->name('shop.create');
@@ -63,14 +68,26 @@ Route::middleware([
     })->name('profile');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/{user}/shop', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware('auth')->group(function(){
+
+    Route::get(
+        '/business-card/create',
+        [BusinessCardController::class,'create']
+    );
+
+
+    Route::post(
+        '/business-card',
+        [BusinessCardController::class,'store']
+    );
+
+
+    Route::get(
+        '/business-card/{id}/pdf',
+        [BusinessCardController::class,'pdf']
+    )
+    ->name('cards.pdf');
+
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {
@@ -116,4 +133,5 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     Route::resource('pages', PageController::class);
 
     Route::resource('subscribers', SubscriberController::class);
+    Route::resource('contacts', ContactController::class);
 });
