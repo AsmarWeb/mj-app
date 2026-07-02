@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AiBuilderController;
+use App\Http\Controllers\BotController;
 use App\Http\Controllers\BusinessCardController;
 use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\UsersController;
@@ -36,6 +38,7 @@ Route::get('/lang/{locale}', function ($locale) {
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
+Route::get('/discover/category/{category}', [DiscoverController::class, 'category'])->name('discover.category');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
@@ -44,7 +47,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/shop/create', [ShopController::class, 'create']);
     Route::post('/shop', [ShopController::class, 'store']);
     Route::get('/shop/{shop}', [ShopController::class, 'show'])->name('shop');
+
+    Route::get('/listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
 });
+
+Route::get('/bot', [BotController::class,'index'])->name('bot');
+Route::post('/bot/chat', [BotController::class,'chat']);
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');

@@ -80,6 +80,17 @@
                 {{-- <a href="#" class="text-gray-600 hover:text-orange-600">Docs</a>
                 <a href="#" class="text-gray-600 hover:text-orange-600">Support</a> --}}
 
+                <div class="relative inline-flex  group">
+                    <div
+                        class="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
+                    </div>
+                    <a href="{{ route('bot') }}" title="Ai Agent"
+                        class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
+                        role="button">Ask Ai
+                    </a>
+                </div>
+
+
                 <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
                     href="{{ route('sell') }}">
                     {{ __('header.main.sell') }}
@@ -383,6 +394,16 @@
         </div>
 
         <hr class="border-gray-200 dark:border-gray-700 my-2">
+
+        <div class="relative inline-flex group w-full justify-center my-2">
+            <div
+                class="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
+            </div>
+            <a href="{{ route('bot') }}" title="Ai Agent"
+                class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
+                role="button">Ask Ai
+            </a>
+        </div>
 
         <button
             class="w-full px-5 py-3 my-2 transition-colors duration-300 bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-60 rounded-md dark:bg-gray-800 md:w-auto md:mx-6 dark:hover:bg-yellow-400">
