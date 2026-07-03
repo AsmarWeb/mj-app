@@ -3,10 +3,8 @@
         Description
     </label>
 
-    <textarea rows="4" name="description" id="description" placeholder="Tell customers about your store..."
-        value="{{ old('description', $shop?->description) }}"
-        class="w-full rounded-2xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-gray-900 outline-none">
-    </textarea>
+    <textarea rows="4" name="description" id="description" placeholder="Tell customers about your store..." autofocus
+        class="w-full rounded-2xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-gray-900 outline-none">{{ old('description', $shop?->description) }}</textarea>
 </div>
 
 @error('description')

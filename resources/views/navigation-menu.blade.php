@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('shop', Auth::user()->shop->slug) }}" :active="request()->routeIs('shops.show')">
+                    <x-nav-link href="{{ route('shop') }}" :active="request()->routeIs('shop')">
                         {{ __('Shop') }}
                     </x-nav-link>
                 </div>

@@ -18,15 +18,12 @@ class ShopController extends Controller
 {
     public function create($step = 1)
     {
-        $shop = Auth::user()?->shop;
+        $shop = auth()->user()->shop;
 
         $countries = Country::orderBy('name')->get();
         $states = State::orderBy('name')->get();
         $cities = City::orderBy('name')->get();
 
-        if (!$shop) {
-        return redirect()->route('shop.setup.step', 1);
-        }
 
         return view("shop.create", [
         'shop' => $shop,
@@ -40,11 +37,11 @@ class ShopController extends Controller
 
     public function store(Request $request, $step)
     {
-        $shop = Auth::user()?->shop ?? Shop::create([
-            'user_id' => Auth::id(),
+        $shop = auth()->user()->shop ?? Shop::create([
+            'user_id' => auth()->id(),
             'slug' => Str::uuid(),
             'name' => '',
-            'type' => '',
+            'type' => null,
             'description' => '',
             'section_id' => null,
             'country_id' => null,
@@ -58,7 +55,8 @@ class ShopController extends Controller
 
             case 1:
                 $request->validate([
-                    'name' => 'required|min:3|max:50'
+                    'name' => 'required|min:3|max:50',
+                    'type' => 'required|in:freelance,local',
                 ]);
 
                 $shop->update([
@@ -102,25 +100,21 @@ class ShopController extends Controller
                 }
                 return redirect('/shop/create/4');
 
+            case 4:
+                $shop->update([
+                    'step' => 4,
+                    'is_completed' => true,
+                ]);
+
+                return redirect()->route('shop');
+
             default:
 
                 return redirect('/dashboard');
         }
     }
 
-    public function show(Shop $shop, $slug)
-    {
-        $title = $shop->name;
-        $description = $shop->description;
-        $keywords = trim("$shop->name, " . optional($shop->city)->name . ", " . optional($shop->section)->name);
-
-        $bannerImage = $shop->banner ? Storage::url($shop->banner) : null;
-        $logoImage = $shop->logo ? Storage::url($shop->logo) : null;
-
-        return view('shop.show', compact('shop', 'slug', 'title', 'description', 'keywords', 'bannerImage', 'logoImage'));
-    }
-
-    public function index()
+    public function show()
     {
         $shop = Auth::user()?->shop;
 
@@ -134,5 +128,10 @@ class ShopController extends Controller
         $logoImage = $shop && $shop->logo ? Storage::url($shop->logo) : null;
 
         return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage'));
+    }
+
+    public function index()
+    {
+        //
     }
 }

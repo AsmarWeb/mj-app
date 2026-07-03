@@ -20,8 +20,8 @@
                                     <div
                                         class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-3xl border-4 border-white bg-white shadow-lg sm:h-32 sm:w-32">
                                         @if ($logoImage)
-                                            <img src="{{ asset('storage/shop-suggest/' . $shop->logo) }}"
-                                                alt="{{ $shop->name }} logo" class="h-full w-full object-cover">
+                                            <img src="{{ $logoImage }}" alt="{{ $shop->name }} logo"
+                                                class="h-full w-full object-cover">
                                         @else
                                             <div
                                                 class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-500 text-3xl font-semibold text-white">

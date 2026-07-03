@@ -2,7 +2,7 @@
     What is your shop name?
 </h2>
 
-<input type="text" name="name" value="{{ old('name', $shop?->name) }}" class="w-full rounded-lg border p-4">
+<input type="text" name="name" autofocus value="{{ old('name', $shop?->name) }}" class="w-full rounded-lg border p-4">
 
 @error('name')
     <p class="text-red-500 mt-2">{{ $message }}</p>

@@ -10,9 +10,9 @@
                     ShopBuilder
                 </h1>
 
-                <button class="px-5 py-2 rounded-xl bg-gray-900 text-white hover:bg-black transition">
+                {{-- <button class="px-5 py-2 rounded-xl bg-gray-900 text-white hover:bg-black transition">
                     My Shops
-                </button>
+                </button> --}}
             </div>
         </header>
 

@@ -44,11 +44,10 @@ Route::resource('users', UsersController::class)->only('show','edit','update')->
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/shop', [ShopController::class, 'index'])->name('shop');
     Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
-
-    Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop.show');
+    
+    Route::get('/shop', [ShopController::class, 'show'])->name('shop');
 
     Route::get('/listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
 });

@@ -31,7 +31,10 @@ class Shop extends Model
         'city_id',
         'rating',
         'published_at',
-        'user_id'
+        'user_id',
+        'step',
+        'is_completed',
+        'is_active'
     ];
 
     protected $dates = ['published_at']; 
