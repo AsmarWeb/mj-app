@@ -44,9 +44,11 @@ Route::resource('users', UsersController::class)->only('show','edit','update')->
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/shop/create', [ShopController::class, 'create']);
-    Route::post('/shop', [ShopController::class, 'store']);
-    Route::get('/shop/{shop}', [ShopController::class, 'show'])->name('shop');
+    Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+    Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
+    Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
+
+    Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop.show');
 
     Route::get('/listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
 });
@@ -60,20 +62,30 @@ Route::view('services', 'pages.services')->name('services');
 Route::view('sell', 'pages.sell')->name('sell');
 Route::view('contact-us', 'pages.contact')->name('contact');
 
-Route::view('create', 'shop.create')->name('shop.create');
+// Route::view('create', 'shop.create')->name('shop.create');
 
 // Route::get('/{users}/show', [ProfileController::class, 'show'])->name('profile');
 
 // Route::resource('users', ProfileController::class);
+
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/{user}', function () {
+//         return view('dashboard');
+//     })->name('profile');
+// });
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/{user}', function () {
-        return view('profile');
-    })->name('profile');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
 
 Route::middleware('auth')->group(function(){

@@ -11,88 +11,127 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use App\Models\State;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class ShopController extends Controller
 {
-    public function create()
+    public function create($step = 1)
     {
-        return view('shop.create');
+        $shop = Auth::user()?->shop;
+
+        $countries = Country::orderBy('name')->get();
+        $states = State::orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
+
+        if (!$shop) {
+        return redirect()->route('shop.setup.step', 1);
+        }
+
+        return view("shop.create", [
+        'shop' => $shop,
+        'step' => (int) $step,
+        'countries' => $countries,
+        'states' => $states,
+        'cities' => $cities,
+        'sections' => Section::orderBy('name')->get(),
+    ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $step)
     {
-        $name = Section::where('id', $request->section_id)->value('name');
-        $countries = Country::orderBy('name')->get();
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'section_id' => 'required|exists:sections,id',
-            'type' => 'required|string|max:255',
-            'country_id' => 'required|exists:countries,id',
-            'state_id' => 'required|exists:states,id',
-            'city_id' => 'required|exists:cities,id',
-            'description' => 'nullable|string',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        $shop = Auth::user()?->shop ?? Shop::create([
+            'user_id' => Auth::id(),
+            'slug' => Str::uuid(),
+            'name' => '',
+            'type' => '',
+            'description' => '',
+            'section_id' => null,
+            'country_id' => null,
+            'state_id' => null,
+            'city_id' => null,
+            'logo' => null,
+            'banner' => null,
         ]);
 
-        if ($request->user()->shop) {
-        return redirect()->back()
-            ->withErrors('You already have a shop.');
+        switch ($step) {
+
+            case 1:
+                $request->validate([
+                    'name' => 'required|min:3|max:50'
+                ]);
+
+                $shop->update([
+                    'name' => $request->name,
+                    'type' => $request->type,
+                ]);
+                return redirect('/shop/create/2');
+
+            case 2:
+                $request->validate([
+                    'description' => 'required|min:10|max:500',
+                    'section_id' => 'required|exists:sections,id',
+                    'location' => 'required',
+                    'country_id' => 'required|exists:countries,id',
+                    'state_id' => 'required|exists:states,id',
+                    'city_id' => 'required|exists:cities,id',
+                ]);
+
+                $shop->update([
+                    'description' => $request->description,
+                    'section_id' => $request->section_id,
+                    'country_id' => $request->country_id,
+                    'state_id' => $request->state_id,
+                    'city_id' => $request->city_id,
+                    'location' => $request->location,
+                ]);
+                return redirect('/shop/create/3');
+
+            case 3:
+                $request->validate([
+                    'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                    'banner' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                ]);
+                if ($request->hasFile('logo')) {
+                    $logoPath = $request->file('logo')->store('public/shop-suggest');
+                    $shop->update(['logo' => $logoPath]);
+                }
+                if ($request->hasFile('banner')) {
+                    $bannerPath = $request->file('banner')->store('public/shop-suggest');
+                    $shop->update(['banner' => $bannerPath]);
+                }
+                return redirect('/shop/create/4');
+
+            default:
+
+                return redirect('/dashboard');
         }
-
-        $shop = Shop::create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
-        $shop->name = $request->name;
-        $shop->location = $request->location;
-        $shop->type = $request->type;
-
-        $shop->section_id = $request->section_id;
-        $shop->country_id = $request->country_id;
-        $shop->state_id = $request->state_id;
-        $shop->city_id = $request->city_id;
-
-        $shop->description = $request->description;
-
-        if ($request->hasFile('logo')) {
-            $shop->logo = $request->file('logo')->store('shop-suggest', 'public');
-        }
-
-        if ($request->hasFile('banner')) {
-            $shop->banner = $request->file('banner')->store('shop-suggest', 'public');
-        }
-
-        if ($request->hasFile('logo')) {
-            $uploadPath = 'public/shop-suggest';
-            $logo = $request->file('logo');
-            $logoImage = $logo->getClientOriginalName();
-            $path = $request->file('logo')->storeAs($uploadPath, $logoImage);
-            $shop['logo'] = $logoImage;
-        }
-
-        if ($request->hasFile('banner')) {
-            $uploadPath = 'public/shop-suggest';
-            $banner = $request->file('banner');
-            $bannerImage = $banner->getClientOriginalName();
-            $path = $request->file('banner')->storeAs($uploadPath, $bannerImage);
-            $shop['banner'] = $bannerImage;
-        } 
-
-        $shop->save();
-
-        return redirect()->route('shop', $shop)->with('message', 'Shop Added Successfully');
     }
 
-    public function show(Shop $shop)
+    public function show(Shop $shop, $slug)
     {
         $title = $shop->name;
         $description = $shop->description;
-        $keywords = "$shop->name, $shop->city->name, $shop->section->name";
+        $keywords = trim("$shop->name, " . optional($shop->city)->name . ", " . optional($shop->section)->name);
 
-        
-        $bannerImage = Storage::url($shop->banner);
-        $logoImage = Storage::url($shop->logo);
+        $bannerImage = $shop->banner ? Storage::url($shop->banner) : null;
+        $logoImage = $shop->logo ? Storage::url($shop->logo) : null;
+
+        return view('shop.show', compact('shop', 'slug', 'title', 'description', 'keywords', 'bannerImage', 'logoImage'));
+    }
+
+    public function index()
+    {
+        $shop = Auth::user()?->shop;
+
+        $title = $shop ? $shop->name : 'Create your shop';
+        $description = $shop ? $shop->description : 'Create a polished shop on Murwaj and start selling your products.';
+        $keywords = $shop
+            ? trim("$shop->name, " . optional($shop->city)->name . ", " . optional($shop->section)->name)
+            : 'shop, murwaj, create online shop';
+
+        $bannerImage = $shop && $shop->banner ? Storage::url($shop->banner) : null;
+        $logoImage = $shop && $shop->logo ? Storage::url($shop->logo) : null;
 
         return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage'));
     }

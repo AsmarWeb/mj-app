@@ -244,12 +244,8 @@
                                             {{ __('Dashboard') }}
                                         </x-dropdown-link>
                                     @else
-                                        <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
-                                            {{ __('My Profile') }}
-                                        </x-dropdown-link>
-
-                                        <x-dropdown-link href="#">
-                                            {{ __('My Shop') }}
+                                        <x-dropdown-link href="{{ route('dashboard') }}">
+                                            {{ __('My Dashboard') }}
                                         </x-dropdown-link>
 
                                         <x-dropdown-link href="{{ route('profile.show') }}">
@@ -451,12 +447,8 @@
                                     {{ __('Dashboard') }}
                                 </x-dropdown-link>
                             @else
-                                <x-dropdown-link href="{{ route('profile', [Auth::user()->username]) }}">
-                                    {{ __('My Profile') }}
-                                </x-dropdown-link>
-
-                                <x-dropdown-link href="#">
-                                    {{ __('My Shop') }}
+                                <x-dropdown-link href="{{ route('dashboard') }}">
+                                    {{ __('My Dashboard') }}
                                 </x-dropdown-link>
 
                                 <x-dropdown-link href="{{ route('profile.show') }}">

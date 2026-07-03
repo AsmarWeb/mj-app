@@ -120,6 +120,20 @@
 
                     <div class="p-5">
 
+                        <div class="flex items-center">
+                            {{-- <a href="#">
+                                <img class="w-10 h-10 rounded-full mr-4" src="https://tailwindcss.com/img/jonathan.jpg"
+                                    alt="Avatar of Jonathan Reinink">
+                                </a> --}}
+                            <div class="text-sm">
+                                <a href="#"
+                                    class="text-orange-500 font-semibold leading-none hover:text-indigo-600 transition">
+                                    By {{ $listing->shop->name }}
+                                </a>
+                                {{-- <p class="text-gray-600">Aug 18</p> --}}
+                            </div>
+                        </div>
+
                         <h3 class="font-bold text-lg">
                             {{ $listing->title }}
                         </h3>

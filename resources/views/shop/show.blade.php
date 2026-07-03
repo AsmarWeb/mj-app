@@ -1,120 +1,114 @@
 <x-main-layout>
-    @section('title', "$title")
-    @section('description', "$description")
-    @section('keywords', "$keywords")
+    @section('title', $title)
+    @section('description', $description)
+    @section('keywords', $keywords)
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="overflow-hidden shadow-xl sm:rounded-lg">
-
-                <div class="profile-card bg-[var(--bg-card)] rounded-3xl overflow-hidden shadow-2xl">
-
-                    <!-- Banner -->
-                    <div class="banner-container h-56 relative"
-                        style="background: url('{{ asset('storage/shop-suggest/' . $shop->banner) }}') center/cover;">
-                        <button
-                            class="edit-banner-btn absolute top-6 right-6 bg-white p-3 rounded-2xl shadow-md hover:bg-gray-100 transition-all">
-                            <i class="bi bi-pencil-square text-xl"></i>
-                        </button>
-                    </div>
-
-                    <!-- Shop Logo -->
-                    <div class="profile-img-wrapper -mt-16 ml-10 relative z-10 inline-block">
-                        <img src="{{ asset('storage/shop-suggest/' . $shop->logo) }}" alt="{{ $shop->name }}"
-                            class="profile-image w-40 h-40 rounded-full border-4 border-white object-cover shadow-xl">
-                    </div>
-
-                    <div class="px-8 pb-8 pt-6">
-                        <div class="flex flex-wrap items-end gap-8">
-                            <!-- Left Info -->
-                            <div class="flex-1">
-                                <h2 class="text-4xl font-bold">{{ $shop->name }}</h2>
-                                <p class="text-gray-500 text-lg">{{ $shop->type }}</p>
-                                <p class="text-gray-500 flex items-center gap-2 mt-1"><i class="bi bi-geo-alt"></i>
-                                    {{ $shop->city->name }}, {{ $shop->state->name }}</p>
-
-                                <div class="flex gap-3 mt-6">
-                                    <button
-                                        class="btn-action border border-gray-300 dark:border-gray-600 px-6 py-3 rounded-3xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">Edit
-                                        Profile</button>
-                                    <button
-                                        class="btn-action border border-gray-300 dark:border-gray-600 px-6 py-3 rounded-3xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">Settings</button>
-                                </div>
-                            </div>
-
-                            <!-- Right Info -->
-                            <div class="text-right">
-                                <div class="mb-6">
-                                    <p class="text-sm text-gray-500 mb-2">Current role</p>
-                                    <span
-                                        class="badge bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white border px-4 py-2 rounded-3xl font-semibold">Software
-                                        Engineer</span>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500 mb-3">Skills</p>
-                                    <div class="flex flex-wrap justify-end gap-2">
-                                        <span class="badge-skill">HTML</span>
-                                        <span class="badge-skill">CSS</span>
-                                        <span class="badge-skill">Dart</span>
-                                        <span class="badge-skill">C++</span>
-                                        <span class="badge-skill">UI Design</span>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="min-h-screen">
+        @if ($shop)
+            <div class="relative overflow-hidden">
+                <div class="absolute inset-0 "></div>
+                <div class="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+                    <div
+                        class="overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 shadow-2xl backdrop-blur">
+                        <div class="h-56 bg-cover bg-center sm:h-72"
+                            style="background-image: url('{{ $bannerImage ?? 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80' }}')">
                         </div>
 
-                        <!-- Info Boxes -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
-                            <a href="#"
-                                class="info-box bg-[var(--info-card-bg)] border border-[var(--border-custom)] rounded-3xl p-6 hover:shadow-lg transition-all">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <h6 class="font-bold">Ready for work</h6>
-                                        <p class="text-sm text-gray-500 mt-2">Show recruiters that you're ready for
-                                            work.</p>
-                                    </div>
+                        <div class="px-6 pb-8 sm:px-8 lg:px-10">
+                            <div class="-mt-16 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                                <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
                                     <div
-                                        class="icon-circle w-9 h-9 p-5 border-2 border-blue-600 text-blue-600 rounded-full flex items-center justify-center">
-                                        →
+                                        class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-3xl border-4 border-white bg-white shadow-lg sm:h-32 sm:w-32">
+                                        @if ($logoImage)
+                                            <img src="{{ asset('storage/shop-suggest/' . $shop->logo) }}"
+                                                alt="{{ $shop->name }} logo" class="h-full w-full object-cover">
+                                        @else
+                                            <div
+                                                class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-500 text-3xl font-semibold text-white">
+                                                {{ strtoupper(substr($shop->name, 0, 1)) }}
+                                            </div>
+                                        @endif
                                     </div>
-                                </div>
-                            </a>
 
-                            <a href="#"
-                                class="info-box bg-[var(--info-card-bg)] border border-[var(--border-custom)] rounded-3xl p-6 hover:shadow-lg transition-all">
-                                <div class="flex justify-between items-start">
                                     <div>
-                                        <h6 class="font-bold">Share posts</h6>
-                                        <p class="text-sm text-gray-500 mt-2">Share latest news to get connected with
-                                            others.</p>
-                                    </div>
-                                    <div
-                                        class="icon-circle w-9 h-9 p-5 border-2 border-blue-600 text-blue-600 rounded-full flex items-center justify-center">
-                                        →
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+                                            {{ $shop->type ?: 'Online shop' }}
+                                        </span>
+                                        <h1 class="mt-3 text-3xl font-semibold text-slate-900 sm:text-4xl">
+                                            {{ $shop->name }}
+                                        </h1>
+                                        <p class="mt-2 text-base text-slate-600">
+                                            {{ optional($shop->section)->name ?: 'Fresh storefront' }} •
+                                            {{ optional($shop->city)->name ?: 'Location pending' }}
+                                        </p>
                                     </div>
                                 </div>
-                            </a>
 
-                            <a href="#"
-                                class="info-box bg-[var(--info-card-bg)] border border-[var(--border-custom)] rounded-3xl p-6 hover:shadow-lg transition-all">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <h6 class="font-bold">Update</h6>
-                                        <p class="text-sm text-gray-500 mt-2">Keep your profile updated so recruiters
-                                            know you better.</p>
+                                <a href="{{ route('discover') }}"
+                                    class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700">
+                                    Explore marketplace
+                                </a>
+                            </div>
+
+                            <div class="mt-8 grid gap-6 lg:grid-cols-[1.7fr_0.9fr]">
+                                <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
+                                    <h2 class="text-xl font-semibold text-slate-900">About this shop</h2>
+                                    <p class="mt-4 text-base leading-8 text-slate-600">
+                                        {{ $shop->description ?: 'This storefront is ready for its first big moment. Add your story, highlights, and listings to make it shine.' }}
+                                    </p>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                                        <h3 class="text-lg font-semibold text-slate-900">Location</h3>
+                                        <p class="mt-2 text-sm leading-7 text-slate-600">
+                                            {{ optional($shop->city)->name ?: 'Location not added yet' }}
+                                            @if (optional($shop->state)->name)
+                                                , {{ optional($shop->state)->name }}
+                                            @endif
+                                        </p>
                                     </div>
-                                    <div
-                                        class="icon-circle w-9 h-9 p-5 border-2 border-blue-600 text-blue-600 rounded-full flex items-center justify-center">
-                                        →
+
+                                    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                                        <h3 class="text-lg font-semibold text-slate-900">Shop status</h3>
+                                        <p class="mt-2 text-sm leading-7 text-slate-600">
+                                            Your storefront is live and ready to welcome visitors.
+                                        </p>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-        </div>
-    </div>
+        @else
+            <div class="flex min-h-[70vh] items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
+                <div class="w-full max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-8 shadow-2xl sm:p-12">
+                    <div
+                        class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+                        Create your shop
+                    </div>
+                    <h1 class="mt-6 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+                        You do not have a shop yet
+                    </h1>
+                    <p class="mt-4 text-lg leading-8 text-slate-600">
+                        Set up your storefront, add your brand story, and start sharing your products with buyers in
+                        minutes.
+                    </p>
 
+                    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                        <a href="{{ route('shop.create') }}"
+                            class="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">
+                            Create your shop
+                        </a>
+                        <a href="{{ route('discover') }}"
+                            class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700">
+                            Explore marketplace
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
 </x-main-layout>
