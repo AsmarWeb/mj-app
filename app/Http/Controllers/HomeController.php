@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Artesaos\SEOTools\Facades\SEOMeta;
 use App\Models\Page;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

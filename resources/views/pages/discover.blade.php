@@ -94,7 +94,7 @@
 
         <div class="flex justify-between mb-8">
 
-            <h2 class="text-3xl font-bold">
+            <h2 class="text-3xl font-bold dark:text-white">
                 Listings
             </h2>
 
@@ -185,36 +185,43 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                @for ($i = 1; $i <= 4; $i++)
+                @foreach ($topCreators as $shop)
                     <div class="rounded-2xl border p-6 text-center hover:shadow-xl transition">
 
-                        <img src="https://i.pravatar.cc/150?img={{ $i + 10 }}"
-                            class="w-24 h-24 rounded-full mx-auto">
+                        @if ($shop->logo)
+                            <img src="{{ Storage::disk('public')->url($shop->logo) }}"
+                                class="w-24 h-24 rounded-full mx-auto">
+                        @else
+                            <div
+                                class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-500 text-3xl font-semibold text-white">
+                                {{ strtoupper(substr($shop->name, 0, 1)) }}
+                            </div>
+                        @endif
 
                         <h3 class="mt-4 font-bold">
-                            Creator {{ $i }}
+                            {{ $shop->user->name }}
                         </h3>
 
                         <p class="text-gray-500">
-                            Laravel Expert
+                            {{ $shop->type ?: 'murwaj seller' }}
                         </p>
 
                         <div class="flex justify-center gap-8 mt-5">
 
                             <div>
-                                <div class="font-bold">120</div>
+                                <div class="font-bold">{{ $shop->listings_count }}</div>
                                 <div class="text-sm text-gray-400">Products</div>
                             </div>
 
                             <div>
-                                <div class="font-bold">4.9★</div>
+                                <div class="font-bold">{{ $shop->rating }}★</div>
                                 <div class="text-sm text-gray-400">Rating</div>
                             </div>
 
                         </div>
 
                     </div>
-                @endfor
+                @endforeach
 
             </div>
 
@@ -222,34 +229,55 @@
 
     </section>
 
-    <!-- Collections -->
+    <!-- Shops -->
 
     <section class="max-w-7xl mx-auto px-6 py-16">
 
-        <h2 class="text-3xl font-bold mb-8">
-            Trending Collections
-        </h2>
+        <div class="flex justify-between mb-10">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
+                Popular shops
+            </h2>
+
+            <a href="#" class="text-blue-600">
+                View All
+            </a>
+        </div>
 
         <div class="grid lg:grid-cols-3 gap-8">
 
-            @foreach (['Admin Dashboards', 'Landing Pages', 'E-Commerce'] as $item)
-                <div class="rounded-3xl overflow-hidden shadow bg-white">
+            @foreach ($shops as $shop)
+                <div
+                    class="relative h-96 px-5 py-8 group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 rounded-3xl bg-gray-200 overflow-hidden shadow-xl">
 
-                    <div class="h-48 bg-gradient-to-r from-indigo-500 to-cyan-500"></div>
+                    @if ($shop->logo)
+                        <img src="{{ Storage::disk('public')->url($shop->logo) }}" alt="{{ $shop->name }}"
+                            class="absolute w-full h-full inset-0 object-cover">
+                    @else
+                        <div
+                            class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-500 text-3xl font-semibold text-white">
+                            {{ strtoupper(substr($shop->name, 0, 1)) }}
+                        </div>
+                    @endif
 
-                    <div class="p-6">
-
-                        <h3 class="font-bold text-xl">
-                            {{ $item }}
-                        </h3>
-
-                        <p class="mt-3 text-gray-500">
-                            Hand-picked premium templates and products.
-                        </p>
-
+                    <div
+                        class="absolute inset-0 w-full h-full rounded-3xl bg-black bg-opacity-0 transition duration-500 backdrop-filter group-hover:bg-opacity-20 group-hover:backdrop-blur">
                     </div>
 
+                    <div class="absolute inset-x-5 text-white">
+                        <h2 class="text-4xl font-semibold mb-2">{{ $shop->name }}</h2>
+                        <p class="text-sm font-medium uppercase tracking-wider mb-6">{{ $shop->type ?: 'Online shop' }}
+                        </p>
+                        <p class="hidden group-hover:block">
+                            {{ $shop->description = strlen($shop->description) > 50 ? substr($shop->description, 0, 50) . '...' : $shop->description }}
+                        </p>
+                    </div>
+
+                    <button onclick="window.location.href='{{ route('shop', $shop->slug) }}'"
+                        class="absolute inset-x-5 bottom-8 py-3 rounded-2xl font-semibold bg-white shadow-lg hidden transition duration-200 hover:bg-gray-300 group-hover:block">
+                        Shop now
+                    </button>
                 </div>
+                {{ $shops->links() }}
             @endforeach
 
         </div>
@@ -304,7 +332,7 @@
             </h2>
 
             <p class="text-blue-100 mt-5 text-lg">
-                Join thousands of creators and grow your digital business.
+                Join thousands of creators and grow your business.
             </p>
 
             <button class="mt-8 px-8 py-4 rounded-xl bg-white text-blue-700 font-bold hover:scale-105 transition">

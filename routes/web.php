@@ -47,13 +47,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
     
-    Route::get('/shop', [ShopController::class, 'show'])->name('shop');
+    Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
+    Route::get('/creators', [ShopController::class, 'creators'])
+    ->name('shop.creators');
 
     Route::get('/listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
+
+    
 });
 
 Route::get('/bot', [BotController::class,'index'])->name('bot');
 Route::post('/bot/chat', [BotController::class,'chat']);
+
+
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');

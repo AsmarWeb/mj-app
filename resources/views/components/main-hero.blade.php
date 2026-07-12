@@ -86,32 +86,26 @@
         <div class="mx-auto max-w-2xl sm:text-center my-20">
 
         </div>
+
         <div
             class="mx-auto max-w-3xl items-stretch space-y-4 text-left sm:flex sm:space-y-0 sm:space-x-8 sm:text-center">
-            <a class="flex w-full items-center rounded-xl border border-black border-opacity-10 px-4 py-6 text-black duration-200 hover:border-opacity-0 hover:no-underline hover:shadow-lg dark:text-white dark:hover:bg-white dark:hover:bg-opacity-10 sm:flex-col sm:hover:shadow-2xl"
-                href="https://framework7.io/" target="_blank">
-                <img class="mr-4 w-12 sm:mr-0 sm:h-32 sm:w-32" src="https://swiperjs.com/images/projects/framework7.svg"
-                    alt="Framework7">
-                <div>
-                    <div class="font-semibold text-black dark:text-white sm:mt-4 sm:mb-2">Framework7</div>
-                </div>
-            </a>
-            <a class="flex w-full items-center rounded-xl border border-black border-opacity-10 px-4 py-6 text-black duration-200 hover:border-opacity-0 hover:no-underline hover:shadow-lg dark:text-white dark:hover:bg-white dark:hover:bg-opacity-10 sm:flex-col sm:hover:shadow-2xl"
-                href="https://atroposjs.com/" target="_blank">
-                <img class="mr-4 w-12 sm:mr-0 sm:h-32 sm:w-32" src="https://swiperjs.com/images/projects/atropos.svg"
-                    alt="Atropos">
-                <div>
-                    <div class="font-semibold text-black dark:text-white sm:mt-4 sm:mb-2">Atropos</div>
-                </div>
-            </a>
-            <a class="flex w-full items-center rounded-xl border border-black border-opacity-10 px-4 py-6 text-black duration-200 hover:border-opacity-0 hover:no-underline hover:shadow-lg dark:text-white dark:hover:bg-white dark:hover:bg-opacity-10 sm:flex-col sm:hover:shadow-2xl"
-                href="https://konstaui.com/" target="_blank">
-                <img class="mr-4 w-12 sm:mr-0 sm:h-32 sm:w-32" src="https://swiperjs.com/images/projects/konsta.svg"
-                    alt="Konsta UI">
-                <div>
-                    <div class="font-semibold text-black dark:text-white sm:mt-4 sm:mb-2">Konsta UI</div>
-                </div>
-            </a>
+            @foreach ($shops as $shop)
+                <a class="flex w-full items-center rounded-xl border border-black border-opacity-10 px-4 py-6 text-black duration-200 hover:border-opacity-0 hover:no-underline hover:shadow-lg dark:text-white dark:hover:bg-white dark:hover:bg-opacity-10 sm:flex-col sm:hover:shadow-2xl"
+                    href="{{ route('shop', $shop->slug) }}" target="_blank">
+                    @if ($shop->logo)
+                        <img class="mr-4 w-12 sm:mr-0 sm:h-32 sm:w-32"
+                            src="{{ Storage::disk('public')->url($shop->logo) }}" alt="{{ $shop->name }}">
+                    @else
+                        <div
+                            class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-500 text-3xl font-semibold text-white">
+                            {{ strtoupper(substr($shop->name, 0, 1)) }}
+                        </div>
+                    @endif
+                    <div>
+                        <div class="font-semibold text-black dark:text-white sm:mt-4 sm:mb-2">{{ $shop->name }}</div>
+                    </div>
+                </a>
+            @endforeach
         </div>
     </div>
 </section>

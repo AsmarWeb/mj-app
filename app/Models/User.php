@@ -16,6 +16,7 @@ use Laratrust\Contracts\LaratrustUser;
 use Laratrust\Traits\HasRolesAndPermissions;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable implements LaratrustUser
 {
@@ -26,6 +27,7 @@ class User extends Authenticatable implements LaratrustUser
     use TwoFactorAuthenticatable;
     use HasRolesAndPermissions;
     use HasSlug;
+    use Billable;
 
     /**
      * The attributes that are mass assignable.

@@ -91,13 +91,17 @@ class ShopController extends Controller
                     'banner' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 ]);
                 if ($request->hasFile('logo')) {
-                    $logoPath = $request->file('logo')->store('public/shop-suggest');
-                    $shop->update(['logo' => $logoPath]);
+                    $logo = $request->file('logo');
+                    $fileName = $logo->getClientOriginalName();
+                    $path = $logo->storeAs('shop-suggest', $fileName, 'public');
+                    $shop->update(['logo' => $path,]);
                 }
                 if ($request->hasFile('banner')) {
-                    $bannerPath = $request->file('banner')->store('public/shop-suggest');
-                    $shop->update(['banner' => $bannerPath]);
-                }
+                    $banner = $request->file('banner');
+                    $fileName = $banner->getClientOriginalName();
+                    $path = $banner->storeAs('shop-suggest', $fileName, 'public');
+                    $shop->update(['banner' => $path,]);
+                } 
                 return redirect('/shop/create/4');
 
             case 4:
@@ -114,9 +118,11 @@ class ShopController extends Controller
         }
     }
 
-    public function show()
+    public function show($slug)
     {
-        $shop = Auth::user()?->shop;
+        $shop = Shop::where('slug', $slug)
+            ->with('listing')
+            ->firstOrFail();
 
         $title = $shop ? $shop->name : 'Create your shop';
         $description = $shop ? $shop->description : 'Create a polished shop on Murwaj and start selling your products.';
@@ -128,10 +134,23 @@ class ShopController extends Controller
         $logoImage = $shop && $shop->logo ? Storage::url($shop->logo) : null;
 
         return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage'));
-    }
+    } 
 
     public function index()
     {
         //
+    }
+
+    public function creators(Request $request)
+    {
+        $shops = Shop::with('user')
+        ->withCount('listing')->when($request->search, function ($query) use ($request) {
+            $query->where('name', 'like', '%'.$request->search.'%')
+                  ->orWhere('slug', 'like', '%'.$request->search.'%');
+        })
+        ->latest()
+        ->paginate(12);
+        
+        return view('shop.creators', compact('shops'));
     }
 }

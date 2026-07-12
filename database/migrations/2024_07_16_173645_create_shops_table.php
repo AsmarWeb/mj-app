@@ -24,8 +24,10 @@ return new class extends Migration
             $table->bigInteger('state_id')->unsigned()->nullable();
             $table->bigInteger('city_id')->unsigned()->nullable();
             $table->string('location')->nullable();
+            $table->string('currency')->default('AED');
             $table->bigInteger('section_id')->unsigned()->nullable();
             $table->decimal('rating', 10, 2)->nullable();
+            $table->unsignedBigInteger('views')->default(0);
             $table->datetime('published_at')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->unique();
             $table->foreignIdFor(User::class, 'updated_by')->nullable();

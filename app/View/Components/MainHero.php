@@ -32,7 +32,7 @@ class MainHero extends Component
             ->get();
 
         return view('search.results', compact('listings', 'shops', 'q')); 
-    }
+    } 
 
     /**
      * Get the view / contents that represent the component.
@@ -40,6 +40,10 @@ class MainHero extends Component
     public function render(): View|Closure|string
     {
         $setting = Setting::find(1);
-        return view('components.main-hero', ['setting' => $setting]);
+
+        $shops = Shop::with('user')->take(3)
+        ->get();
+        
+        return view('components.main-hero', ['setting' => $setting,'shops' => $shops]);
     }
 }

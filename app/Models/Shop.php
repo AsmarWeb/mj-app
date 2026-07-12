@@ -54,6 +54,11 @@ class Shop extends Model
         return $this->hasMany(Listing::class, 'shop_id', 'id');
     }
 
+    public function subscription()
+    {
+    return $this->hasOne(Subscription::class);
+    }
+
     public function scopePublished($query)
     {
         $query->where('published_at', '<=', Carbon::now());
