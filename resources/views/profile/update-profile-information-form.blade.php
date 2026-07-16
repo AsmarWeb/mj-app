@@ -71,8 +71,55 @@
         <div class="col-span-6 sm:col-span-4">
             <x-label for="phone" value="{{ __('Phone Number') }}" />
             <x-input id="phone" type="tel" class="mt-1 block w-full" wire:model="state.phone" required
-                autocomplete="tel" maxlength="10" placeholder="0500000000" />
+                autocomplete="tel" maxlength="16" placeholder="+971500000000" />
             <x-input-error for="phone" class="mt-2" />
+
+            @if (is_null(auth()->user()->phone_verified_at))
+                <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                    <div class="flex items-center gap-3">
+
+                        <span class="text-red-600 text-xl">
+                            ⚠️
+                        </span>
+
+                        <div>
+                            <h3 class="font-semibold text-red-800">
+                                Phone not Verified
+                            </h3>
+
+                            <p class="text-sm text-red-700 mt-1">
+                                Please verify your phone number to secure your account and unlock seller features.
+                            </p>
+
+                            <a href="{{ route('phone.verify') }}"
+                                class="inline-block mt-3 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700">
+                                Verify Phone Now
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            @else
+                <div class="mt-4 rounded-lg border border-green-200 bg-green-50 p-4">
+                    <div class="flex items-center gap-3">
+
+                        <span class="text-green-600 text-xl">
+                            ✅
+                        </span>
+
+                        <div>
+                            <h3 class="font-semibold text-green-800">
+                                Phone Verified
+                            </h3>
+
+                            <p class="text-sm text-green-700 mt-1">
+                                Your phone number is verified.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            @endif
         </div>
 
         <!-- Email -->

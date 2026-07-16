@@ -45,7 +45,7 @@ Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
     Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
     

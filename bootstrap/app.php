@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Laratrust\Middleware\Role::class,
             'permission' => \Laratrust\Middleware\Permission::class,
             'ability' => \Laratrust\Middleware\Ability::class,
+            'phone.verified' => \App\Http\Middleware\EnsurePhoneIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -22,7 +22,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'name' => ['required', 'string', 'max:30'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'username' => ['required', 'string', 'min:3','max:255', Rule::unique('users')->ignore($user->id),'alpha_dash','not_regex:/^\d+$/', new NotReservedUsername()],
-            'phone' => ['required', 'digits:12', Rule::unique('users')->ignore($user->id)],
+            'phone' => ['required', 'regex:/^\+[1-9]\d{7,14}$/', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 
@@ -58,6 +58,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'phone' => $input['phone'],
             'email' => $input['email'],
             'email_verified_at' => null,
+            'phone_verified_at' => null,
         ])->save();
 
         $user->sendEmailVerificationNotification();
