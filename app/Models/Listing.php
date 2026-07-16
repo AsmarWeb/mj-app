@@ -51,11 +51,16 @@ class Listing extends Model
         'price',
         'quantity',
         'description',
+        'features',
         'keywords',
         'image',
         'images',
         'price_condition',
         'condition'
+    ]; 
+
+    protected $casts = [
+        'features' => 'array',
     ];
 
     protected $guarded = ['id', 'created_at', 'update_at'];

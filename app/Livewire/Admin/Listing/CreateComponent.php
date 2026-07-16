@@ -27,6 +27,7 @@ class CreateComponent extends Component
 
     public $title,
         $description,
+        $features = [],
         $title_ar,
         $price,
         $quantity,
@@ -41,6 +42,18 @@ class CreateComponent extends Component
         $category_id,
         $subcategory_id,
         $addListing = false;
+
+    public function addFeature()
+    {
+        $this->features[] = '';
+    }
+
+    public function removeFeature($index)
+    {
+        unset($this->features[$index]);
+
+        $this->features = array_values($this->features);
+    }
 
     /**
      * List of add/edit form rules
@@ -83,6 +96,7 @@ class CreateComponent extends Component
         $this->validateOnly($fields, [
             'title' => 'required',
             'description' => 'required',
+            'features.*' => 'nullable|string|max:255',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
             'image' => [
@@ -102,6 +116,7 @@ class CreateComponent extends Component
         $this->validate([
             'title' => 'required',
             'description' => 'required',
+            'features.*' => 'nullable|string|max:255',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
             'image' => [
@@ -122,6 +137,7 @@ class CreateComponent extends Component
         $listing->title = $this->title;
         $listing->title_ar = $this->title_ar;
         $listing->description = $this->description;
+        $listing->features = $this->features;
         $listing->keywords = $this->keywords;
         $listing->price = $this->price;
         $listing->quantity = $this->quantity;

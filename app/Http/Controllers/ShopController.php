@@ -6,11 +6,13 @@ use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Plan;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use App\Models\State;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -105,12 +107,45 @@ class ShopController extends Controller
                 return redirect('/shop/create/4');
 
             case 4:
+                DB::transaction(function () use ($shop) {
                 $shop->update([
-                    'step' => 4,
-                    'is_completed' => true,
+                'step' => 4,
+                'is_completed' => true,
                 ]);
+                
+                $user = auth()->user();
+                
+                if (! $user->hasRole('seller')) {
+                    $user->addRole('seller');
+                }
 
-                return redirect()->route('shop');
+                // Create a free subscription if one doesn't exist
+                if (! $shop->subscriptions()->exists()) {
+                
+                $freePlan = Plan::where('price', 0)->first();
+                
+                if ($freePlan) {
+
+                $shop->subscriptions()->create([
+                    'plan_id' => $freePlan->id,
+                    'user_id' => auth()->id(),
+                    'status' => 'active',
+                    'payment_provider' => 'free',
+                    'payment_id' => null,
+                    'type' => 'default',
+                    'stripe_id' => 'free_' . Str::uuid(),
+                    'stripe_status' => 'active',
+                    'stripe_price' => null,
+                    'quantity' => 1,
+                    'trial_ends_at' => null,
+                    'ends_at' => null,
+                ]);
+                }
+                }
+            
+            });
+
+                return redirect()->route('shop', ['slug' => $shop->slug,])->with('success', 'Congratulations! Your shop is now live.');
 
             default:
 

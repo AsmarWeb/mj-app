@@ -72,6 +72,7 @@ class User extends Authenticatable implements LaratrustUser
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -101,5 +102,17 @@ class User extends Authenticatable implements LaratrustUser
     public function businessCards(): HasMany
     {
         return $this->hasMany(BusinessCard::class);
+    }
+
+    public function hasVerifiedPhone(): bool
+    {
+    return ! is_null($this->phone_verified_at);
+    }
+    
+    public function markPhoneAsVerified(): bool
+    {
+    return $this->forceFill([
+        'phone_verified_at' => now(),
+    ])->save();
     }
 }

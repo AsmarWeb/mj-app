@@ -7,7 +7,8 @@
             <!-- Logo -->
             <div class="flex items-center space-x-2">
                 <a href="{{ route('home') }}">
-                    <img width="100" src="{{ $setting->logo }}" alt="murwaj" class="block h-9 w-auto">
+                    <img width="100" src="{{ asset('storage/setting-suggest/' . $setting->logo) }}" alt="murwaj"
+                        class="block h-9 w-auto">
                 </a>
 
                 <div class="flex items-center gap-4 md:gap-8">
@@ -244,13 +245,19 @@
                                             {{ __('Dashboard') }}
                                         </x-dropdown-link>
                                     @else
-                                        <x-dropdown-link href="{{ route('dashboard') }}">
-                                            {{ __('My Dashboard') }}
-                                        </x-dropdown-link>
+                                        @if (Auth::check() && Auth::user()->hasRole('seller'))
+                                            <x-dropdown-link href="{{ route('dashboard') }}">
+                                                {{ __('My Dashboard') }}
+                                            </x-dropdown-link>
 
-                                        <x-dropdown-link href="{{ route('profile.show') }}">
-                                            {{ __('Edit Profile') }}
-                                        </x-dropdown-link>
+                                            <x-dropdown-link href="{{ route('profile') }}">
+                                                {{ __('Profile') }}
+                                            </x-dropdown-link>
+                                        @else
+                                            <x-dropdown-link href="{{ route('profile') }}">
+                                                {{ __('My Profile') }}
+                                            </x-dropdown-link>
+                                        @endif
                                     @endif
                                     @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                         <x-dropdown-link href="{{ route('api-tokens.index') }}">
@@ -447,13 +454,18 @@
                                     {{ __('Dashboard') }}
                                 </x-dropdown-link>
                             @else
-                                <x-dropdown-link href="{{ route('dashboard') }}">
-                                    {{ __('My Dashboard') }}
-                                </x-dropdown-link>
-
-                                <x-dropdown-link href="{{ route('profile.show') }}">
-                                    {{ __('Edit Profile') }}
-                                </x-dropdown-link>
+                                @if (Auth::check() && Auth::user()->hasRole('seller'))
+                                    <x-dropdown-link href="{{ route('dashboard') }}">
+                                        {{ __('My Dashboard') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('profile') }}">
+                                        {{ __('My profile') }}
+                                    </x-dropdown-link>
+                                @else
+                                    <x-dropdown-link href="{{ route('profile') }}">
+                                        {{ __('My Profile') }}
+                                    </x-dropdown-link>
+                                @endif
                             @endif
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">

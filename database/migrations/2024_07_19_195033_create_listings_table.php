@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('price');
             $table->integer('quantity')->default(1);
             $table->text('description')->nullable();
+            $table->json('features')->nullable();
             $table->string('keywords')->nullable();
             $table->string('image');
             $table->text('images')->nullable();

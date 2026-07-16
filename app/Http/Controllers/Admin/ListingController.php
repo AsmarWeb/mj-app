@@ -20,17 +20,4 @@ class ListingController extends Controller
             ->where('title', 'like', "%{$search}%")->paginate(5);
         return view('admin.listings.index', compact('listings'));
     }
-
-    public function show(Listing $listing)
-    {
-        $title = $listing->title;
-        $description = $listing->description;
-        $keywords = $listing->keywords;
-
-        SEOMeta::setTitle($title);
-        SEOMeta::setDescription($description);
-        SEOMeta::setKeywords($keywords);
-
-        return view('listings.show', compact('listing', 'title', 'description', 'keywords'));
-    }
 }

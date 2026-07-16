@@ -26,6 +26,8 @@ use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\ProfileController;
 use App\Livewire\Admin\Listing\CreateComponent;
 use Illuminate\Support\Facades\Request;
@@ -43,7 +45,7 @@ Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
     
@@ -51,15 +53,48 @@ Route::middleware('auth')->group(function () {
     Route::get('/creators', [ShopController::class, 'creators'])
     ->name('shop.creators');
 
-    Route::get('/listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
-
+    Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [DiscoverController::class, 'show'])->name('listing.show');
     
+}); 
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/phone/verify', [PhoneVerificationController::class, 'show'])
+        ->name('phone.verify');
+
+    Route::post('/phone/send', [PhoneVerificationController::class, 'send'])
+        ->name('phone.send');
+
+    Route::post('/phone/check', [PhoneVerificationController::class, 'check'])
+        ->name('phone.check');
+
+});
+
+Route::middleware('auth')->group(function(){
+
+    Route::get('/plans',
+        [SubscriptionController::class,'index']
+    )->name('plans.index');
+
+
+    Route::post('/subscription/checkout/{plan}',
+        [SubscriptionController::class,'checkout']
+    )->name('subscription.checkout');
+
+    Route::get('/subscription/success',
+function(){
+
+    return view('subscription.success');
+
+})
+->name('subscription.success');
+
 });
 
 Route::get('/bot', [BotController::class,'index'])->name('bot');
 Route::post('/bot/chat', [BotController::class,'chat']);
 
-
+Route::view('/profile', 'profile')->name('profile');
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');
@@ -84,7 +119,7 @@ Route::view('contact-us', 'pages.contact')->name('contact');
 // });
 
 Route::middleware([
-    'auth:sanctum',
+    'auth:sanctum', 'role:seller',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {

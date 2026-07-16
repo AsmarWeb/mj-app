@@ -54,4 +54,49 @@ class DiscoverController extends Controller
 
         return view('pages.category')->with(compact('title', 'description', 'keywords', 'category'));
     }
+
+    public function show($shop, $section, $category, $subcategories, $brand, $listing)
+    {
+        $listing = Listing::where('slug', $listing)
+
+        ->whereHas('shop', function ($query) use ($shop) {
+            $query->where('slug', $shop);
+        })
+
+        ->whereHas('section', function ($query) use ($section) {
+            $query->where('slug', $section);
+        })
+
+        ->whereHas('category', function ($query) use ($category) {
+            $query->where('slug', $category);
+        })
+
+        ->whereHas('subcategories', function ($query) use ($subcategories) {
+            $query->where('slug', $subcategories);
+        })
+
+        ->whereHas('brand', function ($query) use ($brand) {
+            $query->where('slug', $brand);
+        })
+
+        ->with([
+            'shop',
+            'section',
+            'category',
+            'subcategories',
+            'brand'
+        ])
+        
+        ->firstOrFail();
+
+        $title = $listing->title;
+        $description = $listing->description;
+        $keywords = $listing->keywords;
+
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($description);
+        SEOMeta::setKeywords($keywords);
+
+        return view('listings.show', compact('listing', 'title', 'description', 'keywords'));
+    }
 }

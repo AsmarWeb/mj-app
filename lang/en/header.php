@@ -23,7 +23,7 @@ return [
         "discover" => "Discover",
         "sell" => "Start selling",
         "services" => "Services",
-        "about" => "About"
+        "about" => "About",
     ]
 
 ];

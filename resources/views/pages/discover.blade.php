@@ -126,7 +126,7 @@
                                     alt="Avatar of Jonathan Reinink">
                                 </a> --}}
                             <div class="text-sm">
-                                <a href="#"
+                                <a href="{{ route('shop', $listing->shop->slug) }}"
                                     class="text-orange-500 font-semibold leading-none hover:text-indigo-600 transition">
                                     By {{ $listing->shop->name }}
                                 </a>
@@ -149,7 +149,15 @@
                             </span>
 
                             <button class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-                                <a href="{{ route('listing.show', ['listing' => $listing->id]) }}">
+                                <a
+                                    href="{{ route('listing.show', [
+                                        'shop' => $listing->shop->slug,
+                                        'section' => $listing->section->slug,
+                                        'category' => $listing->category->slug,
+                                        'subcategories' => $listing->subcategories->slug,
+                                        'brand' => $listing->brand->slug,
+                                        'listing' => $listing->slug,
+                                    ]) }}">
                                     View
                                 </a>
                             </button>

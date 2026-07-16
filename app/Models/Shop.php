@@ -54,9 +54,16 @@ class Shop extends Model
         return $this->hasMany(Listing::class, 'shop_id', 'id');
     }
 
-    public function subscription()
+    public function subscriptions()
     {
-    return $this->hasOne(Subscription::class);
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function activeSubscription()
+    {
+    return $this->hasOne(Subscription::class)
+        ->where('status', 'active')
+        ->latestOfMany();
     }
 
     public function scopePublished($query)

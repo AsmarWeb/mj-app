@@ -149,6 +149,35 @@
                         </div>
                     </div>
 
+                    <div class="col-span-full">
+                        <label class="block font-medium mb-2">
+                            Key Features
+                        </label>
+
+
+                        @foreach ($features as $index => $feature)
+                            <div class="flex gap-2 mb-2">
+
+                                <input wire:model="features.{{ $index }}" type="text"
+                                    placeholder="Example: Handmade product" class="flex-1 rounded border-gray-300">
+
+
+                                <button type="button" wire:click="removeFeature({{ $index }})"
+                                    class="px-3 bg-red-500 text-white rounded">
+                                    Remove
+                                </button>
+
+                            </div>
+                        @endforeach
+
+
+                        <button type="button" wire:click="addFeature"
+                            class="px-4 py-2 bg-indigo-600 text-white rounded">
+                            + Add Feature
+                        </button>
+
+                    </div>
+
                     <div x-data @tags-update="console.log('tags updated', $event.detail.tags)"
                         data-tags='["apple","phone"]' class="col-span-full">
                         <div x-data="tagSelect()" x-init="init('parentEl')" @click.away="clearSearch()"
