@@ -61,6 +61,11 @@ class Listing extends Model
 
     protected $casts = [
         'features' => 'array',
+        'keywords' => 'array',
+        'images' => 'array',
+        'published_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'active' => 'boolean',
     ];
 
     protected $guarded = ['id', 'created_at', 'update_at'];

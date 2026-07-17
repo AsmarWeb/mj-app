@@ -6,6 +6,7 @@ use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Order;
 use App\Models\Plan;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -156,7 +157,7 @@ class ShopController extends Controller
     public function show($slug)
     {
         $shop = Shop::where('slug', $slug)
-            ->with('listing')
+            ->with('listings')
             ->firstOrFail();
 
         $title = $shop ? $shop->name : 'Create your shop';
@@ -173,7 +174,82 @@ class ShopController extends Controller
 
     public function index()
     {
-        //
+        $user = auth()->user();
+
+        $shop = $user->shop;
+
+        if (! $shop) {
+            return redirect()->route('shop.create', 1);
+        }
+
+        $subscription = $shop->subscriptions()
+            ->where('status', 'active')
+            ->latest()
+            ->with('plan')
+            ->first();
+
+        $plan = $subscription?->plan;
+
+        $listings = $shop->listings();
+
+        $publishedListings = (clone $listings)
+            ->where('status', 'published')
+            ->count();
+
+        $draftListings = (clone $listings)
+            ->where('status', 'draft')
+            ->count();
+
+        $expiredListings = (clone $listings)
+            ->where('status', 'expired')
+            ->count();
+
+        $outOfStock = (clone $listings)
+            ->where('quantity', 0)
+            ->count();
+
+        $recentListings = $shop->listings()
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Replace with your actual orders relationship/table
+        $ordersCount = Order::where('shop_id', $shop->id)->count();
+
+        $pendingOrders = Order::where('shop_id', $shop->id)
+            ->where('status', 'pending')
+            ->count();
+
+        $completedOrders = Order::where('shop_id', $shop->id)
+            ->where('status', 'completed')
+            ->count();
+
+        $revenue = Order::where('shop_id', $shop->id)
+            ->where('status', 'completed')
+            ->sum('total');
+
+        $expiringListings = $shop->listings()
+            ->where('status', 'published')
+            ->whereNotNull('expires_at')
+            ->whereBetween('expires_at', [now(), now()->addDays(7)])
+            ->orderBy('expires_at')
+            ->get();
+
+        return view('shop.dashboard', compact(
+            'shop',
+            'subscription',
+            'plan',
+            'publishedListings',
+            'draftListings',
+            'expiredListings',
+            'outOfStock',
+            'recentListings',
+            'ordersCount',
+            'pendingOrders',
+            'completedOrders',
+            'revenue',
+            'expiringListings'
+        ));
     }
 
     public function creators(Request $request)
@@ -188,4 +264,6 @@ class ShopController extends Controller
         
         return view('shop.creators', compact('shops'));
     }
+
+
 }

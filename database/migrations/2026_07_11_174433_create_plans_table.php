@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('price',8,2);
             $table->string('stripe_price')->nullable()->unique();
             $table->integer('listing_limit')->default(1);
+            $table->integer('listing_duration')->nullable();
             $table->integer('order_limit')->default(0);
             $table->integer('storage_limit')->default(0);
             $table->boolean('custom_domain')->default(false);

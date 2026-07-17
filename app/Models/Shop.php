@@ -49,7 +49,7 @@ class Shop extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function listing(): HasMany
+    public function listings(): HasMany
     {
         return $this->hasMany(Listing::class, 'shop_id', 'id');
     }
@@ -57,6 +57,11 @@ class Shop extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function orders(): HasMany
+    {
+    return $this->hasMany(Order::class);
     }
 
     public function activeSubscription()

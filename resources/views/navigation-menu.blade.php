@@ -17,6 +17,12 @@
                             {{ __('Dashboard') }}
                         </x-nav-link>
                     </div>
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link href="{{ route('profile') }}" :active="request()->routeIs('profile')">
+                            {{ __('Profile') }}
+                        </x-nav-link>
+                    </div>
                 @else
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
@@ -168,6 +174,10 @@
             @if (Auth::check() && Auth::user()->hasRole('seller'))
                 <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link href="{{ route('profile') }}" :active="request()->routeIs('profile')">
+                    {{ __('Profile') }}
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">

@@ -22,9 +22,9 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->text('description')->nullable();
             $table->json('features')->nullable();
-            $table->string('keywords')->nullable();
+            $table->json('keywords')->nullable();
             $table->string('image');
-            $table->text('images')->nullable();
+            $table->json('images')->nullable();
             $table->string('price_condition');
             $table->string('condition');
             $table->bigInteger('shop_id')->unsigned()->nullable();
@@ -37,6 +37,11 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreignIdFor(User::class, 'deleted_by')->nullable();
             $table->boolean('active')->default(true);
+            $table->enum('status', ['draft', 'published', 'expired', 'archived'])->default('draft');
+            $table->string('shipping_method')->nullable();
+            $table->integer('delivery_days')->nullable();
+            $table->timestamp('published_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

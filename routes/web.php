@@ -30,6 +30,7 @@ use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\ProfileController;
 use App\Livewire\Admin\Listing\CreateComponent;
+use App\Livewire\Seller\CreateListing;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,18 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
     Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [DiscoverController::class, 'show'])->name('listing.show');
     
 }); 
+
+// Route::middleware(['auth', 'verified','prefix' => 'seller', 'phone.verified'])
+//     ->group(function () {
+
+//         Route::get('/create', CreateListing::class)
+//             ->name('listing.create');
+
+// });
+
+Route::group(['namespace' => 'App\Livewire\Seller', 'prefix' => 'seller', 'middleware' => ['role:seller']], function () {
+Route::view('/create', 'listings.create')->name('seller.create');
+});
 
 Route::middleware('auth')->group(function () {
 
@@ -123,9 +136,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [ShopController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware('auth')->group(function(){

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('plan_id')->constrained();
+            $table->foreignId('user_id');
             $table->enum('status',['active','expired','cancelled']);
             $table->string('payment_provider')->nullable();
             $table->string('payment_id')->nullable();
-            $table->foreignId('user_id');
             $table->string('type');
             $table->string('stripe_id')->unique();
             $table->string('stripe_status');
@@ -27,6 +27,8 @@ return new class extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();
             $table->timestamps();
+
+            $table->index(['user_id', 'stripe_status']);
         });
     }
 

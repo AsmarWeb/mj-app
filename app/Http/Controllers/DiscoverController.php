@@ -31,7 +31,7 @@ class DiscoverController extends Controller
         $shops = Shop::with('user')->latest()
         ->paginate(3); 
 
-        $topCreators = Shop::withCount('listing')
+        $topCreators = Shop::withCount('listings')
         ->with('user')
         ->orderByDesc('listings_count')
         ->orderByDesc('rating')

@@ -11,7 +11,7 @@ use App\Models\Section;
 use App\Models\Shop;
 use App\Models\State;
 use App\Models\SubCategory;
-use App\Models\User;
+use App\Models\User; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -132,6 +132,27 @@ class CreateComponent extends Component
 
         $listing = new Listing();
         $user = Auth::user();
+        $shop = $user->shop;
+        $subscription = $shop->subscriptions()
+        ->where('status', 'active')
+        ->with('plan')
+        ->latest()
+        ->first();
+        if (! $subscription) {
+        session()->flash('error', 'You do not have an active subscription.');
+        return;
+        }
+        $plan = $subscription->plan;
+
+        // Publish immediately
+        $listing->status = 'published';
+        $listing->active = true;
+        $listing->published_at = now();
+        
+        $listing->expires_at = $plan->listing_duration
+        ? now()->addDays($plan->listing_duration)
+        : null;
+
         $listing->user_id = $user->id;
         $listing->shop_id = $user->id;
         $listing->title = $this->title;

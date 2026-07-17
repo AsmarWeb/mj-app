@@ -21,6 +21,7 @@ class PlanSeeder extends Seeder
             'stripe_price' => null,
 
             'listing_limit' => 1,
+            'listing_duration' => 30,
             'order_limit' => 5,
             'storage_limit' => 100,
 
@@ -41,6 +42,7 @@ class PlanSeeder extends Seeder
             'stripe_price' => 'price_1Ttm9sBPzsfZpB0FoJvMz9aK',
 
             'listing_limit' => 50,
+            'listing_duration' => 60,
             'order_limit' => 100,
             'storage_limit' => 5000,
 
@@ -61,6 +63,7 @@ class PlanSeeder extends Seeder
             'stripe_price' => 'price_1TtmBhBPzsfZpB0Ffxy6hi5c',
 
             'listing_limit' => 500,
+            'listing_duration' => 90,
             'order_limit' => 1000,
             'storage_limit' => 20000,
 

@@ -4,6 +4,12 @@
 
             <!-- Profile Header -->
 
+            @if (session()->has('success'))
+                <div>
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-8">
                 <div class="h-40 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500"></div>
 
@@ -156,13 +162,13 @@
 
             @role('seller')
 
-                <!-- Seller Dashboard -->
+                <!-- Seller Details -->
                 <div class="grid lg:grid-cols-3 gap-6">
 
                     <div class="bg-white rounded-2xl shadow-sm p-6">
 
                         <h2 class="font-bold text-xl mb-5">
-                            Seller Dashboard
+                            Seller Details
                         </h2>
 
                         <div class="space-y-4">
@@ -180,7 +186,7 @@
 
                             </a>
 
-                            <a href="#"
+                            <a href="{{ route('seller.create') }}"
                                 class="block rounded-xl border p-4 hover:border-green-500 hover:bg-green-50 transition">
 
                                 <h3 class="font-semibold">
@@ -227,7 +233,7 @@
 
                                     <div>
                                         <p class="text-gray-500 text-sm">
-                                            Listing Limit
+                                            Product Limit
                                         </p>
 
                                         <p class="font-bold">
