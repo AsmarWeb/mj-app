@@ -165,7 +165,7 @@
             @endphp
 
             @if ($resume)
-                <div class="mt-8 bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden mb-8">
 
                     <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6 text-white">
 
