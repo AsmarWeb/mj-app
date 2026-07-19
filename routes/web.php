@@ -24,6 +24,7 @@ use App\Http\Controllers\BotController;
 use App\Http\Controllers\BusinessCardController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DiscoverController;
+use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
@@ -108,10 +109,8 @@ Route::middleware('auth')->group(function(){
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
-Route::get(
-    '/category/{slug}',
-    [DiscoverController::class,'category']
-)->name('discover.category');
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+Route::get('/category/{slug}',[DiscoverController::class,'category'])->name('discover.category');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
