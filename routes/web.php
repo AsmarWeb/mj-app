@@ -108,9 +108,9 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
+// Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-Route::get('/category/{slug}',[DiscoverController::class,'category'])->name('discover.category');
+Route::get('/category/{slug}',[ExploreController::class,'category'])->name('discover.category');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
@@ -123,7 +123,7 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
     Route::get('/creators', [ShopController::class, 'creators'])
     ->name('shop.creators');
 
-    Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [DiscoverController::class, 'show'])->name('listing.show');
+    Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
     
 }); 
 

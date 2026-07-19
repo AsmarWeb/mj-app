@@ -35,7 +35,7 @@
                         Explore
                     </a> --}}
                         <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
-                            href="{{ route('discover') }}">
+                            href="{{ route('explore') }}">
                             {{ __('header.main.discover') }}
                         </a>
                         <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-1"
@@ -317,7 +317,7 @@
         class="hidden sm:hidden absolute inset-x-0 z-20 w-full px-5 py-2 transition-all duration-300 ease-in-out bg-white top-24 dark:bg-gray-800 md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:hidden md:items-center">
         <div class="flex flex-col md:flex-row md:mx-1">
             <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-2"
-                href="{{ route('discover') }}">
+                href="{{ route('explore') }}">
                 {{ __('header.main.discover') }}
             </a>
             <a class="my-2 text-ellipsis leading-5 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 hover:underline md:mx-4 md:my-0 flex items-center gap-2"

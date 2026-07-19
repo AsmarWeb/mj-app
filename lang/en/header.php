@@ -20,7 +20,7 @@ return [
     'locale' => "العربية",
 
     'main' => [
-        "discover" => "Discover",
+        "discover" => "Explore",
         "sell" => "Start selling",
         "services" => "Services",
         "about" => "About",

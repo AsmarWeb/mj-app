@@ -53,7 +53,7 @@ class DiscoverController extends Controller
         SEOMeta::setKeywords($keywords);
 
         return view('pages.category')->with(compact('title', 'description', 'keywords', 'category'));
-    }
+    } 
 
     public function show($shop, $section, $category, $subcategories, $brand, $listing)
     {

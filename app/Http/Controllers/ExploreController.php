@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Shop;
+use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Http\Request;
 
 class ExploreController extends Controller
@@ -32,7 +33,64 @@ class ExploreController extends Controller
         'shops'=>Shop::with('user')
             ->take(8)
             ->get(),
-
     ]);
+    }
+
+    public function category(Category $category)
+    {
+        $title = $category->category_name;
+        $description = $category->description;
+        $keywords = $category->keywords;
+
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($description);
+        SEOMeta::setKeywords($keywords);
+
+        return view('pages.category')->with(compact('title', 'description', 'keywords', 'category'));
+    } 
+
+    public function show($shop, $section, $category, $subcategories, $brand, $listing)
+    {
+        $listing = Listing::where('slug', $listing)
+
+        ->whereHas('shop', function ($query) use ($shop) {
+            $query->where('slug', $shop);
+        })
+
+        ->whereHas('section', function ($query) use ($section) {
+            $query->where('slug', $section);
+        })
+
+        ->whereHas('category', function ($query) use ($category) {
+            $query->where('slug', $category);
+        })
+
+        ->whereHas('subcategories', function ($query) use ($subcategories) {
+            $query->where('slug', $subcategories);
+        })
+
+        ->whereHas('brand', function ($query) use ($brand) {
+            $query->where('slug', $brand);
+        })
+
+        ->with([
+            'shop',
+            'section',
+            'category',
+            'subcategories',
+            'brand'
+        ])
+        
+        ->firstOrFail();
+
+        $title = $listing->title;
+        $description = $listing->description;
+        $keywords = $listing->keywords;
+
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($description);
+        SEOMeta::setKeywords($keywords);
+
+        return view('listings.show', compact('listing', 'title', 'description', 'keywords'));
     }
 }

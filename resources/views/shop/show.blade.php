@@ -47,7 +47,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('discover') }}"
+                            <a href="{{ route('explore') }}"
                                 class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700">
                                 Explore marketplace
                             </a>
