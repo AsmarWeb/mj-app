@@ -23,6 +23,7 @@
         "santigarcor/laratrust": "^8.3",
         "spatie/laravel-cookie-consent": "^3.3",
         "spatie/laravel-newsletter": "^5.3",
+        "spatie/laravel-sitemap": "^8.0",
         "spatie/laravel-sluggable": "^3.6",
         "stripe/stripe-php": "^17.6",
         "twilio/sdk": "^8.11"

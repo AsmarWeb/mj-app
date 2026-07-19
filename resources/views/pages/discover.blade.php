@@ -70,12 +70,12 @@
             @foreach ($categories as $category)
                 @if (count($category['subcategories']) > 0)
                     @if (app()->getLocale() == 'ar')
-                        <a href="{{ route('discover.category', ['category' => $category->id]) }}"
+                        <a href="{{ route('discover.category', ['slug' => $category->slug]) }}"
                             class="px-5 py-2 rounded-full bg-white shadow hover:bg-blue-600 hover:text-white transition">
                             {{ $category->category_name_ar }}
                         </a>
                     @else
-                        <a href="{{ route('discover.category', ['category' => $category->id]) }}"
+                        <a href="{{ route('discover.category', ['slug' => $category->slug]) }}"
                             class="px-5 py-2 rounded-full bg-white shadow hover:bg-blue-600 hover:text-white transition">
                             {{ $category->category_name }}
                         </a>

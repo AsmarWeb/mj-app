@@ -22,12 +22,14 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AiBuilderController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BusinessCardController;
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\ProfileController;
@@ -41,9 +43,75 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('locale');
 
+Route::get(
+'/sitemap.xml',
+[SitemapController::class,'index']
+);
+
+
+Route::get(
+'/sitemap-pages.xml',
+[SitemapController::class,'pages']
+);
+
+
+Route::get(
+'/sitemap-products.xml',
+[SitemapController::class,'products']
+);
+
+
+Route::get(
+'/sitemap-shops.xml',
+[SitemapController::class,'shops']
+);
+
+
+Route::get(
+'/sitemap-developers.xml',
+[SitemapController::class,'developers']
+);
+
+Route::get(
+    '/sitemap-categories.xml',
+    [SitemapController::class,'categories']
+);
+
+Route::middleware('auth')->group(function(){
+
+
+    Route::get(
+        '/developers',
+        [DeveloperController::class,'index']
+    )->name('developers.index');
+
+
+    Route::get(
+        '/developers/join',
+        [DeveloperController::class,'create']
+    )->name('developers.join');
+
+
+    Route::post(
+        '/developers',
+        [DeveloperController::class,'store']
+    )->name('developers.store');
+
+
+    Route::get(
+        '/developer/{id}',
+        [DeveloperController::class,'show']
+    )->name('developers.show');
+
+
+});
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
-Route::get('/discover/category/{category}', [DiscoverController::class, 'category'])->name('discover.category');
+Route::get(
+    '/category/{slug}',
+    [DiscoverController::class,'category']
+)->name('discover.category');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
@@ -96,7 +164,7 @@ Route::post(
 
 Route::middleware('auth')->group(function(){
 
-    Route::get('/plans',
+    Route::get('/pricing',
         [SubscriptionController::class,'index']
     )->name('plans.index');
 

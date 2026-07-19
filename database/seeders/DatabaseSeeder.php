@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PageSeeder::class);
         $this->call(KnowledgeSeeder::class);
         $this->call(PlanSeeder::class);
+        $this->call(DeveloperSeeder::class);
 
         // User::factory()->create([
         //     'name' => 'Test User',
