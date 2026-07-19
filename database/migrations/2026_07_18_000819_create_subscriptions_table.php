@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('plan_id')->constrained();
+            $table->foreignId('shop_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('plan_id')->nullable()->constrained()->nullOnDelete();
+            $table->enum('status', ['active','expired','cancelled'])->nullable();
             $table->foreignId('user_id');
-            $table->enum('status',['active','expired','cancelled']);
             $table->string('payment_provider')->nullable();
             $table->string('payment_id')->nullable();
             $table->string('type');

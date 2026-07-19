@@ -133,7 +133,7 @@ class ShopController extends Controller
                     'status' => 'active',
                     'payment_provider' => 'free',
                     'payment_id' => null,
-                    'type' => 'default',
+                    'type' => 'default', 
                     'stripe_id' => 'free_' . Str::uuid(),
                     'stripe_status' => 'active',
                     'stripe_price' => null,

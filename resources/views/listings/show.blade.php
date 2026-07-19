@@ -1,7 +1,7 @@
 <x-main-layout>
-    @section('title', 'Listing | murwaj')
+    @section('title', $title)
     @section('description', "$description")
-    @section('keywords', "$keywords")
+    @section('keywords', implode(', ', $keywords))
 
     <x-slot name="header">
         <x-main-header></x-main-header>
@@ -31,7 +31,7 @@
 
                     <div class="flex gap-4 py-4 justify-center overflow-x-auto">
                         @php
-                            $images = explode(',', $listing->images);
+                            $images = $listing->images;
                         @endphp
                         @foreach ($images as $image)
                             @if ($image)

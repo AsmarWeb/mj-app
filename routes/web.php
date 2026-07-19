@@ -27,6 +27,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\ProfileController;
 use App\Livewire\Admin\Listing\CreateComponent;
@@ -71,6 +73,10 @@ Route::view('/create', 'listings.create')->name('seller.create');
 });
 
 Route::middleware('auth')->group(function () {
+    Route::view('/profile', 'profile')->name('profile');
+});
+
+Route::middleware('auth')->group(function () {
 
     Route::get('/phone/verify', [PhoneVerificationController::class, 'show'])
         ->name('phone.verify');
@@ -82,6 +88,11 @@ Route::middleware('auth')->group(function () {
         ->name('phone.check');
 
 });
+
+Route::post(
+    '/stripe/webhook',
+    [StripeWebhookController::class, 'handleWebhook']
+);
 
 Route::middleware('auth')->group(function(){
 
@@ -106,8 +117,6 @@ function(){
 
 Route::get('/bot', [BotController::class,'index'])->name('bot');
 Route::post('/bot/chat', [BotController::class,'chat']);
-
-Route::view('/profile', 'profile')->name('profile');
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');
@@ -139,26 +148,15 @@ Route::middleware([
     Route::get('/dashboard', [ShopController::class, 'index'])->name('dashboard');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
+    Route::get('/resumes/create', [ResumeController::class, 'create'])->name('resumes.create');
+    Route::post('/resumes', [ResumeController::class, 'store'])->name('resumes.store');
+    Route::get('/resumes/{id}/edit', [ResumeController::class, 'edit'])->name('resumes.edit');
+    Route::put('/resumes/{id}', [ResumeController::class, 'update'])->name('resumes.update');
+    Route::get('/resumes/{id}/pdf', [ResumeController::class, 'pdf'])->name('resumes.pdf');
+    Route::delete('/resumes/{id}', [ResumeController::class, 'destroy'])->name('resumes.destroy');
 
-    Route::get(
-        '/business-card/create',
-        [BusinessCardController::class,'create']
-    );
-
-
-    Route::post(
-        '/business-card',
-        [BusinessCardController::class,'store']
-    );
-
-
-    Route::get(
-        '/business-card/{id}/pdf',
-        [BusinessCardController::class,'pdf']
-    )
-    ->name('cards.pdf');
-
+    Route::get('/cv/{slug}', [ResumeController::class,'public'])->name('resume.public');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {

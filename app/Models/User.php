@@ -110,6 +110,23 @@ class User extends Authenticatable implements LaratrustUser
         return $this->hasMany(BusinessCard::class);
     }
 
+    public function payments()
+    {
+    return $this->hasMany(Payment::class);
+    }
+
+    public function resumes()
+    {
+    return $this->hasMany(Resume::class);
+    }
+
+    public function coupons()
+    {
+    return $this->belongsToMany(Coupon::class)
+        ->withPivot('payment_id', 'discount_amount')
+        ->withTimestamps();
+    }
+
     public function hasVerifiedPhone(): bool
     {
     return ! is_null($this->phone_verified_at);

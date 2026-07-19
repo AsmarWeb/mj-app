@@ -302,9 +302,9 @@
                 Why Choose Our Marketplace?
             </h2>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                @foreach (['Verified Creators', 'Instant Downloads', 'Secure Payments', '24/7 Support'] as $feature)
+                @foreach (['Verified Creators', 'Secure Payments', '24/7 Support'] as $feature)
                     <div class="text-center">
 
                         <div
@@ -317,7 +317,7 @@
                         </h3>
 
                         <p class="text-gray-500 mt-3">
-                            Premium experience with trusted developers.
+
                         </p>
 
                     </div>

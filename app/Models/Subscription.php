@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Cashier\Subscription as CashierSubscription;
 
-
-class Subscription extends Model
+class Subscription extends CashierSubscription
 {
     protected $fillable = [
         'shop_id',
@@ -34,8 +32,8 @@ class Subscription extends Model
         return $this->belongsTo(Plan::class);
     }
 
-    public function user()
+    public function payments()
     {
-        return $this->belongsTo(User::class);
+    return $this->hasMany(Payment::class);
     }
 }

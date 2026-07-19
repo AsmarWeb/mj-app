@@ -9,7 +9,7 @@ class SubscriptionController extends Controller
 {
     public function index()
     {
-    $plans = Plan::where('is_active', true)
+        $plans = Plan::where('is_active', true)
         ->where('is_free', false)
         ->get();
 
@@ -26,6 +26,39 @@ class SubscriptionController extends Controller
         'selected_plan_id' => $plan->id,
     ]);
 
+    $subscription = $user->subscriptions()
+        ->where('type', 'default')
+        ->latest()
+        ->first();
+
+    // User is on Free plan (local subscription)
+    if ($subscription && $subscription->payment_provider === 'free') {
+
+        // Do NOT use swap()
+        // Create a new Stripe subscription
+
+        // Create real Stripe subscription
+        return $user
+            ->newSubscription('default', $plan->stripe_price)
+            ->checkout([
+                'success_url' => route('subscription.success'),
+                'cancel_url' => route('plans.index'),
+            ]);
+    }
+
+
+    // User already has Stripe subscription
+    if ($subscription && $subscription->payment_provider === 'stripe') {
+
+        $user->subscription('default')
+            ->swap($plan->stripe_price);
+
+        return redirect()
+            ->route('shop.dashboard')
+            ->with('success', 'Plan updated.');
+    }
+    
+    // No subscription exists
     return $user
         ->newSubscription('default', $plan->stripe_price)
         ->checkout([
@@ -36,32 +69,10 @@ class SubscriptionController extends Controller
 
     public function success()
     {
-    $user = auth()->user();
-    $shop = $user->shop;
-
-    $plan = Plan::find(session('selected_plan_id'));
-
-    if (! $plan) {
-        return redirect()->route('plans.index')
-            ->with('error', 'Unable to determine the selected plan.');
-    }
-
-    $subscription = $shop->subscriptions()
-        ->where('status', 'active')
-        ->latest()
-        ->first();
-
-    if ($subscription) {
-        $subscription->update([
-            'plan_id'       => $plan->id,
-            'stripe_price'  => $plan->stripe_price,
-            'status'        => 'active',
-        ]);
-    }
-
     session()->forget('selected_plan_id');
 
-    return redirect()->route('shop.dashboard')
-        ->with('success', 'Your subscription has been upgraded successfully.');
+    return redirect()
+        ->route('shop.dashboard')
+        ->with('success', 'Your payment was received. Your subscription is being activated.');
     }
 }

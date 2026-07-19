@@ -18,7 +18,7 @@ return [
     'rent' => 'إيجار',
     'booking' => 'حجز',
     'Shopping with' => 'تسوق مع',
-    'murwaj' => 'مُروَّج',
+    'murwaj' => 'مُروَّج.كم',
     'Buy and sell everything from digital products to services.' => 'شراء وبيع كل شيء من المنتجات الرقمية إلى الخدمات.',
     'explore store' => 'استكشف المتجر',
     'top creators' => 'أفضل المبدعين',

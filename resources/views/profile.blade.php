@@ -160,6 +160,133 @@
                 </div>
             </div>
 
+            @php
+                $resume = auth()->user()->resumes()->latest()->first();
+            @endphp
+
+            @if ($resume)
+                <div class="mt-8 bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+
+                    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6 text-white">
+
+                        <h2 class="text-2xl font-bold">
+                            🌐 Share Your Resume
+                        </h2>
+
+                        <p class="mt-2 text-white/90">
+                            Share your professional resume with recruiters, clients, and employers using a single
+                            public link.
+                        </p>
+
+                    </div>
+
+                    <div class="p-8">
+
+                        <div class="grid lg:grid-cols-3 gap-8">
+
+                            {{-- Link + Actions --}}
+                            <div class="lg:col-span-2">
+
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Public Resume Link
+                                </label>
+
+                                <div class="flex gap-3">
+
+                                    <input id="resumeLink" type="text" readonly
+                                        value="{{ route('resume.public', $resume->slug) }}"
+                                        class="flex-1 rounded-xl border-gray-300 bg-gray-50">
+
+                                    <button onclick="copyResumeLink()"
+                                        class="px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition">
+
+                                        📋 Copy
+
+                                    </button>
+
+                                </div>
+
+                                <div class="mt-8">
+
+                                    <h3 class="font-semibold text-gray-800 mb-4">
+                                        Share on Social Media
+                                    </h3>
+
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                                        <a target="_blank"
+                                            href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                            class="flex items-center justify-center gap-2 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white py-3 transition">
+
+                                            💼 LinkedIn
+
+                                        </a>
+
+                                        <a target="_blank"
+                                            href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                            class="flex items-center justify-center gap-2 rounded-xl bg-[#1877F2] hover:bg-[#166FE5] text-white py-3 transition">
+
+                                            📘 Facebook
+
+                                        </a>
+
+                                        <a target="_blank"
+                                            href="https://twitter.com/intent/tweet?url={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                            class="flex items-center justify-center gap-2 rounded-xl bg-black hover:bg-gray-800 text-white py-3 transition">
+
+                                            ✖ X
+
+                                        </a>
+
+                                        <a target="_blank"
+                                            href="https://wa.me/?text={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                            class="flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3 transition">
+
+                                            💬 WhatsApp
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            @endif
+
+            <div class="mb-8 bg-white rounded-2xl p-8 shadow-sm">
+
+                <div class="text-4xl mb-4">
+                    📄
+                </div>
+
+                <h3 class="font-bold text-xl">
+                    Create Professional Resume
+                </h3>
+
+                <p class="text-gray-500 mt-2">
+                    Build a modern CV, choose your design, upload your photo and download a professional PDF.
+                </p>
+
+                @if (auth()->user()->resumes()->exists())
+                    <a href="{{ route('resumes.edit', auth()->user()->resumes()->latest()->first()->id) }}"
+                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-purple-500 text-white font-semibold hover:bg-purple-600 transition">
+                        ✏️ Edit My Resume
+                    </a>
+                @else
+                    <a href="{{ route('resumes.create') }}"
+                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-purple-700 font-semibold hover:bg-gray-100 transition">
+                        📄 Create Your Resume
+                    </a>
+                @endif
+
+            </div>
+
             @role('seller')
 
                 <!-- Seller Details -->
@@ -355,4 +482,24 @@
 
         </div>
     </div>
+    <script>
+        function copyResumeLink() {
+            const input = document.getElementById('resumeLink');
+
+            navigator.clipboard.writeText(input.value);
+
+            const button = event.target;
+            const original = button.innerHTML;
+
+            button.innerHTML = "✅ Copied";
+            button.classList.remove("bg-indigo-600");
+            button.classList.add("bg-green-600");
+
+            setTimeout(() => {
+                button.innerHTML = original;
+                button.classList.remove("bg-green-600");
+                button.classList.add("bg-indigo-600");
+            }, 2000);
+        }
+    </script>
 </x-app-layout>
