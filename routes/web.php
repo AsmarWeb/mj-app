@@ -28,8 +28,10 @@ use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\ShopCountryController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
@@ -114,6 +116,8 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 // Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/category/{slug}',[ExploreController::class,'category'])->name('discover.category');
+Route::get('/categories', [ListingCategoryController::class, 'index'])->name('categories');
+Route::get('/countries', [ShopCountryController::class, 'index'])->name('countries');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
@@ -138,8 +142,8 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
 
 // });
 
-Route::group(['namespace' => 'App\Livewire\Seller', 'prefix' => 'seller', 'middleware' => ['role:seller']], function () {
-Route::view('/create', 'listings.create')->name('seller.create');
+Route::group(['namespace' => 'App\Livewire\Seller', 'prefix' => 'seller', 'middleware' => ['role:seller|administrator']], function () {
+    Route::view('/create', 'listings.create')->name('seller.create');
 });
 
 Route::middleware('auth')->group(function () {
@@ -211,7 +215,7 @@ Route::view('contact-us', 'pages.contact')->name('contact');
 // });
 
 Route::middleware([
-    'auth:sanctum', 'role:seller',
+    'auth:sanctum', 'role:seller|administrator',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -239,6 +243,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
     Route::post('page/delete/{id}', [PageController::class, 'delete'])->name('page.delete');
 
     Route::post('page/deleteImage', [PageController::class, 'deleteImage'])->name('page.deleteImage');
+
+    Route::post('shops/{shop}/verify', [ShopsController::class, 'verify'])->name('admin.shops.verify');
+
+    Route::post('shops/{shop}/unverify', [ShopsController::class, 'unverify'])->name('admin.shops.unverify');
 });
 
 Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {

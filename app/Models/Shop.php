@@ -34,15 +34,25 @@ class Shop extends Model
         'user_id',
         'step',
         'is_completed',
-        'is_active'
+        'is_active',
+        'verified',
+        'verified_at',
+        'verified_by',
     ];
 
     protected $dates = ['published_at']; 
 
     protected $casts = [
+        'verified' => 'boolean',
+        'verified_at' => 'datetime',
         'published_at' => 'datetime',
         'rating' => 'float',
     ];
+
+    public function isVerified()
+    {
+        return $this->verified;
+    }
 
     public function user(): BelongsTo
     {

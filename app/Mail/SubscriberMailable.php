@@ -29,7 +29,7 @@ class SubscriberMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Thank You',
+            subject: 'Welcome to murwaj Community 🎉',
         );
     }
 

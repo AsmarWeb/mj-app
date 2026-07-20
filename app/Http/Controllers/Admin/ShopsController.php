@@ -97,4 +97,26 @@ class ShopsController extends Controller
         $shop->delete();
         return redirect()->route('shops.index')->with('message', 'Shop deleted Successfully');
     }
+
+    public function verify(Shop $shop)
+    {
+    $shop->update([
+        'verified' => true,
+        'verified_at' => now(),
+        'verified_by' => auth()->id(),
+    ]);
+
+    return back()->with('success', 'Shop verified successfully.');
+    }
+
+    public function unverify(Shop $shop)
+    {
+        $shop->verified = false;
+        $shop->verified_at = null;
+        $shop->verified_by = null;
+        
+        $shop->save();
+        
+        return back()->with('success', 'Shop unverified successfully.');
+    }
 }

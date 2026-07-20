@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email');
             $table->string('token');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

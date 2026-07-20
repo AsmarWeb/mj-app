@@ -74,7 +74,7 @@
                 </h2>
 
 
-                <a href="{{ route('categories.index') }}" class="text-indigo-600 font-semibold">
+                <a href="{{ route('categories') }}" class="text-indigo-600 font-semibold">
 
                     View All
 
@@ -467,19 +467,7 @@
 
 
 
-                <form class="mt-8 flex">
-
-                    <input class="flex-1 rounded-l-xl text-gray-900 px-5" placeholder="Your email">
-
-
-                    <button class="bg-indigo-600 px-8 rounded-r-xl">
-
-                        Subscribe
-
-                    </button>
-
-
-                </form>
+                @livewire('newsletter.subscribe')
 
 
             </div>

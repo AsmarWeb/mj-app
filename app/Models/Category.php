@@ -51,7 +51,7 @@ class Category extends Model
     }
 
     //Relacion entre categories y products atravez de otra relación en este caso Subcategory
-    public function listing(): HasMany
+    public function listings(): HasMany
     {
         return $this->hasMany(Listing::class, 'category_id', 'id');
     }

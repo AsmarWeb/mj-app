@@ -16,18 +16,23 @@ class ShopSeeder extends Seeder
         $data = array(
             'name' => "murwaj",
             'slug' => "murwaj",
-            'description' => "Murwaj Shop",
+            'description' => "Official murwaj Marketplace Store.",
             'logo' => "shop-suggest/logo.png",
             'banner' => "shop-suggest/cover.jpg",
             'type' => "freelance",
             'country_id' => "1",
             'state_id' => "1",
-            'city_id' => "1",
-            'location' => "Dubai,UAE",
+            'city_id' => "4",
+            'location' => "Dubai,UAE", 
             'currency' => "AED",
             'section_id' => "1",
             'rating' => "4.5",
-            'published_at' => "2024-07-17 12:36:30",
+            'published_at' => now(),
+            'is_active' => true,
+            // Verification
+            'verified' => true,
+            'verified_at' => now(),
+            'verified_by' => 1,
             'user_id' => "1",
         );
         DB::table('shops')->insert($data);

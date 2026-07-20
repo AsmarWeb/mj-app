@@ -28,7 +28,7 @@ return new class extends Migration
             $table->bigInteger('section_id')->unsigned()->nullable();
             $table->decimal('rating', 10, 2)->nullable();
             $table->unsignedBigInteger('views')->default(0);
-            $table->datetime('published_at')->nullable();
+            $table->datetime('published_at')->nullable(); 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->unique();
             $table->foreignIdFor(User::class, 'updated_by')->nullable();
             $table->softDeletes();
@@ -36,6 +36,9 @@ return new class extends Migration
             $table->unsignedTinyInteger('step')->default(1);
             $table->boolean('is_completed')->default(false);
             $table->boolean('is_active')->default(false);
+            $table->boolean('verified')->default(false)->after('is_active');
+            $table->timestamp('verified_at')->nullable();
+            $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

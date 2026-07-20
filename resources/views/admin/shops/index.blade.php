@@ -97,6 +97,10 @@
                                     </th>
                                     <th
                                         class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                                        Verified
+                                    </th>
+                                    <th
+                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                                         Published at
                                     </th>
                                     <th
@@ -145,10 +149,61 @@
                                                     class="img-fluid" style="max-width:80px" alt="shop">
                                             @endif
                                         </td>
+                                        <td>
+                                            @if ($shop->verified)
+                                                <div
+                                                    class="inline-flex items-center gap-2 rounded-full bg-emerald-500 text-white px-4 py-2 shadow">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                        fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M16.707 5.293a1 1 0 010 1.414l-7.5 7.5a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L8.5 12.086l6.793-6.793a1 1 0 011.414 0z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+
+                                                    Verified Seller
+
+                                                </div>
+                                            @else
+                                                <div
+                                                    class="inline-flex items-center gap-2 rounded-full bg-slate-200 text-slate-700 px-4 py-2">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                        fill="none" stroke="currentColor" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M12 8v4m0 4h.01M10.29 3.86L1.82 18A2 2 0 003.53 21h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                                    </svg>
+
+                                                    Not Verified
+
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
                                                 {{ $shop->published_at }}
                                             </div>
+                                        </td>
+                                        <td>
+                                            @if ($shop->verified)
+                                                <form action="{{ route('admin.shops.unverify', $shop) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button
+                                                        class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white">
+                                                        Remove Verification
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('admin.shops.verify', $shop) }}" method="POST">
+                                                    @csrf
+                                                    <button
+                                                        class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
+                                                        Verify Shop
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <form action="{{ route('shops.destroy', $shop->id) }}" method="POST">

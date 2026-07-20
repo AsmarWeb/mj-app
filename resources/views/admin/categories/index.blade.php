@@ -131,13 +131,13 @@
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
-                                                <a class="text-sm leading-5 text-gray-800">{{ $category->listing->count() }}
+                                                <a class="text-sm leading-5 text-gray-800">{{ $category->listings->count() }}
                                                 </a>
                                             </div>
                                         </td>
                                         <td class="p-4 border-b border-blue-gray-50">
                                             <div class="flex items-center gap-3">
-                                                <a class="text-sm leading-5 text-gray-800">{{ $category->listing->sum('quantity') }}
+                                                <a class="text-sm leading-5 text-gray-800">{{ $category->listings->sum('quantity') }}
                                                 </a>
                                             </div>
                                         </td>

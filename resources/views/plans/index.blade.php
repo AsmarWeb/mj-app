@@ -1,89 +1,316 @@
 <x-main-layout>
 
-    <div class="grid gap-8 md:grid-cols-3">
+    <x-slot name="header">
+        <x-main-header></x-main-header>
+    </x-slot>
 
-        @foreach ($plans as $plan)
-            <div class="relative rounded-2xl border bg-white p-8 shadow-sm hover:shadow-lg transition">
+    <div class="min-h-screen py-16">
 
-                @if ($plan->is_popular)
-                    <span
-                        class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-4 py-1 text-xs font-semibold text-white">
-                        Most Popular
-                    </span>
+
+        {{-- Hero --}}
+        <div class="max-w-5xl mx-auto text-center px-6">
+
+            <span class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 font-semibold">
+                🚀 Murwaj Seller Plans
+            </span>
+
+
+            <h1 class="mt-6 text-5xl font-bold text-slate-900 dark:text-white">
+                Choose the perfect plan for your shop
+            </h1>
+
+
+            <p class="mt-4 text-lg text-slate-500 dark:text-slate-100">
+                Start selling today and upgrade as your business grows.
+            </p>
+
+
+        </div>
+
+
+
+        {{-- Plans --}}
+        <div class="max-w-7xl mx-auto px-6 mt-16">
+
+
+            <div class="grid gap-8 md:grid-cols-3">
+
+                @php
+                    $user = auth()->user();
+
+                    $isFree = !$user->subscriptions()->exists();
+                @endphp
+
+                {{-- Free Plan --}}
+                @if ($isFree)
+                    <div
+                        class="relative rounded-3xl bg-slate-100 border-2 border-dashed border-slate-300 overflow-hidden">
+
+                        <div
+                            class="absolute top-0 right-0 bg-green-600 text-white px-5 py-2 rounded-bl-2xl text-sm font-bold">
+                            Current Plan
+                        </div>
+
+                        <div class="p-8">
+                            <h2 class="text-3xl font-bold text-slate-900">
+                                Free
+                            </h2>
+
+                            <p class="mt-2 text-gray-500">
+                                Your default seller account before subscribing.
+                            </p>
+
+                            <div class="mt-6 flex items-end gap-2">
+                                <span class="text-5xl font-black text-slate-900">
+                                    $0
+                                </span>
+
+                                <span class="text-gray-500 mb-2">
+                                    /Forever
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="px-8 pb-8">
+                            <div class="border-t pt-6">
+
+                                <h3 class="font-bold mb-5">
+                                    Plan Features
+                                </h3>
+
+                                <ul class="space-y-4 text-sm text-slate-700">
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+                                        1 Active Product
+                                    </li>
+
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+                                        100 MB Storage
+                                    </li>
+
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+                                        Listings live for 30 days
+                                    </li>
+
+                                    <li class="flex gap-3">
+                                        <span class="text-red-500">✖</span>
+                                        No Featured Listings
+                                    </li>
+
+                                    <li class="flex gap-3">
+                                        <span class="text-red-500">✖</span>
+                                        No Video Uploads
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <button disabled
+                                class="mt-8 w-full py-4 rounded-2xl font-bold bg-gray-300 text-gray-600 cursor-not-allowed">
+                                Your Current Plan
+                            </button>
+                        </div>
+
+                    </div>
                 @endif
 
-                <h2 class="text-2xl font-bold">
-                    {{ $plan->name }}
-                </h2>
 
-                <p class="mt-3 text-4xl font-bold">
-                    ${{ number_format($plan->price, 2) }}
-                </p>
+                @foreach ($plans as $plan)
+                    <div
+                        class="
+                    relative 
+                    rounded-3xl 
+                    bg-white 
+                    border 
+                    overflow-hidden
+                    shadow-sm 
+                    hover:shadow-2xl 
+                    transition
+                    {{ $plan->is_popular ? 'ring-2 ring-indigo-600' : '' }}
+                    ">
 
-                <p class="text-gray-500">
-                    per {{ ucfirst($plan->billing_period) }}
-                </p>
 
-                <hr class="my-6">
+                        {{-- Popular Badge --}}
+                        @if ($plan->is_popular)
+                            <div
+                                class="
+                            absolute 
+                            top-0 
+                            right-0
+                            bg-gradient-to-r 
+                            from-indigo-600 
+                            to-purple-600
+                            text-white
+                            px-5
+                            py-2
+                            rounded-bl-2xl
+                            text-sm
+                            font-bold
+                            ">
 
-                <ul class="space-y-3 text-sm">
+                                ⭐ Most Popular
 
-                    <li>✔ {{ $plan->listing_limit }} Active Products</li>
+                            </div>
+                        @endif
 
-                    <li>✔ {{ $plan->storage_limit }} MB Image Storage</li>
 
-                    <li>✔ Listings live for {{ $plan->listing_duration }} days</li>
 
-                    <li>✔ Featured Listings:
-                        {{ $plan->featured_limit ?? 'Unlimited' }}
-                    </li>
+                        {{-- Header --}}
+                        <div class="p-8">
 
-                    <li>✔ Product Images:
-                        {{ $plan->image_limit ?? 'Unlimited' }}
-                    </li>
 
-                    <li>✔ Video Uploads:
-                        {{ $plan->video_upload ? 'Yes' : 'No' }}
-                    </li>
+                            <h2 class="text-3xl font-bold text-slate-900">
+                                {{ $plan->name }}
+                            </h2>
 
-                    <li>✔ Customer Chat:
-                        {{ $plan->live_chat ? 'Included' : 'Not Included' }}
-                    </li>
 
-                    <li>✔ Analytics Dashboard:
-                        {{ $plan->analytics ? 'Included' : 'Basic' }}
-                    </li>
+                            <p class="mt-2 text-gray-500">
+                                {{ $plan->description ?? 'Perfect plan for growing your business.' }}
+                            </p>
 
-                    <li>✔ Priority Search Ranking:
-                        {{ $plan->priority_listing ? 'Yes' : 'No' }}
-                    </li>
 
-                    <li>✔ Coupon Creation:
-                        {{ $plan->coupon_limit ?? 'No Coupons' }}
-                    </li>
 
-                    <li>✔ Team Members:
-                        {{ $plan->staff_limit ?? 1 }}
-                    </li>
+                            <div class="mt-6 flex items-end gap-2">
 
-                    <li>✔ Support:
-                        {{ $plan->support_level }}
-                    </li>
 
-                </ul>
+                                <span class="text-5xl font-black text-slate-900">
 
-                <form action="{{ route('subscription.checkout', $plan) }}" method="POST" class="mt-8">
+                                    ${{ number_format($plan->price, 2) }}
 
-                    @csrf
+                                </span>
 
-                    <button class="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700">
-                        Subscribe
-                    </button>
 
-                </form>
+                                <span class="text-gray-500 mb-2">
+
+                                    /{{ ucfirst($plan->billing_period) }}
+
+                                </span>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                        {{-- Features --}}
+                        <div class="px-8 pb-8">
+
+
+                            <div class="border-t pt-6">
+
+
+                                <h3 class="font-bold mb-5">
+                                    Plan Features
+                                </h3>
+
+
+
+                                <ul class="space-y-4 text-sm text-slate-700">
+
+
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+                                        {{ $plan->listing_limit }} Active Products
+                                    </li>
+
+
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+                                        {{ $plan->storage_limit }} MB Storage
+                                    </li>
+
+
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+                                        Listings live {{ $plan->listing_duration }} days
+                                    </li>
+
+
+                                    <li class="flex gap-3">
+                                        <span class="text-green-600">✔</span>
+
+                                        Featured Listings:
+                                        <b>
+                                            {{ $plan->featured_limit ?? 'Unlimited' }}
+                                        </b>
+
+                                    </li>
+
+
+
+                                    <li class="flex gap-3">
+
+                                        @if ($plan->video_upload)
+                                            <span class="text-green-600">✔</span>
+                                            Video Uploads Included
+                                        @else
+                                            <span class="text-red-500">✖</span>
+                                            No Video Uploads
+                                        @endif
+
+                                    </li>
+
+
+
+                                </ul>
+
+
+                            </div>
+
+
+
+
+                            {{-- Button --}}
+
+                            <form action="{{ route('subscription.checkout', $plan) }}" method="POST" class="mt-8">
+
+
+                                @csrf
+
+
+                                <button
+                                    class="
+                                w-full
+                                py-4
+                                rounded-2xl
+                                font-bold
+                                transition
+
+                                {{ $plan->is_popular
+                                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                                    : 'bg-slate-900 hover:bg-black text-white' }}
+                                ">
+
+
+                                    Subscribe Now 🚀
+
+
+                                </button>
+
+
+
+
+                            </form>
+
+
+                        </div>
+
+
+                    </div>
+                @endforeach
+
 
             </div>
-        @endforeach
+
+
+        </div>
+
 
     </div>
+
+    <x-main-footer></x-main-footer>
 </x-main-layout>

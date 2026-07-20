@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Newsletter;
 
-use App\Actions\Newsletter\EmailSubscriber;
 use App\Mail\SubscriberMailable;
+use App\Models\Subscriber;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use Spatie\Newsletter\Facades\Newsletter;
+use Illuminate\Support\Facades\Hash;
 
 class Subscribe extends Component
 {
@@ -20,15 +20,16 @@ class Subscribe extends Component
     {
         $this->validate();
 
-        $token = bcrypt($this->email);
+        $token = Hash::make($this->email);
 
-        $data = array(
-            'email' => $this->email,
-        );
+        $subscriber = Subscriber::create([
 
-        (new EmailSubscriber)([
             'email' => $this->email,
+
             'token' => $token,
+
+            'active' => true,
+
         ]);
 
         // if (!Newsletter::isSubscribed($this->email)) {
@@ -36,8 +37,12 @@ class Subscribe extends Component
         // }
 
         Mail::to($this->email)
-            ->send(new SubscriberMailable($data));
-
+            ->send(
+                new SubscriberMailable([
+                    'email' => $this->email
+                ])
+            );
+            
         session()->flash('success', 'You are subscribed successfully!');
 
         $this->reset();

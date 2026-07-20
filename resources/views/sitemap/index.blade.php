@@ -32,8 +32,10 @@
                         <li><a href="{{ route('home') }}" class="text-indigo-600 hover:underline">Home</a></li>
                         <li><a href="{{ route('explore') }}" class="text-indigo-600 hover:underline">Marketplace</a>
                         </li>
-                        <li><a href="{{ route('categories.index') }}"
-                                class="text-indigo-600 hover:underline">Categories</a></li>
+                        <li><a href="{{ route('categories') }}" class="text-indigo-600 hover:underline">Categories</a>
+                        </li>
+                        <li><a href="{{ route('countries') }}" class="text-indigo-600 hover:underline">Countries</a>
+                        </li>
                         <li><a href="{{ route('plans.index') }}" class="text-indigo-600 hover:underline">Pricing</a>
                         </li>
                     </ul>
