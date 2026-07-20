@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
             $table->char('code', 3);
+            $table->char('phone_code', 3);
+            $table->string('flag', 20)->nullable()->after('code');
             $table->string('name', 255);
             $table->string('name_ar', 255);
+            $table->string('slug');
             $table->timestamps();
         });
     }

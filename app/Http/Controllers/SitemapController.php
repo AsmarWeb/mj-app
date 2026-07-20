@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
@@ -352,5 +353,17 @@ public function categories()
             'Content-Type',
             'application/xml'
         );
+}
+
+public function page()
+{
+    return view('sitemap.index', [
+        'categories' => Category::where('status', 'active')->take(20)->get(),
+        'shops' => Shop::latest()->take(20)->get(),
+        'products' => Listing::latest()->take(20)->get(),
+        'countries' => Country::withCount('shops')
+            ->orderBy('name')
+            ->get(), 
+    ]);
 }
 }

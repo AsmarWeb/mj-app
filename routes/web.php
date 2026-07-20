@@ -44,6 +44,9 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('locale');
 
+Route::get('/sitemap', [SitemapController::class, 'page'])
+    ->name('sitemap.page');
+
 Route::get(
 '/sitemap.xml',
 [SitemapController::class,'index']

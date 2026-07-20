@@ -21,6 +21,9 @@
                 <a target="_blank" href="{{ route('policy.show') }}"
                     class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
                     aria-label="Reddit"> {{ __('footer.main.policy') }} </a>
+                <a target="_blank" href="{{ route('sitemap.page') }}"
+                    class="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
+                    aria-label="Reddit"> {{ __('footer.main.sitemap') }} </a>
             </div>
 
         </div>
@@ -28,7 +31,8 @@
         <hr class="my-6 border-gray-200 md:my-10 dark:border-gray-700" />
 
         <div class="flex flex-col items-center sm:flex-row sm:justify-between">
-            <p class="text-sm text-gray-500 dark:text-gray-300">© murwaj 2025 - Crafted with love and coffee in Dubai.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300">© murwaj 2025 - Crafted with love and coffee in Dubai.
+            </p>
 
             <div class="flex -mx-2 py-4">
 

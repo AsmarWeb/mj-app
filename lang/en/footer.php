@@ -17,7 +17,8 @@ return [
         "home" => "Home",
         "contact" => "Contact Us",
         "terms" => "Teams",
-        "policy" => "Privacy"
+        "policy" => "Privacy",
+        "sitemap" => "Sitemap"
     ]
 
 ];

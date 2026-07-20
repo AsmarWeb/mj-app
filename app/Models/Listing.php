@@ -165,4 +165,16 @@ class Listing extends Model
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug');
     }
+
+    public function getUrlAttribute()
+    {
+    return route('listing.show', [
+        'shop' => $this->shop->slug,
+        'section' => $this->section->slug,
+        'category' => $this->category->slug,
+        'subcategories' => optional($this->subcategories)->slug ?? 'all',
+        'brand' => optional($this->brand)->slug ?? 'general',
+        'listing' => $this->slug,
+    ]);
+    }
 }
