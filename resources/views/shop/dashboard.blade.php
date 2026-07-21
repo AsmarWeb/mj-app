@@ -272,6 +272,13 @@
 
                                         </a>
 
+                                        <a href="{{ route('shop.public', $shop->slug) }}"
+                                            class="block bg-orange-600 rounded-lg text-center py-3 text-white hover:bg-orange-700">
+
+                                            Business Card
+
+                                        </a>
+
                                         <a href="#"
                                             class="block bg-gray-100 rounded-lg text-center py-3 hover:bg-gray-200">
 
@@ -285,6 +292,8 @@
                                             Subscription
 
                                         </a>
+
+
 
                                     </div>
 

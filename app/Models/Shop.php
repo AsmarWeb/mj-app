@@ -79,6 +79,11 @@ class Shop extends Model
     return $this->hasMany(Payment::class);
     }
 
+    public function businessCard()
+    {
+    return $this->hasOne(BusinessCard::class);
+    }
+
     public function activeSubscription()
     {
     return $this->hasOne(Subscription::class)

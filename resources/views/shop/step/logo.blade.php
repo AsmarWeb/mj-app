@@ -18,7 +18,8 @@
         </div>
 
 
-        <input type="file" name="logo" onchange="previewLogo(event)"
+        <input type="file" name="logo" accept="image/*"
+            onchange="previewImage(event,'logoPreview','logoPlaceholder')"
             class="absolute inset-0 opacity-0 cursor-pointer rounded-full">
 
     </div>
@@ -59,7 +60,8 @@
         </div>
 
 
-        <input type="file" name="banner" onchange="previewCover(event)"
+        <input type="file" name="banner" accept="image/*"
+            onchange="previewImage(event,'coverPreview','coverPlaceholder')"
             class="absolute inset-0 opacity-0 cursor-pointer">
 
     </div>
@@ -67,45 +69,27 @@
 </div>
 
 <script>
-    function previewLogo(event) {
-        const logoPreview = document.getElementById('logoPreview');
-        const logoPlaceholder = document.getElementById('logoPlaceholder');
+    function previewImage(event, previewId, placeholderId) {
+        const preview = document.getElementById(previewId);
+        const placeholder = document.getElementById(placeholderId);
 
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                logoPreview.src = e.target.result;
-                logoPreview.classList.remove('hidden');
-                logoPlaceholder.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
-        } else {
-            logoPreview.src = '';
-            logoPreview.classList.add('hidden');
-            logoPlaceholder.classList.remove('hidden');
-        }
-    }
-</script>
 
-<script>
-    function previewCover(event) {
-        const coverPreview = document.getElementById('coverPreview');
-        const coverPlaceholder = document.getElementById('coverPlaceholder');
-
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                coverPreview.src = e.target.result;
-                coverPreview.classList.remove('hidden');
-                coverPlaceholder.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
-        } else {
-            coverPreview.src = '';
-            coverPreview.classList.add('hidden');
-            coverPlaceholder.classList.remove('hidden');
+        if (!file) {
+            preview.src = "";
+            preview.classList.add("hidden");
+            placeholder.classList.remove("hidden");
+            return;
         }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove("hidden");
+            placeholder.classList.add("hidden");
+        };
+
+        reader.readAsDataURL(file);
     }
 </script>

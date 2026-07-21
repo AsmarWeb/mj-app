@@ -127,8 +127,10 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
     
     Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
-    Route::get('/creators', [ShopController::class, 'creators'])
-    ->name('shop.creators');
+    Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
+
+    Route::get('/shop/{slug}/business-card',[ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
+    Route::get('/business-card/{slug}',[ShopController::class,'businessCard'])->name('shop.public');
 
     Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
     

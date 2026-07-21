@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($shop->listing as $item)
+                @foreach ($shop->listings as $item)
                     <tr>
                         <td class="py-4 text-gray-700">{{ $item->title }}</td>
                         <td class="py-4 text-gray-700">{{ $item->quantity }}</td>
@@ -35,7 +35,7 @@
                         <td class="py-4 text-gray-700">{{ $item->price * $item->quantity }}</td>
                     </tr>
                 @endforeach
-                @if ($shop->listing->isEmpty())
+                @if ($shop->listings->isEmpty())
                     <tr>
                         <td colspan="3">
                             <div class="flex flecol justify-center items-center py-4 text-lg">

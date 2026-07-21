@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
+use App\Models\BusinessCard;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Order;
@@ -15,6 +16,9 @@ use App\Models\Shop;
 use App\Models\State;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
 class ShopController extends Controller
@@ -142,6 +146,20 @@ class ShopController extends Controller
                     'ends_at' => null,
                 ]);
                 }
+
+                BusinessCard::firstOrCreate(
+                    ['shop_id' => $shop->id],
+                    [
+        
+                    'title' => $shop->name,
+        
+                    'phone' => auth()->user()->phone,
+        
+                    'email' => auth()->user()->email,
+        
+                    'website' => route('shop', $shop->slug),
+                    ]
+                );
                 }
             
             });
@@ -264,6 +282,78 @@ class ShopController extends Controller
         
         return view('shop.creators', compact('shops'));
     }
+
+    public function downloadBusinessCard($slug)
+    {
+    $shop = Shop::with([
+        'businessCard',
+        'city',
+        'country'
+    ])
+    ->where('slug',$slug)
+    ->firstOrFail();
+
+
+    $writer = new \Endroid\QrCode\Writer\PngWriter();
+
+
+    $qr = new \Endroid\QrCode\QrCode(
+        data: route('shop.public',$shop->slug),
+        size:200,
+        margin:10
+    );
+
+
+    $result = $writer->write($qr);
+
+
+    $qrCode = base64_encode($result->getString());
+
+
+    $pdf = Pdf::loadView(
+        'shop.pdf.business-card',
+        compact('shop','qrCode')
+    )
+    ->setPaper('a4');
+
+
+    return $pdf->download(
+        $shop->slug.'-business-card.pdf'
+    );
+    }
+
+    public function businessCard($slug)
+{
+    $shop = Shop::with([
+        'businessCard',
+        'city',
+        'country'
+    ])
+    ->where('slug',$slug)
+    ->firstOrFail();
+
+
+    $writer = new \Endroid\QrCode\Writer\PngWriter();
+
+
+    $qr = new \Endroid\QrCode\QrCode(
+        data: route('shop.public',$shop->slug),
+        size:200,
+        margin:10
+    );
+
+
+    $result = $writer->write($qr);
+
+
+    $qrCode = base64_encode($result->getString());
+
+
+    return view(
+        'shop.public',
+        compact('shop','qrCode')
+    );
+}
 
 
 }
