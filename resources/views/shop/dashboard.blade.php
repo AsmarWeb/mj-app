@@ -223,7 +223,8 @@
 
                                                         <td>
 
-                                                            <a href="#" class="text-indigo-600">
+                                                            <a href="{{ route('seller.edit', ['listing' => $listing->id]) }}"
+                                                                class="text-indigo-600">
                                                                 Edit
                                                             </a>
 
@@ -257,101 +258,229 @@
                             <!-- Sidebar -->
                             <div class="space-y-6">
 
-                                <div class="bg-white rounded-xl shadow p-6">
+                                <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
 
-                                    <h2 class="font-bold mb-4">
-                                        Quick Actions
-                                    </h2>
+                                    <!-- Header -->
+                                    <div class="flex items-center justify-between p-6 border-b">
 
-                                    <div class="space-y-3">
+                                        <div>
+                                            <h2 class="text-lg font-bold text-gray-900">
+                                                Notifications
+                                            </h2>
 
-                                        <a href="{{ route('seller.create') }}"
-                                            class="block bg-indigo-600 text-white rounded-lg text-center py-3 hover:bg-indigo-700">
+                                            <p class="text-sm text-gray-500">
+                                                Stay up to date with your shop.
+                                            </p>
+                                        </div>
 
-                                            Add Product
-
-                                        </a>
-
-                                        <a href="{{ route('shop.public', $shop->slug) }}"
-                                            class="block bg-orange-600 rounded-lg text-center py-3 text-white hover:bg-orange-700">
-
-                                            Business Card
-
-                                        </a>
-
-                                        <a href="#"
-                                            class="block bg-gray-100 rounded-lg text-center py-3 hover:bg-gray-200">
-
-                                            Edit Shop
-
-                                        </a>
-
-                                        <a href="{{ route('plans.index') }}"
-                                            class="block bg-gray-100 rounded-lg text-center py-3 hover:bg-gray-200">
-
-                                            Subscription
-
-                                        </a>
-
-
+                                        @if (auth()->user()->unreadNotifications->count())
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                                {{ auth()->user()->unreadNotifications->count() }} New
+                                            </span>
+                                        @endif
 
                                     </div>
 
-                                </div>
+                                    <!-- Notifications -->
+                                    <div class="divide-y divide-gray-100">
 
-                                <div class="bg-white rounded-xl shadow p-6">
+                                        @forelse($notifications as $notification)
+                                            <a href="{{ route('notifications.read', $notification->id) }}"
+                                                class="block transition hover:bg-gray-50">
 
-                                    <h2 class="font-bold mb-4">
-                                        Shop Status
-                                    </h2>
+                                                <div
+                                                    class="flex gap-4 p-5 {{ is_null($notification->read_at) ? 'bg-indigo-50' : 'bg-white' }}">
 
-                                    <ul class="space-y-3">
+                                                    <!-- Icon -->
+                                                    <div
+                                                        class="flex h-12 w-12 items-center justify-center rounded-full
+                        {{ is_null($notification->read_at) ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500' }}">
 
-                                        <li class="flex justify-between">
+                                                        @switch($notification->data['icon'] ?? 'bell')
+                                                            @case('success')
+                                                                ✅
+                                                            @break
 
-                                            <span>Email</span>
+                                                            @case('order')
+                                                                📦
+                                                            @break
 
-                                            @if (auth()->user()->hasVerifiedEmail())
-                                                <span class="text-green-600">Verified</span>
-                                            @else
-                                                <span class="text-red-600">Not Verified</span>
-                                            @endif
+                                                            @case('shop')
+                                                                🏪
+                                                            @break
 
-                                        </li>
+                                                            @case('payment')
+                                                                💳
+                                                            @break
 
-                                        <li class="flex justify-between">
+                                                            @default
+                                                                🔔
+                                                        @endswitch
 
-                                            <span>Phone</span>
+                                                    </div>
 
-                                            @if (auth()->user()->phone_verified_at)
-                                                <span class="text-green-600">Verified</span>
-                                            @else
-                                                <span class="text-red-600">Not Verified</span>
-                                            @endif
+                                                    <!-- Content -->
+                                                    <div class="flex-1">
 
-                                        </li>
+                                                        <div class="flex items-start justify-between">
 
-                                        <li class="flex justify-between">
+                                                            <h3 class="font-semibold text-gray-900">
+                                                                {{ $notification->data['title'] }}
+                                                            </h3>
 
-                                            <span>Shop</span>
+                                                            @if (is_null($notification->read_at))
+                                                                <span class="h-3 w-3 rounded-full bg-indigo-600"></span>
+                                                            @endif
 
-                                            <span class="text-green-600">
-                                                Active
-                                            </span>
+                                                        </div>
 
-                                        </li>
+                                                        <p class="mt-1 text-sm text-gray-600">
+                                                            {{ $notification->data['message'] }}
+                                                        </p>
 
-                                    </ul>
+                                                        <div class="mt-3 flex items-center justify-between">
+
+                                                            <span class="text-xs text-gray-400">
+                                                                {{ $notification->created_at->diffForHumans() }}
+                                                            </span>
+
+                                                            @if (is_null($notification->read_at))
+                                                                <span class="text-xs font-medium text-indigo-600">
+                                                                    Mark as read →
+                                                                </span>
+                                                            @else
+                                                                <span class="text-xs text-gray-400">
+                                                                    Read
+                                                                </span>
+                                                            @endif
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </a>
+
+                                            @empty
+
+                                                <div class="py-12 text-center">
+
+                                                    <div class="text-5xl mb-4">
+                                                        🔔
+                                                    </div>
+
+                                                    <h3 class="font-semibold text-gray-800">
+                                                        No notifications
+                                                    </h3>
+
+                                                    <p class="text-sm text-gray-500 mt-2">
+                                                        We'll notify you when something important happens.
+                                                    </p>
+
+                                                </div>
+                                            @endforelse
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="bg-white rounded-xl shadow p-6">
+
+                                        <h2 class="font-bold mb-4">
+                                            Quick Actions
+                                        </h2>
+
+                                        <div class="space-y-3">
+
+                                            <a href="{{ route('seller.create') }}"
+                                                class="block bg-indigo-600 text-white rounded-lg text-center py-3 hover:bg-indigo-700">
+
+                                                Add Product
+
+                                            </a>
+
+                                            <a href="{{ route('shop.public', $shop->slug) }}"
+                                                class="block bg-orange-600 rounded-lg text-center py-3 text-white hover:bg-orange-700">
+
+                                                Business Card
+
+                                            </a>
+
+                                            <a href="{{ route('shop.edit') }}"
+                                                class="block bg-gray-100 rounded-lg text-center py-3 hover:bg-gray-200">
+
+                                                Edit Shop
+
+                                            </a>
+
+                                            <a href="{{ route('plans.index') }}"
+                                                class="block bg-gray-100 rounded-lg text-center py-3 hover:bg-gray-200">
+
+                                                Subscription
+
+                                            </a>
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="bg-white rounded-xl shadow p-6">
+
+                                        <h2 class="font-bold mb-4">
+                                            Shop Status
+                                        </h2>
+
+                                        <ul class="space-y-3">
+
+                                            <li class="flex justify-between">
+
+                                                <span>Email</span>
+
+                                                @if (auth()->user()->hasVerifiedEmail())
+                                                    <span class="text-green-600">Verified</span>
+                                                @else
+                                                    <span class="text-red-600">Not Verified</span>
+                                                @endif
+
+                                            </li>
+
+                                            <li class="flex justify-between">
+
+                                                <span>Phone</span>
+
+                                                @if (auth()->user()->phone_verified_at)
+                                                    <span class="text-green-600">Verified</span>
+                                                @else
+                                                    <span class="text-red-600">Not Verified</span>
+                                                @endif
+
+                                            </li>
+
+                                            <li class="flex justify-between">
+
+                                                <span>Shop</span>
+
+                                                <span class="text-green-600">
+                                                    Active
+                                                </span>
+
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
 
                                 </div>
 
                             </div>
 
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </x-app-layout>

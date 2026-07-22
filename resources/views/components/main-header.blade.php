@@ -97,6 +97,10 @@
                     {{ __('header.main.sell') }}
                 </a>
 
+                @auth
+                    <livewire:cart-icon />
+                @endauth
+
                 <button id="theme-toggle" type="button" x-cloak x-on:click="darkMode = !darkMode;"
                     class="group flex max-w-[2.25rem] border border-gray-200/40 dark:border-gray-700/40 bg-gray-100/20 dark:bg-gray-800/20 rounded-lg h-9 w-9 items-center justify-center">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -113,6 +117,8 @@
                         </path>
                     </svg>
                 </button>
+
+
 
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
@@ -296,8 +302,14 @@
                 @endauth
             </div>
 
+
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
+
+                @auth
+                    <livewire:cart-icon />
+                @endauth
+
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">

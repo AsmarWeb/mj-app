@@ -19,11 +19,9 @@ use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\AiBuilderController;
 use App\Http\Controllers\BotController;
-use App\Http\Controllers\BusinessCardController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\DeveloperController;
-use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
@@ -35,9 +33,9 @@ use App\Http\Controllers\ShopCountryController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\EditController;
+use App\Http\Controllers\WishlistController;
 use App\Livewire\Admin\Listing\CreateComponent;
-use App\Livewire\Seller\CreateListing;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -125,16 +123,34 @@ Route::resource('users', UsersController::class)->only('show','edit','update')->
 Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
     Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
+    Route::get('/shop/edit', [ShopController::class, 'edit'])->name('shop.edit');
+    Route::put('/shop/update', [ShopController::class, 'update'])->name('shop.update');
     
     Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
     Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
 
     Route::get('/shop/{slug}/business-card',[ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
     Route::get('/business-card/{slug}',[ShopController::class,'businessCard'])->name('shop.public');
-
-    Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
     
-}); 
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
+});
+
+Route::get('/notifications/{notification}', function ($id) {
+
+    $notification = auth()->user()
+        ->notifications()
+        ->findOrFail($id);
+
+    if (!$notification->read_at) {
+        $notification->markAsRead();
+    }
+
+    return redirect($notification->data['url'] ?? route('dashboard'));
+
+})->name('notifications.read');
 
 // Route::middleware(['auth', 'verified','prefix' => 'seller', 'phone.verified'])
 //     ->group(function () {
@@ -146,6 +162,57 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
 
 Route::group(['namespace' => 'App\Livewire\Seller', 'prefix' => 'seller', 'middleware' => ['role:seller|administrator']], function () {
     Route::view('/create', 'listings.create')->name('seller.create');
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/seller/listing/{listing}/edit',
+        [EditController::class,'edit']
+    )
+    ->name('seller.edit');
+
+
+    Route::put(
+        '/seller/listing/{listing}',
+        [EditController::class,'update']
+    )
+    ->name('seller.listing.update');
+
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+    Route::post('/cart/{item}/increase', [CartController::class, 'increase'])
+        ->name('cart.increase');
+
+    Route::post('/cart/{item}/decrease', [CartController::class, 'decrease'])
+        ->name('cart.decrease');
+
+    Route::delete('/cart/{item}', [CartController::class, 'destroy'])
+        ->name('cart.destroy');
+
+});
+
+Route::middleware('auth')->group(function(){
+
+Route::post(
+'/cart/add/{listing}',
+[CartController::class,'add']
+)
+->name('cart.add');
+
+
+
+Route::post(
+'/wishlist/add/{listing}',
+[WishlistController::class,'add']
+)
+->name('wishlist.add');
+
+
 });
 
 Route::middleware('auth')->group(function () {

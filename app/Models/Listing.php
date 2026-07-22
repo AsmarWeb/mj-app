@@ -56,7 +56,9 @@ class Listing extends Model
         'image',
         'images',
         'price_condition',
-        'condition'
+        'condition',
+        'shipping_method',
+        'delivery_days',
     ]; 
 
     protected $casts = [

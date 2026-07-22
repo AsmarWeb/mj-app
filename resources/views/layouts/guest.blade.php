@@ -34,6 +34,7 @@
 
     gtag('config', 'G-EFEE07R6NT');
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <body>
     <div class="font-sans text-gray-900 antialiased">

@@ -326,18 +326,25 @@
 
                             </a>
 
-                            <a href="#"
-                                class="block rounded-xl border p-4 hover:border-orange-500 hover:bg-orange-50 transition">
+                            @php
+                                $listing = auth()->user()->listing()->latest()->first();
+                            @endphp
 
-                                <h3 class="font-semibold">
-                                    Manage Products
-                                </h3>
 
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Edit prices, inventory and product images.
-                                </p>
+                            @if ($listing)
+                                <a href="{{ route('seller.edit', $listing) }}"
+                                    class="block rounded-xl border p-4 hover:border-orange-500 hover:bg-orange-50 transition">
 
-                            </a>
+                                    <h3 class="font-semibold">
+                                        Manage Products
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Edit prices, inventory and product images.
+                                    </p>
+
+                                </a>
+                            @endif
 
                         </div>
 

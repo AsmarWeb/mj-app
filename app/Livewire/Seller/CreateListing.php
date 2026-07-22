@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Notifications\ListingCreatedNotification;
 
 class CreateListing extends Component
 {
@@ -113,6 +114,10 @@ class CreateListing extends Component
 
             'price_condition' => 'required',
 
+            'shipping_method' => 'required|string|max:255',
+        
+            'delivery_days' => 'required|integer|min:1',
+
             'image' => 'required|image|max:2048',
 
             'images.*' => 'image|max:2048',
@@ -156,6 +161,122 @@ class CreateListing extends Component
     $this->keywords = array_values($this->keywords);
     }
 
+    private function checkStorageLimit($user)
+    {
+    $subscription = $user->shop
+        ->subscriptions()
+        ->where('status', 'active')
+        ->with('plan')
+        ->latest()
+        ->first();
+
+
+    if (!$subscription) {
+        return false;
+    }
+
+
+    $plan = $subscription->plan;
+
+
+    // Current used storage in MB
+    $usedStorage = 0;
+
+
+    $files = Listing::where('user_id', $user->id)
+        ->get();
+
+
+    foreach ($files as $listing) {
+
+
+        // Main image
+        if ($listing->image) {
+
+            $path = storage_path(
+                'app/public/products/'.$listing->image
+            );
+
+            if (file_exists($path)) {
+                $usedStorage += filesize($path);
+            }
+
+        }
+
+
+
+        // Gallery images
+        if ($listing->images) {
+
+            foreach ($listing->images as $image) {
+
+
+                $path = storage_path(
+                    'app/public/products/'.$image
+                );
+
+
+                if (file_exists($path)) {
+                    $usedStorage += filesize($path);
+                }
+
+
+            }
+
+        }
+
+    }
+
+
+
+    // Convert bytes to MB
+    $usedStorage = $usedStorage / 1024 / 1024;
+
+
+
+    // New upload size
+    $newStorage = 0;
+
+
+    if ($this->image) {
+
+        $newStorage += $this->image->getSize();
+
+    }
+
+
+    foreach ($this->images as $image) {
+
+        $newStorage += $image->getSize();
+
+    }
+
+
+    $newStorage = $newStorage / 1024 / 1024;
+
+
+
+    if (($usedStorage + $newStorage) > $plan->storage_limit) {
+
+
+        session()->flash(
+            'error',
+            "Storage limit reached. You are using "
+            .round($usedStorage,2)
+            ." MB out of "
+            .$plan->storage_limit
+            ." MB."
+        );
+
+
+        return false;
+
+    }
+
+
+    return true;
+    }
+
     public function save($status = 'published')
     {
         // Double-check on the server
@@ -167,6 +288,10 @@ class CreateListing extends Component
         $this->validate();
 
         $user = Auth::user();
+
+        if (!$this->checkStorageLimit($user)) {
+            return;
+        }
 
         $shop = $user->shop;
 
@@ -241,9 +366,15 @@ class CreateListing extends Component
 
         $listing->delivery_days = $this->delivery_days;
 
-        $listing->status = 'published';
+        $listing->status = $status;
 
-        $listing->published_at = now();
+        if ($status === 'published') {
+            $listing->published_at = now();
+
+            $listing->expires_at = $plan->listing_duration
+            ? now()->addDays($plan->listing_duration)
+            : null;
+        }
 
         $listing->expires_at = $plan->listing_duration
             ? now()->addDays($plan->listing_duration)
@@ -267,6 +398,10 @@ class CreateListing extends Component
             }
 
         $listing->save();
+        
+        if ($listing->status === 'published') {
+        $user->notify(new ListingCreatedNotification($listing));
+        }
 
         session()->flash('success', 'Product published successfully.');
 

@@ -123,6 +123,44 @@
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('livewire:init', () => {
+
+            Livewire.on('notify', (event) => {
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Added to Basket',
+                    html: `
+                <div style="margin-top:8px">
+                    <strong>${event[0].message}</strong><br><br>
+
+                    <a href="/cart"
+                       style="
+                        display:inline-block;
+                        padding:8px 14px;
+                        background:#f97316;
+                        color:white;
+                        border-radius:8px;
+                        text-decoration:none;
+                        font-weight:600;">
+                        View Basket
+                    </a>
+                </div>
+            `,
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                });
+
+            });
+
+        });
+    </script>
 
     @stack('modals')
 

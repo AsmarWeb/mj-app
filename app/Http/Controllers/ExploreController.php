@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Shop;
+use App\Models\Wishlist;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Http\Request;
 
@@ -83,6 +85,27 @@ class ExploreController extends Controller
         
         ->firstOrFail();
 
+        $inWishlist = false;
+
+        if (auth()->check()) {
+        $inWishlist = Wishlist::where('user_id', auth()->id())
+            ->where('listing_id', $listing->id)
+            ->exists();
+        }
+
+        $inCart = false;
+    
+        if(auth()->check()) {
+
+        $inCart = CartItem::whereHas('cart', function($query){
+
+            $query->where('user_id', auth()->id());
+
+        })
+        ->where('listing_id',$listing->id)
+        ->exists();
+        }
+
         $title = $listing->title;
         $description = $listing->description;
         $keywords = $listing->keywords;
@@ -91,6 +114,6 @@ class ExploreController extends Controller
         SEOMeta::setDescription($description);
         SEOMeta::setKeywords($keywords);
 
-        return view('listings.show', compact('listing', 'title', 'description', 'keywords'));
+        return view('listings.show', compact('listing', 'title', 'description', 'keywords','inWishlist','inCart'));
     }
 }

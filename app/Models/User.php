@@ -120,6 +120,21 @@ class User extends Authenticatable implements LaratrustUser
     return $this->hasMany(Resume::class);
     }
 
+    public function cart()
+    {
+    return $this->hasOne(Cart::class);
+    }
+
+
+    public function wishlists(){
+    return $this->hasMany(Wishlist::class);
+    }
+
+    public function cartItems()
+    {
+    return $this->hasMany(CartItem::class);
+    }
+
     public function coupons()
     {
     return $this->belongsToMany(Coupon::class)
@@ -137,5 +152,51 @@ class User extends Authenticatable implements LaratrustUser
     return $this->forceFill([
         'phone_verified_at' => now(),
     ])->save();
+    }
+
+    public function storageUsed()
+    {
+    return $this->listings()
+        ->sum(function ($listing) {
+
+            $size = 0;
+
+            // Main image
+            if ($listing->image) {
+
+                $path = storage_path(
+                    'app/public/products/'.$listing->image
+                );
+
+                if (file_exists($path)) {
+                    $size += filesize($path);
+                }
+            }
+
+
+            // Gallery images
+            if ($listing->images) {
+
+                foreach ($listing->images as $image) {
+
+                    $path = storage_path(
+                        'app/public/products/'.$image
+                    );
+
+                    if (file_exists($path)) {
+                        $size += filesize($path);
+                    }
+                }
+            }
+
+
+            return $size;
+
+        });
+    }
+
+    public function storageUsedMB()
+    {
+    return round($this->storageUsed() / 1024 / 1024, 2);
     }
 }

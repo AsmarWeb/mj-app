@@ -20,6 +20,7 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\ShopCreatedNotification;
 
 class ShopController extends Controller
 {
@@ -161,6 +162,8 @@ class ShopController extends Controller
                     ]
                 );
                 }
+
+                $user->notify(new ShopCreatedNotification($shop));
             
             });
 
@@ -168,8 +171,45 @@ class ShopController extends Controller
 
             default:
 
-                return redirect('/dashboard');
+                return redirect('/dashboard'); 
         }
+    }
+
+    public function edit()
+    {
+    $shop = Auth::user()->shop;
+
+    return view('shop.edit', compact('shop'));
+    }
+
+    public function update(Request $request)
+    {
+    $shop = Auth::user()->shop;
+
+    $validated = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'description' => ['nullable', 'string', 'max:1000'],
+        'logo' => ['nullable', 'image', 'max:2048'],
+    ]);
+
+
+    if ($request->hasFile('logo')) {
+
+        if ($shop->logo) {
+            Storage::disk('public')->delete($shop->logo);
+        }
+
+        $validated['logo'] = $request->file('logo')
+            ->store('shop-suggest', 'public');
+    }
+
+
+    $shop->update($validated);
+
+
+    return redirect()
+        ->route('shop.edit')
+        ->with('success', 'Shop updated successfully.');
     }
 
     public function show($slug)
@@ -253,6 +293,8 @@ class ShopController extends Controller
             ->orderBy('expires_at')
             ->get();
 
+        $notifications = auth()->user()->notifications()->latest()->take(5)->get();
+
         return view('shop.dashboard', compact(
             'shop',
             'subscription',
@@ -266,7 +308,8 @@ class ShopController extends Controller
             'pendingOrders',
             'completedOrders',
             'revenue',
-            'expiringListings'
+            'expiringListings',
+            'notifications'
         ));
     }
 
