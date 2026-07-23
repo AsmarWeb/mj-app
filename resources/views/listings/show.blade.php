@@ -1,203 +1,268 @@
 <x-main-layout>
     @section('title', $title)
-    @section('description', "$description")
+    @section('description', $description)
     @section('keywords', implode(', ', $keywords))
 
     <x-slot name="header">
         <x-main-header></x-main-header>
     </x-slot>
 
-    <div class="">
-        <div class="container mx-auto px-4 py-8">
-            <div class="flex flex-wrap -mx-4">
-                <!-- Product Images -->
-                <div class="w-full md:w-1/2 px-4 mb-8">
-                    <div class="relative">
-                        {{-- Stock Badge --}}
-                        @if ($listing->quantity > 0)
-                            <span
-                                class="absolute top-4 left-4 z-10 inline-flex items-center rounded-full bg-emerald-600 text-white px-3 py-1 text-sm font-semibold shadow-lg">
-                                ✓ In Stock
-                            </span>
-                        @else
-                            <span
-                                class="absolute top-4 left-4 z-10 inline-flex items-center rounded-full bg-red-600 text-white px-3 py-1 text-sm font-semibold shadow-lg">
-                                ✕ Out of Stock
-                            </span>
-                        @endif
-                    </div>
-                    <img src="{{ asset('storage/products/' . $listing->image) }}" alt="{{ $listing->title }}"
-                        class="w-full h-auto rounded-lg shadow-md mb-4" id="mainImage">
+    <div class="container mx-auto px-4 py-8">
 
-                    <div class="flex gap-4 py-4 justify-center overflow-x-auto">
-                        @php
-                            $images = $listing->images;
-                        @endphp
-                        @foreach ($images as $image)
-                            @if ($image)
-                                <img src="{{ asset('storage/products/' . $image) }}" alt="{{ $listing->title }}"
-                                    class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
-                                    onclick="changeImage(this.src)">
-                            @endif
-                        @endforeach
-                    </div>
+        <div class="flex flex-wrap -mx-4">
+
+            {{-- Product Images --}}
+            <div class="w-full md:w-1/2 px-4 mb-8">
+
+                <div class="relative">
+
+                    @if ($listing->quantity > 0)
+                        <span
+                            class="absolute top-4 left-4 z-10 rounded-full bg-emerald-600 text-white px-3 py-1 text-sm font-semibold shadow">
+                            ✓ In Stock
+                        </span>
+                    @else
+                        <span
+                            class="absolute top-4 left-4 z-10 rounded-full bg-red-600 text-white px-3 py-1 text-sm font-semibold shadow">
+                            ✕ Out of Stock
+                        </span>
+                    @endif
+
+
+                    <img id="mainImage"
+                        src="{{ $listing->image ? asset('storage/products/' . $listing->image) : asset('images/no-image.png') }}"
+                        alt="{{ $listing->title }}" class="w-full rounded-lg shadow-md">
 
                 </div>
 
-                <!-- Product Details -->
-                <div class="w-full md:w-1/2 px-4">
-                    <h2 class="text-3xl font-bold mb-2 dark:text-white">{{ $listing->title }}</h2>
-                    <p class="text-gray-600 dark:text-gray-200 mb-4">SKU: {{ $listing->sku }}</p>
-                    <div class="mb-4">
-                        <span class="text-2xl font-bold mr-2 dark:text-gray-200">{{ $listing->shop->currency }}
-                            {{ $listing->price }}</span>
-                        <span class="text-gray-500">{{ $listing->price_condition }}</span>
-                        {{-- <span class="text-gray-500 line-through">$399.99</span> --}}
-                    </div>
-                    {{-- <div class="flex items-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="size-6 text-yellow-500">
-                            <path fill-rule="evenodd"
-                                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="size-6 text-yellow-500">
-                            <path fill-rule="evenodd"
-                                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="size-6 text-yellow-500">
-                            <path fill-rule="evenodd"
-                                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="size-6 text-yellow-500">
-                            <path fill-rule="evenodd"
-                                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="size-6 text-yellow-500">
-                            <path fill-rule="evenodd"
-                                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span class="ml-2 text-gray-600">4.5 (120 reviews)</span>
-                    </div> --}}
-                    <p class="text-gray-700 dark:text-gray-100 mb-6">{{ $listing->description }}</p>
 
-                    {{-- <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-2 dark:text-gray-200">Color:</h3>
-                        <div class="flex space-x-2">
-                            <button
-                                class="w-8 h-8 bg-black rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"></button>
-                            <button
-                                class="w-8 h-8 bg-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"></button>
-                            <button
-                                class="w-8 h-8 bg-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"></button>
-                        </div>
-                    </div> --}}
+                <div class="flex gap-4 py-4 justify-center overflow-x-auto">
 
-                    <div class="mb-4">
-                        <span class="text-gray-500 dark:text-gray-200">Product condition:
-                            {{ $listing->condition }}</span>
-                    </div>
+                    @foreach ($listing->images ?? [] as $image)
+                        @if ($image)
+                            <img src="{{ asset('storage/products/' . $image) }}" onclick="changeImage(this.src)"
+                                class="size-20 object-cover rounded-md cursor-pointer opacity-70 hover:opacity-100 transition">
+                        @endif
+                    @endforeach
 
-                    <div class="mb-6">
+                </div>
 
-                        <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                            Quantity:
-                        </label>
+            </div>
 
 
-                        <input type="number" wire:model="quantity" min="1" max="{{ $listing->quantity }}"
-                            class="w-20 rounded-lg border-gray-300">
+            {{-- Product Details --}}
+            <div class="w-full md:w-1/2 px-4">
 
-                    </div>
+
+                <h1 class="text-3xl font-bold mb-2 dark:text-white">
+                    {{ $listing->title }}
+                </h1>
+
+
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                    SKU: {{ $listing->sku }}
+                </p>
+
+
+                <div class="mb-4">
+
+                    <span class="text-2xl font-bold dark:text-white">
+                        {{ $listing->shop->currency }}
+                        {{ $listing->price }}
+                    </span>
+
+                    <span class="text-gray-500">
+                        {{ $listing->price_condition }}
+                    </span>
+
+                </div>
 
 
 
-                    <div class="flex space-x-4 mb-6">
-
-
-                        {{-- Add To Cart --}}
-                        <livewire:add-to-cart :listing="$listing" />
-
+                <p class="text-gray-700 dark:text-gray-200 mb-6">
+                    {{ $listing->description }}
+                </p>
 
 
 
-                        {{-- Wishlist --}}
-                        <form action="{{ route('wishlist.add', $listing) }}" method="POST">
+                <div class="mb-4">
+                    <span class="text-gray-500 dark:text-gray-300">
+                        Product condition:
+                        {{ $listing->condition }}
+                    </span>
+                </div>
+
+
+
+                <div class="mb-6">
+
+                    <label class="block text-sm font-medium mb-1 dark:text-white">
+                        Quantity:
+                    </label>
+
+                    <input type="number" name="quantity" value="1" min="1" max="{{ $listing->quantity }}"
+                        class="w-24 rounded-lg border-gray-300">
+
+                </div>
+
+
+
+                <div class="flex flex-col gap-4 mb-6">
+
+
+                    {{-- Cart --}}
+                    <livewire:add-to-cart :listing="$listing" />
+
+
+
+                    {{-- WhatsApp --}}
+                    @if ($listing->shop?->allow_whatsapp && $listing->shop?->whatsapp)
+                        <form method="POST" action="{{ route('lead.store', $listing) }}"
+                            onsubmit="openWhatsApp(event)">
 
                             @csrf
 
+                            <input type="hidden" name="type" value="whatsapp">
+
+
                             <button type="submit"
-                                class="bg-gray-200 flex gap-2 items-center 
-            text-gray-800 px-6 py-2 rounded-md 
-            hover:bg-gray-300{{ $inWishlist ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-gray-200 text-gray-800 hover:bg-gray-300' }}">
+                                class="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-3 text-white font-semibold hover:bg-green-700">
 
-                                @if ($inWishlist)
-                                    ❤️
-                                    Added to Wishlist
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-
-                                    </svg>
-                                    Wishlist
-                                @endif
+                                WhatsApp Seller
 
                             </button>
 
                         </form>
 
 
-                    </div>
+                        <script>
+                            function openWhatsApp(event) {
 
-                    <div class="mt-6">
-
-                        <h3 class="font-bold text-lg">
-                            Shipping
-                        </h3>
+                                event.preventDefault();
 
 
-                        <p class="text-gray-600 dark:text-gray-200">
-                            Method:
-                            {{ $listing->shipping_method }}
-                        </p>
+                                let form = event.target;
 
 
-                        <p class="text-gray-600 dark:text-gray-200">
-                            Delivery:
-                            {{ $listing->delivery_days }} days
-                        </p>
+                                fetch(form.action, {
 
-                    </div>
+                                    method: "POST",
 
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2 dark:text-gray-200">Key Features:</h3>
-                        <ul class="list-disc list-inside text-gray-700 dark:text-gray-200">
-                            @foreach ($listing->features as $feature)
-                                <li>{{ $feature }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                                    body: new FormData(form),
+
+                                    headers: {
+
+                                        "X-CSRF-TOKEN": form.querySelector('[name="_token"]').value
+
+                                    }
+
+                                });
+
+
+                                window.open(
+                                    "https://wa.me/{{ preg_replace('/\D+/', '', $listing->shop->whatsapp) }}?text={{ rawurlencode("Hi, I'm interested in " . $listing->title . ' ' . url()->current()) }}",
+                                    "_blank"
+                                );
+
+                            }
+                        </script>
+                    @endif
+
+
+
+                    {{-- Phone --}}
+                    @if ($listing->shop?->allow_phone && $listing->shop?->phone)
+                        <a href="tel:{{ preg_replace('/\s+/', '', $listing->shop->phone) }}"
+                            class="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700">
+
+                            Call Seller
+
+                        </a>
+                    @endif
+
+
+
+                    {{-- Wishlist --}}
+                    <form action="{{ route('wishlist.add', $listing) }}" method="POST">
+
+                        @csrf
+
+                        <button type="submit"
+                            class="w-full flex justify-center items-center gap-2 px-6 py-3 rounded-md
+                            {{ $inWishlist ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-800' }}">
+
+                            @if ($inWishlist)
+                                ❤️ Added to Wishlist
+                            @else
+                                ♡ Wishlist
+                            @endif
+
+                        </button>
+
+                    </form>
+
+
                 </div>
+
+
+
+                {{-- Shipping --}}
+                <div class="mb-6">
+
+                    <h3 class="font-bold text-lg">
+                        Shipping
+                    </h3>
+
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Method:
+                        {{ $listing->shipping_method }}
+                    </p>
+
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Delivery:
+                        {{ $listing->delivery_days }} days
+                    </p>
+
+                </div>
+
+
+
+                {{-- Features --}}
+                <div>
+
+                    <h3 class="text-lg font-semibold mb-2 dark:text-white">
+                        Key Features
+                    </h3>
+
+
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200">
+
+                        @foreach ($listing->features ?? [] as $feature)
+                            <li>
+                                {{ $feature }}
+                            </li>
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+
             </div>
+
         </div>
 
-        <script>
-            function changeImage(src) {
-                document.getElementById('mainImage').src = src;
-            }
-        </script>
     </div>
 
+
+
+    <script>
+        function changeImage(src) {
+            document.getElementById('mainImage').src = src;
+        }
+    </script>
+
+
     <x-main-footer></x-main-footer>
+
 </x-main-layout>

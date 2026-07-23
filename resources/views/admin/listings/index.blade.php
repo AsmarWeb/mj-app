@@ -1,142 +1,350 @@
 <x-admin>
+
     <div class="py-12">
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="sm:flex sm:items-center sm:justify-between">
+
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between mb-6">
+
+
                 <div>
-                    <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Listings</h2>
 
-                        <span
-                            class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">{{ $listings->count() }}
-                            listings</span>
+                    <div class="flex items-center gap-3">
+
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+                            Listings
+                        </h2>
+
+
+                        <span class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full">
+                            {{ $listings->total() }} listings
+                        </span>
+
+
                     </div>
+
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Manage your listings
+                    </p>
+
+
                 </div>
 
-                <div class="flex items-center mt-4 gap-x-3">
-                    <a href="{{ route('admin.create') }}"
-                        class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
 
-                        <span>{{ __('Add listing') }}</span>
-                    </a>
-                </div>
+
+
+                <a href="{{ route('admin.create') }}"
+                    class="inline-flex items-center gap-2 px-5 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+
+                    </svg>
+
+
+                    Add Listing
+
+                </a>
+
+
             </div>
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+
+
+
+
+
+
+            @if (session('success'))
+                <div class="p-4 mb-5 text-sm text-green-700 bg-green-100 rounded-lg">
+
+                    {{ session('success') }}
 
                 </div>
-                <div class="bg-gray-200 bg-opacity-25 overflow-scroll px-0 gap-6 lg:gap-8 p-6 lg:p-8">
-                    @if (session()->has('message'))
-                        <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
-                            <span class="font-medium">
-                                {{ session()->get('message') }}
-                            </span>
-                        </div>
-                    @endif
-                    <div>
-                        <form method="GET">
-                            <label for="table-search" class="sr-only">Search</label>
-                            <div class="relative mt-1">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <input type="text" name="search" id="table-search"
-                                    value="{{ request()->input('search') }}"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Search for user">
+            @endif
+
+
+
+
+
+
+
+            <div class="bg-white rounded-xl shadow border overflow-hidden">
+
+
+
+                {{-- Search --}}
+                <div class="p-6 border-b">
+
+
+                    <form method="GET" action="{{ route('listings.index') }}">
+
+
+                        <div class="relative w-full md:w-96">
+
+
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+
+                                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+
+                                    <path fill-rule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd" />
+
+                                </svg>
+
                             </div>
-                        </form>
-                        <table
-                            class="mt-4 w-full min-w-max table-auto text-left divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead name="head" class="bg-gray-50 dark:bg-gray-800">
-                                <tr>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        #
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Image
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        @include('admin.includes.sort-link', [
-                                            'label' => 'Name',
-                                            'attribute' => 'name',
-                                        ])
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <slot name="body">
-                                @foreach ($listings as $listing)
-                                    <tr>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                <a class="text-sm leading-5 text-gray-800">{{ $listing->id }}</a>
+
+
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Search listings..."
+                                class="w-full pl-10 rounded-lg border-gray-300 focus:ring-blue-500">
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="overflow-x-auto">
+
+
+                    <table class="w-full text-left">
+
+
+                        <thead class="bg-gray-50 border-b">
+
+
+                            <tr>
+
+
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-600">
+                                    #
+                                </th>
+
+
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-600">
+                                    Image
+                                </th>
+
+
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-600">
+                                    Title
+                                </th>
+
+
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-600">
+                                    Status
+                                </th>
+
+
+                                <th class="px-6 py-4 text-sm font-semibold text-gray-600 text-right">
+                                    Actions
+                                </th>
+
+
+                            </tr>
+
+
+                        </thead>
+
+
+
+
+
+
+                        <tbody class="divide-y">
+
+
+                            @forelse($listings as $listing)
+                                <tr class="hover:bg-gray-50">
+
+
+                                    <td class="px-6 py-4">
+                                        {{ $listing->id }}
+                                    </td>
+
+
+
+
+
+                                    <td class="px-6 py-4">
+
+
+                                        @if ($listing->image)
+                                            <img src="{{ asset('storage/listings/' . $listing->image) }}"
+                                                class="w-16 h-16 rounded-lg object-cover">
+                                        @else
+                                            <div
+                                                class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+
+                                                No Image
+
                                             </div>
-                                        </td>
-                                        <td>
-                                            @if ($listing->image)
-                                                <img src="{{ asset('storage/products/' . $listing->image) }}"
-                                                    class="img-fluid" style="max-width:80px" alt="#">
-                                            @else
-                                                <img src="https://images.unsplash.com/photo-1622180203374-9524a54b734d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
-                                                    class="img-fluid" style="max-width:80px" alt="shop">
-                                            @endif
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                <a href="#"
-                                                    class="no-underline hover:underline text-cyan-600">{{ $listing->title }}</a>
-                                            </div>
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <form action="#" method="POST">
-                                                <a href="#" class="btn btn-info btn-sm">
-                                                    {{ __('Edit') }}
-                                                </a>
+                                        @endif
+
+
+                                    </td>
+
+
+
+
+
+                                    <td class="px-6 py-4">
+
+
+                                        <a href="{{ route('listings.edit', $listing->id) }}"
+                                            class="text-blue-600 hover:underline font-medium">
+
+                                            {{ $listing->title }}
+
+                                        </a>
+
+
+                                        <p class="text-xs text-gray-500">
+
+                                            {{ $listing->slug }}
+
+                                        </p>
+
+
+                                    </td>
+
+
+
+
+
+
+                                    <td class="px-6 py-4">
+
+
+                                        @if ($listing->status == 'active')
+                                            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
+                                                Active
+                                            </span>
+                                        @else
+                                            <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-700">
+                                                Inactive
+                                            </span>
+                                        @endif
+
+
+                                    </td>
+
+
+
+
+
+
+
+                                    <td class="px-6 py-4 text-right">
+
+
+                                        <div class="flex justify-end gap-2">
+
+
+
+                                            <a href="{{ route('listings.edit', $listing->id) }}"
+                                                class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+
+                                                Edit
+
+                                            </a>
+
+
+
+
+
+                                            <form action="{{ route('listings.destroy', $listing->id) }}"
+                                                method="POST">
+
 
                                                 @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('{{ __('Are you sure you want to delete?') }}')">
-                                                    {{ __('Delete') }}
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                @if ($listings->isEmpty())
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="flex flecol justify-center items-center py-4 text-lg">
-                                                {{ __('No Result Found') }}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endif
-                            </slot>
-                        </table>
 
-                        <div class="py-8">
-                            {{ $listings->links() }}
-                        </div>
-                    </div>
+                                                @method('DELETE')
+
+
+                                                <button type="submit"
+                                                    onclick="return confirm('Are you sure you want to delete?')"
+                                                    class="px-3 py-1.5 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">
+
+                                                    Delete
+
+                                                </button>
+
+
+                                            </form>
+
+
+
+                                        </div>
+
+
+                                    </td>
+
+
+
+                                </tr>
+
+
+
+                            @empty
+
+
+                                <tr>
+
+                                    <td colspan="5" class="px-6 py-10 text-center text-gray-500">
+
+                                        No listings found
+
+                                    </td>
+
+                                </tr>
+                            @endforelse
+
+
+
+                        </tbody>
+
+
+                    </table>
+
+
                 </div>
+
+
+
+
+
+
+
+                <div class="px-6 py-4 border-t">
+
+                    {{ $listings->links() }}
+
+                </div>
+
+
+
             </div>
+
+
         </div>
+
     </div>
+
 </x-admin>

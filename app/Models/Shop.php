@@ -38,6 +38,10 @@ class Shop extends Model
         'verified',
         'verified_at',
         'verified_by',
+        'phone',
+        'whatsapp',
+        'allow_phone',
+        'allow_whatsapp',
     ];
 
     protected $dates = ['published_at']; 
@@ -48,6 +52,19 @@ class Shop extends Model
         'published_at' => 'datetime',
         'rating' => 'float',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($shop) {
+
+            $shop->wallet()->create([
+                'available_balance' => 0,
+                'pending_balance' => 0,
+                'total_earned' => 0,
+            ]);
+
+        });
+    }
 
     public function isVerified()
     {
@@ -69,6 +86,11 @@ class Shop extends Model
         return $this->hasMany(Subscription::class);
     }
 
+    public function plan()
+    {
+    return $this->belongsTo(Plan::class);
+    }
+
     public function orders(): HasMany
     {
     return $this->hasMany(Order::class);
@@ -77,6 +99,11 @@ class Shop extends Model
     public function payments()
     {
     return $this->hasMany(Payment::class);
+    }
+
+    public function wallet()
+    {
+    return $this->hasOne(Wallet::class);
     }
 
     public function businessCard()
@@ -131,6 +158,45 @@ class Shop extends Model
     public function city()
     {
     return $this->belongsTo(City::class, 'city_id');
+    }
+
+    public function canReceiveOrder()
+    {
+    // No plan = no orders
+    if (!$this->plan) {
+        return false;
+    }
+
+
+    // Unlimited orders
+    if ($this->plan->order_limit == 0) {
+        return true;
+    }
+
+
+    $ordersThisPeriod = $this->orders()
+    ->whereIn('status', [
+        'processing',
+        'completed'
+    ])
+    ->whereMonth('created_at', now()->month)
+    ->whereYear('created_at', now()->year)
+    ->count();
+
+
+    return $ordersThisPeriod < $this->plan->order_limit;
+    }
+
+    public function stripeReady()
+    {
+    $account = \Stripe\Account::retrieve(
+        $this->stripe_account_id
+    );
+
+
+    return
+        $account->charges_enabled &&
+        $account->payouts_enabled;
     }
 
 }

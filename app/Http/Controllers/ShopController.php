@@ -187,9 +187,15 @@ class ShopController extends Controller
     $shop = Auth::user()->shop;
 
     $validated = $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'description' => ['nullable', 'string', 'max:1000'],
-        'logo' => ['nullable', 'image', 'max:2048'],
+    'name' => ['required', 'string', 'max:255'],
+    'description' => ['nullable', 'string', 'max:1000'],
+    'logo' => ['nullable', 'image', 'max:2048'],
+
+    'phone' => ['nullable', 'string', 'max:20'],
+    'whatsapp' => ['nullable', 'string', 'max:20'],
+
+    'allow_phone' => ['nullable', 'boolean'],
+    'allow_whatsapp' => ['nullable', 'boolean'],
     ]);
 
 
@@ -204,7 +210,16 @@ class ShopController extends Controller
     }
 
 
-    $shop->update($validated);
+    $shop->update([
+    'name' => $validated['name'],
+    'description' => $validated['description'],
+
+    'phone' => Auth::user()->phone,
+    'whatsapp' => $validated['whatsapp'] ?? Auth::user()->phone,
+
+    'allow_phone' => $request->boolean('allow_phone'),
+    'allow_whatsapp' => $request->boolean('allow_whatsapp'),
+    ]);
 
 
     return redirect()
@@ -272,7 +287,12 @@ class ShopController extends Controller
             ->get();
 
         // Replace with your actual orders relationship/table
-        $ordersCount = Order::where('shop_id', $shop->id)->count();
+        $ordersCount = $shop->orders()
+        ->whereMonth(
+            'created_at',
+            now()->month
+        )
+        ->count();
 
         $pendingOrders = Order::where('shop_id', $shop->id)
             ->where('status', 'pending')
@@ -295,8 +315,11 @@ class ShopController extends Controller
 
         $notifications = auth()->user()->notifications()->latest()->take(5)->get();
 
+        $wallet = $shop->wallet;
+
         return view('shop.dashboard', compact(
             'shop',
+            'wallet',
             'subscription',
             'plan',
             'publishedListings',

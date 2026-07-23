@@ -7,7 +7,6 @@
 
     <div class="min-h-screen py-10">
 
-
         <div class="max-w-6xl mx-auto px-6">
 
 
@@ -16,152 +15,200 @@
             </h1>
 
 
-
-            @if ($shops->count())
+            @if (isset($shops) && $shops->count())
 
 
                 <div class="space-y-8">
 
 
                     @foreach ($shops as $shopId => $items)
-                        <div class="bg-white rounded-3xl shadow-sm p-6">
+                        @php
+                            $shop = $items->first()->listing?->shop;
+                        @endphp
 
 
-                            <h2 class="text-xl font-bold mb-5">
-
-                                {{ $items->first()->listing->shop->name }}
-
-                            </h2>
+                        @if ($shop)
+                            <div class="bg-white rounded-3xl shadow-sm p-6">
 
 
+                                <div class="flex justify-between items-center mb-5">
 
-                            @foreach ($items as $item)
-                                <div class="flex gap-5 border-b pb-5 mb-5">
-
-
-                                    <img src="{{ asset('storage/products/' . $item->listing->image) }}"
-                                        class="w-28 h-28 rounded-xl object-cover">
+                                    <h2 class="text-xl font-bold">
+                                        {{ $shop->name }}
+                                    </h2>
 
 
+                                    @if ($shop->allow_whatsapp && $shop->whatsapp)
+                                        <a href="https://wa.me/{{ preg_replace('/\D/', '', $shop->whatsapp) }}"
+                                            target="_blank" class="text-green-600 font-semibold">
 
-                                    <div class="flex-1">
+                                            WhatsApp
 
+                                        </a>
+                                    @endif
 
-                                        <h3 class="font-semibold text-lg">
-
-                                            {{ $item->listing->title }}
-
-                                        </h3>
-
-
-                                        <p class="text-gray-500">
-
-                                            {{ $item->listing->shop->name }}
-
-                                        </p>
+                                </div>
 
 
 
-                                        <div class="flex items-center gap-3 mt-3">
+                                @foreach ($items as $item)
+                                    @if ($item->listing)
+                                        <div class="flex gap-5 border-b pb-5 mb-5">
 
 
-                                            <div class="flex items-center rounded-xl border overflow-hidden">
+                                            <img src="{{ asset('storage/products/' . $item->listing->image) }}"
+                                                class="w-28 h-28 rounded-xl object-cover">
 
-                                                <form action="{{ route('cart.decrease', $item) }}" method="POST">
+
+
+                                            <div class="flex-1">
+
+
+                                                <h3 class="font-semibold text-lg">
+
+                                                    {{ $item->listing->title }}
+
+                                                </h3>
+
+
+
+                                                <p class="text-gray-500">
+
+                                                    {{ $shop->name }}
+
+                                                </p>
+
+
+
+                                                <div class="flex items-center gap-3 mt-4">
+
+
+                                                    <div class="flex items-center rounded-xl border">
+
+
+                                                        <form method="POST"
+                                                            action="{{ route('cart.decrease', $item->id) }}">
+
+                                                            @csrf
+
+                                                            <button class="w-10 h-10 hover:bg-gray-100">
+
+                                                                −
+
+                                                            </button>
+
+                                                        </form>
+
+
+
+                                                        <span class="px-5 font-bold">
+
+                                                            {{ $item->quantity }}
+
+                                                        </span>
+
+
+
+                                                        <form method="POST"
+                                                            action="{{ route('cart.increase', $item->id) }}">
+
+                                                            @csrf
+
+                                                            <button class="w-10 h-10 hover:bg-gray-100">
+
+                                                                +
+
+                                                            </button>
+
+                                                        </form>
+
+
+                                                    </div>
+
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+                                            <div class="text-right">
+
+
+                                                <p class="font-bold text-lg">
+
+                                                    {{ $shop->currency }}
+
+                                                    {{ number_format($item->price * $item->quantity, 2) }}
+
+                                                </p>
+
+
+
+
+                                                <form method="POST" action="{{ route('cart.destroy', $item->id) }}">
+
                                                     @csrf
+                                                    @method('DELETE')
 
-                                                    <button class="w-10 h-10 bg-gray-100 hover:bg-gray-200 text-lg">
-                                                        −
+
+                                                    <button onclick="return confirm('Remove this item?')"
+                                                        class="mt-4 text-red-600">
+
+                                                        Remove
+
                                                     </button>
+
+
                                                 </form>
 
-                                                <span class="px-5 font-semibold">
-                                                    {{ $item->quantity }}
-                                                </span>
 
-                                                <form action="{{ route('cart.increase', $item) }}" method="POST">
-                                                    @csrf
-
-                                                    <button class="w-10 h-10 bg-gray-100 hover:bg-gray-200 text-lg">
-                                                        +
-                                                    </button>
-                                                </form>
 
                                             </div>
 
 
                                         </div>
-
-
-                                    </div>
-
-
-
-                                    <div class="text-right">
-
-
-                                        <p class="font-bold text-lg">
-
-                                            {{ $item->listing->shop->currency }}
-
-                                            {{ number_format($item->price * $item->quantity, 2) }}
-
-                                        </p>
+                                    @endif
+                                @endforeach
 
 
 
-                                        <form action="{{ route('cart.destroy', $item) }}" method="POST">
 
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button onclick="return confirm('Remove this item?')"
-                                                class="mt-4 text-red-600 hover:text-red-700 font-medium">
-
-                                                Remove
-
-                                            </button>
-
-                                        </form>
+                                <div class="flex justify-between font-bold">
 
 
-                                    </div>
+                                    <span>
+                                        Shop Total
+                                    </span>
 
+
+                                    <span>
+
+                                        {{ $shop->currency }}
+
+                                        {{ number_format(
+                                            $items->sum(function ($item) {
+                                                return $item->price * $item->quantity;
+                                            }),
+                                            2,
+                                        ) }}
+
+                                    </span>
 
 
                                 </div>
-                            @endforeach
 
-
-
-
-                            <div class="flex justify-between font-bold">
-
-
-                                <span>
-                                    Shop Total
-                                </span>
-
-
-                                <span>
-
-                                    {{ $items->first()->listing->shop->currency }}
-
-                                    {{ number_format($items->sum(fn($i) => $i->price * $i->quantity), 2) }}
-
-                                </span>
 
 
                             </div>
-
-
-
-                        </div>
+                        @endif
                     @endforeach
 
 
                 </div>
-
 
 
 
@@ -188,18 +235,8 @@
 
 
 
-                    <a href="#"
-                        class="
-block
-text-center
-mt-6
-bg-orange-600
-text-white
-py-4
-rounded-2xl
-font-bold
-hover:bg-orange-700
-">
+                    <a href="{{ route('checkout') }}"
+                        class="block mt-6 text-center bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-xl font-bold">
 
                         Proceed to Checkout
 
@@ -223,15 +260,9 @@ hover:bg-orange-700
                     </h2>
 
 
+
                     <a href="{{ route('explore') }}"
-                        class="
-inline-block
-mt-5
-bg-orange-600
-text-white
-px-8
-py-3
-rounded-xl">
+                        class="inline-block mt-5 bg-orange-600 text-white px-8 py-3 rounded-xl">
 
                         Continue Shopping
 
@@ -244,13 +275,12 @@ rounded-xl">
             @endif
 
 
-
         </div>
 
     </div>
 
 
-
     <x-main-footer />
+
 
 </x-main-layout>

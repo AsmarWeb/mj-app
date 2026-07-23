@@ -68,6 +68,10 @@
                                 {{ __('Features') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('project-explorer') }}" :active="request()->routeIs('project-explorer')">
+                                {{ __('Project Ex') }}
+                            </x-dropdown-link>
+
                         </x-slot>
                     </x-dropdown>
                 </div>

@@ -299,69 +299,71 @@
 
             </div>
 
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="grid md:grid-cols-2 gap-6">
 
-                {{-- Shipping Method --}}
-                <div>
-                    <label class="block font-semibold mb-2">
-                        Shipping Method
-                    </label>
+                    {{-- Shipping Method --}}
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            Shipping Method
+                        </label>
 
-                    <select wire:model="shipping_method" class="w-full rounded-xl border-gray-300">
+                        <select wire:model="shipping_method" class="w-full rounded-xl border-gray-300">
 
-                        <option value="">
-                            Select shipping method
-                        </option>
+                            <option value="">
+                                Select shipping method
+                            </option>
 
-                        <option value="Standard Shipping">
-                            Standard Shipping
-                        </option>
+                            <option value="Standard Shipping">
+                                Standard Shipping
+                            </option>
 
-                        <option value="Express Shipping">
-                            Express Shipping
-                        </option>
+                            <option value="Express Shipping">
+                                Express Shipping
+                            </option>
 
-                        <option value="Free Shipping">
-                            Free Shipping
-                        </option>
+                            <option value="Free Shipping">
+                                Free Shipping
+                            </option>
 
-                        <option value="Pickup">
-                            Local Pickup
-                        </option>
+                            <option value="Pickup">
+                                Local Pickup
+                            </option>
 
-                    </select>
+                        </select>
 
-                    @error('shipping_method')
-                        <span class="text-red-500 text-sm">
-                            {{ $message }}
-                        </span>
-                    @enderror
+                        @error('shipping_method')
+                            <span class="text-red-500 text-sm">
+                                {{ $message }}
+                            </span>
+                        @enderror
+
+                    </div>
+
+
+
+                    {{-- Delivery Days --}}
+                    <div>
+
+                        <label class="block font-semibold mb-2">
+                            Delivery Time (Days)
+                        </label>
+
+
+                        <input type="number" min="1" wire:model="delivery_days" placeholder="Example: 5"
+                            class="w-full rounded-xl border-gray-300">
+
+
+                        @error('delivery_days')
+                            <span class="text-red-500 text-sm">
+                                {{ $message }}
+                            </span>
+                        @enderror
+
+
+                    </div>
 
                 </div>
-
-
-
-                {{-- Delivery Days --}}
-                <div>
-
-                    <label class="block font-semibold mb-2">
-                        Delivery Time (Days)
-                    </label>
-
-
-                    <input type="number" min="1" wire:model="delivery_days" placeholder="Example: 5"
-                        class="w-full rounded-xl border-gray-300">
-
-
-                    @error('delivery_days')
-                        <span class="text-red-500 text-sm">
-                            {{ $message }}
-                        </span>
-                    @enderror
-
-
-                </div>
-
             </div>
 
             <!-- Images -->

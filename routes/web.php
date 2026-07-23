@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProjectExplorerController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -21,21 +22,30 @@ use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\Seller\StripeConnectController;
 use App\Http\Controllers\ShopCountryController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\EditController;
 use App\Http\Controllers\WishlistController;
 use App\Livewire\Admin\Listing\CreateComponent;
+use App\Models\Order;
+use App\Mail\OrderPaidMail;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\OrderPaidNotification;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +53,12 @@ Route::get('/lang/{locale}', function ($locale) {
     session()->put('locale', $locale);
     return redirect()->back();
 })->name('locale');
+
+Route::get('/auth/{provider}', [SocialAuthController::class, 'redirect'])
+    ->name('social.redirect');
+
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])
+    ->name('social.callback');
 
 Route::get('/sitemap', [SitemapController::class, 'page'])
     ->name('sitemap.page');
@@ -164,6 +180,16 @@ Route::group(['namespace' => 'App\Livewire\Seller', 'prefix' => 'seller', 'middl
     Route::view('/create', 'listings.create')->name('seller.create');
 });
 
+Route::middleware(['auth', 'role:seller'])->group(function () {
+
+    Route::get('/seller/stripe/connect', [StripeConnectController::class, 'connect'])
+        ->name('seller.stripe.connect');
+
+    Route::get('/seller/stripe/success', [StripeConnectController::class, 'success'])
+        ->name('seller.stripe.success');
+
+});
+
 Route::middleware('auth')->group(function () {
 
     Route::get(
@@ -183,6 +209,18 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/connect/create', [ConnectController::class, 'createAccount'])
+        ->name('connect.create');
+
+    Route::get('/connect/success', [ConnectController::class, 'success'])
+        ->name('connect.success');
+
+    Route::get('/connect/refresh', [ConnectController::class, 'refresh'])
+        ->name('connect.refresh');
+});
+
+Route::middleware('auth')->group(function () {
+
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
     Route::post('/cart/{item}/increase', [CartController::class, 'increase'])
@@ -195,6 +233,31 @@ Route::middleware('auth')->group(function () {
         ->name('cart.destroy');
 
 });
+
+Route::middleware('auth')->group(function () {
+
+
+    Route::get(
+        '/checkout',
+        [CheckoutController::class,'checkout']
+    )
+    ->name('checkout');
+
+
+
+    Route::get(
+        '/checkout/success/{order}',
+        [CheckoutController::class,'success']
+    )
+    ->name('checkout.success');
+
+
+});
+
+Route::post(
+    '/listing/{listing}/lead',
+    [LeadController::class,'store']
+)->name('lead.store');
 
 Route::middleware('auth')->group(function(){
 
@@ -350,4 +413,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
 
     Route::resource('subscribers', SubscriberController::class);
     Route::resource('contacts', ContactController::class);
+
+    Route::middleware(['auth'])->group(function () {
+
+    Route::get('project-explorer',
+        [ProjectExplorerController::class, 'index']
+    )->name('project-explorer');
+
+});
 });

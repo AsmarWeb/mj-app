@@ -2,7 +2,7 @@
     <footer class="container px-6 py-8 mx-auto">
         <div class="flex flex-col items-center text-center font-normal">
             <a href="{{ route('home') }}">
-                <img class="w-auto h-7" src="{{ $setting->logo }}" alt="">
+                <img class="w-auto h-7" src="{{ $setting->logo }}" alt="murwaj">
             </a>
 
             <div class="flex flex-wrap justify-center mt-6 -mx-4">

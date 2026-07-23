@@ -71,5 +71,34 @@
                 </x-button>
             </div>
         </form>
+
+        <div class="mt-6">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="bg-white px-3 text-gray-500">
+                        Or continue with
+                    </span>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-center gap-4">
+
+                <!-- Google -->
+                <a href="{{ route('social.redirect', 'google') }}"
+                    class="flex h-12 w-12 items-center justify-center rounded-full border border-gray-300 bg-white shadow-sm transition hover:bg-gray-100 hover:shadow-md">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-6 w-6">
+                </a>
+
+                <!-- Facebook -->
+                <a href="{{ route('social.redirect', 'facebook') }}"
+                    class="flex h-12 w-12 items-center justify-center rounded-full border border-gray-300 bg-white shadow-sm transition hover:bg-gray-100 hover:shadow-md">
+                    <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" class="h-6 w-6">
+                </a>
+
+            </div>
+        </div>
     </x-authentication-card>
 </x-guest-layout>

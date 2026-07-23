@@ -37,6 +37,34 @@
                             </div>
                         </div>
 
+                        @if (!$shop->stripe_connected)
+                            <div class="mb-6 rounded-xl border border-yellow-200 bg-yellow-50 p-5">
+
+                                <div class="flex items-center justify-between">
+
+                                    <div>
+
+                                        <h3 class="font-semibold text-yellow-900">
+                                            Complete your payment setup
+                                        </h3>
+
+                                        <p class="mt-1 text-sm text-yellow-700">
+                                            Your shop is live, but you can't receive customer payments until you connect
+                                            your Stripe Express account.
+                                        </p>
+
+                                    </div>
+
+                                    <a href="{{ route('connect.create') }}"
+                                        class="rounded-lg bg-indigo-600 px-5 py-2 text-white hover:bg-indigo-700">
+                                        Connect Stripe
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        @endif
+
                         <!-- Statistics -->
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
@@ -253,6 +281,267 @@
 
                                 </div>
 
+                                <div class="space-y-6">
+
+                                    <div>
+                                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                                            Shop Wallet
+                                        </h2>
+
+                                        <p class="text-gray-500 dark:text-gray-400">
+                                            Track your earnings, pending payments, and available balance.
+                                        </p>
+                                    </div>
+
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+
+                                        {{-- Available Balance --}}
+                                        <div
+                                            class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 p-6 text-white shadow-lg">
+
+                                            <div class="flex items-center justify-between">
+
+                                                <div>
+
+                                                    <p class="text-sm opacity-90">
+                                                        Available Balance
+                                                    </p>
+
+
+                                                    <h3 class="mt-3 text-3xl font-bold">
+                                                        {{ $shop->currency ?? '$' }}
+                                                        {{ number_format($wallet->available_balance, 2) }}
+                                                    </h3>
+
+
+                                                </div>
+
+
+                                                <div class="rounded-full bg-white/20 p-3">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-10V6m0 12v-2m9-4a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                                                    </svg>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                        {{-- Pending Balance --}}
+                                        <div
+                                            class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-6 text-white shadow-lg">
+
+                                            <div class="flex items-center justify-between">
+
+                                                <div>
+
+                                                    <p class="text-sm opacity-90">
+                                                        Pending Balance
+                                                    </p>
+
+
+                                                    <h3 class="mt-3 text-3xl font-bold">
+
+                                                        {{ $shop->currency ?? '$' }}
+                                                        {{ number_format($wallet->pending_balance, 2) }}
+
+                                                    </h3>
+
+
+                                                </div>
+
+
+                                                <div class="rounded-full bg-white/20 p-3">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                                                    </svg>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+
+
+
+                                        {{-- Total Earnings --}}
+                                        <div
+                                            class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 text-white shadow-lg">
+
+
+                                            <div class="flex items-center justify-between">
+
+
+                                                <div>
+
+                                                    <p class="text-sm opacity-90">
+                                                        Total Earned
+                                                    </p>
+
+
+                                                    <h3 class="mt-3 text-3xl font-bold">
+
+                                                        {{ $shop->currency ?? '$' }}
+                                                        {{ number_format($wallet->total_earned, 2) }}
+
+                                                    </h3>
+
+
+                                                </div>
+
+
+
+                                                <div class="rounded-full bg-white/20 p-3">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+
+                                                    </svg>
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                    {{-- Wallet Information --}}
+                                    <div class="rounded-2xl bg-white dark:bg-gray-800 shadow p-6">
+
+
+                                        <div class="flex items-center justify-between">
+
+
+                                            <div>
+
+                                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                                                    Wallet Summary
+                                                </h3>
+
+
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                                    Your marketplace earnings overview
+                                                </p>
+
+                                            </div>
+
+
+
+                                            <span
+                                                class="rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
+
+                                                Active
+
+                                            </span>
+
+
+                                        </div>
+
+
+
+                                        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+
+
+                                            <div class="rounded-xl bg-gray-50 dark:bg-gray-700 p-4">
+
+                                                <p class="text-sm text-gray-500 dark:text-gray-300">
+                                                    Commission
+                                                </p>
+
+                                                <p class="mt-2 font-bold text-gray-900 dark:text-white">
+
+                                                    {{ config('revenue.commission') }}%
+
+                                                </p>
+
+                                            </div>
+
+
+
+                                            <div class="rounded-xl bg-gray-50 dark:bg-gray-700 p-4">
+
+                                                <p class="text-sm text-gray-500 dark:text-gray-300">
+                                                    Currency
+                                                </p>
+
+                                                <p class="mt-2 font-bold text-gray-900 dark:text-white">
+
+                                                    {{ $shop->currency ?? 'USD' }}
+
+                                                </p>
+
+                                            </div>
+
+
+
+                                            <div class="rounded-xl bg-gray-50 dark:bg-gray-700 p-4">
+
+                                                <p class="text-sm text-gray-500 dark:text-gray-300">
+                                                    Status
+                                                </p>
+
+                                                <p class="mt-2 font-bold text-green-600">
+
+                                                    Verified
+
+                                                </p>
+
+                                            </div>
+
+
+
+                                            <div class="rounded-xl bg-gray-50 dark:bg-gray-700 p-4">
+
+                                                <p class="text-sm text-gray-500 dark:text-gray-300">
+                                                    Withdrawals
+                                                </p>
+
+                                                <p class="mt-2 font-bold text-gray-900 dark:text-white">
+
+                                                    Available
+
+                                                </p>
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
                             </div>
 
                             <!-- Sidebar -->
@@ -294,8 +583,7 @@
 
                                                     <!-- Icon -->
                                                     <div
-                                                        class="flex h-12 w-12 items-center justify-center rounded-full
-                        {{ is_null($notification->read_at) ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500' }}">
+                                                        class="flex h-12 w-12 items-center justify-center rounded-full{{ is_null($notification->read_at) ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500' }}">
 
                                                         @switch($notification->data['icon'] ?? 'bell')
                                                             @case('success')
@@ -330,7 +618,8 @@
                                                             </h3>
 
                                                             @if (is_null($notification->read_at))
-                                                                <span class="h-3 w-3 rounded-full bg-indigo-600"></span>
+                                                                <span
+                                                                    class="h-3 w-3 rounded-full bg-indigo-600"></span>
                                                             @endif
 
                                                         </div>
