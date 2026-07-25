@@ -125,6 +125,18 @@ class Listing extends Model
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
+    public function reviews()
+    {
+    return $this->hasMany(Review::class);
+    }
+
+    public function getRatingAttribute()
+    {
+    return $this->reviews()
+        ->where('approved', true)
+        ->avg('rating');
+    }
+
     /**
      * Scope a query to only include the product with the highest price.
      *

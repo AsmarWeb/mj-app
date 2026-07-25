@@ -252,6 +252,58 @@
 
         </div>
 
+        <div class="mt-10">
+
+            <h2 class="text-xl font-bold">
+                Write a Review
+            </h2>
+
+
+            <form method="POST" action="{{ route('review.store', $listing) }}">
+
+                @csrf
+
+
+                <select name="rating" class="border rounded p-2">
+
+                    <option value="5">
+                        ⭐⭐⭐⭐⭐
+                    </option>
+
+                    <option value="4">
+                        ⭐⭐⭐⭐
+                    </option>
+
+                    <option value="3">
+                        ⭐⭐⭐
+                    </option>
+
+                    <option value="2">
+                        ⭐⭐
+                    </option>
+
+                    <option value="1">
+                        ⭐
+                    </option>
+
+                </select>
+
+
+
+                <textarea name="comment" class="w-full border rounded mt-3" placeholder="Your review"></textarea>
+
+
+                <button class="bg-orange-500 text-white px-5 py-2 rounded mt-3">
+
+                    Submit Review
+
+                </button>
+
+
+            </form>
+
+        </div>
+
     </div>
 
 
@@ -261,6 +313,49 @@
             document.getElementById('mainImage').src = src;
         }
     </script>
+
+    @push('schema')
+        <script type="application/ld+json">
+
+{
+    "@context": "https://schema.org/",
+    "@type": "Product",
+
+    "name": "{{ $listing->title }}",
+
+    "description": "{{ strip_tags($listing->description) }}",
+
+    "image": [
+        "{{ asset('storage/products/'.$listing->image) }}"
+    ],
+
+    "sku": "{{ $listing->sku }}",
+
+    "brand": {
+        "@type": "Brand",
+        "name": "{{ $listing->brand->name ?? '' }}"
+    },
+
+
+    "offers": {
+
+        "@type": "Offer",
+
+        "url": "{{ url()->current() }}",
+
+        "priceCurrency": "AED",
+
+        "price": "{{ $listing->price }}",
+
+        "availability":
+        "https://schema.org/InStock"
+
+    }
+
+}
+
+</script>
+    @endpush
 
 
     <x-main-footer></x-main-footer>

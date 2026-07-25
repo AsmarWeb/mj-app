@@ -13,10 +13,17 @@ class ConnectController extends Controller
 
     public function createAccount(Request $request)
     {
-        $shop = $request->user()->shop;
+        $user = $request->user();
 
-        if (! $shop) {
-            return redirect()->route('shop.create', 1);
+        $shop = $user->shop;
+
+
+        if (!$shop) {
+
+            return redirect()
+                ->route('shop.create', 1)
+                ->with('error', 'Please create your shop first.');
+
         }
 
 
@@ -37,23 +44,43 @@ class ConnectController extends Controller
 
                     'country' => 'AE',
 
-                    'email' => $request->user()->email,
+                    'email' => $user->email,
 
                 ]);
 
 
-                $shop->update([
 
-                    'stripe_account_id' => $account->id,
+                // Save manually to avoid fillable problems
 
-                ]);
+                $shop->stripe_account_id = $account->id;
+
+                $shop->save();
+
+
+
+                // Reload database value
+
+                $shop->refresh();
 
             }
+
+
+
+            if (!$shop->stripe_account_id) {
+
+                return back()->with(
+                    'error',
+                    'Stripe account was not created.'
+                );
+
+            }
+
 
 
             return $this->onboarding(
                 $shop->stripe_account_id
             );
+
 
 
         } catch (ApiErrorException $e) {
@@ -70,13 +97,10 @@ class ConnectController extends Controller
 
 
 
+
+
     public function onboarding($accountId)
     {
-
-        Stripe::setApiKey(
-            config('cashier.secret')
-        );
-
 
         if (!$accountId) {
 
@@ -84,10 +108,15 @@ class ConnectController extends Controller
                 ->route('dashboard')
                 ->with(
                     'error',
-                    'Stripe account was not created.'
+                    'Missing Stripe account ID.'
                 );
 
         }
+
+
+        Stripe::setApiKey(
+            config('cashier.secret')
+        );
 
 
         try {
@@ -97,18 +126,24 @@ class ConnectController extends Controller
 
                 'account' => $accountId,
 
-                'refresh_url' => route('connect.refresh'),
+                'refresh_url' => route(
+                    'connect.refresh'
+                ),
 
-                'return_url' => route('connect.success'),
+                'return_url' => route(
+                    'connect.success'
+                ),
 
                 'type' => 'account_onboarding',
 
             ]);
 
 
+
             return redirect(
                 $link->url
             );
+
 
 
         } catch (ApiErrorException $e) {
@@ -125,10 +160,24 @@ class ConnectController extends Controller
 
 
 
+
+
     public function success(Request $request)
     {
 
         $shop = $request->user()->shop;
+
+
+        if (!$shop || !$shop->stripe_account_id) {
+
+            return redirect()
+                ->route('dashboard')
+                ->with(
+                    'error',
+                    'Stripe account not found.'
+                );
+
+        }
 
 
         Stripe::setApiKey(
@@ -144,20 +193,22 @@ class ConnectController extends Controller
             );
 
 
-            $shop->update([
 
-                'stripe_connected' =>
-                    $account->details_submitted,
+            $shop->stripe_connected =
+                $account->details_submitted;
 
-            ]);
+
+            $shop->save();
+
 
 
             return redirect()
-                ->route('shop.dashboard')
+                ->route('dashboard')
                 ->with(
                     'success',
                     'Stripe connected successfully.'
                 );
+
 
 
         } catch (ApiErrorException $e) {
@@ -176,10 +227,14 @@ class ConnectController extends Controller
 
 
 
+
+
     public function refresh()
     {
+
         return redirect()
             ->route('connect.create');
+
     }
 
 }

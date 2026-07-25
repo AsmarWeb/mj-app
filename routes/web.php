@@ -33,6 +33,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Seller\StripeConnectController;
 use App\Http\Controllers\ShopCountryController;
 use App\Http\Controllers\SitemapController;
@@ -42,12 +43,15 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\EditController;
 use App\Http\Controllers\WishlistController;
 use App\Livewire\Admin\Listing\CreateComponent;
+use App\Livewire\SearchResults;
 use App\Models\Order;
 use App\Mail\OrderPaidMail;
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\OrderPaidNotification;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::view('/search', 'pages.search')->name('search');
 
 Route::get('/lang/{locale}', function ($locale) {
     session()->put('locale', $locale);
@@ -152,6 +156,16 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
+});
+
+Route::middleware('auth')->group(function(){
+
+    Route::post(
+        '/listing/{listing}/review',
+        [ReviewController::class,'store']
+    )
+    ->name('review.store');
+
 });
 
 Route::get('/notifications/{notification}', function ($id) {

@@ -42,6 +42,8 @@ class Shop extends Model
         'whatsapp',
         'allow_phone',
         'allow_whatsapp',
+        'stripe_account_id',
+        'stripe_connected',
     ];
 
     protected $dates = ['published_at']; 
