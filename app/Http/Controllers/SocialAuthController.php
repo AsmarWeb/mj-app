@@ -39,6 +39,11 @@ class SocialAuthController extends Controller
             $user->profile_photo_path = $filename;
             $user->save();
         }
+        
+        // Every user should have the "user" role
+        if (! $user->hasRole('user')) {
+            $user->addRole('user');
+        }
 
         Auth::login($user);
 
