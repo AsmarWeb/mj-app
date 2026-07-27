@@ -229,9 +229,27 @@ class ShopController extends Controller
 
     public function show($slug)
     {
-        $shop = Shop::where('slug', $slug)
-            ->with('listings')
-            ->firstOrFail();
+        $shop = Shop::where('slug',$slug)
+        ->with([
+            'section',
+            'city',
+            'state'
+        ])
+        ->firstOrFail();
+
+
+    $products = $shop->listings()
+        ->where('status','published')
+        ->latest()
+        ->paginate(12);
+
+
+    $categories = $shop->listings()
+        ->where('status','published')
+        ->with('category')
+        ->get()
+        ->pluck('category')
+        ->unique('id');
 
         $title = $shop ? $shop->name : 'Create your shop';
         $description = $shop ? $shop->description : 'Create a polished shop on Murwaj and start selling your products.';
@@ -242,7 +260,7 @@ class ShopController extends Controller
         $bannerImage = $shop && $shop->banner ? Storage::url($shop->banner) : null;
         $logoImage = $shop && $shop->logo ? Storage::url($shop->logo) : null;
 
-        return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage'));
+        return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage','products','categories'));
     } 
 
     public function index()

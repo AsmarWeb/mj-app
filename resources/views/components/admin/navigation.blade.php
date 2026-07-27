@@ -38,7 +38,7 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('contacts.index') }}" :active="request()->routeIs('contacts.index')">
-                        {{ __('Leads') }}
+                        {{ __('Contacts') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden sm:flex sm:items-center sm:ml-6 pt-1">
@@ -72,6 +72,10 @@
                                 {{ __('Project Ex') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('leads.index') }}" :active="request()->routeIs('leads.index')">
+                                {{ __('Leads') }}
+                            </x-dropdown-link>
+
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -101,6 +105,10 @@
 
                             <x-dropdown-link href="{{ route('listings.index') }}" :active="request()->routeIs('listings.index')">
                                 {{ __('Listings') }}
+                            </x-dropdown-link>
+
+                            <x-dropdown-link href="{{ route('digital-products.index') }}" :active="request()->routeIs('digital-products.index')">
+                                {{ __('Digital Products') }}
                             </x-dropdown-link>
 
                             <x-dropdown-link href="{{ route('brands.index') }}" :active="request()->routeIs('brands.index')">

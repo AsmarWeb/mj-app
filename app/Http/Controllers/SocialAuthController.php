@@ -36,7 +36,7 @@ class SocialAuthController extends Controller
             $contents = Http::get($socialUser->getAvatar())->body();
             $filename = 'profile-photos/' . Str::uuid() . '.jpg';
             Storage::disk('public')->put($filename, $contents);
-            $user->profile_photo_path = $filename;
+            $user->profile_photo_path = $filename; 
             $user->save();
         }
         

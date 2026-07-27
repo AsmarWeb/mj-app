@@ -1,90 +1,351 @@
 <x-main-layout>
+
     @section('title', $title)
     @section('description', $description)
     @section('keywords', $keywords)
 
+
     <x-slot name="header">
-        <x-main-header></x-main-header>
+        <x-main-header />
     </x-slot>
 
+
     <div class="min-h-screen">
-        <div class="relative overflow-hidden">
-            <div class="absolute inset-0 "></div>
-            <div class="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
-                <div class="overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 shadow-2xl backdrop-blur">
-                    <div class="h-56 bg-cover bg-center sm:h-72"
-                        style="background-image: url('{{ $bannerImage ?? 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80' }}')">
-                    </div>
 
-                    <div class="px-6 pb-8 sm:px-8 lg:px-10">
-                        <div class="-mt-16 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                            <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
-                                <div
-                                    class="flex h-28 w-28 items-center justify-center overflow-hidden rounded-3xl border-4 border-white bg-white shadow-lg sm:h-32 sm:w-32">
-                                    @if ($logoImage)
-                                        <img src="{{ $logoImage }}" alt="{{ $shop->name }} logo"
-                                            class="h-full w-full object-cover">
-                                    @else
-                                        <div
-                                            class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-500 text-3xl font-semibold text-white">
-                                            {{ strtoupper(substr($shop->name, 0, 1)) }}
-                                        </div>
-                                    @endif
-                                </div>
 
-                                <div>
-                                    <span
-                                        class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
-                                        {{ $shop->type ?: 'Online shop' }}
-                                    </span>
-                                    <h1 class="mt-3 text-3xl font-semibold text-slate-900 sm:text-4xl">
-                                        {{ $shop->name }}
-                                    </h1>
-                                    <p class="mt-2 text-base text-slate-600">
-                                        {{ optional($shop->section)->name ?: 'Fresh storefront' }} •
-                                        {{ optional($shop->city)->name ?: 'Location pending' }}
-                                    </p>
-                                </div>
-                            </div>
+        {{-- SHOP HEADER --}}
+        <section class="max-w-7xl mx-auto px-6 py-10">
 
-                            <a href="{{ route('explore') }}"
-                                class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700">
-                                Explore marketplace
-                            </a>
-                        </div>
 
-                        <div class="mt-8 grid gap-6 lg:grid-cols-[1.7fr_0.9fr]">
-                            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
-                                <h2 class="text-xl font-semibold text-slate-900">About this shop</h2>
-                                <p class="mt-4 text-base leading-8 text-slate-600">
-                                    {{ $shop->description ?: 'This storefront is ready for its first big moment. Add your story, highlights, and listings to make it shine.' }}
-                                </p>
-                            </div>
+            <div class="bg-white rounded-3xl shadow overflow-hidden">
 
-                            <div class="space-y-4">
-                                <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                                    <h3 class="text-lg font-semibold text-slate-900">Location</h3>
-                                    <p class="mt-2 text-sm leading-7 text-slate-600">
-                                        {{ optional($shop->city)->name ?: 'Location not added yet' }}
-                                        @if (optional($shop->state)->name)
-                                            , {{ optional($shop->state)->name }}
-                                        @endif
-                                    </p>
-                                </div>
 
-                                <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                                    <h3 class="text-lg font-semibold text-slate-900">Shop status</h3>
-                                    <p class="mt-2 text-sm leading-7 text-slate-600">
-                                        Your storefront is live and ready to welcome visitors.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                {{-- Banner --}}
+                <div class="h-72 bg-cover bg-center"
+                    style="background-image:url('{{ $shop->banner ? asset('storage/' . $shop->banner) : asset('shop-banner.jpg') }}')">
                 </div>
+
+
+
+                <div class="px-8 pb-8">
+
+
+                    <div class="-mt-16 flex flex-col md:flex-row gap-6 items-center md:items-end">
+
+
+                        {{-- Logo --}}
+                        <div class="w-32 h-32 rounded-full border-8 border-white bg-white shadow overflow-hidden">
+
+
+                            @if ($shop->logo)
+                                <img src="{{ asset('storage/' . $shop->logo) }}" class="w-full h-full object-cover">
+                            @else
+                                <div
+                                    class="w-full h-full flex items-center justify-center 
+bg-indigo-600 text-white text-4xl font-bold">
+
+                                    {{ substr($shop->name, 0, 1) }}
+
+                                </div>
+                            @endif
+
+
+                        </div>
+
+
+
+                        <div class="flex-1 text-center md:text-left">
+
+
+                            <h1 class="text-4xl font-bold">
+                                {{ $shop->name }}
+                            </h1>
+
+
+                            <p class="text-gray-500 mt-2">
+                                {{ $shop->description }}
+                            </p>
+
+
+
+                            <div class="flex justify-center md:justify-start gap-5 mt-4 text-sm">
+
+
+                                <span>
+                                    ⭐ {{ $shop->rating ?? 5 }}
+                                </span>
+
+
+                                <span>
+                                    {{ $shop->digitalProduct ?? $products->total() }}
+                                    Products
+                                </span>
+
+
+                                <span>
+                                    📍 {{ $shop->city->name ?? '' }}
+                                </span>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        <button class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold">
+
+                            Follow Shop
+
+                        </button>
+
+
+
+                    </div>
+
+
+                </div>
+
             </div>
-        </div>
+
+
+        </section>
+
+
+
+
+
+        {{-- SHOP NAVIGATION --}}
+
+        <section class="max-w-7xl mx-auto px-6">
+
+
+            <div class="bg-white rounded-xl shadow p-5 flex gap-8">
+
+
+                <a class="font-bold text-orange-500">
+
+                    Products
+
+                </a>
+
+
+                <a>
+                    Reviews
+                </a>
+
+
+                <a>
+                    About
+                </a>
+
+
+            </div>
+
+
+        </section>
+
+
+
+
+
+        {{-- SHOP CATEGORIES --}}
+
+        @if ($categories->count())
+
+            <section class="max-w-7xl mx-auto px-6 py-8">
+
+
+                <h2 class="text-2xl font-bold mb-5">
+
+                    Shop Categories
+
+                </h2>
+
+
+                <div class="flex flex-wrap gap-3">
+
+
+                    @foreach ($categories as $category)
+                        <span class="px-5 py-2 rounded-full bg-white shadow">
+
+                            {{ $category->category_name ?? $category->name }}
+
+                        </span>
+                    @endforeach
+
+
+                </div>
+
+
+            </section>
+
+        @endif
+
+
+
+
+
+
+
+        {{-- PRODUCTS --}}
+
+        <section class="max-w-7xl mx-auto px-6 py-10">
+
+
+            <div class="flex justify-between mb-8">
+
+
+                <h2 class="text-3xl font-bold dark:text-white">
+
+                    {{ $shop->name }} Products
+
+                </h2>
+
+
+                <span class="text-gray-500 dark:text-white">
+
+                    {{ $products->total() }} items
+
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+
+                @forelse($products as $product)
+                    <div class="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
+
+
+                        <div class="h-56 relative">
+
+
+                            <img src="{{ asset('storage/products/' . $product->image) }}"
+                                class="w-full h-full object-cover">
+
+
+                            @if ($product->product_type == 'digital')
+                                <span
+                                    class="absolute top-3 left-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs">
+
+                                    Digital
+
+                                </span>
+                            @endif
+
+
+
+                        </div>
+
+
+
+
+
+                        <div class="p-5">
+
+
+                            <h3 class="font-bold text-lg line-clamp-1">
+
+                                {{ $product->title }}
+
+                            </h3>
+
+
+
+                            <p class="text-gray-500 text-sm mt-2 line-clamp-2">
+
+                                {{ Str::limit($product->description, 70) }}
+
+                            </p>
+
+
+
+
+                            <div class="flex justify-between items-center mt-5">
+
+
+                                <span class="font-bold text-xl">
+
+                                    {{ $shop->currency ?? '$' }}
+                                    {{ number_format($product->price, 2) }}
+
+                                </span>
+
+
+
+                                <a href="{{ route('listing.show', $product->slug) }}"
+                                    class="bg-orange-500 text-white px-4 py-2 rounded-lg">
+
+
+                                    View
+
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                @empty
+
+
+                    <div class="col-span-full text-center py-20">
+
+
+                        <h2 class="text-2xl font-bold dark:text-white">
+
+                            No products yet
+
+                        </h2>
+
+
+                        <p class="text-gray-500 dark:text-white">
+
+                            This shop is preparing new products.
+
+                        </p>
+
+
+                    </div>
+                @endforelse
+
+
+            </div>
+
+
+
+
+
+            <div class="mt-10">
+
+                {{ $products->links() }}
+
+            </div>
+
+
+        </section>
+
+
+
+
     </div>
 
-    <x-main-footer></x-main-footer>
+
+
+    <x-main-footer />
+
 </x-main-layout>

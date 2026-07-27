@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\DigitalProductController;
 use App\Http\Controllers\Admin\FeatureController;
+use App\Http\Controllers\Admin\LeadsController;
 use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
@@ -397,7 +400,53 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
 
 Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {
     Route::get('/create', CreateComponent::class)->name('admin.create');
+
+    Route::get(
+            'digital-products',
+            [DigitalProductController::class, 'index']
+        )
+        ->name('digital-products.index');
+
+    Route::get('/digital-products/create',
+        [DigitalProductController::class, 'create']
+    )
+    ->name('digital-products.create');
+
+    Route::post('/digital-products',
+        [DigitalProductController::class, 'store']
+    )
+    ->name('digital-products.store');
 });
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/digital-products/{slug}/download',
+        [DigitalProductController::class, 'download']
+    )->name('digital-products.download');
+
+     Route::middleware('auth')->post(
+    '/digital-products/{slug}/checkout',
+    [DigitalProductController::class, 'checkout']
+    )->name('digital-products.checkout');
+
+    Route::get(
+    '/digital-products/{slug}/success',
+    [DigitalProductController::class, 'success']
+    )->name('digital-products.success');
+
+   Route::middleware('auth')->get(
+    '/downloads/{token}',
+    [DownloadController::class, 'download']
+    )->name('downloads.download');
+
+    Route::get('/digital-products/{slug}',
+    [DigitalProductController::class, 'show']
+    )->name('digital-products.show');
+
+});
+
+   
 
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage', 'middleware' => ['role:superadministrator|administrator']], function () {
@@ -433,6 +482,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     Route::get('project-explorer',
         [ProjectExplorerController::class, 'index']
     )->name('project-explorer');
+
+    Route::resource('leads', LeadsController::class);
 
 });
 });

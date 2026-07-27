@@ -24,6 +24,8 @@ return new class extends Migration
             $table->json('features')->nullable();
             $table->json('keywords')->nullable();
             $table->string('image');
+            $table->string('video')->nullable();
+            $table->integer('video_views')->default(0);
             $table->json('images')->nullable();
             $table->string('price_condition');
             $table->string('condition');

@@ -83,6 +83,11 @@ class Shop extends Model
         return $this->hasMany(Listing::class, 'shop_id', 'id');
     }
 
+    public function digitalProduct(): HasMany
+    {
+        return $this->hasMany(DigitalProduct::class, 'shop_id', 'id');
+    }
+
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);

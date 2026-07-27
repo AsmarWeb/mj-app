@@ -407,6 +407,40 @@
 
             </div>
 
+            <div>
+
+                <label class="font-semibold block mb-2">
+                    Product Video
+                </label>
+
+
+                <input type="file" wire:model="video" accept="video/mp4,video/webm,video/quicktime"
+                    class="w-full border rounded-xl p-3">
+
+
+                @error('video')
+                    <p class="text-red-500 text-sm mt-2">
+                        {{ $message }}
+                    </p>
+                @enderror
+
+
+                @if ($video)
+                    <video class="mt-4 rounded-xl w-full max-w-md" controls>
+
+                        <source src="{{ $video->temporaryUrl() }}">
+
+                    </video>
+                @endif
+
+
+                <p class="text-gray-500 text-sm mt-2">
+                    Upload a short product video (15-60 seconds).
+                    MP4 recommended.
+                </p>
+
+            </div>
+
             <!-- Publish -->
             <div class="bg-white rounded-xl shadow p-6">
 

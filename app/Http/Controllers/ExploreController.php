@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\DigitalProduct;
 use App\Models\Listing;
+use App\Models\Section;
 use App\Models\Shop;
 use App\Models\Wishlist;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -12,9 +14,32 @@ use Illuminate\Http\Request;
 
 class ExploreController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Listing::query()->where('status', 'published');
+
+    if ($request->filled('section')) {
+
+        $query->whereHas('section', function ($q) use ($request) {
+
+            $q->where('slug', $request->section);
+
+        });
+
+    }
+
+    $listings = $query->latest()->paginate(20);
+
+    $digitalProducts = DigitalProduct::where('status','published')
+    ->latest()
+    ->take(8)
+    ->get();
+
     return view('explore.index',[
+        'listings' => $listings,
+        'digitalProducts' => $digitalProducts,
+        
+        'sections' => Section::where('status', 'active')->take(5)->get(),
 
         'categories'=>Category::where('status','active')
             ->take(12)

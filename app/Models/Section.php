@@ -53,6 +53,11 @@ class Section extends Model
             ->where(['parent_id' => 0, 'status' => 'active'])->with('subcategories');
     }
 
+    public function digitalCategory(): HasMany
+    {
+        return $this->hasMany(DigitalCategory::class, 'section_id', 'id');
+    }
+
     public function listing(): HasMany
     {
         return $this->hasMany(Listing::class, 'section_id', 'id');

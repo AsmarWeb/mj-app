@@ -46,6 +46,8 @@ class CreateListing extends Component
     public $feature = '';
 
     public $image;
+    
+    public $video;
 
     public $images = [];
 
@@ -119,6 +121,8 @@ class CreateListing extends Component
             'delivery_days' => 'required|integer|min:1',
 
             'image' => 'required|image|max:2048',
+
+            'video' => ['nullable','file','mimes:mp4,mov,webm','max:51200'],
 
             'images.*' => 'image|max:2048',
 
@@ -223,6 +227,10 @@ class CreateListing extends Component
 
             }
 
+        }
+
+        if ($this->video) {
+            $newStorage += $this->video->getSize();
         }
 
     }
@@ -386,6 +394,28 @@ class CreateListing extends Component
             $this->image->storeAs('products', $imageName, 'public');
             $listing->image = $imageName;
             }
+
+        // Upload product video
+
+
+        if ($this->video) {
+
+    
+        $videoName = Carbon::now()->timestamp 
+        . '_video.' 
+        . $this->video->extension();
+
+
+    
+        $this->video->storeAs(
+        'products/videos',
+        $videoName,
+        'public'
+    
+        );
+
+        $listing->video = $videoName;
+        }
             
         // Upload gallery images
         $gallery = [];

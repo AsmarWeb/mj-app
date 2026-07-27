@@ -161,6 +161,54 @@
             </div>
 
             @php
+                $downloads = auth()->user()->downloads()->with('product')->latest()->get();
+            @endphp
+
+            <div class="grid md:grid-cols-4 gap-6 mb-10">
+
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <div class="text-3xl">📦</div>
+                    <div class="mt-3 text-3xl font-bold">
+                        {{ $downloads->count() }}
+                    </div>
+                    <div class="text-gray-500">
+                        Digital Products
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <div class="text-3xl">⬇️</div>
+                    <div class="mt-3 text-3xl font-bold">
+                        {{ $downloads->sum(fn($d) => optional($d->product)->downloads ?? 0) }}
+                    </div>
+                    <div class="text-gray-500">
+                        Total Downloads
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <div class="text-3xl">💳</div>
+                    <div class="mt-3 text-3xl font-bold">
+                        {{ $downloads->where('paid', true)->count() }}
+                    </div>
+                    <div class="text-gray-500">
+                        Paid Purchases
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <div class="text-3xl">🎁</div>
+                    <div class="mt-3 text-3xl font-bold">
+                        {{ $downloads->where('paid', false)->count() }}
+                    </div>
+                    <div class="text-gray-500">
+                        Free Downloads
+                    </div>
+                </div>
+
+            </div>
+
+            @php
                 $resume = auth()->user()->resumes()->latest()->first();
             @endphp
 

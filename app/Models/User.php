@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,7 +18,7 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Laravel\Cashier\Billable;
 
-class User extends Authenticatable implements LaratrustUser
+class User extends Authenticatable implements LaratrustUser, MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -100,6 +100,11 @@ class User extends Authenticatable implements LaratrustUser
     public function listing(): HasMany
     {
         return $this->hasMany(Listing::class)->latest();
+    }
+
+    public function downloads()
+    {
+    return $this->hasMany(\App\Models\Download::class);
     }
 
     public function orders(): HasMany

@@ -54,6 +54,7 @@ class Listing extends Model
         'features',
         'keywords',
         'image',
+        'video',
         'images',
         'price_condition',
         'condition',
@@ -127,15 +128,17 @@ class Listing extends Model
 
     public function reviews()
     {
-    return $this->hasMany(Review::class);
+        return $this->hasMany(Review::class);
     }
 
     public function getRatingAttribute()
     {
-    return $this->reviews()
+        return $this->reviews()
         ->where('approved', true)
         ->avg('rating');
     }
+
+    
 
     /**
      * Scope a query to only include the product with the highest price.
