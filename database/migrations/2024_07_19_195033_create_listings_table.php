@@ -42,7 +42,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'published', 'expired', 'archived'])->default('draft');
             $table->string('shipping_method')->nullable();
             $table->integer('delivery_days')->nullable();
-            $table->timestamp('published_at')->nullable();
+            $table->timestamp('published_at')->nullable(); 
             $table->timestamp('expires_at')->nullable();
             $table->boolean('featured')->default(false);
             $table->timestamp('featured_at')->nullable(); 

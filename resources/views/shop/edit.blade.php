@@ -73,7 +73,8 @@
                                 Phone Number
                             </label>
 
-                            <input type="text" name="phone" value="{{ old('phone', $shop->phone) }}"
+                            <input id="phone" type="tel" name="phone"
+                                value="{{ old('phone', auth()->user()->phone) }}" autocomplete="tel"
                                 class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                         </div>
 
@@ -83,7 +84,7 @@
                                 WhatsApp Number
                             </label>
 
-                            <input type="text" name="whatsapp" value="{{ old('whatsapp', $shop->whatsapp) }}"
+                            <input type="text" name="whatsapp" value="{{ old('whatsapp', auth()->user()->phone) }}"
                                 placeholder="971501234567"
                                 class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                         </div>

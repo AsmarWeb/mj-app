@@ -323,7 +323,63 @@
 
         </div>
 
+        <div class="mt-8 space-y-6">
 
+            @forelse($listing->reviews as $review)
+
+                <div class="rounded-xl border bg-white p-6 shadow-sm">
+
+                    <div class="flex justify-between">
+
+                        <div>
+
+                            <h4 class="font-semibold">
+
+                                {{ $review->user->name }}
+
+                            </h4>
+
+                            <p class="text-sm text-gray-500">
+
+                                {{ $review->created_at->diffForHumans() }}
+
+                            </p>
+
+                        </div>
+
+                        <div class="text-yellow-500 text-lg">
+
+                            @for ($i = 1; $i <= 5; $i++)
+                                {{ $i <= $review->rating ? '★' : '☆' }}
+                            @endfor
+
+                        </div>
+
+                    </div>
+
+                    <p class="mt-4 text-gray-700">
+
+                        {{ $review->comment }}
+
+                    </p>
+
+                </div>
+
+            @empty
+
+                <div class="rounded-xl bg-gray-50 p-10 text-center text-gray-500">
+
+                    No reviews yet.
+
+                    <br>
+
+                    Be the first to review this product.
+
+                </div>
+
+            @endforelse
+
+        </div>
 
 
         {{-- REVIEWS --}}

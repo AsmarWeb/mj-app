@@ -396,6 +396,16 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
     Route::post('shops/{shop}/verify', [ShopsController::class, 'verify'])->name('admin.shops.verify');
 
     Route::post('shops/{shop}/unverify', [ShopsController::class, 'unverify'])->name('admin.shops.unverify');
+
+    Route::post(
+        'listings/{listing}/featured',
+        [ListingController::class, 'featured']
+    )->name('listings.featured');
+
+    Route::post(
+        'listings/{listing}/unfeatured',
+        [ListingController::class, 'unfeatured']
+    )->name('listings.unfeatured');
 });
 
 Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {

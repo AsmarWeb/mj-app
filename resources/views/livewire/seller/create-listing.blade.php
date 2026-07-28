@@ -49,17 +49,19 @@
                         <label class="font-medium">Title</label>
 
                         <input type="text" wire:model.defer="title" wire:model.live="title"
-                            class="w-full mt-2 border rounded-lg p-3">
+                            placeholder="Product title" class="w-full mt-2 border rounded-lg p-3">
 
                         @error('title')
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
+                    <div dir="rtl">
+
                         <label class="font-medium">Arabic Title</label>
 
-                        <input type="text" wire:model.defer="title_ar" class="w-full mt-2 border rounded-lg p-3">
+                        <input type="text" wire:model.defer="title_ar" placeholder="عنوان المنتج"
+                            class="w-full mt-2 border rounded-lg p-3 text-right">
 
                         @error('title_ar')
                             <p class="text-red-500 text-sm">{{ $message }}</p>

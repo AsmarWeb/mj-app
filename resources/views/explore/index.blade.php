@@ -405,7 +405,7 @@
             </div>
 
 
-            <a href="{{ route('digital-products.index') }}" class="text-orange-500 font-semibold">
+            <a href="#" class="text-orange-500 font-semibold">
 
                 View All →
 

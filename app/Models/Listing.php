@@ -59,7 +59,9 @@ class Listing extends Model
         'price_condition',
         'condition',
         'shipping_method',
-        'delivery_days',
+        'delivery_days', 
+        'featured',
+        'featured_at'
     ]; 
 
     protected $casts = [
