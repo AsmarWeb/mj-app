@@ -31,7 +31,8 @@
         <hr class="my-6 border-gray-200 md:my-10 dark:border-gray-700" />
 
         <div class="flex flex-col items-center sm:flex-row sm:justify-between">
-            <p class="text-sm text-gray-500 dark:text-gray-300">© murwaj 2025 - Crafted with love and coffee in Dubai.
+            <p class="text-sm text-gray-500 dark:text-gray-300">©
+                {{ date('Y') }} {{ app()->getLocale() == 'ar' ? $setting->copyright_ar : $setting->copyright }}
             </p>
 
             <div class="flex -mx-2 py-4">

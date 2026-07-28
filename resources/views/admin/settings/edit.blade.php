@@ -77,6 +77,22 @@
             </div>
 
             <div class="mb-4">
+                <label for="copyright" class="block text-gray-700 font-medium mb-2">
+                    Copyright (English)
+                </label>
+                <textarea id="copyright" name="copyright" rows="3"
+                    class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400">{{ old('copyright', $setting->copyright) }}</textarea>
+            </div>
+
+            <div class="mb-4 text-end">
+                <label for="copyright_ar" class="block text-sm font-medium text-gray-900 text-right">
+                    حقوق النشر (العربية)
+                </label>
+                <textarea id="copyright_ar" name="copyright_ar" rows="3"
+                    class="text-right block w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:border-indigo-600">{{ old('copyright_ar', $setting->copyright_ar) }}</textarea>
+            </div>
+
+            <div class="mb-4">
                 <label for="facebook" class="block text-gray-700 font-medium mb-2">Enter Facebook</label>
                 <input type="url" id="facebook" name="facebook" value="{{ $setting->facebook }}"
                     class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400">

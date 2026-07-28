@@ -29,7 +29,9 @@ class SettingSeeder extends Seeder
             'instagram' => "https://www.instagram.com/murwajcom/",
             'telegram' => "https://t.me/murwaj",
             'tiktok' => "https://www.tiktok.com/@murwajcom",
-        );
+            'copyright' => "murwaj - Crafted with love and coffee in Dubai.",
+            'copyright_ar' => "مُروَّج.كم - صُنع بحب وقهوة في دبي"
+        ); 
         DB::table('settings')->insert($data);
     }
 }

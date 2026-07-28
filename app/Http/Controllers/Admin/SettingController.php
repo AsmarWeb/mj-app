@@ -17,7 +17,7 @@ class SettingController extends Controller
     {
         $setting = Setting::find(1);
         return view('admin.settings.index', compact('setting'));
-    }
+    } 
 
     /**
      * Show the form for creating a new resource.
@@ -73,6 +73,9 @@ class SettingController extends Controller
         $setting->instagram = $request->instagram;
         $setting->telegram = $request->telegram;
         $setting->tiktok = $request->tiktok;
+
+        $setting->copyright = $request->copyright;
+        $setting->copyright_ar = $request->copyright_ar;
 
         $setting->map = $request->map;
 

@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('telegram');
             $table->string('instagram');
             $table->string('tiktok');
+            $table->text('copyright')->nullable();
+            $table->text('copyright_ar')->nullable();
             $table->timestamps();
         });
     }
