@@ -260,6 +260,8 @@ class ShopController extends Controller
         $bannerImage = $shop && $shop->banner ? Storage::url($shop->banner) : null;
         $logoImage = $shop && $shop->logo ? Storage::url($shop->logo) : null;
 
+        $shop->loadCount('followers');
+
         return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage','products','categories'));
     } 
 

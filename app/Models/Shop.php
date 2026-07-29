@@ -167,6 +167,16 @@ class Shop extends Model
     return $this->belongsTo(City::class, 'city_id');
     }
 
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'shop_followers')->withTimestamps();
+    }
+
+    public function ratings()
+    {
+    return $this->hasMany(ShopRating::class);
+    }
+
     public function canReceiveOrder()
     {
     // No plan = no orders

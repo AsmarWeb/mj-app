@@ -30,7 +30,8 @@ return new class extends Migration
             $table->boolean('allow_whatsapp')->default(true);
             $table->boolean('allow_phone')->default(true);
             $table->bigInteger('section_id')->unsigned()->nullable();
-            $table->decimal('rating', 10, 2)->nullable();
+            $table->decimal('rating', 10, 2)->nullable(); 
+            $table->unsignedInteger('ratings_count')->default(0);
             $table->unsignedBigInteger('views')->default(0);
             $table->datetime('published_at')->nullable(); 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->unique();

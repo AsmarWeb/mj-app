@@ -39,6 +39,7 @@ use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Seller\StripeConnectController;
 use App\Http\Controllers\ShopCountryController;
+use App\Http\Controllers\ShopFollowController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\StripeWebhookController;
@@ -168,6 +169,11 @@ Route::middleware('auth')->group(function(){
         [ReviewController::class,'store']
     )
     ->name('review.store');
+
+    Route::middleware('auth')->post(
+    '/shops/{shop}/follow',
+    [ShopFollowController::class, 'toggle']
+)->name('shops.follow');
 
 });
 

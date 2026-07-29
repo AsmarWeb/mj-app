@@ -153,6 +153,11 @@ class User extends Authenticatable implements LaratrustUser, MustVerifyEmail
         ->withTimestamps();
     }
 
+    public function followedShops()
+    {
+        return $this->belongsToMany(Shop::class, 'shop_followers')->withTimestamps();
+    }
+
     public function hasVerifiedPhone(): bool
     {
     return ! is_null($this->phone_verified_at);

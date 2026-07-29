@@ -68,39 +68,54 @@ bg-indigo-600 text-white text-4xl font-bold">
 
 
 
-                            <div class="flex justify-center md:justify-start gap-5 mt-4 text-sm">
-
+                            <div class="flex gap-5 text-sm">
 
                                 <span>
                                     ⭐ {{ $shop->rating ?? 5 }}
                                 </span>
 
-
                                 <span>
-                                    {{ $shop->digitalProduct ?? $products->total() }}
-                                    Products
+                                    {{ $products->total() }} Products
                                 </span>
 
+                                <span>
+                                    ❤️ {{ $shop->followers_count }} Followers
+                                </span>
 
                                 <span>
                                     📍 {{ $shop->city->name ?? '' }}
                                 </span>
-
 
                             </div>
 
 
                         </div>
 
+                        @auth
+                            @if (auth()->id() !== $shop->user_id)
+                                @php
+                                    $following = auth()->user()->followedShops->contains($shop->id);
+                                @endphp
 
+                                <form action="{{ route('shops.follow', $shop) }}" method="POST">
+                                    @csrf
 
+                                    <button
+                                        class="{{ $following ? 'bg-gray-200 text-gray-800' : 'bg-orange-500 text-white' }} px-8 py-3 rounded-xl font-bold transition">
 
-                        <button class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold">
+                                        {{ $following ? 'Following' : 'Follow Shop' }}
 
-                            Follow Shop
+                                    </button>
 
-                        </button>
+                                </form>
+                            @endif
+                        @endauth
 
+                        @guest
+                            <a href="{{ route('login') }}" class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold">
+                                Follow Shop
+                            </a>
+                        @endguest
 
 
                     </div>
@@ -117,140 +132,106 @@ bg-indigo-600 text-white text-4xl font-bold">
 
 
 
+
         {{-- SHOP NAVIGATION --}}
+        <section class="sticky top-16 z-30 bg-gray-50/80 backdrop-blur border-y">
+            <div class="max-w-7xl mx-auto px-6">
 
-        <section class="max-w-7xl mx-auto px-6">
+                <nav class="flex gap-3 overflow-x-auto py-3">
 
+                    <a href="#products"
+                        class="px-5 py-2 rounded-xl bg-orange-500 text-white font-semibold whitespace-nowrap hover:bg-orange-600 transition">
+                        📦 Products
+                    </a>
 
-            <div class="bg-white rounded-xl shadow p-5 flex gap-8">
+                    <a href="#reviews"
+                        class="px-5 py-2 rounded-xl bg-white hover:bg-gray-100 font-semibold whitespace-nowrap transition">
+                        ⭐ Reviews
+                    </a>
 
+                    <a href="#about"
+                        class="px-5 py-2 rounded-xl bg-white hover:bg-gray-100 font-semibold whitespace-nowrap transition">
+                        ℹ️ About
+                    </a>
 
-                <a class="font-bold text-orange-500">
-
-                    Products
-
-                </a>
-
-
-                <a>
-                    Reviews
-                </a>
-
-
-                <a>
-                    About
-                </a>
-
+                </nav>
 
             </div>
-
-
         </section>
 
 
+        {{-- PRODUCTS --}}
+        <section id="products" class="max-w-7xl mx-auto px-6 py-10">
 
+            @if ($categories->count())
 
+                <div class="mb-10">
 
-        {{-- SHOP CATEGORIES --}}
+                    <h2 class="text-2xl font-bold mb-5">
+                        Shop Categories
+                    </h2>
 
-        @if ($categories->count())
+                    <div class="flex flex-wrap gap-3">
 
-            <section class="max-w-7xl mx-auto px-6 py-8">
+                        @foreach ($categories as $category)
+                            <span class="px-4 py-2 bg-white rounded-full shadow text-sm hover:bg-orange-50 transition">
 
+                                {{ $category->category_name ?? $category->name }}
 
-                <h2 class="text-2xl font-bold mb-5">
+                            </span>
+                        @endforeach
 
-                    Shop Categories
-
-                </h2>
-
-
-                <div class="flex flex-wrap gap-3">
-
-
-                    @foreach ($categories as $category)
-                        <span class="px-5 py-2 rounded-full bg-white shadow">
-
-                            {{ $category->category_name ?? $category->name }}
-
-                        </span>
-                    @endforeach
-
+                    </div>
 
                 </div>
 
-
-            </section>
-
-        @endif
+            @endif
 
 
+            <div class="flex items-center justify-between mb-8">
 
+                <div>
 
+                    <h2 class="text-3xl font-bold">
 
+                        {{ $shop->name }} Products
 
+                    </h2>
 
-        {{-- PRODUCTS --}}
+                    <p class="text-gray-500">
 
-        <section class="max-w-7xl mx-auto px-6 py-10">
+                        {{ $products->total() }} Products Available
 
+                    </p>
 
-            <div class="flex justify-between mb-8">
-
-
-                <h2 class="text-3xl font-bold dark:text-white">
-
-                    {{ $shop->name }} Products
-
-                </h2>
-
-
-                <span class="text-gray-500 dark:text-white">
-
-                    {{ $products->total() }} items
-
-                </span>
-
+                </div>
 
             </div>
-
-
-
 
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-
                 @forelse($products as $product)
-                    <div class="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
+                    <div
+                        class="bg-white rounded-2xl shadow hover:shadow-2xl hover:-translate-y-1 transition overflow-hidden">
 
-
-                        <div class="h-56 relative">
-
+                        <div class="relative">
 
                             <img src="{{ asset('storage/products/' . $product->image) }}"
-                                class="w-full h-full object-cover">
-
+                                class="w-full h-60 object-cover">
 
                             @if ($product->product_type == 'digital')
                                 <span
-                                    class="absolute top-3 left-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs">
+                                    class="absolute top-3 left-3 bg-purple-600 text-white text-xs px-3 py-1 rounded-full">
 
                                     Digital
 
                                 </span>
                             @endif
 
-
-
                         </div>
 
-
-
-
-
                         <div class="p-5">
-
 
                             <h3 class="font-bold text-lg line-clamp-1">
 
@@ -258,77 +239,59 @@ bg-indigo-600 text-white text-4xl font-bold">
 
                             </h3>
 
-
-
                             <p class="text-gray-500 text-sm mt-2 line-clamp-2">
 
                                 {{ Str::limit($product->description, 70) }}
 
                             </p>
 
+                            <div class="flex items-center justify-between mt-5">
 
+                                <span class="text-xl font-bold text-orange-600">
 
+                                    {{ $shop->currency }}
 
-                            <div class="flex justify-between items-center mt-5">
-
-
-                                <span class="font-bold text-xl">
-
-                                    {{ $shop->currency ?? '$' }}
                                     {{ number_format($product->price, 2) }}
 
                                 </span>
 
-
-
-                                <a href="{{ route('listing.show', $product->slug) }}"
-                                    class="bg-orange-500 text-white px-4 py-2 rounded-lg">
-
+                                <a href="{{ $product->url }}"
+                                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition">
 
                                     View
 
                                 </a>
 
-
                             </div>
-
 
                         </div>
 
-
                     </div>
-
-
 
                 @empty
 
+                    <div class="col-span-full">
 
-                    <div class="col-span-full text-center py-20">
+                        <div class="bg-white rounded-2xl shadow p-16 text-center">
 
+                            <h3 class="text-2xl font-bold">
 
-                        <h2 class="text-2xl font-bold dark:text-white">
+                                No products yet
 
-                            No products yet
+                            </h3>
 
-                        </h2>
+                            <p class="text-gray-500 mt-3">
 
+                                This shop is preparing new products.
 
-                        <p class="text-gray-500 dark:text-white">
+                            </p>
 
-                            This shop is preparing new products.
-
-                        </p>
-
+                        </div>
 
                     </div>
                 @endforelse
 
-
             </div>
-
-
-
-
 
             <div class="mt-10">
 
@@ -336,9 +299,101 @@ bg-indigo-600 text-white text-4xl font-bold">
 
             </div>
 
+        </section>
+
+
+        {{-- REVIEWS --}}
+        <section id="reviews" class="max-w-7xl mx-auto px-6 py-10">
+
+            <livewire:shop-review :shop="$shop" />
 
         </section>
 
+
+        {{-- ABOUT --}}
+        <section id="about" class="max-w-7xl mx-auto px-6 py-10">
+
+            <h2 class="text-3xl font-bold mb-8">
+
+                About {{ $shop->name }}
+
+            </h2>
+
+            <div class="bg-white rounded-2xl shadow p-8">
+
+                <p class="text-gray-600 leading-8">
+
+                    {{ $shop->description }}
+
+                </p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+
+                    <div>
+
+                        <h4 class="font-semibold">
+
+                            📍 Location
+
+                        </h4>
+
+                        <p class="text-gray-500 mt-2">
+
+                            {{ $shop->city->name ?? '' }}
+
+                            {{ $shop->state->name ?? '' }}
+
+                        </p>
+
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold">
+                            📅 Member Since
+                        </h4>
+
+                        <p class="text-gray-500 mt-2">
+                            {{ $shop->created_at ? $shop->created_at->format('F Y') : 'Not available' }}
+                        </p>
+                    </div>
+
+                    <div>
+
+                        <h4 class="font-semibold">
+
+                            👁 Views
+
+                        </h4>
+
+                        <p class="text-gray-500 mt-2">
+
+                            {{ number_format($shop->views) }}
+
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="font-semibold">
+
+                            ❤️ Followers
+
+                        </h4>
+
+                        <p class="text-gray-500 mt-2">
+
+                            {{ $shop->followers_count }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
 
 
 
