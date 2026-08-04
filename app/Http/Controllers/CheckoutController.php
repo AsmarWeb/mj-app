@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -14,7 +16,8 @@ use Stripe\Account;
 class CheckoutController extends Controller
 {
 
-    public function checkout()
+
+public function checkout()
 {
     $user = auth()->user();
 
@@ -36,11 +39,13 @@ class CheckoutController extends Controller
     $shopItems = $cart->items->groupBy('shop_id');
 
 
-    $orders = [];
+    $orderIds = [];
+
 
 
     foreach($shopItems as $shopId => $items)
     {
+
 
         $shop = Shop::findOrFail($shopId);
 
@@ -62,6 +67,7 @@ class CheckoutController extends Controller
         );
 
 
+
         if(
             !$account->charges_enabled ||
             !$account->payouts_enabled
@@ -78,9 +84,7 @@ class CheckoutController extends Controller
 
         $lineItems=[];
 
-
-
-        $subtotal = 0;
+        $subtotal=0;
 
 
 
@@ -100,9 +104,7 @@ class CheckoutController extends Controller
                     'currency'=>'aed',
 
                     'product_data'=>[
-
                         'name'=>$item->listing->title
-
                     ],
 
 
@@ -116,10 +118,17 @@ class CheckoutController extends Controller
 
             ];
 
+
         }
 
 
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Order
+        |--------------------------------------------------------------------------
+        */
 
 
         $order = Order::create([
@@ -143,12 +152,14 @@ class CheckoutController extends Controller
 
 
 
-        $orders[]=$order;
+        $orderIds[]=$order->id;
+
 
 
 
         foreach($items as $item)
         {
+
 
             OrderItem::create([
 
@@ -162,15 +173,25 @@ class CheckoutController extends Controller
 
                 'quantity'=>$item->quantity,
 
-                'total'=>$item->price*$item->quantity
+                'total'=>
+                $item->price*$item->quantity
 
             ]);
+
 
         }
 
 
 
-        $commission = 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Stripe Checkout
+        |--------------------------------------------------------------------------
+        */
+
+
+        $commission =
             $subtotal *
             config('revenue.commission')
             /100;
@@ -185,6 +206,7 @@ class CheckoutController extends Controller
             ],
 
 
+
             'line_items'=>$lineItems,
 
 
@@ -195,17 +217,15 @@ class CheckoutController extends Controller
             'payment_intent_data'=>[
 
 
-                // Your commission
                 'application_fee_amount'=>
                     intval($commission*100),
 
 
 
-                // Seller receives balance
                 'transfer_data'=>[
 
                     'destination'=>
-                        $shop->stripe_account_id
+                    $shop->stripe_account_id
 
                 ]
 
@@ -215,9 +235,8 @@ class CheckoutController extends Controller
 
             'metadata'=>[
 
-                'order_id'=>$order->id,
-
-                'shop_id'=>$shop->id
+                'order_ids'=>
+                    implode(',',$orderIds)
 
             ],
 
@@ -225,14 +244,15 @@ class CheckoutController extends Controller
 
             'success_url'=>
 
-                route('checkout.success',
-                $order->id)
+                route(
+                    'checkout.success',
+                    $order->id
+                )
                 .'?session_id={CHECKOUT_SESSION_ID}',
 
 
 
             'cancel_url'=>
-
                 route('cart.index')
 
 
@@ -242,8 +262,8 @@ class CheckoutController extends Controller
 
         return redirect($session->url);
 
-    }
 
+    }
 
 }
 
@@ -252,73 +272,149 @@ class CheckoutController extends Controller
 
 
 
+public function success(Order $order, Request $request)
+{
 
-    public function success(Order $order,Request $request)
-    {
-
-        Stripe::setApiKey(config('cashier.secret'));
-
-
-
-        $session = Session::retrieve(
-            $request->session_id
-        );
+    Stripe::setApiKey(config('cashier.secret'));
 
 
 
-        $orderIds = explode(
-            ',',
-            $session->metadata->orders
-        );
+    $session = Session::retrieve(
+        $request->session_id
+    );
 
 
 
-        $orders = Order::with([
+    $orderIds = explode(
+        ',',
+        $session->metadata->order_ids
+    );
+
+
+
+    $orders = Order::with([
         'shop',
         'items'
-        ])
-        ->whereIn('id',$orderIds)
-        ->get();
+    ])
+    ->whereIn('id',$orderIds)
+    ->get();
 
 
 
-        foreach($orders as $order){
 
 
-            if($order->payment_status=='paid'){
-                continue;
-            }
+    foreach($orders as $order)
+    {
 
 
-
-            $order->update([
-
-                'payment_status'=>'paid',
-
-                'status'=>'processing',
-
-                'paid_at'=>now(),
-
-            ]);
-
-
-
+        if($order->payment_status === 'paid'){
+            continue;
         }
 
 
 
-        auth()->user()
-            ->cart
-            ->items()
-            ->delete();
+        $order->update([
+
+            'payment_status'=>'paid',
+
+            'status'=>'processing',
+
+            'paid_at'=>now(),
+
+        ]);
 
 
 
-        return view(
-            'checkout.success',
-            compact('orders')
-        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Invoice
+        |--------------------------------------------------------------------------
+        */
+
+
+        $invoice = Invoice::create([
+
+    'shop_id'=>$order->shop_id,
+
+    'order_id'=>$order->id,
+
+
+    'invoice_number'=>
+        'INV-'.strtoupper(Str::random(8)),
+
+
+    'customer_name'=>
+        $order->user->name,
+
+
+    'customer_email'=>
+        $order->user->email,
+
+
+    'customer_phone'=>
+        $order->user->phone ?? null,
+
+
+    'subtotal'=>$order->subtotal,
+
+
+    'tax'=>0,
+
+
+    'total'=>$order->total,
+
+
+    'status'=>'paid'
+
+]);
+
+
+
+
+
+foreach($order->items as $item)
+{
+
+    InvoiceItem::create([
+
+        'invoice_id'=>$invoice->id,
+
+        'title'=>$item->listing_name,
+
+        'quantity'=>$item->quantity,
+
+        'price'=>$item->price,
+
+        'total'=>$item->total
+
+    ]);
+
+}
+
+
 
     }
+
+
+
+
+
+    auth()->user()
+        ->cart
+        ->items()
+        ->delete();
+
+
+
+
+    return view(
+        'checkout.success',
+        compact('orders')
+    );
+
+
+}
 
 }

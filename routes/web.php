@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DigitalProductController;
 use App\Http\Controllers\Admin\FeatureController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\LeadsController;
 use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\PageController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DownloadController;
@@ -33,8 +35,10 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Seller\StripeConnectController;
@@ -135,9 +139,10 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::view('/ai-studio','ai-studio')->middleware('auth')->name('ai.studio');
 // Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-Route::get('/category/{slug}',[ExploreController::class,'category'])->name('discover.category');
+Route::get('/category/{category}',[ExploreController::class,'category'])->name('discover.category');
 Route::get('/categories', [ListingCategoryController::class, 'index'])->name('categories');
 Route::get('/countries', [ShopCountryController::class, 'index'])->name('countries');
 Route::get('about', [HomeController::class, 'about'])->name('about');
@@ -160,6 +165,34 @@ Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
+});
+
+Route::middleware('auth')->group(function(){
+
+
+    Route::get('/posts',
+        [PostController::class,'index']
+    )->name('posts.index');
+
+
+
+    Route::post('/posts',
+        [PostController::class,'store']
+    )->name('posts.store');
+
+
+
+    Route::post('/posts/{post}/like',
+        [LikeController::class,'store']
+    )->name('posts.like');
+
+
+
+    Route::post('/posts/{post}/comment',
+        [CommentController::class,'store']
+    )->name('comments.store');
+
+
 });
 
 Route::middleware('auth')->group(function(){
@@ -500,6 +533,33 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     )->name('project-explorer');
 
     Route::resource('leads', LeadsController::class);
+
+    Route::resource(
+    'invoices',
+    InvoiceController::class
+);
+
+
+
+Route::get(
+    'invoices/{invoice}/download',
+    [
+    InvoiceController::class,
+    'download'
+    ]
+)
+->name('invoices.download');
+
+
+
+Route::post(
+'invoices/{invoice}/status',
+[
+InvoiceController::class,
+'updateStatus'
+]
+)
+->name('invoices.status');
 
 });
 });

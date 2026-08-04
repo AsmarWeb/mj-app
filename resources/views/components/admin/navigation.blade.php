@@ -103,6 +103,10 @@
                                 {{ __('Shops') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('invoices.index') }}" :active="request()->routeIs('invoices.index')">
+                                {{ __('Invoices') }}
+                            </x-dropdown-link>
+
                             <x-dropdown-link href="{{ route('listings.index') }}" :active="request()->routeIs('listings.index')">
                                 {{ __('Listings') }}
                             </x-dropdown-link>

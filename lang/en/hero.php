@@ -13,9 +13,6 @@ return [
     |
     */
 
-    'coming' => "murwaj.com",
-    'soon' => "soon",
-
     'form' => [
         "button" => "Search",
         "placeholder" => "What are you looking for?"

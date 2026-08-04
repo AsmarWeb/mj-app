@@ -455,18 +455,25 @@ class CreateListing extends Component
 
     public function updated($property)
     {
-    $this->dispatch('previewUpdated', [
-
+        $this->dispatch('previewUpdated', [
+    
         'title' => $this->title,
-
+    
         'description' => $this->description,
-
+    
         'price' => $this->price,
-
-        'image' => $this->image 
-            ? $this->image->temporaryUrl()
-            : null,
-
-    ]);
+    
+        'quantity' => $this->quantity,
+    
+        'condition' => $this->condition,
+    
+        'price_condition' => $this->price_condition,
+    
+        'features' => $this->features,
+    
+        'keywords' => $this->keywords,
+    
+        'image' => $this->image ? $this->image->temporaryUrl() : null,
+        ]);
     }
 } 

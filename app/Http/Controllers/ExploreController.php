@@ -63,17 +63,34 @@ class ExploreController extends Controller
     ]);
     }
 
-    public function category(Category $category)
+    public function category($category)
     {
-        $title = $category->category_name;
-        $description = $category->description;
-        $keywords = $category->keywords;
+        $category = Category::where('slug', $category)->firstOrFail();
 
-        SEOMeta::setTitle($title);
-        SEOMeta::setDescription($description);
-        SEOMeta::setKeywords($keywords);
+    $products = Listing::whereHas('category', function ($query) use ($category) {
+            $query->where('slug', $category->slug);
+        })
+        ->with([
+            'shop',
+            'section',
+            'category',
+            'subcategories',
+            'brand',
+        ])
+        ->where('status', 'published')
+        ->where('active', true)
+        ->latest()
+        ->paginate(24);
 
-        return view('pages.category')->with(compact('title', 'description', 'keywords', 'category'));
+    $title = $category->category_name;
+    $description = "Browse all {$category->category_name} products on murwaj Marketplace.";
+    $keywords = $category->category_name;
+
+    SEOMeta::setTitle($title);
+    SEOMeta::setDescription($description);
+    SEOMeta::setKeywords($keywords);
+
+        return view('pages.category')->with(compact('title', 'description', 'keywords', 'category','products'));
     } 
 
     public function show($shop, $section, $category, $subcategories, $brand, $listing)

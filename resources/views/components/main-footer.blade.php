@@ -1,5 +1,5 @@
 <div>
-    <footer class="container px-6 py-8 mx-auto">
+    <footer class="container px-6 py-8 mx-auto dark:bg-gray-900">
         <div class="flex flex-col items-center text-center font-normal">
             <a href="{{ route('home') }}">
                 <img class="w-auto h-7" src="{{ asset('storage/setting-suggest/' . $setting->logo) }}" alt="murwaj">

@@ -1,12 +1,5 @@
 <div class="max-w-7xl mx-auto py-8 px-4">
 
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold">Create a New Product</h1>
-        <p class="text-gray-500 mt-2">
-            Fill in the details below to publish your product.
-        </p>
-    </div>
-
     @if (!$canCreate)
 
         <div class="mb-6 rounded-xl border border-yellow-300 bg-yellow-50 p-6">
@@ -34,6 +27,13 @@
 
         </div>
     @else
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold">Create a New Product</h1>
+            <p class="text-gray-500 mt-2">
+                Fill in the details below to publish your product.
+            </p>
+        </div>
+
         <form wire:submit="save" class="space-y-8">
 
             <!-- Basic Information -->
@@ -177,87 +177,163 @@
             </div>
 
             <!-- Categories -->
-            <div class="bg-white rounded-xl shadow p-6">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-6">
 
-                <h2 class="text-xl font-semibold mb-6">
-                    Category
+                <h2 class="text-2xl font-bold mb-8">
+                    Choose Category
                 </h2>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {{-- SECTION --}}
+                <div>
 
-                    <div>
+                    <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                        1. Select Section
+                    </h3>
 
-                        <label>Section</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-                        <select wire:model="section_id" class="w-full mt-2 border rounded-lg p-3">
+                        @foreach ($sections as $section)
+                            <button type="button" wire:click="$set('section_id', {{ $section->id }})"
+                                class="
+                        rounded-2xl
+                        p-5
+                        border
+                        transition-all
+                        duration-300
 
-                            <option value="">Select</option>
+                        {{ $section_id == $section->id
+                            ? 'bg-orange-500 text-white border-orange-500 shadow-lg scale-105'
+                            : 'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400 hover:-translate-y-1' }}
+                    ">
 
-                            @foreach ($sections as $section)
-                                <option value="{{ $section->id }}">
+                                <div class="text-3xl mb-2">📂</div>
+
+                                <div class="font-semibold">
                                     {{ $section->name }}
-                                </option>
-                            @endforeach
+                                </div>
 
-                        </select>
-
-                    </div>
-
-                    <div>
-
-                        <label>Category</label>
-
-                        <select wire:model="category_id" class="w-full mt-2 border rounded-lg p-3">
-
-                            <option value="">Select</option>
-
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">
-                                    {{ $category->category_name }}
-                                </option>
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-                    <div>
-
-                        <label>Subcategory</label>
-
-                        <select wire:model="subcategory_id" class="w-full mt-2 border rounded-lg p-3">
-
-                            <option value="">Select</option>
-
-                            @foreach ($subcategories as $subcategory)
-                                <option value="{{ $subcategory->id }}">
-                                    {{ $subcategory->subcategory_name }}
-                                </option>
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-                    <div>
-
-                        <label>Brand</label>
-
-                        <select wire:model="brand_id" class="w-full mt-2 border rounded-lg p-3">
-
-                            <option value="">Select</option>
-
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}">
-                                    {{ $brand->brand_name }}
-                                </option>
-                            @endforeach
-
-                        </select>
+                            </button>
+                        @endforeach
 
                     </div>
 
                 </div>
+
+
+
+                {{-- CATEGORY --}}
+                @if ($section_id)
+
+                    <div class="mt-8">
+
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                            2. Select Category
+                        </h3>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                            @foreach ($categories->where('section_id', $section_id) as $category)
+                                <button type="button" wire:click="$set('category_id', {{ $category->id }})"
+                                    class="
+                            rounded-2xl
+                            p-5
+                            border
+                            transition-all
+
+                            {{ $category_id == $category->id
+                                ? 'bg-orange-500 text-white border-orange-500 shadow-lg scale-105'
+                                : 'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400 hover:-translate-y-1' }}
+                        ">
+
+                                    <div class="text-3xl mb-2">📦</div>
+
+                                    <div class="font-semibold">
+                                        {{ $category->category_name }}
+                                    </div>
+
+                                </button>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+
+                {{-- SUBCATEGORY --}}
+                @if ($category_id)
+
+                    <div class="mt-8">
+
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                            3. Select Subcategory
+                        </h3>
+
+                        <div class="flex flex-wrap gap-3">
+
+                            @foreach ($subcategories->where('category_id', $category_id) as $subcategory)
+                                <button type="button" wire:click="$set('subcategory_id', {{ $subcategory->id }})"
+                                    class="
+                            px-5
+                            py-3
+                            rounded-full
+                            transition
+
+                            {{ $subcategory_id == $subcategory->id
+                                ? 'bg-orange-500 text-white'
+                                : 'bg-gray-100 dark:bg-neutral-800 hover:bg-orange-100 dark:hover:bg-neutral-700' }}
+                        ">
+
+                                    {{ $subcategory->subcategory_name }}
+
+                                </button>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+
+                {{-- BRAND --}}
+                @if ($subcategory_id)
+
+                    <div class="mt-8">
+
+                        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                            4. Select Brand
+                        </h3>
+
+                        <div class="flex flex-wrap gap-3">
+
+                            @foreach ($brands as $brand)
+                                <button type="button" wire:click="$set('brand_id', {{ $brand->id }})"
+                                    class="
+                            px-5
+                            py-3
+                            rounded-full
+                            border
+                            transition-all
+
+                            {{ $brand_id == $brand->id
+                                ? 'bg-black dark:bg-orange-500 text-white border-orange-500'
+                                : 'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400' }}
+                        ">
+
+                                    {{ $brand->brand_name }}
+
+                                </button>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                @endif
 
             </div>
 

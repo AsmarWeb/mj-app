@@ -246,7 +246,7 @@
 
             @foreach ($categories as $category)
                 @if (app()->getLocale() == 'ar')
-                    <a href="{{ route('discover.category', $category->slug) }}"
+                    <a href="{{ $category->url }}"
                         class="bg-white rounded-2xl shadow hover:shadow-xl transition p-5 text-center">
 
 
@@ -270,7 +270,7 @@
 
                     </a>
                 @else
-                    <a href="{{ route('discover.category', $category->slug) }}"
+                    <a href="{{ $category->url }}"
                         class="bg-white rounded-2xl shadow hover:shadow-xl transition p-5 text-center">
 
 
@@ -540,12 +540,16 @@
 
                 <div class="col-span-full text-center py-20">
 
-                    <h3 class="text-xl font-bold">
+                    <h3 class="text-xl font-bold dark:text-gray-300">
                         No digital products yet
                     </h3>
 
                     <p class="text-gray-500">
-                        Upload your first creative product.
+                        Have a digital product? <a target="_blank" href="{{ route('contact') }}"
+                            class="hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400">
+                            Contact Us
+                        </a>
+                        today, and we'll help you list it in our marketplace and reach more customers.
                     </p>
 
                 </div>

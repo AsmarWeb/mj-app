@@ -138,6 +138,184 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        function detectLocation() {
+
+            const status = document.getElementById('location-status');
+            const locationInput = document.getElementById('location');
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+
+            status.innerHTML = "📡 Detecting your location...";
+
+            if (!navigator.geolocation) {
+
+                status.innerHTML = "❌ Your browser does not support location services.";
+                return;
+
+            }
+
+
+            navigator.geolocation.getCurrentPosition(
+
+                async function(position) {
+
+
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+
+                        // Save coordinates
+                        latitudeInput.value = lat;
+                        longitudeInput.value = lng;
+
+
+                        status.innerHTML = "🔎 Finding your address...";
+
+
+                        try {
+
+
+                            const response = await fetch(
+
+                                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+
+                                {
+                                    headers: {
+                                        "Accept": "application/json"
+                                    }
+                                }
+
+                            );
+
+
+                            const data = await response.json();
+
+
+
+                            if (data && data.address) {
+
+
+                                let address = data.address;
+
+
+                                let city =
+                                    address.city ||
+                                    address.town ||
+                                    address.village ||
+                                    "";
+
+
+                                let country =
+                                    address.country ||
+                                    "";
+
+
+
+                                let displayAddress = [
+                                        city,
+                                        country
+                                    ]
+                                    .filter(Boolean)
+                                    .join(", ");
+
+
+
+                                locationInput.value =
+                                    displayAddress || data.display_name;
+
+
+
+                                status.innerHTML =
+                                    "✅ Location added successfully";
+
+
+                            } else {
+
+
+                                status.innerHTML =
+                                    "⚠️ Could not find your address. Please enter it manually.";
+
+
+                            }
+
+
+
+                        } catch (error) {
+
+
+                            console.error(error);
+
+
+                            status.innerHTML =
+                                "⚠️ Address lookup failed. Please enter manually.";
+
+
+                        }
+
+
+
+                    },
+
+
+                    function(error) {
+
+
+                        switch (error.code) {
+
+
+                            case error.PERMISSION_DENIED:
+
+                                status.innerHTML =
+                                    "❌ Location permission denied.";
+
+                                break;
+
+
+                            case error.POSITION_UNAVAILABLE:
+
+                                status.innerHTML =
+                                    "⚠️ Location unavailable.";
+
+                                break;
+
+
+                            case error.TIMEOUT:
+
+                                status.innerHTML =
+                                    "⏳ Location request timed out.";
+
+                                break;
+
+
+                            default:
+
+                                status.innerHTML =
+                                    "⚠️ Unable to detect location.";
+
+                        }
+
+
+                    },
+
+
+                    {
+
+
+                        enableHighAccuracy: true,
+
+                        timeout: 15000,
+
+                        maximumAge: 60000
+
+
+                    }
+
+            );
+
+        }
+    </script>
+
     @stack('modals')
 
     @livewireScripts

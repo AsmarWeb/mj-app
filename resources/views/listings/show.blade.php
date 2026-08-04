@@ -5,6 +5,19 @@
     @section('keywords', implode(', ', $keywords ?? []))
 
 
+    @section('og:title', $listing->title)
+
+    @section('og:description', Str::limit($listing->description, 160))
+
+    @section('og:image', Storage::url('products/' . $listing->image))
+
+
+    @section('twitter:title', $listing->title)
+
+    @section('twitter:description', Str::limit($listing->description, 160))
+
+    @section('twitter:image', Storage::url('products/' . $listing->image))
+
     <x-slot name="header">
         <x-main-header />
     </x-slot>
@@ -131,7 +144,7 @@
                 <div class="mt-6">
 
 
-                    <span class="text-3xl font-bold">
+                    <span class="text-3xl font-bold dark:text-gray-100">
 
                         {{ $listing->shop?->currency ?? '$' }}
                         {{ number_format($listing->price, 2) }}
@@ -205,7 +218,7 @@
                     <div class="mt-6">
 
 
-                        <label class="font-semibold">
+                        <label class="font-semibold dark:text-gray-100">
 
                             Quantity
 
@@ -301,14 +314,14 @@
         <div class="mt-12">
 
 
-            <h2 class="text-2xl font-bold">
+            <h2 class="text-2xl font-bold dark:text-gray-100">
 
                 Features
 
             </h2>
 
 
-            <ul class="mt-4 list-disc ml-6">
+            <ul class="mt-4 list-disc ml-6 dark:text-gray-200">
 
 
                 @foreach ($listing->features ?? [] as $feature)
@@ -387,7 +400,7 @@
         <div class="mt-12">
 
 
-            <h2 class="text-2xl font-bold">
+            <h2 class="text-2xl font-bold dark:text-gray-100">
 
                 Write Review
 

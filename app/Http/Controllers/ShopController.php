@@ -49,6 +49,7 @@ class ShopController extends Controller
             'user_id' => auth()->id(),
             'slug' => Str::uuid(),
             'name' => '',
+            'name_ar' => '',
             'type' => null,
             'description' => '',
             'section_id' => null,
@@ -64,11 +65,13 @@ class ShopController extends Controller
             case 1:
                 $request->validate([
                     'name' => 'required|min:3|max:50',
+                    'name_ar' => 'required|min:3|max:50',
                     'type' => 'required|in:freelance,local',
                 ]);
 
                 $shop->update([
                     'name' => $request->name,
+                    'name_ar' => $request->name,
                     'type' => $request->type,
                 ]);
                 return redirect('/shop/create/2');
@@ -86,10 +89,14 @@ class ShopController extends Controller
                 $shop->update([
                     'description' => $request->description,
                     'section_id' => $request->section_id,
+                    // Optional if reverse geocoding fills them
                     'country_id' => $request->country_id,
                     'state_id' => $request->state_id,
                     'city_id' => $request->city_id,
+                    
                     'location' => $request->location,
+                    'latitude' => $request->latitude,
+                    'longitude' => $request->longitude,
                 ]);
                 return redirect('/shop/create/3');
 

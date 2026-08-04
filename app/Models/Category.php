@@ -55,4 +55,11 @@ class Category extends Model
     {
         return $this->hasMany(Listing::class, 'category_id', 'id');
     }
+
+    public function getUrlAttribute()
+    {
+    return route('discover.category', [
+        'category' => $this->slug,
+    ]);
+    }
 }

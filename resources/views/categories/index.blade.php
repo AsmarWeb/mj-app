@@ -45,7 +45,7 @@
             <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
 
                 @foreach ($categories as $category)
-                    <a href="{{ route('discover.category', $category->slug) }}"
+                    <a href="{{ $category->url }}"
                         class="group bg-white rounded-3xl shadow-sm hover:shadow-xl transition overflow-hidden border hover:border-indigo-500">
 
                         <div class="h-40 bg-slate-100 flex items-center justify-center">
@@ -69,7 +69,7 @@
 
                             <h2 class="font-bold text-lg group-hover:text-indigo-600">
 
-                                {{ $category->name }}
+                                {{ app()->getLocale() == 'ar' ? $category->category_name_ar : $category->category_name }}
 
                             </h2>
 

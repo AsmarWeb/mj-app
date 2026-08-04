@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('name_ar');
             $table->string('slug')->unique();
             $table->string('description')->nullable();
             $table->string('logo')->nullable();
@@ -24,8 +25,10 @@ return new class extends Migration
             $table->bigInteger('state_id')->unsigned()->nullable();
             $table->bigInteger('city_id')->unsigned()->nullable();
             $table->string('location')->nullable();
+            $table->decimal('latitude',10,7)->nullable();
+            $table->decimal('longitude',10,7)->nullable();
             $table->string('currency')->default('AED');
-            $table->string('phone')->nullable();
+            $table->string('phone')->nullable(); 
             $table->string('whatsapp')->nullable();
             $table->boolean('allow_whatsapp')->default(true);
             $table->boolean('allow_phone')->default(true);

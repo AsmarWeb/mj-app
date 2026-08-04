@@ -70,6 +70,10 @@ class ShopsController extends Controller
      */
     public function show(Shop $shop)
     {
+        $shop->load([
+        'user',
+        'listings']);
+
         return view('admin.shops.show', compact('shop'));
     }
 
@@ -78,15 +82,86 @@ class ShopsController extends Controller
      */
     public function edit(Shop $shop)
     {
-        return view('admin.shops.edit');
+        return view('admin.shops.edit', compact('shop'));
     } 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Shop $shop)
-    {
-        //
+    public function update(StoreShopRequest $request, Shop $shop)
+{
+    $validated = $request->validated();
+
+
+    // Contact permissions
+    $validated['allow_phone'] = $request->boolean('allow_phone');
+    $validated['allow_whatsapp'] = $request->boolean('allow_whatsapp');
+
+
+    // Verification
+    $verified = $request->boolean('verified');
+
+    $validated['verified'] = $verified;
+
+
+    if ($verified && !$shop->verified) {
+
+        $validated['verified_at'] = now();
+        $validated['verified_by'] = auth()->id();
+
+    } elseif (!$verified) {
+
+        $validated['verified_at'] = null;
+        $validated['verified_by'] = null;
+
+    }
+
+
+
+    // Keep original owner
+    $validated['user_id'] = $shop->user_id;
+
+
+
+    // Update Logo
+    if ($request->hasFile('logo')) {
+
+
+        if ($shop->logo && Storage::disk('public')->exists($shop->logo)) {
+            Storage::disk('public')->delete($shop->logo);
+        }
+
+
+        $validated['logo'] = 
+            $request->file('logo')->store('shops', 'public');
+
+    }
+
+
+
+    // Update Banner
+    if ($request->hasFile('banner')) {
+
+
+        if ($shop->banner && Storage::disk('public')->exists($shop->banner)) {
+            Storage::disk('public')->delete($shop->banner);
+        }
+
+
+        $validated['banner'] =
+            $request->file('banner')->store('shops', 'public');
+
+    }
+
+
+
+    $shop->update($validated);
+
+
+
+    return redirect()
+        ->route('shops.index')
+        ->with('message', 'Shop updated successfully.');
     }
 
     /**

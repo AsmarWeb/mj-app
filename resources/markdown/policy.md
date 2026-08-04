@@ -4,20 +4,20 @@
 
 murwaj – Connecting Creative Talent with Clients in Dubai\*\*
 
-Last Updated: Nov-2025
+Last Updated: Aug-2026
 
 murwaj (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, mobile applications, website, or any related services (collectively, the “Services”).
-By accessing or using Murwaj, you agree to the practices described in this Privacy Policy.
+By accessing or using murwaj, you agree to the practices described in this Privacy Policy.
 
 Information We Collect
 1.1 Personal Information
 
 When you register or interact with our platform, we may collect personal details such as:
 
-Full name
-Email address
-Phone number
-Profile photo
+Full name,
+Email address,
+Phone number,
+Profile photo,
 Location (e.g., Dubai, UAE)
 Professional information (portfolio, skills, experience, CV)
 Payment or billing details (handled securely by third-party processors)
@@ -35,7 +35,7 @@ Time spent on the platform
 
 We may collect:
 
-Messages exchanged through Murwaj
+Messages exchanged through murwaj
 Project briefs, files, and attachments
 Feedback or reviews
 1.4 Cookies & Tracking Technologies
@@ -102,10 +102,10 @@ Update or correct information
 Request account deletion
 Withdraw consent
 Object to marketing communications
-To exercise these rights, contact us at: [Insert Contact Email]
+To exercise these rights, contact us at: support@murwaj.com
 
 Children’s Privacy
-Murwaj is intended for users aged 18 and above.
+murwaj is intended for users aged 18 and above.
 We do not knowingly collect information from minors.
 If we discover such data, it will be deleted immediately.
 
@@ -127,15 +127,15 @@ If you have questions, concerns, or requests regarding this Privacy Policy, plea
 
 murwaj – Dubai, UAE
 Email: support@murwaj.com
-Website: www.murwaj.comPrivacy Policy
+Website: www.murwaj.com Privacy Policy
 \*\*Privacy Policy
 
 murwaj – Connecting Creative Talent with Clients in Dubai\*\*
 
 Last Updated: Nov-2025
 
-Murwaj (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, mobile applications, website, or any related services (collectively, the “Services”).
-By accessing or using Murwaj, you agree to the practices described in this Privacy Policy.
+murwaj (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, mobile applications, website, or any related services (collectively, the “Services”).
+By accessing or using murwaj, you agree to the practices described in this Privacy Policy.
 
 Information We Collect
 1.1 Personal Information
@@ -163,7 +163,7 @@ Time spent on the platform
 
 We may collect:
 
-Messages exchanged through Murwaj
+Messages exchanged through murwaj
 Project briefs, files, and attachments
 Feedback or reviews
 1.4 Cookies & Tracking Technologies
@@ -233,7 +233,7 @@ Object to marketing communications
 To exercise these rights, contact us at: [Insert Contact Email]
 
 Children’s Privacy
-Murwaj is intended for users aged 18 and above.
+murwaj is intended for users aged 18 and above.
 We do not knowingly collect information from minors.
 If we discover such data, it will be deleted immediately.
 

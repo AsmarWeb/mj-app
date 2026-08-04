@@ -167,7 +167,7 @@ bg-indigo-600 text-white text-4xl font-bold">
 
                 <div class="mb-10">
 
-                    <h2 class="text-2xl font-bold mb-5">
+                    <h2 class="text-2xl font-bold mb-5 dark:text-gray-100">
                         Shop Categories
                     </h2>
 
@@ -192,7 +192,7 @@ bg-indigo-600 text-white text-4xl font-bold">
 
                 <div>
 
-                    <h2 class="text-3xl font-bold">
+                    <h2 class="text-3xl font-bold dark:text-gray-100">
 
                         {{ $shop->name }} Products
 
@@ -313,7 +313,7 @@ bg-indigo-600 text-white text-4xl font-bold">
         {{-- ABOUT --}}
         <section id="about" class="max-w-7xl mx-auto px-6 py-10">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-gray-100">
 
                 About {{ $shop->name }}
 

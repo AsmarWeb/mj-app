@@ -405,92 +405,162 @@
 
 
             {{-- Categories --}}
+            <div
+                class="bg-white dark:bg-neutral-900 rounded-3xl shadow-lg border border-gray-200 dark:border-neutral-800 p-6 space-y-8">
+
+                {{-- STEP 1 --}}
+                <div>
+                    <h3 class="text-lg font-bold mb-4">
+                        1. Select Section
+                    </h3>
+
+                    <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+
+                        @foreach ($sections as $section)
+                            <button type="button" wire:click="$set('section_id', {{ $section->id }})"
+                                class="
+                        shrink-0
+                        px-5
+                        py-3
+                        rounded-2xl
+                        border
+                        transition-all
+                        duration-300
+
+                        {{ $section_id == $section->id
+                            ? 'bg-orange-500 border-orange-500 text-white shadow-lg'
+                            : 'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400 hover:-translate-y-1' }}
+                    ">
+
+                                {{ $section->name }}
+
+                            </button>
+                        @endforeach
+
+                    </div>
+                </div>
 
 
-            <div class="grid md:grid-cols-4 gap-5">
+                {{-- STEP 2 --}}
+                @if ($section_id)
+
+                    <div>
+
+                        <h3 class="text-lg font-bold mb-4">
+                            2. Choose Category
+                        </h3>
+
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                            @foreach ($categories as $category)
+                                <button type="button" wire:click="$set('category_id', {{ $category->id }})"
+                                    class="
+                        rounded-2xl
+                        border
+                        p-5
+                        text-center
+                        transition-all
+                        duration-300
+
+                        {{ $category_id == $category->id
+                            ? 'bg-orange-500 text-white border-orange-500 shadow-xl scale-105'
+                            : 'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400 hover:-translate-y-1' }}
+                    ">
+
+                                    <div class="text-4xl mb-3">
+
+                                        📦
+
+                                    </div>
+
+                                    <div class="font-semibold">
+
+                                        {{ $category->category_name }}
+
+                                    </div>
+
+                                </button>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                @endif
 
 
-                <select wire:model.live="section_id" class="rounded-lg border-gray-300">
+                {{-- STEP 3 --}}
+                @if ($category_id)
 
-                    <option>
-                        Select Section
-                    </option>
+                    <div>
 
+                        <h3 class="text-lg font-bold mb-4">
+                            3. Select Subcategory
+                        </h3>
 
-                    @foreach ($sections as $section)
-                        <option value="{{ $section->id }}">
-                            {{ $section->name }}
-                        </option>
-                    @endforeach
+                        <div class="flex flex-wrap gap-3">
 
+                            @foreach ($subcategories->where('category_id', $category_id) as $subcategory)
+                                <button type="button" wire:click="$set('subcategory_id', {{ $subcategory->id }})"
+                                    class="
+                        px-5
+                        py-3
+                        rounded-full
+                        border
+                        transition
 
-                </select>
+                        {{ $subcategory_id == $subcategory->id
+                            ? 'bg-orange-500 text-white border-orange-500'
+                            : 'bg-gray-100 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400' }}
+                    ">
 
+                                    {{ $subcategory->subcategory_name }}
 
+                                </button>
+                            @endforeach
 
+                        </div>
 
+                    </div>
 
-                <select wire:model.live="category_id" class="rounded-lg border-gray-300">
-
-
-                    <option>
-                        Select Category
-                    </option>
-
-
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">
-                            {{ $category->category_name }}
-                        </option>
-                    @endforeach
-
-
-                </select>
-
+                @endif
 
 
+                {{-- STEP 4 --}}
+                @if ($subcategory_id)
 
+                    <div>
 
+                        <h3 class="text-lg font-bold mb-4">
+                            4. Select Brand
+                        </h3>
 
-                <select wire:model="subcategory_id" class="rounded-lg border-gray-300">
+                        <div class="flex flex-wrap gap-3">
 
+                            @foreach ($brands as $brand)
+                                <button type="button" wire:click="$set('brand_id', {{ $brand->id }})"
+                                    class="
+                        px-5
+                        py-3
+                        rounded-full
+                        border
+                        transition
 
-                    <option>
-                        Select Subcategory
-                    </option>
+                        {{ $brand_id == $brand->id
+                            ? 'bg-black dark:bg-orange-500 text-white border-orange-500'
+                            : 'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:border-orange-400' }}
+                    ">
 
+                                    {{ $brand->brand_name }}
 
-                    @foreach ($subcategories as $subcategory)
-                        <option value="{{ $subcategory->id }}">
-                            {{ $subcategory->subcategory_name }}
-                        </option>
-                    @endforeach
+                                </button>
+                            @endforeach
 
+                        </div>
 
-                </select>
+                    </div>
 
-
-
-
-
-                <select wire:model="brand_id" class="rounded-lg border-gray-300">
-
-
-                    <option>
-                        Select Brand
-                    </option>
-
-
-                    @foreach ($brands as $brand)
-                        <option value="{{ $brand->id }}">
-                            {{ $brand->brand_name }}
-                        </option>
-                    @endforeach
-
-
-                </select>
-
-
+                @endif
 
             </div>
 

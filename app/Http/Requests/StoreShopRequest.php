@@ -22,10 +22,19 @@ class StoreShopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255',
-            'type' => 'required|in:freelance,local',
-            'location' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
+        'name' => ['required','string','max:255'],
+        'location' => ['nullable','string','max:255'],
+
+        'description' => ['nullable','string'],
+        'description_ar' => ['nullable','string'],
+
+        'phone' => ['nullable','string'],
+        'whatsapp' => ['nullable','string'],
+
+        'logo' => ['nullable','image','max:10240'],
+        'banner' => ['nullable','image','max:10240'],
+
+        'published_at' => ['nullable','date'],
         ];
     }
 }

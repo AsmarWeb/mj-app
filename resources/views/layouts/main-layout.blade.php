@@ -3,39 +3,101 @@
     x-bind:class="{ 'dark': darkMode }">
 
 <head>
+
     <meta charset="utf-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @if (!@empty($meta_title))
-        <title>{{ $meta_title }}</title>
-    @else
-        <title>@yield('title', 'murwaj')</title>
-    @endif
 
-    @if (!@empty($meta_description))
-        <meta name="meta_description" content="@yield('meta_description')">
-    @else
-        <meta name="description" content="@yield('description')">
-    @endif
-    @if (!@empty($meta_keywords))
-        <meta name="meta_keywords" content="@yield('meta_keywords')">
-    @else
-        <meta name="keywords" content="@yield('keywords')">
-    @endif
+    {{-- Language --}}
+    <meta http-equiv="content-language" content="{{ app()->getLocale() }}">
 
-    <!-- Fonts -->
+
+    {{-- Title --}}
+    <title>
+        {{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj Marketplace')) }}
+    </title>
+
+
+    {{-- Description --}}
+    <meta name="description"
+        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on murwaj Marketplace')) }}">
+
+
+    {{-- Keywords --}}
+    <meta name="keywords"
+        content="{{ $meta_keywords ?? trim($__env->yieldContent('keywords', 'marketplace, products, shops')) }}">
+
+
+
+    {{-- Robots --}}
+    <meta name="robots" content="index, follow">
+
+
+
+    {{-- Canonical --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
+
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="{{ $og_type ?? 'website' }}">
+
+    <meta property="og:title" content="{{ $meta_title ?? trim($__env->yieldContent('title', 'Murwaj Marketplace')) }}">
+
+
+    <meta property="og:description"
+        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on Murwaj Marketplace')) }}">
+
+
+    <meta property="og:image" content="{{ $meta_image ?? asset('images/share-default.jpg') }}">
+
+
+    <meta property="og:url" content="{{ url()->current() }}">
+
+    <meta property="og:site_name" content="murwaj Marketplace">
+
+
+
+    {{-- Twitter Card --}}
+
+    <meta name="twitter:card" content="summary_large_image">
+
+
+    <meta name="twitter:title"
+        content="{{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj Marketplace')) }}">
+
+
+    <meta name="twitter:description"
+        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on murwaj Marketplace')) }}">
+
+
+    <meta name="twitter:image" content="{{ $meta_image ?? asset('images/share-default.jpg') }}">
+
+
+
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+
+
+
+    {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- FAVICON -->
-    <link rel="icon" href="{{ asset('favicon.png') }}">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
+
+
+    {{-- App --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Styles -->
+
+    {{-- Livewire --}}
     @livewireStyles
+
+
 </head>
 
 <!-- Google tag (gtag.js) -->

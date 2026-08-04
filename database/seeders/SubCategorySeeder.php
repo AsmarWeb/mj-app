@@ -23,7 +23,7 @@ class SubCategorySeeder extends Seeder
             ['id' => 7,  'category_id' => 1, 'category_name' => 'Electronics',  'subcategory_name'   => 'Cell Phone Accessories',  'subcategory_name_ar' => 'ملحقات الهاتف الخليوي',       'slug' => 'cell phone accessories', 'status' => 'active'],
             ['id' => 8,  'category_id' => 1, 'category_name' => 'Electronics',  'subcategory_name'   => 'Computers & Peripherals', 'subcategory_name_ar' => 'أجهزة الكمبيوتر والأجهزة الطرفية',       'slug' => 'computers & peripherals', 'status' => 'active'],
             ['id' => 9,  'category_id' => 1, 'category_name' => 'Electronics',  'subcategory_name'   => 'Telephones & Handsets',   'subcategory_name_ar' => 'الهواتف',       'slug' => 'telephones & handsets', 'status' => 'active'],
-            ['id' => 10, 'category_id' => 1, 'category_name' => 'Electronics', 'subcategory_name'    => 'Gadgets',                 'subcategory_name_ar' => 'الأدوات',       'slug' => 'gadgets', 'status' => 'active'],
+            ['id' => 10, 'category_id' => 1, 'category_name' => 'Electronics',  'subcategory_name'   => 'Gadgets',                 'subcategory_name_ar' => 'الأدوات',       'slug' => 'gadgets', 'status' => 'active'],
         ];
         SubCategory::insert($subcategoryRecords);
     }

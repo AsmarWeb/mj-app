@@ -15,6 +15,7 @@ class ShopSeeder extends Seeder
     {
         $data = array(
             'name' => "murwaj",
+            'name_ar'=>"مُروَّج.كم",
             'slug' => "murwaj",
             'description' => "Official murwaj Marketplace Store.",
             'logo' => "shop-suggest/logo.png",
@@ -34,6 +35,7 @@ class ShopSeeder extends Seeder
             'verified_at' => now(),
             'verified_by' => 1,
             'user_id' => "1",
+            'whatsapp'=>"+971559650283"
         );
         DB::table('shops')->insert($data);
     }

@@ -24,6 +24,7 @@ return [
         "sell" => "Start selling",
         "services" => "Services",
         "about" => "About",
+        "posts" => "Posts",
     ]
 
 ];

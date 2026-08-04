@@ -18,7 +18,7 @@
                 <div
                     class="hidden sm:flex items-center gap-2 ml-6 border border-gray-200 rounded-full px-4 py-1.5 text-xs text-gray-600 dark:text-gray-200">
                     <span>Local Time</span>
-                    <span class="w-1 h-1 bg-black rounded-full"></span>
+                    <span class="w-1 h-1 bg-black dark:bg-white rounded-full"></span>
                     <span id="clock">12:32:04 pm</span>
                 </div>
 
@@ -34,6 +34,11 @@
                     <a href="{{ route('services') }}"
                         class="text-gray-700 dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 transition">
                         {{ __('header.main.services') }}
+                    </a>
+
+                    <a href="{{ route('posts.index') }}"
+                        class="text-gray-700 dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400 transition">
+                        {{ __('header.main.posts') }}
                     </a>
 
                     <a href="{{ route('about') }}"
@@ -68,7 +73,8 @@
 
 
                 <!-- Sell -->
-                <a href="{{ route('sell') }}" class="text-gray-700 dark:text-gray-200 hover:text-orange-600 transition">
+                <a href="{{ route('sell') }}"
+                    class="text-gray-700 dark:text-gray-200 hover:text-orange-600 transition">
                     {{ __('header.main.sell') }}
                 </a>
 
@@ -397,6 +403,12 @@
 
             </a>
 
+            <a href="{{ route('posts.index') }}" class="text-gray-700 dark:text-gray-200">
+
+                {{ __('header.main.posts') }}
+
+            </a>
+
 
             <a href="{{ route('about') }}" class="text-gray-700 dark:text-gray-200">
 
@@ -493,12 +505,12 @@
 
 
         <div class="mt-5">
+            <form action="{{ route('search') }}" method="GET">
 
+                <input type="text" placeholder="Search"
+                    class="w-full rounded-md border-gray-300 dark:bg-gray-800 dark:border-gray-700">
 
-            <input type="text" placeholder="Search"
-                class="w-full rounded-md border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-
-
+            </form>
         </div>
 
 

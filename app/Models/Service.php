@@ -17,4 +17,9 @@ class Service extends Model
     {
         return ['red', 'green', 'yellow', 'blue', 'purple'][$this->id % 5];
     }
+
+    public function shop()
+    {
+    return $this->belongsTo(Shop::class);
+    }
 }
