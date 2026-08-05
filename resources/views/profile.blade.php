@@ -1,560 +1,1216 @@
 <x-app-layout>
-    <div class="bg-gray-50 min-h-screen py-10">
-        <div class="max-w-7xl mx-auto px-4">
 
-            <!-- Profile Header -->
+    <div class="min-h-screen bg-gray-50 dark:bg-neutral-950 py-10">
+
+        <div class="max-w-7xl mx-auto px-4 space-y-8">
+
 
             @if (session()->has('success'))
-                <div>
+                <div
+                    class="
+bg-green-100
+dark:bg-green-900/30
+border
+border-green-300
+dark:border-green-700
+text-green-700
+dark:text-green-300
+rounded-2xl
+px-5
+py-4
+font-semibold
+">
                     {{ session('success') }}
                 </div>
             @endif
 
-            <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-8">
-                <div class="h-40 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500"></div>
 
-                <div class="px-8 pb-8 relative">
-                    <div class="-mt-16 flex flex-col md:flex-row md:items-end md:justify-between">
+
+            {{-- PROFILE HEADER --}}
+
+            <div class="
+bg-white
+dark:bg-neutral-900
+rounded-3xl
+shadow-xl
+overflow-hidden
+">
+
+
+                <div class="
+h-44
+bg-gradient-to-r
+from-orange-500
+via-red-500
+to-orange-600
+">
+                </div>
+
+
+
+                <div class="px-8 pb-8">
+
+
+                    <div class="
+-translate-y-16
+flex
+flex-col
+md:flex-row
+md:items-end
+md:justify-between
+gap-6
+">
+
 
                         <div class="flex items-center gap-6">
+
+
                             <img src="{{ Auth::user()->profile_photo_url ?: 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}"
-                                class="w-32 h-32 rounded-full border-4 border-white object-cover">
+                                class="
+w-32
+h-32
+rounded-full
+border-4
+border-white
+dark:border-neutral-900
+shadow-xl
+object-cover
+">
+
 
                             <div>
-                                <h1 class="text-3xl font-bold">
+
+
+                                <h1 class="
+text-3xl
+font-black
+dark:text-white
+">
+
                                     {{ auth()->user()->name }}
+
                                 </h1>
 
-                                <p class="text-gray-500">
+
+                                <p class="
+text-gray-500
+dark:text-gray-400
+">
+
                                     {{ auth()->user()->email }}
+
                                 </p>
 
-                                <div class="mt-3 flex gap-2">
+
+
+                                <div class="mt-3">
 
                                     @role('seller')
                                         <span
-                                            class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
-                                            Seller
+                                            class="
+px-4
+py-2
+rounded-full
+bg-green-100
+text-green-700
+font-bold
+text-sm
+">
+
+                                            🏪 Seller
+
                                         </span>
                                     @else
                                         <span
-                                            class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">
-                                            Buyer
+                                            class="
+px-4
+py-2
+rounded-full
+bg-orange-100
+text-orange-700
+font-bold
+text-sm
+">
+
+                                            🛒 Buyer
+
                                         </span>
                                     @endrole
 
                                 </div>
 
+
                             </div>
+
                         </div>
 
+
+
+
                         <a href="{{ route('profile.show') }}"
-                            class="mt-6 md:mt-0 px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-black">
-                            Edit Profile
+                            class="
+bg-orange-500
+hover:bg-orange-600
+text-white
+px-7
+py-3
+rounded-2xl
+font-bold
+shadow-lg
+transition
+">
+
+                            ✏️ Edit Profile
+
                         </a>
 
+
+
                     </div>
+
+
                 </div>
+
             </div>
 
+
+
+
+
+            {{-- WELCOME CARD --}}
+
+
             <div
-                class="mb-8 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white overflow-hidden shadow-xl">
+                class="
+rounded-3xl
+overflow-hidden
+shadow-xl
+bg-gradient-to-br
+from-orange-500
+to-red-500
+text-white
+">
+
+
                 <div class="p-8">
 
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+
+                    <div class="
+flex
+flex-col
+lg:flex-row
+gap-8
+justify-between
+">
+
+
 
                         <div class="max-w-3xl">
 
-                            <span
-                                class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 text-sm font-medium">
+
+                            <span class="
+inline-flex
+px-4
+py-2
+rounded-full
+bg-white/20
+font-semibold
+">
+
                                 🎉 Welcome to {{ config('app.name') }}
+
                             </span>
 
-                            <h1 class="mt-4 text-4xl font-bold">
-                                Hello, {{ auth()->user()->name }} 👋
+
+
+                            <h1 class="
+mt-5
+text-4xl
+font-black
+">
+
+                                Hello {{ auth()->user()->name }} 👋
+
                             </h1>
 
-                            <p class="mt-3 text-white/90 text-lg leading-relaxed">
-                                Welcome to your account! Complete the steps below to secure your account
-                                and unlock all marketplace features, including creating your own shop and
-                                selling products.
+
+
+                            <p class="
+mt-4
+text-lg
+text-white/90
+">
+
+                                Complete your account setup and unlock marketplace features,
+                                create your shop, sell products and connect with customers.
+
                             </p>
+
+
+
 
                             <div class="mt-6 flex flex-wrap gap-3">
 
+
+
                                 @unless (auth()->user()->hasVerifiedEmail())
                                     <a href="{{ route('verification.notice') }}"
-                                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-indigo-700 font-semibold hover:bg-gray-100 transition">
+                                        class="
+px-5
+py-3
+rounded-xl
+bg-white
+text-orange-600
+font-bold
+">
+
                                         📧 Verify Email
+
                                     </a>
                                 @endunless
 
+
+
+
                                 @if (empty(auth()->user()->phone_verified_at))
-                                    <a href="{{ route('phone.verify') }}""
-                                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-yellow-400 text-gray-900 font-semibold hover:bg-yellow-300 transition">
+                                    <a href="{{ route('phone.verify') }}"
+                                        class="
+px-5
+py-3
+rounded-xl
+bg-yellow-400
+text-black
+font-bold
+">
+
                                         📱 Verify Phone
+
                                     </a>
                                 @endif
 
+
+
+
+
                                 @unless (auth()->user()->hasRole('seller'))
                                     <a href="{{ route('shop.create', 1) }}"
-                                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold transition">
-                                        🏪 Become a Seller
+                                        class="
+px-5
+py-3
+rounded-xl
+bg-black/30
+font-bold
+">
+
+                                        🏪 Become Seller
+
                                     </a>
                                 @endunless
 
+
+
                             </div>
+
 
                         </div>
 
-                        <!-- Progress Card -->
-                        <div class="bg-white/10 backdrop-blur rounded-2xl p-6 min-w-[320px]">
 
-                            <h3 class="font-bold text-lg mb-4">
+
+
+
+
+                        {{-- CHECKLIST --}}
+
+
+                        <div class="
+bg-white/20
+backdrop-blur
+rounded-3xl
+p-6
+min-w-[300px]
+">
+
+
+                            <h3 class="
+font-black
+text-xl
+mb-5
+">
+
                                 Account Checklist
+
                             </h3>
+
+
 
                             <div class="space-y-4">
 
-                                <div class="flex items-center justify-between">
-                                    <span>Account Created</span>
-                                    <span class="text-green-300 font-bold">✔</span>
+
+
+                                <div class="flex justify-between">
+
+                                    <span>
+                                        Account Created
+                                    </span>
+
+                                    <span>
+                                        ✔
+                                    </span>
+
                                 </div>
 
-                                <div class="flex items-center justify-between">
-                                    <span>Email Verified</span>
+
+
+
+                                <div class="flex justify-between">
+
+                                    <span>
+                                        Email Verified
+                                    </span>
+
 
                                     @if (auth()->user()->hasVerifiedEmail())
-                                        <span class="text-green-300 font-bold">✔</span>
+                                        <span>
+                                            ✔
+                                        </span>
                                     @else
-                                        <span class="text-yellow-300">Pending</span>
+                                        <span>
+                                            Pending
+                                        </span>
                                     @endif
+
+
                                 </div>
 
-                                <div class="flex items-center justify-between">
-                                    <span>Phone Verified</span>
+
+
+
+                                <div class="flex justify-between">
+
+                                    <span>
+                                        Phone Verified
+                                    </span>
+
 
                                     @if (auth()->user()->phone_verified_at)
-                                        <span class="text-green-300 font-bold">✔</span>
+                                        <span>
+                                            ✔
+                                        </span>
                                     @else
-                                        <span class="text-yellow-300">Pending</span>
+                                        <span>
+                                            Pending
+                                        </span>
                                     @endif
+
+
                                 </div>
 
-                                <div class="flex items-center justify-between">
-                                    <span>Seller Account</span>
+
+
+
+
+                                <div class="flex justify-between">
+
+                                    <span>
+                                        Seller Account
+                                    </span>
+
 
                                     @if (auth()->user()->hasRole('seller'))
-                                        <span class="text-green-300 font-bold">✔</span>
+                                        <span>
+                                            ✔
+                                        </span>
                                     @else
-                                        <span class="text-gray-200">Not Started</span>
+                                        <span>
+                                            Not Started
+                                        </span>
                                     @endif
+
+
                                 </div>
+
+
+
 
                             </div>
 
+
                         </div>
+
 
                     </div>
 
+
                 </div>
+
+
             </div>
+
+
+
+
 
             @php
                 $downloads = auth()->user()->downloads()->with('product')->latest()->get();
             @endphp
 
-            <div class="grid md:grid-cols-4 gap-6 mb-10">
 
-                <div class="bg-white rounded-2xl p-6 shadow">
-                    <div class="text-3xl">📦</div>
-                    <div class="mt-3 text-3xl font-bold">
+
+
+            {{-- STATS --}}
+
+
+            <div class="
+grid
+md:grid-cols-4
+gap-6
+">
+
+
+                <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
+
+                    <div class="text-4xl">
+                        📦
+                    </div>
+
+                    <h2 class="text-3xl font-black mt-3 dark:text-white">
+
                         {{ $downloads->count() }}
-                    </div>
-                    <div class="text-gray-500">
+
+                    </h2>
+
+                    <p class="text-gray-500">
                         Digital Products
-                    </div>
+                    </p>
+
                 </div>
 
-                <div class="bg-white rounded-2xl p-6 shadow">
-                    <div class="text-3xl">⬇️</div>
-                    <div class="mt-3 text-3xl font-bold">
+
+
+                <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
+
+                    <div class="text-4xl">
+                        ⬇️
+                    </div>
+
+                    <h2 class="text-3xl font-black mt-3 dark:text-white">
+
                         {{ $downloads->sum(fn($d) => optional($d->product)->downloads ?? 0) }}
-                    </div>
-                    <div class="text-gray-500">
-                        Total Downloads
-                    </div>
+
+                    </h2>
+
+                    <p class="text-gray-500">
+                        Downloads
+                    </p>
+
                 </div>
 
-                <div class="bg-white rounded-2xl p-6 shadow">
-                    <div class="text-3xl">💳</div>
-                    <div class="mt-3 text-3xl font-bold">
+
+
+
+                <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
+
+                    <div class="text-4xl">
+                        💳
+                    </div>
+
+                    <h2 class="text-3xl font-black mt-3 dark:text-white">
+
                         {{ $downloads->where('paid', true)->count() }}
-                    </div>
-                    <div class="text-gray-500">
+
+                    </h2>
+
+                    <p class="text-gray-500">
                         Paid Purchases
-                    </div>
+                    </p>
+
                 </div>
 
-                <div class="bg-white rounded-2xl p-6 shadow">
-                    <div class="text-3xl">🎁</div>
-                    <div class="mt-3 text-3xl font-bold">
+
+
+                <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
+
+                    <div class="text-4xl">
+                        🎁
+                    </div>
+
+                    <h2 class="text-3xl font-black mt-3 dark:text-white">
+
                         {{ $downloads->where('paid', false)->count() }}
-                    </div>
-                    <div class="text-gray-500">
+
+                    </h2>
+
+                    <p class="text-gray-500">
                         Free Downloads
-                    </div>
+                    </p>
+
                 </div>
+
+
 
             </div>
+
+            {{-- RESUME SECTION --}}
 
             @php
                 $resume = auth()->user()->resumes()->latest()->first();
             @endphp
 
+
             @if ($resume)
-                <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden mb-8">
+                <div class="
+bg-white
+dark:bg-neutral-900
+rounded-3xl
+shadow-xl
+overflow-hidden
+">
 
-                    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6 text-white">
 
-                        <h2 class="text-2xl font-bold">
+                    <div class="
+bg-gradient-to-r
+from-orange-500
+to-red-500
+p-8
+text-white
+">
+
+
+                        <h2 class="text-3xl font-black">
+
                             🌐 Share Your Resume
+
                         </h2>
 
+
                         <p class="mt-2 text-white/90">
-                            Share your professional resume with recruiters, clients, and employers using a single
-                            public link.
+
+                            Share your professional resume with recruiters and customers.
+
                         </p>
 
+
                     </div>
+
+
+
 
                     <div class="p-8">
 
-                        <div class="grid lg:grid-cols-3 gap-8">
 
-                            {{-- Link + Actions --}}
-                            <div class="lg:col-span-2">
+                        <label class="font-bold dark:text-white">
 
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Public Resume Link
-                                </label>
+                            Public Resume Link
 
-                                <div class="flex gap-3">
+                        </label>
 
-                                    <input id="resumeLink" type="text" readonly
-                                        value="{{ route('resume.public', $resume->slug) }}"
-                                        class="flex-1 rounded-xl border-gray-300 bg-gray-50">
 
-                                    <button onclick="copyResumeLink()"
-                                        class="px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition">
+                        <div class="flex gap-3 mt-3">
 
-                                        📋 Copy
 
-                                    </button>
+                            <input id="resumeLink" readonly value="{{ route('resume.public', $resume->slug) }}"
+                                class="
+flex-1
+rounded-xl
+border-gray-300
+dark:bg-neutral-800
+dark:border-neutral-700
+">
 
-                                </div>
 
-                                <div class="mt-8">
+                            <button onclick="copyResumeLink()"
+                                class="
+px-6
+rounded-xl
+bg-orange-500
+hover:bg-orange-600
+text-white
+font-bold
+">
 
-                                    <h3 class="font-semibold text-gray-800 mb-4">
-                                        Share on Social Media
-                                    </h3>
+                                📋 Copy
 
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            </button>
 
-                                        <a target="_blank"
-                                            href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(route('resume.public', $resume->slug)) }}"
-                                            class="flex items-center justify-center gap-2 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white py-3 transition">
-
-                                            💼 LinkedIn
-
-                                        </a>
-
-                                        <a target="_blank"
-                                            href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('resume.public', $resume->slug)) }}"
-                                            class="flex items-center justify-center gap-2 rounded-xl bg-[#1877F2] hover:bg-[#166FE5] text-white py-3 transition">
-
-                                            📘 Facebook
-
-                                        </a>
-
-                                        <a target="_blank"
-                                            href="https://twitter.com/intent/tweet?url={{ urlencode(route('resume.public', $resume->slug)) }}"
-                                            class="flex items-center justify-center gap-2 rounded-xl bg-black hover:bg-gray-800 text-white py-3 transition">
-
-                                            ✖ X
-
-                                        </a>
-
-                                        <a target="_blank"
-                                            href="https://wa.me/?text={{ urlencode(route('resume.public', $resume->slug)) }}"
-                                            class="flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3 transition">
-
-                                            💬 WhatsApp
-
-                                        </a>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
 
                         </div>
 
+
+
+
+
+                        <div class="mt-8 grid md:grid-cols-4 gap-4">
+
+
+                            <a target="_blank"
+                                href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                class="
+rounded-xl
+bg-blue-600
+text-white
+py-3
+text-center
+font-bold
+">
+
+                                💼 LinkedIn
+
+                            </a>
+
+
+
+                            <a target="_blank"
+                                href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                class="
+rounded-xl
+bg-blue-500
+text-white
+py-3
+text-center
+font-bold
+">
+
+                                📘 Facebook
+
+                            </a>
+
+
+
+
+                            <a target="_blank"
+                                href="https://twitter.com/intent/tweet?url={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                class="
+rounded-xl
+bg-black
+text-white
+py-3
+text-center
+font-bold
+">
+
+                                ✖ X
+
+                            </a>
+
+
+
+                            <a target="_blank"
+                                href="https://wa.me/?text={{ urlencode(route('resume.public', $resume->slug)) }}"
+                                class="
+rounded-xl
+bg-green-500
+text-white
+py-3
+text-center
+font-bold
+">
+
+                                💬 WhatsApp
+
+                            </a>
+
+
+                        </div>
+
+
                     </div>
+
 
                 </div>
             @endif
 
-            <div class="mb-8 bg-white rounded-2xl p-8 shadow-sm">
 
-                <div class="text-4xl mb-4">
+
+
+
+
+
+            {{-- CREATE RESUME --}}
+
+
+            <div class="
+bg-white
+dark:bg-neutral-900
+rounded-3xl
+shadow-xl
+p-8
+">
+
+
+                <div class="text-5xl">
                     📄
                 </div>
 
-                <h3 class="font-bold text-xl">
+
+                <h3 class="
+text-2xl
+font-black
+mt-4
+dark:text-white
+">
+
                     Create Professional Resume
+
                 </h3>
 
-                <p class="text-gray-500 mt-2">
-                    Build a modern CV, choose your design, upload your photo and download a professional PDF.
+
+
+                <p class="text-gray-500 mt-3">
+
+                    Build a modern CV and share it with employers.
+
                 </p>
+
+
 
                 @if (auth()->user()->resumes()->exists())
                     <a href="{{ route('resumes.edit', auth()->user()->resumes()->latest()->first()->id) }}"
-                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-purple-500 text-white font-semibold hover:bg-purple-600 transition">
-                        ✏️ Edit My Resume
+                        class="
+inline-block
+mt-6
+px-6
+py-3
+rounded-xl
+bg-orange-500
+text-white
+font-bold
+">
+
+                        ✏️ Edit Resume
+
                     </a>
                 @else
                     <a href="{{ route('resumes.create') }}"
-                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-purple-700 font-semibold hover:bg-gray-100 transition">
-                        📄 Create Your Resume
+                        class="
+inline-block
+mt-6
+px-6
+py-3
+rounded-xl
+bg-orange-500
+text-white
+font-bold
+">
+
+                        📄 Create Resume
+
                     </a>
                 @endif
 
+
             </div>
+
+
+
+
+
+
 
             @role('seller')
 
-                <!-- Seller Details -->
+
+
+                {{-- SELLER AREA --}}
+
+
                 <div class="grid lg:grid-cols-3 gap-6">
 
-                    <div class="bg-white rounded-2xl shadow-sm p-6">
 
-                        <h2 class="font-bold text-xl mb-5">
-                            Seller Details
+
+                    <div class="
+bg-white
+dark:bg-neutral-900
+rounded-3xl
+shadow-xl
+p-6
+">
+
+
+                        <h2 class="
+text-2xl
+font-black
+dark:text-white
+mb-5
+">
+
+                            🏪 Seller Dashboard
+
                         </h2>
+
+
 
                         <div class="space-y-4">
 
-                            <a href="{{ route('shop', auth()->user()->shop->slug) }}"
-                                class="block rounded-xl border p-4 hover:border-indigo-500 hover:bg-indigo-50 transition">
 
-                                <h3 class="font-semibold">
+                            <a href="{{ route('shop', auth()->user()->shop->slug) }}"
+                                class="
+block
+rounded-2xl
+border
+dark:border-neutral-700
+p-5
+hover:border-orange-500
+transition
+">
+
+
+                                <h3 class="font-bold dark:text-white">
+
                                     My Shop
+
                                 </h3>
 
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Manage your storefront and information.
+
+                                <p class="text-sm text-gray-500">
+
+                                    Manage your store.
+
                                 </p>
 
+
                             </a>
+
+
+
 
                             <a href="{{ route('seller.create') }}"
-                                class="block rounded-xl border p-4 hover:border-green-500 hover:bg-green-50 transition">
+                                class="
+block
+rounded-2xl
+border
+dark:border-neutral-700
+p-5
+hover:border-orange-500
+transition
+">
 
-                                <h3 class="font-semibold">
+
+                                <h3 class="font-bold dark:text-white">
+
                                     Add Product
+
                                 </h3>
 
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Publish a new product to your shop.
+
+                                <p class="text-sm text-gray-500">
+
+                                    Publish new products.
+
                                 </p>
+
 
                             </a>
 
-                            @php
-                                $listing = auth()->user()->listing()->latest()->first();
-                            @endphp
 
 
-                            @if ($listing)
-                                <a href="{{ route('seller.edit', $listing) }}"
-                                    class="block rounded-xl border p-4 hover:border-orange-500 hover:bg-orange-50 transition">
-
-                                    <h3 class="font-semibold">
-                                        Manage Products
-                                    </h3>
-
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        Edit prices, inventory and product images.
-                                    </p>
-
-                                </a>
-                            @endif
 
                         </div>
 
+
                     </div>
 
-                    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
 
-                        <h2 class="text-xl font-bold mb-6">
+
+
+
+                    <div class="
+lg:col-span-2
+bg-white
+dark:bg-neutral-900
+rounded-3xl
+shadow-xl
+p-6
+">
+
+
+                        <h2 class="
+text-2xl
+font-black
+dark:text-white
+">
+
                             Subscription
+
                         </h2>
 
-                        @if (auth()->user()->shop?->activeSubscription)
-                            <div class="rounded-xl bg-green-50 border border-green-200 p-6">
 
-                                <h3 class="text-2xl font-bold">
+
+                        @if (auth()->user()->shop?->activeSubscription)
+                            <div class="
+mt-5
+bg-green-50
+dark:bg-green-900/20
+rounded-2xl
+p-6
+">
+
+
+                                <h3 class="
+text-2xl
+font-black
+">
+
                                     {{ auth()->user()->shop->activeSubscription->plan->name }}
+
                                 </h3>
 
-                                <div class="mt-4 grid md:grid-cols-3 gap-4">
+
+                                <div class="grid md:grid-cols-3 gap-4 mt-5">
+
 
                                     <div>
-                                        <p class="text-gray-500 text-sm">
-                                            Product Limit
+                                        <p class="text-gray-500">
+                                            Products
                                         </p>
 
-                                        <p class="font-bold">
+                                        <b>
                                             {{ auth()->user()->shop->activeSubscription->plan->listing_limit }}
-                                        </p>
+                                        </b>
+
                                     </div>
 
+
                                     <div>
-                                        <p class="text-gray-500 text-sm">
+                                        <p class="text-gray-500">
                                             Storage
                                         </p>
 
-                                        <p class="font-bold">
+                                        <b>
                                             {{ auth()->user()->shop->activeSubscription->plan->storage_limit }} MB
-                                        </p>
+                                        </b>
+
                                     </div>
 
+
                                     <div>
-                                        <p class="text-gray-500 text-sm">
+                                        <p class="text-gray-500">
                                             Orders
                                         </p>
 
-                                        <p class="font-bold">
+                                        <b>
                                             {{ auth()->user()->shop->activeSubscription->plan->order_limit }}
-                                        </p>
+                                        </b>
+
                                     </div>
+
 
                                 </div>
 
+
                                 <a href="{{ route('plans.index') }}"
-                                    class="inline-flex mt-6 px-5 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">
+                                    class="
+inline-block
+mt-6
+bg-orange-500
+text-white
+px-6
+py-3
+rounded-xl
+font-bold
+">
+
                                     Upgrade Plan
+
                                 </a>
+
 
                             </div>
                         @endif
 
+
                     </div>
+
 
                 </div>
             @else
-                <!-- Become Seller -->
-                <div
-                    class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-3xl text-white overflow-hidden">
+                {{-- BECOME SELLER --}}
 
-                    <div class="grid lg:grid-cols-2 items-center">
 
-                        <div class="p-10">
+                <div class="
+rounded-3xl
+overflow-hidden
+bg-gradient-to-br
+from-orange-500
+to-red-500
+text-white
+">
 
-                            <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
-                                Start Selling Today
-                            </span>
 
-                            <h2 class="text-5xl font-bold mt-6 leading-tight">
-                                Open your own shop and sell to thousands of customers.
-                            </h2>
+                    <div class="p-10">
 
-                            <p class="mt-6 text-lg text-white/90">
-                                Create your shop in just a few minutes. You'll receive a free seller plan with your first
-                                product included.
-                            </p>
 
-                            <div class="mt-8 flex flex-wrap gap-4">
+                        <span class="
+bg-white/20
+px-4
+py-2
+rounded-full
+">
 
-                                <a href="{{ route('shop.create', 1) }}"
-                                    class="px-8 py-4 rounded-xl bg-white text-indigo-700 font-bold hover:bg-gray-100">
-                                    Become a Seller
-                                </a>
+                            Start Selling Today
 
-                                <a href="{{ route('plans.index') }}"
-                                    class="px-8 py-4 rounded-xl border border-white hover:bg-white/10">
-                                    View Plans
-                                </a>
+                        </span>
 
-                            </div>
+
+                        <h2 class="
+text-5xl
+font-black
+mt-6
+">
+
+                            Open your shop and reach customers.
+
+                        </h2>
+
+
+                        <p class="
+mt-5
+text-lg
+text-white/90
+">
+
+                            Create your marketplace store and start selling products.
+
+                        </p>
+
+
+
+                        <div class="mt-8 flex gap-4 flex-wrap">
+
+
+                            <a href="{{ route('shop.create', 1) }}"
+                                class="
+bg-white
+text-orange-600
+px-8
+py-4
+rounded-xl
+font-black
+">
+
+                                🏪 Become Seller
+
+                            </a>
+
+
+                            <a href="{{ route('plans.index') }}"
+                                class="
+border
+border-white
+px-8
+py-4
+rounded-xl
+font-bold
+">
+
+                                View Plans
+
+                            </a>
+
 
                         </div>
 
-                        <div class="hidden lg:flex justify-center">
 
-                            <img src="#" class="max-w-md">
+                    </div>
 
+
+                </div>
+
+
+
+
+
+
+                {{-- BENEFITS --}}
+
+
+                <div class="
+grid
+md:grid-cols-3
+gap-6
+">
+
+
+                    <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-8">
+
+                        <div class="text-5xl">
+                            🏪
                         </div>
 
+                        <h3 class="text-xl font-black mt-4 dark:text-white">
+                            Create Shop
+                        </h3>
+
+                        <p class="text-gray-500 mt-2">
+                            Customize your store.
+                        </p>
+
                     </div>
+
+
+
+
+                    <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-8">
+
+                        <div class="text-5xl">
+                            📦
+                        </div>
+
+                        <h3 class="text-xl font-black mt-4 dark:text-white">
+                            Sell Products
+                        </h3>
+
+                        <p class="text-gray-500 mt-2">
+                            Manage products easily.
+                        </p>
+
+                    </div>
+
+
+
+
+                    <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-8">
+
+                        <div class="text-5xl">
+                            💰
+                        </div>
+
+                        <h3 class="text-xl font-black mt-4 dark:text-white">
+                            Grow Business
+                        </h3>
+
+                        <p class="text-gray-500 mt-2">
+                            Reach more buyers.
+                        </p>
+
+                    </div>
+
 
                 </div>
 
-                <!-- Benefits -->
-                <div class="grid md:grid-cols-3 gap-6 mt-10">
 
-                    <div class="bg-white rounded-2xl p-8 shadow-sm">
-                        <div class="text-4xl mb-4">🏪</div>
-                        <h3 class="font-bold text-xl">Create Your Shop</h3>
-                        <p class="text-gray-500 mt-2">
-                            Customize your storefront with a logo, banner, description and location.
-                        </p>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-8 shadow-sm">
-                        <div class="text-4xl mb-4">📦</div>
-                        <h3 class="font-bold text-xl">Sell Products</h3>
-                        <p class="text-gray-500 mt-2">
-                            Add products, upload multiple images, manage stock and pricing.
-                        </p>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-8 shadow-sm">
-                        <div class="text-4xl mb-4">💰</div>
-                        <h3 class="font-bold text-xl">Grow Your Business</h3>
-                        <p class="text-gray-500 mt-2">
-                            Upgrade your plan to publish more products and unlock premium features.
-                        </p>
-                    </div>
-
-                </div>
 
             @endrole
 
+
+
         </div>
+
     </div>
+
+
+
     <script>
         function copyResumeLink() {
+
             const input = document.getElementById('resumeLink');
 
             navigator.clipboard.writeText(input.value);
 
-            const button = event.target;
-            const original = button.innerHTML;
+            alert('Resume link copied');
 
-            button.innerHTML = "✅ Copied";
-            button.classList.remove("bg-indigo-600");
-            button.classList.add("bg-green-600");
-
-            setTimeout(() => {
-                button.innerHTML = original;
-                button.classList.remove("bg-green-600");
-                button.classList.add("bg-indigo-600");
-            }, 2000);
         }
     </script>
+
+
+
 </x-app-layout>

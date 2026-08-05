@@ -224,6 +224,146 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+
+            const input = document.getElementById('imageInput');
+            const preview = document.getElementById('imagePreview');
+
+
+            let files = [];
+
+
+            input.addEventListener('change', function(e) {
+
+
+                files = Array.from(e.target.files);
+
+
+                preview.innerHTML = "";
+
+
+                files.forEach((file, index) => {
+
+
+                    const reader = new FileReader();
+
+
+                    reader.onload = function(event) {
+
+
+                        const box = document.createElement('div');
+
+
+                        box.className =
+                            `
+                relative
+                aspect-square
+                rounded-2xl
+                overflow-hidden
+                border
+                border-gray-200
+                dark:border-neutral-700
+                `;
+
+
+
+                        box.innerHTML = `
+
+                    <img 
+                    src="${event.target.result}"
+                    class="
+                    w-full
+                    h-full
+                    object-cover
+                    ">
+
+
+                    <button
+                    type="button"
+                    data-index="${index}"
+                    class="
+                    remove-image
+                    absolute
+                    top-2
+                    right-2
+                    bg-black/60
+                    text-white
+                    w-7
+                    h-7
+                    rounded-full
+                    flex
+                    items-center
+                    justify-center
+                    font-bold
+                    ">
+
+                    ×
+
+                    </button>
+
+                `;
+
+
+                        preview.appendChild(box);
+
+
+
+                    };
+
+
+                    reader.readAsDataURL(file);
+
+
+                });
+
+
+            });
+
+
+
+
+
+            preview.addEventListener('click', function(e) {
+
+
+                if (e.target.classList.contains('remove-image')) {
+
+
+                    let index = e.target.dataset.index;
+
+
+                    files.splice(index, 1);
+
+
+
+                    const dataTransfer = new DataTransfer();
+
+
+                    files.forEach(file => {
+
+                        dataTransfer.items.add(file);
+
+                    });
+
+
+
+                    input.files = dataTransfer.files;
+
+
+
+                    input.dispatchEvent(new Event('change'));
+
+                }
+
+
+            });
+
+
+        });
+    </script>
+
     @stack('modals')
 
     @livewireScripts

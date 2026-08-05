@@ -78,7 +78,7 @@ font-bold
 
 
 
-                                <a href="#"
+                                <a href="{{ route('countries') }}"
                                     class="
 flex
 items-center
@@ -360,56 +360,132 @@ font-black
                         <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data"
                             class="mt-6">
 
-
                             @csrf
 
 
+                            {{-- TEXT AREA --}}
+                            <div class="relative">
 
-                            <textarea name="caption" rows="4" required
-                                class="
-w-full
-rounded-3xl
-border
-border-gray-200
-dark:border-neutral-700
-dark:bg-neutral-800
-p-5
-resize-none
-"
-                                placeholder="
+                                <textarea name="caption" rows="5" required
+                                    class="
+            w-full
+            rounded-3xl
+            border
+            border-gray-200
+            dark:border-neutral-700
+            dark:bg-neutral-800
+            dark:text-white
+            p-5
+            text-base
+            leading-7
+            resize-none
+            outline-none
+            focus:ring-2
+            focus:ring-orange-500
+            transition
+            "
+                                    placeholder="
+
+What are you looking for?
+
 Example:
 
-Looking for iPhone 15 Pro nearby
+📱 Looking for iPhone 15 Pro nearby
 
-Need a gaming laptop
+💻 Need a gaming laptop today
 
-Searching for furniture shop
+🏠 Searching for furniture shop
 
-Who sells PlayStation 5?
+🚗 Need a car rental
+
 "></textarea>
 
 
+                                <div
+                                    class="
+        absolute
+        bottom-4
+        right-5
+        text-xs
+        text-gray-400
+        ">
+                                    murwaj Request
+                                </div>
+
+                            </div>
 
 
-                            <div class="
-flex
-justify-between
-items-center
-mt-5
-">
 
 
-                                <label class="
-cursor-pointer
-text-orange-500
-font-bold
-">
+                            {{-- IMAGE PREVIEW --}}
+                            <div id="imagePreview"
+                                class="
+        grid
+        grid-cols-3
+        gap-3
+        mt-5
+        ">
+                            </div>
 
 
-                                    📷 Add Images
 
 
-                                    <input type="file" name="images[]" multiple class="hidden">
+
+                            {{-- ACTION BAR --}}
+                            <div
+                                class="
+        mt-6
+        flex
+        items-center
+        justify-between
+        bg-gray-50
+        dark:bg-neutral-800
+        rounded-3xl
+        p-4
+        ">
+
+
+
+                                {{-- UPLOAD BUTTON --}}
+                                <label
+                                    class="
+            cursor-pointer
+            flex
+            items-center
+            gap-3
+            text-orange-500
+            font-bold
+            hover:text-orange-600
+            transition
+            ">
+
+
+                                    <div
+                                        class="
+                w-10
+                h-10
+                rounded-full
+                bg-orange-100
+                dark:bg-orange-500/20
+                flex
+                items-center
+                justify-center
+                text-xl
+                ">
+
+                                        📷
+
+                                    </div>
+
+
+                                    <span>
+                                        Add Images
+                                    </span>
+
+
+
+                                    <input type="file" name="images[]" id="imageInput" multiple accept="image/*"
+                                        class="hidden">
 
 
                                 </label>
@@ -418,24 +494,34 @@ font-bold
 
 
 
-                                <button
-                                    class="
-bg-orange-500
-hover:bg-orange-600
-text-white
-px-8
-py-3
-rounded-full
-font-bold
-">
 
-                                    Post Request
+
+                                {{-- POST BUTTON --}}
+                                <button type="submit"
+                                    class="
+            bg-gradient-to-r
+            from-orange-500
+            to-red-500
+            hover:from-orange-600
+            hover:to-red-600
+            text-white
+            px-8
+            py-3
+            rounded-full
+            font-black
+            shadow-lg
+            hover:shadow-xl
+            transition
+            ">
+
+                                    🚀 Post Request
 
                                 </button>
 
 
 
                             </div>
+
 
 
                         </form>

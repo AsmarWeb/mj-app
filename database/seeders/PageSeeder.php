@@ -28,7 +28,7 @@ class PageSeeder extends Seeder
             'short_des' => 'murwaj.com For Online Selling, to help your business grow through digital marketing.',
 
             'short_des_ar' => 'مروج.كوم للبيع عبر الإنترنت
-، لمساعدة أعمالك على النمو من خلال التسويق الرقمي.',
+، لمساعدة أعمالك على النمو من خلال التسويق الرقمي',
 
             'content' => 'Our mission is to provide the most effective digital marketing solutions in the industry, focusing on a high-touch customer experience that delivers results so we can use our profits to reinvest in the success of our clients, our team, and our community.',
 

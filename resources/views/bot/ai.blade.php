@@ -211,7 +211,7 @@
                 <div class="flex">
 
 
-                    <input type="text" id="message" placeholder="Ask Murwaj AI..."
+                    <input type="text" id="message" placeholder="Ask murwaj AI..."
                         class="
                         flex-1
                         p-3
