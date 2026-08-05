@@ -1,6 +1,6 @@
 <x-main-layout>
 
-    @section('title', 'Feed | Murwaj')
+    @section('title', 'Feed | murwaj')
 
 
     <x-slot name="header">

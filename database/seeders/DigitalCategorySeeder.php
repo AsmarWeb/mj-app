@@ -201,6 +201,17 @@ class DigitalCategorySeeder extends Seeder
                 'status' => 'active',
             ],
 
+            [
+                'id' => 18,
+                'code' => 'D118',
+                'bg_color' => '#2563EB',
+                'category_name_ar' => 'الطباعة عند الطلب',
+                'category_name' => 'Print on Demand',
+                'slug' => 'print_on_demand',
+                'image' => 'pod.png',
+                'status' => 'active',
+            ],
+
         ];
 
         DigitalCategory::insert($digitalCategoryRecords);

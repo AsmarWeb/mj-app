@@ -17,7 +17,7 @@
 
     {{-- Title --}}
     <title>
-        {{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj Marketplace')) }}
+        {{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj marketplace')) }}
     </title>
 
 

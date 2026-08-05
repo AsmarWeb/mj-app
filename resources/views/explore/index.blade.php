@@ -1,4 +1,5 @@
 <x-main-layout>
+    @section('title', 'Explore | murwaj')
 
     <x-slot name="header">
         <x-main-header></x-main-header>
