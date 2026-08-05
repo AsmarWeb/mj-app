@@ -3,30 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resume;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Str;
-use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ResumeController extends Controller
 {
-
-
     public function create()
     {
         return view('resumes.create');
     }
 
-
-
-
-
     public function store(Request $request)
     {
-
 
         $data = $request->validate([
 
@@ -42,17 +34,14 @@ class ResumeController extends Controller
 
             'summary' => 'nullable|string',
 
-
             'template' => 'required|in:modern,professional,minimal,creative,dark,ats',
 
             'accent_color' => 'nullable|string',
 
             'font' => 'nullable|string',
 
-
             'experiences' => 'nullable|array',
             'educations' => 'nullable|array',
-
 
             'skills' => 'nullable',
             'projects' => 'nullable',
@@ -64,18 +53,13 @@ class ResumeController extends Controller
 
         ]);
 
-
-
-/*
-        |--------------------------------------------------------------------------
-        | Generate Public CV Link
-        |--------------------------------------------------------------------------
-        */
-
+        /*
+                |--------------------------------------------------------------------------
+                | Generate Public CV Link
+                |--------------------------------------------------------------------------
+                */
 
         $data['slug'] = Str::uuid();
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -83,29 +67,19 @@ class ResumeController extends Controller
         |--------------------------------------------------------------------------
         */
 
-
-        if($request->hasFile('photo')){
-
+        if ($request->hasFile('photo')) {
 
             $data['photo'] = $request
                 ->file('photo')
-                ->store('resumes','public');
-
+                ->store('resumes', 'public');
 
         }
-
-
-
-
-
-
 
         /*
         |--------------------------------------------------------------------------
         | Convert JSON Fields
         |--------------------------------------------------------------------------
         */
-
 
         $jsonFields = [
 
@@ -117,92 +91,52 @@ class ResumeController extends Controller
             'languages',
             'awards',
             'volunteer',
-            'references'
+            'references',
 
         ];
 
+        foreach ($jsonFields as $field) {
 
+            if ($request->filled($field)) {
 
-
-
-        foreach($jsonFields as $field){
-
-
-            if($request->filled($field)){
-
-
-                if(is_array($request->$field)){
-
+                if (is_array($request->$field)) {
 
                     $data[$field] = $request->$field;
 
-
-                }else{
-
+                } else {
 
                     $data[$field] = json_decode(
                         $request->$field,
                         true
                     );
 
-
                 }
 
-
-            }else{
-
+            } else {
 
                 $data[$field] = [];
 
-
             }
 
-
         }
-
-
-
-
-
-
-
 
         $resume = auth()->user()
             ->resumes()
             ->create($data);
 
-
-
-
-
-
         return redirect()
-            ->route('resumes.pdf',$resume->id);
-
+            ->route('resumes.pdf', $resume->id);
 
     }
 
-
-
-
-
-
-
-
-
     public function pdf($id)
     {
-
 
         $resume = auth()->user()
             ->resumes()
             ->findOrFail($id);
 
-
-
-
-        $template = match($resume->template){
-
+        $template = match ($resume->template) {
 
             'professional' => 'professional',
 
@@ -218,10 +152,6 @@ class ResumeController extends Controller
 
         };
 
-
-
-
-
         $pdf = Pdf::loadView(
 
             'resumes.pdf.'.$template,
@@ -229,12 +159,7 @@ class ResumeController extends Controller
             compact('resume')
 
         )
-
-        ->setPaper('a4');
-
-
-
-
+            ->setPaper('a4');
 
         return $pdf->download(
 
@@ -247,80 +172,45 @@ class ResumeController extends Controller
 
         );
 
-
     }
-
-
-
-
-
-
-
 
     public function edit($id)
     {
 
-
         $resume = auth()->user()
             ->resumes()
             ->findOrFail($id);
-
 
         return view(
             'resumes.edit',
             compact('resume')
         );
 
-
     }
 
-
-
-
-
-
-
-
-
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-
 
         $resume = auth()->user()
             ->resumes()
             ->findOrFail($id);
 
-
-
-
         $data = $request->all();
 
+        if ($request->hasFile('photo')) {
 
-
-
-        if($request->hasFile('photo')){
-
-
-            if($resume->photo){
+            if ($resume->photo) {
 
                 Storage::disk('public')
                     ->delete($resume->photo);
 
             }
 
-
-
             $data['photo'] = $request
                 ->file('photo')
-                ->store('resumes','public');
-
+                ->store('resumes', 'public');
 
         }
-
-
-
-
-
 
         $jsonFields = [
 
@@ -332,122 +222,79 @@ class ResumeController extends Controller
             'languages',
             'awards',
             'volunteer',
-            'references'
+            'references',
 
         ];
 
+        foreach ($jsonFields as $field) {
 
+            if (isset($data[$field])) {
 
-
-
-        foreach($jsonFields as $field){
-
-
-            if(isset($data[$field])){
-
-
-                if(!is_array($data[$field])){
-
+                if (! is_array($data[$field])) {
 
                     $data[$field] = json_decode(
                         $data[$field],
                         true
                     );
 
-
                 }
-
 
             }
 
-
         }
-
-
-
-
 
         $resume->update($data);
 
-
-
-
         return redirect()
-            ->route('resumes.pdf',$resume->id);
-
+            ->route('resumes.pdf', $resume->id);
 
     }
 
-
-
-
-/*
-    |--------------------------------------------------------------------------
-    | Public Resume Link
-    |--------------------------------------------------------------------------
-    */
-
+    /*
+        |--------------------------------------------------------------------------
+        | Public Resume Link
+        |--------------------------------------------------------------------------
+        */
 
     public function public($slug)
     {
 
-
         $resume = Resume::where('slug', $slug)->firstOrFail();
 
-    
-        $writer = new PngWriter();
+        $writer = new PngWriter;
 
-    
         $qr = new QrCode(
-        data: route('resume.public', $resume->slug),
-        size: 200,
-        margin: 10
+            data: route('resume.public', $resume->slug),
+            size: 200,
+            margin: 10
         );
 
-    
         $result = $writer->write($qr);
 
-    
         $qrCode = base64_encode($result->getString());
 
-    
         return view('resumes.public', compact('resume', 'qrCode'));
 
     }
 
-
-
-
     public function destroy($id)
     {
-
 
         $resume = auth()->user()
             ->resumes()
             ->findOrFail($id);
 
-
-
-        if($resume->photo){
-
+        if ($resume->photo) {
 
             Storage::disk('public')
                 ->delete($resume->photo);
 
-
         }
 
-
-
         $resume->delete();
-
-
 
         return redirect()
             ->route('resumes.create');
 
-
     }
-
-
 }

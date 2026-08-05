@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Developer;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DeveloperSeeder extends Seeder
@@ -15,7 +14,6 @@ class DeveloperSeeder extends Seeder
     public function run(): void
     {
         $user = User::first();
-
 
         Developer::create([
 
@@ -33,7 +31,7 @@ class DeveloperSeeder extends Seeder
 
             'bio' => 'The team behind murwaj.com. We build modern web solutions, marketplaces, and digital platforms with Laravel, PHP, JavaScript, and cloud technologies.',
 
-            'avatar' => "developers/logo.png",
+            'avatar' => 'developers/logo.png',
 
             'approved' => true,
 

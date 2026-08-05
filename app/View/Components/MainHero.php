@@ -12,12 +12,11 @@ use Illuminate\View\Component;
 
 class MainHero extends Component
 {
-
     public function search(Request $request)
     {
         $q = $request->input('q');
 
-        if (!$q) {
+        if (! $q) {
             return view('search');
         }
 
@@ -31,8 +30,8 @@ class MainHero extends Component
             ->limit(10)
             ->get();
 
-        return view('search.results', compact('listings', 'shops', 'q')); 
-    } 
+        return view('search.results', compact('listings', 'shops', 'q'));
+    }
 
     /**
      * Get the view / contents that represent the component.
@@ -42,8 +41,8 @@ class MainHero extends Component
         $setting = Setting::find(1);
 
         $shops = Shop::with('user')->take(3)
-        ->get();
-        
-        return view('components.main-hero', ['setting' => $setting,'shops' => $shops]);
+            ->get();
+
+        return view('components.main-hero', ['setting' => $setting, 'shops' => $shops]);
     }
 }

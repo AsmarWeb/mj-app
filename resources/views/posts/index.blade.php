@@ -69,17 +69,7 @@ font-bold
 
 
                                 <a href="{{ route('posts.index') }}"
-                                    class="
-flex
-items-center
-gap-3
-bg-gray-100
-dark:bg-neutral-800
-px-4
-py-3
-rounded-2xl
-font-bold
-">
+                                    class="flex items-center gap-3 bg-gray-100 dark:bg-neutral-800 px-4 py-3 rounded-2xl font-bold ">
 
                                     📦 Requests
 
@@ -534,11 +524,21 @@ dark:border-neutral-800
 
 
 
-                                <button class="text-xl text-gray-400">
+                                @if (auth()->id() === $post->user_id)
+                                    <form action="{{ route('posts.destroy', $post) }}" method="POST"
+                                        onsubmit="return confirm('Delete this post?');">
 
-                                    ⋮
+                                        @csrf
+                                        @method('DELETE')
 
-                                </button>
+                                        <button class="text-red-500 text-sm font-bold">
+
+                                            🗑 Delete
+
+                                        </button>
+
+                                    </form>
+                                @endif
 
 
                             </div>
@@ -781,7 +781,6 @@ font-bold
                                     @forelse($post->comments as $comment)
                                         <div class="flex gap-3">
 
-
                                             <div
                                                 class="
 w-9
@@ -805,35 +804,91 @@ font-bold
 
 
 
-                                            <div class="
-bg-white
-dark:bg-neutral-900
-rounded-2xl
-px-4
-py-3
-flex-1
-">
+                                            <div
+                                                class="
+    bg-white
+    dark:bg-neutral-900
+    rounded-2xl
+    px-4
+    py-3
+    flex-1
+    border
+    border-gray-100
+    dark:border-neutral-800
+    ">
 
 
-                                                <p class="font-bold text-sm dark:text-white">
-
-                                                    {{ $comment->user->name ?? 'User' }}
-
-                                                </p>
+                                                <div class="flex items-start justify-between gap-3">
 
 
-                                                <p class="text-sm dark:text-gray-300">
-
-                                                    {{ $comment->comment }}
-
-                                                </p>
+                                                    <div class="flex-1">
 
 
-                                                <p class="text-xs text-gray-400">
+                                                        <p class="font-bold text-sm dark:text-white">
+                                                            {{ $comment->user->name ?? 'User' }}
+                                                        </p>
 
-                                                    {{ $comment->created_at->diffForHumans() }}
 
-                                                </p>
+                                                        <p
+                                                            class="
+                text-sm
+                text-gray-700
+                dark:text-gray-300
+                mt-1
+                break-words
+            ">
+                                                            {{ $comment->comment }}
+                                                        </p>
+
+
+                                                        <div
+                                                            class="
+                flex
+                items-center
+                gap-3
+                mt-2
+            ">
+
+                                                            <p class="text-xs text-gray-400">
+                                                                {{ $comment->created_at->diffForHumans() }}
+                                                            </p>
+
+
+                                                            @if (auth()->id() === $comment->user_id)
+                                                                <form
+                                                                    action="{{ route('comments.destroy', $comment) }}"
+                                                                    method="POST"
+                                                                    onsubmit="return confirm('Delete this comment?');">
+
+                                                                    @csrf
+                                                                    @method('DELETE')
+
+
+                                                                    <button
+                                                                        class="
+                            text-xs
+                            text-red-500
+                            hover:text-red-700
+                            font-semibold
+                            transition
+                            ">
+
+                                                                        Delete
+
+                                                                    </button>
+
+
+                                                                </form>
+                                                            @endif
+
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+                                                </div>
 
 
                                             </div>

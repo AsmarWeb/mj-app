@@ -18,14 +18,14 @@ class ShopReview extends Component
     {
         $this->shop = $shop;
 
-        if(auth()->check()){
+        if (auth()->check()) {
 
             $myReview = ShopRating::where([
-                'shop_id'=>$shop->id,
-                'user_id'=>auth()->id()
+                'shop_id' => $shop->id,
+                'user_id' => auth()->id(),
             ])->first();
 
-            if($myReview){
+            if ($myReview) {
 
                 $this->rating = $myReview->rating;
                 $this->review = $myReview->review;
@@ -37,35 +37,35 @@ class ShopReview extends Component
 
     public function save()
     {
-        abort_if(!auth()->check(),403);
+        abort_if(! auth()->check(), 403);
 
         $this->validate([
-            'rating'=>'required|min:1|max:5',
-            'review'=>'nullable|max:1000'
+            'rating' => 'required|min:1|max:5',
+            'review' => 'nullable|max:1000',
         ]);
 
         ShopRating::updateOrCreate(
 
             [
-                'shop_id'=>$this->shop->id,
-                'user_id'=>auth()->id()
+                'shop_id' => $this->shop->id,
+                'user_id' => auth()->id(),
             ],
 
             [
-                'rating'=>$this->rating,
-                'review'=>$this->review
+                'rating' => $this->rating,
+                'review' => $this->review,
             ]
 
         );
 
         $this->shop->update([
 
-            'rating'=>round(
+            'rating' => round(
                 $this->shop->ratings()->avg('rating'),
                 2
             ),
 
-            'ratings_count'=>$this->shop->ratings()->count(),
+            'ratings_count' => $this->shop->ratings()->count(),
 
         ]);
 
@@ -74,13 +74,13 @@ class ShopReview extends Component
 
     public function render()
     {
-        return view('livewire.shop-review',[
+        return view('livewire.shop-review', [
 
-            'reviews'=>$this->shop
+            'reviews' => $this->shop
                 ->ratings()
                 ->with('user')
                 ->latest()
-                ->paginate(10)
+                ->paginate(10),
 
         ]);
     }

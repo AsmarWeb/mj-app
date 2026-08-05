@@ -16,16 +16,14 @@ class SearchResults extends Component
 
     protected $queryString = [
         'search' => [
-            'except' => ''
+            'except' => '',
         ],
     ];
-
 
     public function mount()
     {
         $this->search = request('search', '');
     }
-
 
     public function updatedSearch()
     {
@@ -40,29 +38,21 @@ class SearchResults extends Component
 
             ->where(function ($query) {
 
-
                 if ($this->search) {
 
-
                     $query->where('title', 'like', "%{$this->search}%")
-
-                    ->orWhere('title_ar', 'like', "%{$this->search}%")
-
-                    ->orWhere('description', 'like', "%{$this->search}%")
-
-                    ->orWhereJsonContains('keywords', $this->search);
-
+                        ->orWhere('title_ar', 'like', "%{$this->search}%")
+                        ->orWhere('description', 'like', "%{$this->search}%")
+                        ->orWhereJsonContains('keywords', $this->search);
 
                 }
 
-
             })
-
 
             ->with([
                 'brand',
                 'category',
-                'shop'
+                'shop',
             ])
 
             ->latest()
@@ -70,21 +60,21 @@ class SearchResults extends Component
             ->paginate(20);
 
         // Create global search link
-    if ($listings->total() == 0 && $this->search) {
+        if ($listings->total() == 0 && $this->search) {
 
-        $this->globalSearchUrl =
-            "https://www.google.com/search?q="
-            . urlencode($this->search);
+            $this->globalSearchUrl =
+                'https://www.google.com/search?q='
+                .urlencode($this->search);
 
-    } else {
+        } else {
 
-        $this->globalSearchUrl = null;
+            $this->globalSearchUrl = null;
 
-    }
+        }
 
-        return view('livewire.search-results', [ 
+        return view('livewire.search-results', [
 
-            'listings' => $listings
+            'listings' => $listings,
 
         ]);
     }

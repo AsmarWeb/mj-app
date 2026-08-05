@@ -23,5 +23,4 @@ return [
     'explore store' => 'استكشف المتجر',
     'top creators' => 'أفضل المبدعين',
 
-
 ];

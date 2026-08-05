@@ -12,11 +12,9 @@ class PostMedia extends Model
 
         'file_path',
 
-        'file_type'
+        'file_type',
 
     ];
-
-
 
     public function post()
     {

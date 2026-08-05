@@ -14,103 +14,85 @@ return new class extends Migration
         Schema::create('digital_products', function (Blueprint $table) {
             $table->id();
             // Basic Information
-    $table->string('title');
-    $table->string('title_ar')->nullable();
+            $table->string('title');
+            $table->string('title_ar')->nullable();
 
-    $table->text('description');
-    $table->text('description_ar')->nullable();
+            $table->text('description');
+            $table->text('description_ar')->nullable();
 
-    $table->string('slug')->unique();
+            $table->string('slug')->unique();
 
+            // Pricing
+            $table->decimal('price', 10, 2)->default(0);
 
-    // Pricing
-    $table->decimal('price', 10, 2)->default(0);
+            $table->boolean('is_free')->default(false);
 
-    $table->boolean('is_free')->default(false);
+            // Files
+            $table->string('image');
 
+            // Main downloadable file
+            $table->string('file');
 
-    // Files
-    $table->string('image');
+            // Product Information
+            $table->string('version')->nullable();
 
-    // Main downloadable file
-    $table->string('file');
+            $table->string('compatible_with')->nullable();
+            // Photoshop, Figma, Canva, WordPress...
 
+            $table->string('file_size')->nullable();
+            // 250 MB
 
-    // Product Information
-    $table->string('version')->nullable();
+            $table->string('included_files')->nullable();
+            // PSD, AI, SVG, PNG
 
-    $table->string('compatible_with')->nullable();
-    // Photoshop, Figma, Canva, WordPress...
+            $table->enum('license', [
+                'personal',
+                'commercial',
+                'extended',
+            ])->default('personal');
 
+            // Preview
+            $table->string('preview_url')->nullable();
 
-    $table->string('file_size')->nullable();
-    // 250 MB
+            $table->string('video_url')->nullable();
 
+            // Extra Information
+            $table->text('requirements')->nullable();
 
-    $table->string('included_files')->nullable();
-    // PSD, AI, SVG, PNG
+            $table->text('installation')->nullable();
 
+            $table->text('changelog')->nullable();
 
-    $table->enum('license', [
-        'personal',
-        'commercial',
-        'extended'
-    ])->default('personal');
+            // Gallery Images
+            $table->json('gallery')->nullable();
 
+            // Marketplace Stats
+            $table->unsignedBigInteger('downloads')->default(0);
 
-    // Preview
-    $table->string('preview_url')->nullable();
+            $table->unsignedBigInteger('favorites')->default(0);
 
-    $table->string('video_url')->nullable();
+            $table->decimal('rating', 3, 2)->default(0);
 
+            $table->unsignedInteger('reviews')->default(0);
 
-    // Extra Information
-    $table->text('requirements')->nullable();
+            // Featured
+            $table->boolean('featured')->default(false);
 
-    $table->text('installation')->nullable();
+            // Category
+            $table->foreignId('digital_category_id')
+                ->nullable()
+                ->constrained('digital_categories')
+                ->nullOnDelete();
 
-    $table->text('changelog')->nullable();
+            // Seller
+            $table->bigInteger('shop_id')->unsigned()->nullable();
 
-
-    // Gallery Images
-    $table->json('gallery')->nullable();
-
-
-    // Marketplace Stats
-    $table->unsignedBigInteger('downloads')->default(0);
-
-    $table->unsignedBigInteger('favorites')->default(0);
-
-    $table->decimal('rating', 3, 2)->default(0);
-
-    $table->unsignedInteger('reviews')->default(0);
-
-
-
-    // Featured
-    $table->boolean('featured')->default(false);
-
-
-
-    // Category
-    $table->foreignId('digital_category_id')
-        ->nullable()
-        ->constrained('digital_categories')
-        ->nullOnDelete();
-
-
-
-    // Seller
-    $table->bigInteger('shop_id')->unsigned()->nullable();
-
-
-
-    // Status
-    $table->enum('status', [
-        'draft',
-        'published',
-        'archived'
-    ])->default('published');
+            // Status
+            $table->enum('status', [
+                'draft',
+                'published',
+                'archived',
+            ])->default('published');
             $table->timestamps();
         });
     }

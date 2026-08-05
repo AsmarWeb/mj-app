@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -29,7 +28,7 @@ class Category extends Model
         'image',
         'parent_id',
         'section_id',
-        'bg_color'
+        'bg_color',
     ];
 
     public function __construct(array $attributes = [])
@@ -42,7 +41,7 @@ class Category extends Model
 
     public function subcategories(): HasMany
     {
-        return $this->hasMany(SubCategory::class, 'category_id', 'id'); //Relación uno a muchos
+        return $this->hasMany(SubCategory::class, 'category_id', 'id'); // Relación uno a muchos
     }
 
     public function brands(): HasMany
@@ -50,7 +49,7 @@ class Category extends Model
         return $this->hasMany(Brand::class, 'category_id', 'id')->where('status', 'active');
     }
 
-    //Relacion entre categories y products atravez de otra relación en este caso Subcategory
+    // Relacion entre categories y products atravez de otra relación en este caso Subcategory
     public function listings(): HasMany
     {
         return $this->hasMany(Listing::class, 'category_id', 'id');
@@ -58,8 +57,8 @@ class Category extends Model
 
     public function getUrlAttribute()
     {
-    return route('discover.category', [
-        'category' => $this->slug,
-    ]);
+        return route('discover.category', [
+            'category' => $this->slug,
+        ]);
     }
 }

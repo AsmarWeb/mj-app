@@ -23,5 +23,4 @@ return [
     'explore store' => 'Explore Store',
     'top creators' => 'Top Creators',
 
-
 ];

@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->foreignId('listing_id')->nullable()->constrained()->nullOnDelete();
             $table->string('listing_name');
-            $table->decimal('price',10,2);
+            $table->decimal('price', 10, 2);
             $table->integer('quantity');
-            $table->decimal('total',10,2);
+            $table->decimal('total', 10, 2);
             $table->timestamps();
         });
     }

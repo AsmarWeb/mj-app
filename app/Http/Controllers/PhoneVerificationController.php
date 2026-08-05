@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
-use Exception;
 
 class PhoneVerificationController extends Controller
 {
-
     public function show()
     {
         return view('auth.verify-phone');
     }
-
-
-
 
     public function send(Request $request)
     {
@@ -31,15 +27,9 @@ class PhoneVerificationController extends Controller
 
         ]);
 
-
-
         $phone = preg_replace('/\s+/', '', $request->phone);
 
-
-
         $user = auth()->user();
-
-
 
         // Already verified
         if ($user->phone_verified_at && $user->phone === $phone) {
@@ -51,10 +41,7 @@ class PhoneVerificationController extends Controller
 
         }
 
-
-
         try {
-
 
             $client = new Client(
 
@@ -63,8 +50,6 @@ class PhoneVerificationController extends Controller
                 config('services.twilio.token')
 
             );
-
-
 
             $client->verify
                 ->v2
@@ -80,21 +65,17 @@ class PhoneVerificationController extends Controller
 
                 );
 
-
-
             /*
             Save phone only after Twilio accepts request
             */
 
             $user->forceFill([
 
-                'phone'=>$phone,
+                'phone' => $phone,
 
-                'phone_verified_at'=>null,
+                'phone_verified_at' => null,
 
             ])->save();
-
-
 
             return back()
                 ->with(
@@ -106,16 +87,11 @@ class PhoneVerificationController extends Controller
                     'Verification code sent successfully.'
                 );
 
-
-
-        } catch(Exception $e) {
-
+        } catch (Exception $e) {
 
             Log::error(
                 'Twilio send error: '.$e->getMessage()
             );
-
-
 
             return back()
 
@@ -134,18 +110,12 @@ class PhoneVerificationController extends Controller
 
     }
 
-
-
-
-
-
-
     public function check(Request $request)
     {
 
         $request->validate([
 
-            'code'=>[
+            'code' => [
 
                 'required',
 
@@ -155,30 +125,19 @@ class PhoneVerificationController extends Controller
 
         ]);
 
-
-
         $user = auth()->user();
 
-
-
-        if(!$user->phone){
-
+        if (! $user->phone) {
 
             return back()->withErrors([
 
-                'code'=>
-                'Phone number not found.'
+                'code' => 'Phone number not found.',
 
             ]);
 
         }
 
-
-
-
-
         try {
-
 
             $client = new Client(
 
@@ -187,8 +146,6 @@ class PhoneVerificationController extends Controller
                 config('services.twilio.token')
 
             );
-
-
 
             $verification = $client->verify
 
@@ -202,28 +159,19 @@ class PhoneVerificationController extends Controller
 
                 ->create([
 
-                    'to'=>$user->phone,
+                    'to' => $user->phone,
 
-                    'code'=>$request->code,
+                    'code' => $request->code,
 
                 ]);
 
-
-
-
-
-            if($verification->status === 'approved'){
-
-
+            if ($verification->status === 'approved') {
 
                 $user->forceFill([
 
-                    'phone_verified_at'=>now(),
+                    'phone_verified_at' => now(),
 
                 ])->save();
-
-
-
 
                 return redirect()
 
@@ -237,31 +185,19 @@ class PhoneVerificationController extends Controller
 
                     );
 
-
             }
-
-
-
-
 
             return back()->withErrors([
 
-                'code'=>
-                'Invalid verification code.'
+                'code' => 'Invalid verification code.',
 
             ])
-            ->with(
-                'codeSent',
-                true
-            );
+                ->with(
+                    'codeSent',
+                    true
+                );
 
-
-
-
-
-        } catch(Exception $e){
-
-
+        } catch (Exception $e) {
 
             Log::error(
 
@@ -269,14 +205,11 @@ class PhoneVerificationController extends Controller
 
             );
 
-
-
             return back()
 
                 ->withErrors([
 
-                    'code'=>
-                    'Verification failed. Please try again.'
+                    'code' => 'Verification failed. Please try again.',
 
                 ])
 
@@ -291,5 +224,4 @@ class PhoneVerificationController extends Controller
         }
 
     }
-
 }

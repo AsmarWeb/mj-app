@@ -14,11 +14,11 @@ return [
     */
 
     'main' => [
-        "home" => "Home",
-        "contact" => "Contact Us",
-        "terms" => "Teams",
-        "policy" => "Privacy",
-        "sitemap" => "Sitemap"
-    ]
+        'home' => 'Home',
+        'contact' => 'Contact Us',
+        'terms' => 'Teams',
+        'policy' => 'Privacy',
+        'sitemap' => 'Sitemap',
+    ],
 
 ];

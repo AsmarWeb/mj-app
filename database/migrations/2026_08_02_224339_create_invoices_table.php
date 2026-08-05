@@ -14,58 +14,44 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
 
-    // Optional: invoice can belong to a store order
-    $table->foreignId('shop_id')
-        ->nullable()
-        ->constrained()
-        ->nullOnDelete();
+            // Optional: invoice can belong to a store order
+            $table->foreignId('shop_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
 
+            // Optional: invoice can belong to an order
+            $table->foreignId('order_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
 
-    // Optional: invoice can belong to an order
-    $table->foreignId('order_id')
-        ->nullable()
-        ->constrained()
-        ->nullOnDelete();
+            $table->string('invoice_number')
+                ->unique();
 
+            // For manual invoices
+            $table->string('customer_name')
+                ->nullable();
 
+            $table->string('customer_email')
+                ->nullable();
 
-    $table->string('invoice_number')
-        ->unique();
+            $table->string('customer_phone')
+                ->nullable();
 
+            $table->decimal('subtotal', 10, 2)
+                ->default(0);
 
-    // For manual invoices
-    $table->string('customer_name')
-        ->nullable();
+            $table->decimal('tax', 10, 2)
+                ->default(0);
 
+            $table->decimal('total', 10, 2)
+                ->default(0);
 
-    $table->string('customer_email')
-        ->nullable();
+            $table->string('status')
+                ->default('pending');
 
-
-    $table->string('customer_phone')
-        ->nullable();
-
-
-
-    $table->decimal('subtotal',10,2)
-        ->default(0);
-
-
-    $table->decimal('tax',10,2)
-        ->default(0);
-
-
-    $table->decimal('total',10,2)
-        ->default(0);
-
-
-
-    $table->string('status')
-        ->default('pending');
-
-
-
-    $table->timestamps();
+            $table->timestamps();
         });
     }
 

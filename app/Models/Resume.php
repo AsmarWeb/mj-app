@@ -9,62 +9,61 @@ class Resume extends Model
 {
     protected $fillable = [
 
-    'user_id',
+        'user_id',
 
-    'slug',
+        'slug',
 
-    'full_name',
-    'job_title',
-    'email',
-    'phone',
-    'website',
-    'address',
+        'full_name',
+        'job_title',
+        'email',
+        'phone',
+        'website',
+        'address',
 
-    'photo',
+        'photo',
 
-    'summary',
+        'summary',
 
-    'experiences',
-    'educations',
-    'skills',
+        'experiences',
+        'educations',
+        'skills',
 
-    'projects',
-    'certificates',
-    'languages',
-    'awards',
-    'volunteer',
-    'references',
+        'projects',
+        'certificates',
+        'languages',
+        'awards',
+        'volunteer',
+        'references',
 
-    'template',
-    'accent_color',
-    'font',
+        'template',
+        'accent_color',
+        'font',
     ];
 
+    protected $casts = [
 
-protected $casts = [
+        'experiences' => 'array',
+        'educations' => 'array',
+        'skills' => 'array',
 
-    'experiences'=>'array',
-    'educations'=>'array',
-    'skills'=>'array',
+        'projects' => 'array',
+        'certificates' => 'array',
+        'languages' => 'array',
+        'awards' => 'array',
+        'volunteer' => 'array',
+        'references' => 'array',
 
-    'projects'=>'array',
-    'certificates'=>'array',
-    'languages'=>'array',
-    'awards'=>'array',
-    'volunteer'=>'array',
-    'references'=>'array',
+    ];
 
-];
+    protected static function boot()
+    {
+        parent::boot();
 
-protected static function boot()
-{
-    parent::boot();
+        static::creating(function ($resume) {
 
-    static::creating(function ($resume) {
+            $resume->slug = Str::slug($resume->full_name)
+                .'-'.uniqid();
 
-        $resume->slug = Str::slug($resume->full_name)
-            .'-'.uniqid();
-
-    });
-}
+        });
+    }
 }

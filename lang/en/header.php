@@ -14,17 +14,17 @@ return [
     */
 
     'user' => [
-        "login" => "Join me",
+        'login' => 'Join me',
     ],
 
-    'locale' => "العربية",
+    'locale' => 'العربية',
 
     'main' => [
-        "discover" => "Explore",
-        "sell" => "Start selling",
-        "services" => "Services",
-        "about" => "About",
-        "posts" => "Posts",
-    ]
+        'discover' => 'Explore',
+        'sell' => 'Start selling',
+        'services' => 'Services',
+        'about' => 'About',
+        'posts' => 'Posts',
+    ],
 
 ];

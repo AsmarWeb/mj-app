@@ -11,7 +11,7 @@ class SubscriptionCard extends Component
         $shop = auth()->user()->shop;
 
         $subscription = $shop?->subscriptions()
-            ->where('status','active')
+            ->where('status', 'active')
             ->with('plan')
             ->latest()
             ->first();

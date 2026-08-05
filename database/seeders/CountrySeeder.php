@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -13,63 +12,63 @@ class CountrySeeder extends Seeder
      */
     public function run(): void
     {
-        $countries = array(
+        $countries = [
 
-    array(
-        'name' => 'United Arab Emirates',
-        'name_ar' => 'الإمارات العربية المتحدة',
-        'slug' => 'united-arab-emirates',
-        'code' => 'AE',
-        'phone_code' => '+971',
-        'flag' => '🇦🇪',
-    ),
+            [
+                'name' => 'United Arab Emirates',
+                'name_ar' => 'الإمارات العربية المتحدة',
+                'slug' => 'united-arab-emirates',
+                'code' => 'AE',
+                'phone_code' => '+971',
+                'flag' => '🇦🇪',
+            ],
 
-    array(
-        'name' => 'Saudi Arabia',
-        'name_ar' => 'المملكة العربية السعودية',
-        'slug' => 'saudi-arabia',
-        'code' => 'SA',
-        'phone_code' => '+966',
-        'flag' => '🇸🇦',
-    ),
+            [
+                'name' => 'Saudi Arabia',
+                'name_ar' => 'المملكة العربية السعودية',
+                'slug' => 'saudi-arabia',
+                'code' => 'SA',
+                'phone_code' => '+966',
+                'flag' => '🇸🇦',
+            ],
 
-    array(
-        'name' => 'Qatar',
-        'name_ar' => 'قطر',
-        'slug' => 'qatar',
-        'code' => 'QA',
-        'phone_code' => '+974',
-        'flag' => '🇶🇦',
-    ),
+            [
+                'name' => 'Qatar',
+                'name_ar' => 'قطر',
+                'slug' => 'qatar',
+                'code' => 'QA',
+                'phone_code' => '+974',
+                'flag' => '🇶🇦',
+            ],
 
-    array(
-        'name' => 'Kuwait',
-        'name_ar' => 'الكويت',
-        'slug' => 'kuwait',
-        'code' => 'KW',
-        'phone_code' => '+965',
-        'flag' => '🇰🇼',
-    ),
+            [
+                'name' => 'Kuwait',
+                'name_ar' => 'الكويت',
+                'slug' => 'kuwait',
+                'code' => 'KW',
+                'phone_code' => '+965',
+                'flag' => '🇰🇼',
+            ],
 
-    array(
-        'name' => 'Bahrain',
-        'name_ar' => 'البحرين',
-        'slug' => 'bahrain',
-        'code' => 'BH',
-        'phone_code' => '+973',
-        'flag' => '🇧🇭',
-    ),
+            [
+                'name' => 'Bahrain',
+                'name_ar' => 'البحرين',
+                'slug' => 'bahrain',
+                'code' => 'BH',
+                'phone_code' => '+973',
+                'flag' => '🇧🇭',
+            ],
 
-    array(
-        'name' => 'Oman',
-        'name_ar' => 'سلطنة عُمان',
-        'slug' => 'oman',
-        'code' => 'OM',
-        'phone_code' => '+968',
-        'flag' => '🇴🇲',
-    ),
+            [
+                'name' => 'Oman',
+                'name_ar' => 'سلطنة عُمان',
+                'slug' => 'oman',
+                'code' => 'OM',
+                'phone_code' => '+968',
+                'flag' => '🇴🇲',
+            ],
 
-);
+        ];
 
         DB::table('countries')->insert($countries);
     }

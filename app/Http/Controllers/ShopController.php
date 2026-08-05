@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreShopRequest;
-use App\Http\Requests\UpdateShopRequest;
 use App\Models\BusinessCard;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Order;
 use App\Models\Plan;
 use App\Models\Section;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use App\Models\State;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Notifications\ShopCreatedNotification;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Notifications\ShopCreatedNotification;
+use Illuminate\Support\Str;
 
 class ShopController extends Controller
 {
@@ -32,15 +30,14 @@ class ShopController extends Controller
         $states = State::orderBy('name')->get();
         $cities = City::orderBy('name')->get();
 
-
-        return view("shop.create", [
-        'shop' => $shop,
-        'step' => (int) $step,
-        'countries' => $countries,
-        'states' => $states,
-        'cities' => $cities,
-        'sections' => Section::orderBy('name')->get(),
-    ]);
+        return view('shop.create', [
+            'shop' => $shop,
+            'step' => (int) $step,
+            'countries' => $countries,
+            'states' => $states,
+            'cities' => $cities,
+            'sections' => Section::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request, $step)
@@ -74,6 +71,7 @@ class ShopController extends Controller
                     'name_ar' => $request->name,
                     'type' => $request->type,
                 ]);
+
                 return redirect('/shop/create/2');
 
             case 2:
@@ -93,11 +91,12 @@ class ShopController extends Controller
                     'country_id' => $request->country_id,
                     'state_id' => $request->state_id,
                     'city_id' => $request->city_id,
-                    
+
                     'location' => $request->location,
                     'latitude' => $request->latitude,
                     'longitude' => $request->longitude,
                 ]);
+
                 return redirect('/shop/create/3');
 
             case 3:
@@ -109,159 +108,155 @@ class ShopController extends Controller
                     $logo = $request->file('logo');
                     $fileName = $logo->getClientOriginalName();
                     $path = $logo->storeAs('shop-suggest', $fileName, 'public');
-                    $shop->update(['logo' => $path,]);
+                    $shop->update(['logo' => $path]);
                 }
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     $fileName = $banner->getClientOriginalName();
                     $path = $banner->storeAs('shop-suggest', $fileName, 'public');
-                    $shop->update(['banner' => $path,]);
-                } 
+                    $shop->update(['banner' => $path]);
+                }
+
                 return redirect('/shop/create/4');
 
             case 4:
                 DB::transaction(function () use ($shop) {
-                $shop->update([
-                'step' => 4,
-                'is_completed' => true,
-                ]);
-                
-                $user = auth()->user();
-                
-                if (! $user->hasRole('seller')) {
-                    $user->addRole('seller');
-                }
+                    $shop->update([
+                        'step' => 4,
+                        'is_completed' => true,
+                    ]);
 
-                // Create a free subscription if one doesn't exist
-                if (! $shop->subscriptions()->exists()) {
-                
-                $freePlan = Plan::where('price', 0)->first();
-                
-                if ($freePlan) {
+                    $user = auth()->user();
 
-                $shop->subscriptions()->create([
-                    'plan_id' => $freePlan->id,
-                    'user_id' => auth()->id(),
-                    'status' => 'active',
-                    'payment_provider' => 'free',
-                    'payment_id' => null,
-                    'type' => 'default', 
-                    'stripe_id' => 'free_' . Str::uuid(),
-                    'stripe_status' => 'active',
-                    'stripe_price' => null,
-                    'quantity' => 1,
-                    'trial_ends_at' => null,
-                    'ends_at' => null,
-                ]);
-                }
+                    if (! $user->hasRole('seller')) {
+                        $user->addRole('seller');
+                    }
 
-                BusinessCard::firstOrCreate(
-                    ['shop_id' => $shop->id],
-                    [
-        
-                    'title' => $shop->name,
-        
-                    'phone' => auth()->user()->phone,
-        
-                    'email' => auth()->user()->email,
-        
-                    'website' => route('shop', $shop->slug),
-                    ]
-                );
-                }
+                    // Create a free subscription if one doesn't exist
+                    if (! $shop->subscriptions()->exists()) {
 
-                $user->notify(new ShopCreatedNotification($shop));
-            
-            });
+                        $freePlan = Plan::where('price', 0)->first();
 
-                return redirect()->route('shop', ['slug' => $shop->slug,])->with('success', 'Congratulations! Your shop is now live.');
+                        if ($freePlan) {
+
+                            $shop->subscriptions()->create([
+                                'plan_id' => $freePlan->id,
+                                'user_id' => auth()->id(),
+                                'status' => 'active',
+                                'payment_provider' => 'free',
+                                'payment_id' => null,
+                                'type' => 'default',
+                                'stripe_id' => 'free_'.Str::uuid(),
+                                'stripe_status' => 'active',
+                                'stripe_price' => null,
+                                'quantity' => 1,
+                                'trial_ends_at' => null,
+                                'ends_at' => null,
+                            ]);
+                        }
+
+                        BusinessCard::firstOrCreate(
+                            ['shop_id' => $shop->id],
+                            [
+
+                                'title' => $shop->name,
+
+                                'phone' => auth()->user()->phone,
+
+                                'email' => auth()->user()->email,
+
+                                'website' => route('shop', $shop->slug),
+                            ]
+                        );
+                    }
+
+                    $user->notify(new ShopCreatedNotification($shop));
+
+                });
+
+                return redirect()->route('shop', ['slug' => $shop->slug])->with('success', 'Congratulations! Your shop is now live.');
 
             default:
 
-                return redirect('/dashboard'); 
+                return redirect('/dashboard');
         }
     }
 
     public function edit()
     {
-    $shop = Auth::user()->shop;
+        $shop = Auth::user()->shop;
 
-    return view('shop.edit', compact('shop'));
+        return view('shop.edit', compact('shop'));
     }
 
     public function update(Request $request)
     {
-    $shop = Auth::user()->shop;
+        $shop = Auth::user()->shop;
 
-    $validated = $request->validate([
-    'name' => ['required', 'string', 'max:255'],
-    'description' => ['nullable', 'string', 'max:1000'],
-    'logo' => ['nullable', 'image', 'max:2048'],
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'logo' => ['nullable', 'image', 'max:2048'],
 
-    'phone' => ['nullable', 'string', 'max:20'],
-    'whatsapp' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'whatsapp' => ['nullable', 'string', 'max:20'],
 
-    'allow_phone' => ['nullable', 'boolean'],
-    'allow_whatsapp' => ['nullable', 'boolean'],
-    ]);
+            'allow_phone' => ['nullable', 'boolean'],
+            'allow_whatsapp' => ['nullable', 'boolean'],
+        ]);
 
+        if ($request->hasFile('logo')) {
 
-    if ($request->hasFile('logo')) {
+            if ($shop->logo) {
+                Storage::disk('public')->delete($shop->logo);
+            }
 
-        if ($shop->logo) {
-            Storage::disk('public')->delete($shop->logo);
+            $validated['logo'] = $request->file('logo')
+                ->store('shop-suggest', 'public');
         }
 
-        $validated['logo'] = $request->file('logo')
-            ->store('shop-suggest', 'public');
-    }
+        $shop->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
 
+            'phone' => Auth::user()->phone,
+            'whatsapp' => $validated['whatsapp'] ?? Auth::user()->phone,
 
-    $shop->update([
-    'name' => $validated['name'],
-    'description' => $validated['description'],
+            'allow_phone' => $request->boolean('allow_phone'),
+            'allow_whatsapp' => $request->boolean('allow_whatsapp'),
+        ]);
 
-    'phone' => Auth::user()->phone,
-    'whatsapp' => $validated['whatsapp'] ?? Auth::user()->phone,
-
-    'allow_phone' => $request->boolean('allow_phone'),
-    'allow_whatsapp' => $request->boolean('allow_whatsapp'),
-    ]);
-
-
-    return redirect()
-        ->route('shop.edit')
-        ->with('success', 'Shop updated successfully.');
+        return redirect()
+            ->route('shop.edit')
+            ->with('success', 'Shop updated successfully.');
     }
 
     public function show($slug)
     {
-        $shop = Shop::where('slug',$slug)
-        ->with([
-            'section',
-            'city',
-            'state'
-        ])
-        ->firstOrFail();
+        $shop = Shop::where('slug', $slug)
+            ->with([
+                'section',
+                'city',
+                'state',
+            ])
+            ->firstOrFail();
 
+        $products = $shop->listings()
+            ->where('status', 'published')
+            ->latest()
+            ->paginate(12);
 
-    $products = $shop->listings()
-        ->where('status','published')
-        ->latest()
-        ->paginate(12);
-
-
-    $categories = $shop->listings()
-        ->where('status','published')
-        ->with('category')
-        ->get()
-        ->pluck('category')
-        ->unique('id');
+        $categories = $shop->listings()
+            ->where('status', 'published')
+            ->with('category')
+            ->get()
+            ->pluck('category')
+            ->unique('id');
 
         $title = $shop ? $shop->name : 'Create your shop';
         $description = $shop ? $shop->description : 'Create a polished shop on Murwaj and start selling your products.';
         $keywords = $shop
-            ? trim("$shop->name, " . optional($shop->city)->name . ", " . optional($shop->section)->name)
+            ? trim("$shop->name, ".optional($shop->city)->name.', '.optional($shop->section)->name)
             : 'shop, murwaj, create online shop';
 
         $bannerImage = $shop && $shop->banner ? Storage::url($shop->banner) : null;
@@ -269,8 +264,8 @@ class ShopController extends Controller
 
         $shop->loadCount('followers');
 
-        return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage','products','categories'));
-    } 
+        return view('shop.show', compact('shop', 'title', 'description', 'keywords', 'bannerImage', 'logoImage', 'products', 'categories'));
+    }
 
     public function index()
     {
@@ -315,11 +310,11 @@ class ShopController extends Controller
 
         // Replace with your actual orders relationship/table
         $ordersCount = $shop->orders()
-        ->whereMonth(
-            'created_at',
-            now()->month
-        )
-        ->count();
+            ->whereMonth(
+                'created_at',
+                now()->month
+            )
+            ->count();
 
         $pendingOrders = Order::where('shop_id', $shop->id)
             ->where('status', 'pending')
@@ -366,87 +361,74 @@ class ShopController extends Controller
     public function creators(Request $request)
     {
         $shops = Shop::with('user')
-        ->withCount('listing')->when($request->search, function ($query) use ($request) {
-            $query->where('name', 'like', '%'.$request->search.'%')
-                  ->orWhere('slug', 'like', '%'.$request->search.'%');
-        })
-        ->latest()
-        ->paginate(12);
-        
+            ->withCount('listing')->when($request->search, function ($query) use ($request) {
+                $query->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('slug', 'like', '%'.$request->search.'%');
+            })
+            ->latest()
+            ->paginate(12);
+
         return view('shop.creators', compact('shops'));
     }
 
     public function downloadBusinessCard($slug)
     {
-    $shop = Shop::with([
-        'businessCard',
-        'city',
-        'country'
-    ])
-    ->where('slug',$slug)
-    ->firstOrFail();
+        $shop = Shop::with([
+            'businessCard',
+            'city',
+            'country',
+        ])
+            ->where('slug', $slug)
+            ->firstOrFail();
 
+        $writer = new PngWriter;
 
-    $writer = new \Endroid\QrCode\Writer\PngWriter();
+        $qr = new QrCode(
+            data: route('shop.public', $shop->slug),
+            size: 200,
+            margin: 10
+        );
 
+        $result = $writer->write($qr);
 
-    $qr = new \Endroid\QrCode\QrCode(
-        data: route('shop.public',$shop->slug),
-        size:200,
-        margin:10
-    );
+        $qrCode = base64_encode($result->getString());
 
+        $pdf = Pdf::loadView(
+            'shop.pdf.business-card',
+            compact('shop', 'qrCode')
+        )
+            ->setPaper('a4');
 
-    $result = $writer->write($qr);
-
-
-    $qrCode = base64_encode($result->getString());
-
-
-    $pdf = Pdf::loadView(
-        'shop.pdf.business-card',
-        compact('shop','qrCode')
-    )
-    ->setPaper('a4');
-
-
-    return $pdf->download(
-        $shop->slug.'-business-card.pdf'
-    );
+        return $pdf->download(
+            $shop->slug.'-business-card.pdf'
+        );
     }
 
     public function businessCard($slug)
-{
-    $shop = Shop::with([
-        'businessCard',
-        'city',
-        'country'
-    ])
-    ->where('slug',$slug)
-    ->firstOrFail();
+    {
+        $shop = Shop::with([
+            'businessCard',
+            'city',
+            'country',
+        ])
+            ->where('slug', $slug)
+            ->firstOrFail();
 
+        $writer = new PngWriter;
 
-    $writer = new \Endroid\QrCode\Writer\PngWriter();
+        $qr = new QrCode(
+            data: route('shop.public', $shop->slug),
+            size: 200,
+            margin: 10
+        );
 
+        $result = $writer->write($qr);
 
-    $qr = new \Endroid\QrCode\QrCode(
-        data: route('shop.public',$shop->slug),
-        size:200,
-        margin:10
-    );
+        $qrCode = base64_encode($result->getString());
 
-
-    $result = $writer->write($qr);
-
-
-    $qrCode = base64_encode($result->getString());
-
-
-    return view(
-        'shop.public',
-        compact('shop','qrCode')
-    );
-}
-
-
+        return view(
+            'shop.public',
+            compact('shop', 'qrCode')
+        );
+    }
 }

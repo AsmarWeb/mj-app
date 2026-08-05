@@ -14,18 +14,18 @@ return [
     */
 
     'main' => [
-        "title" => "Contact Us",
-        "subtitle" => "Ask us everything and we would love to hear from you.",
-        "follow" => "Follow us",
-        "form" => "Contact form"
+        'title' => 'Contact Us',
+        'subtitle' => 'Ask us everything and we would love to hear from you.',
+        'follow' => 'Follow us',
+        'form' => 'Contact form',
     ],
 
     'form' => [
-        "fullname" => "Full Name",
-        "email" => "Email address",
-        "phone" => "Phone number",
-        "message" => "Message",
-        "submit" => "get in touch"
-    ]
+        'fullname' => 'Full Name',
+        'email' => 'Email address',
+        'phone' => 'Phone number',
+        'message' => 'Message',
+        'submit' => 'get in touch',
+    ],
 
 ];

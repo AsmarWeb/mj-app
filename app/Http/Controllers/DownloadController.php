@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DigitalProduct;
 use App\Models\Download;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,7 +17,7 @@ class DownloadController extends Controller
 
         $product = $download->product;
 
-        if (!$product) {
+        if (! $product) {
             abort(404);
         }
 

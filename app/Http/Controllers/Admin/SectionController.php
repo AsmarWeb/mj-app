@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\StoreSectionRequest;
 use App\Http\Requests\UpdateSectionRequest;
-use Illuminate\Support\Facades\File;
 use App\Models\Section;
+use Illuminate\Support\Facades\File;
 
 class SectionController extends Controller
 {
     public $section;
+
     /**
      * Display a listing of the resource.
      */
@@ -21,7 +21,7 @@ class SectionController extends Controller
         $sectionCount = Section::count();
 
         if (request()->has('search')) {
-            $sections->where('name', 'Like', '%' . request()->input('search') . '%');
+            $sections->where('name', 'Like', '%'.request()->input('search').'%');
         }
 
         return view('admin.sections.index', compact('sections', 'sectionCount'));
@@ -72,6 +72,7 @@ class SectionController extends Controller
     public function edit($id)
     {
         $section_info = Section::findOrFail($id);
+
         return view('admin.sections.edit', compact('section_info'));
     }
 
@@ -86,7 +87,7 @@ class SectionController extends Controller
         $section->slug = strtolower(str_replace(' ', '-', $request->name));
 
         if ($request->hasFile('image')) {
-            $uploadPath = 'storage/section-suggest/' . $section->image;
+            $uploadPath = 'storage/section-suggest/'.$section->image;
             if (File::exists($uploadPath)) {
                 unlink($uploadPath);
             }
@@ -107,6 +108,7 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         $section->delete();
+
         return redirect()->route('sections.index')->with('message', 'Section deleted Successfully');
     }
 }

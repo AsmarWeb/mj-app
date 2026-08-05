@@ -13,13 +13,13 @@ return [
     |
     */
 
-    "services" => "Services",
+    'services' => 'Services',
 
     'main' => [
-        "title" => "Services",
-        "subtitle" => "Here is a few of the awesome Services we provide.",
-        "td" => "No Result found!",
-        "by" => "By"
+        'title' => 'Services',
+        'subtitle' => 'Here is a few of the awesome Services we provide.',
+        'td' => 'No Result found!',
+        'by' => 'By',
     ],
 
 ];

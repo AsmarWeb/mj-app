@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('listing_id')->constrained()->cascadeOnDelete();
-            $table->integer('rating'); 
+            $table->integer('rating');
             // 1 to 5 stars
             $table->text('comment')->nullable();
             $table->boolean('approved')->default(true);

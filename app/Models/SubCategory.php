@@ -12,7 +12,6 @@ class SubCategory extends Model
 
     protected $table = 'subcategories';
 
-
     protected $fillable = [
         'subcategory_name',
         'subcategory_name_ar',
@@ -21,15 +20,15 @@ class SubCategory extends Model
         'category_name',
     ];
 
-    //En una subcategory pueden haber muchos products
+    // En una subcategory pueden haber muchos products
     public function listing(): HasMany
     {
         return $this->hasMany(Listing::class, 'subcategory_id', 'id');
     }
 
-    //Al recoger solo un dato pongo el nombre de la funcion en singular
+    // Al recoger solo un dato pongo el nombre de la funcion en singular
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id'); //Relacion uno a muchos inversa.
+        return $this->belongsTo(Category::class, 'category_id'); // Relacion uno a muchos inversa.
     }
 }

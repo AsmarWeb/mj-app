@@ -15,6 +15,7 @@ class MainFooter extends Component
     public function render(): View|Closure|string
     {
         $setting = Setting::find(1);
+
         return view('components.main-footer', ['setting' => $setting]);
     }
 }

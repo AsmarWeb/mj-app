@@ -10,10 +10,9 @@ class DeveloperController extends Controller
     public function index()
     {
 
-        $developers = Developer::where('approved',true)
+        $developers = Developer::where('approved', true)
             ->latest()
             ->get();
-
 
         return view(
             'developers.index',
@@ -32,48 +31,35 @@ class DeveloperController extends Controller
     public function store(Request $request)
     {
 
-
         $data = $request->validate([
 
-            'name'=>'required|string|max:255',
+            'name' => 'required|string|max:255',
 
-            'role'=>'required|string|max:255',
+            'role' => 'required|string|max:255',
 
-            'github'=>'nullable|url',
+            'github' => 'nullable|url',
 
-            'linkedin'=>'nullable|url',
+            'linkedin' => 'nullable|url',
 
-            'website'=>'nullable|url',
+            'website' => 'nullable|url',
 
-            'bio'=>'nullable|string',
+            'bio' => 'nullable|string',
 
-            'avatar'=>'nullable|image|max:2048',
+            'avatar' => 'nullable|image|max:2048',
 
         ]);
 
-
-
-
-
-        if($request->hasFile('avatar')){
-
+        if ($request->hasFile('avatar')) {
 
             $data['avatar'] = $request
                 ->file('avatar')
-                ->store('developers','public');
+                ->store('developers', 'public');
 
         }
-
-
-
-
 
         $data['user_id'] = auth()->id();
 
         Developer::create($data);
-
-
-
 
         return redirect()
             ->route('developers.index')
@@ -82,21 +68,17 @@ class DeveloperController extends Controller
                 'Developer profile submitted!'
             );
 
-
     }
 
     public function show($id)
     {
 
-
         $developer = Developer::findOrFail($id);
-
 
         return view(
             'developers.show',
             compact('developer')
         );
-
 
     }
 

@@ -4,9 +4,9 @@ namespace App\Livewire\Newsletter;
 
 use App\Mail\SubscriberMailable;
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use Illuminate\Support\Facades\Hash;
 
 class Subscribe extends Component
 {
@@ -39,10 +39,10 @@ class Subscribe extends Component
         Mail::to($this->email)
             ->send(
                 new SubscriberMailable([
-                    'email' => $this->email
+                    'email' => $this->email,
                 ])
             );
-            
+
         session()->flash('success', 'You are subscribed successfully!');
 
         $this->reset();

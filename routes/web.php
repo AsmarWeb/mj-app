@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AIController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -31,8 +32,6 @@ use App\Http\Controllers\ConnectController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\LikeController;
@@ -42,6 +41,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Seller\StripeConnectController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ShopCountryController;
 use App\Http\Controllers\ShopFollowController;
 use App\Http\Controllers\SitemapController;
@@ -49,20 +49,16 @@ use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\User\EditController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WishlistController;
 use App\Livewire\Admin\Listing\CreateComponent;
-use App\Livewire\SearchResults;
-use App\Models\Order;
-use App\Mail\OrderPaidMail;
-use Illuminate\Support\Facades\Mail;
-use App\Notifications\OrderPaidNotification;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/search', 'pages.search')->name('search');
 
 Route::get('/lang/{locale}', function ($locale) {
     session()->put('locale', $locale);
+
     return redirect()->back();
 })->name('locale');
 
@@ -76,137 +72,129 @@ Route::get('/sitemap', [SitemapController::class, 'page'])
     ->name('sitemap.page');
 
 Route::get(
-'/sitemap.xml',
-[SitemapController::class,'index']
+    '/sitemap.xml',
+    [SitemapController::class, 'index']
 );
 
-
 Route::get(
-'/sitemap-pages.xml',
-[SitemapController::class,'pages']
+    '/sitemap-pages.xml',
+    [SitemapController::class, 'pages']
 );
 
-
 Route::get(
-'/sitemap-products.xml',
-[SitemapController::class,'products']
+    '/sitemap-products.xml',
+    [SitemapController::class, 'products']
 );
 
-
 Route::get(
-'/sitemap-shops.xml',
-[SitemapController::class,'shops']
+    '/sitemap-shops.xml',
+    [SitemapController::class, 'shops']
 );
 
-
 Route::get(
-'/sitemap-developers.xml',
-[SitemapController::class,'developers']
+    '/sitemap-developers.xml',
+    [SitemapController::class, 'developers']
 );
 
 Route::get(
     '/sitemap-categories.xml',
-    [SitemapController::class,'categories']
+    [SitemapController::class, 'categories']
 );
 
-Route::middleware('auth')->group(function(){
-
+Route::middleware('auth')->group(function () {
 
     Route::get(
         '/developers',
-        [DeveloperController::class,'index']
+        [DeveloperController::class, 'index']
     )->name('developers.index');
-
 
     Route::get(
         '/developers/join',
-        [DeveloperController::class,'create']
+        [DeveloperController::class, 'create']
     )->name('developers.join');
-
 
     Route::post(
         '/developers',
-        [DeveloperController::class,'store']
+        [DeveloperController::class, 'store']
     )->name('developers.store');
-
 
     Route::get(
         '/developer/{id}',
-        [DeveloperController::class,'show']
+        [DeveloperController::class, 'show']
     )->name('developers.show');
-
 
 });
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::view('/ai-studio','ai-studio')->middleware('auth')->name('ai.studio');
+Route::view('/ai-studio', 'ai-studio')->middleware('auth')->name('ai.studio');
 // Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-Route::get('/category/{category}',[ExploreController::class,'category'])->name('discover.category');
+Route::get('/category/{category}', [ExploreController::class, 'category'])->name('discover.category');
 Route::get('/categories', [ListingCategoryController::class, 'index'])->name('categories');
 Route::get('/countries', [ShopCountryController::class, 'index'])->name('countries');
 Route::get('about', [HomeController::class, 'about'])->name('about');
-Route::resource('users', UsersController::class)->only('show','edit','update')->middleware('auth');
+Route::resource('users', UsersController::class)->only('show', 'edit', 'update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
-Route::middleware(['auth', 'verified','phone.verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'phone.verified'])->group(function () {
     Route::get('/shop/create/{step?}', [ShopController::class, 'create'])->name('shop.create');
     Route::post('/shop/create/{step}', [ShopController::class, 'store'])->name('shop.store');
     Route::get('/shop/edit', [ShopController::class, 'edit'])->name('shop.edit');
     Route::put('/shop/update', [ShopController::class, 'update'])->name('shop.update');
-    
+
     Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
     Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
 
-    Route::get('/shop/{slug}/business-card',[ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
-    Route::get('/business-card/{slug}',[ShopController::class,'businessCard'])->name('shop.public');
-    
+    Route::get('/shop/{slug}/business-card', [ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
+    Route::get('/business-card/{slug}', [ShopController::class, 'businessCard'])->name('shop.public');
+
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
 });
 
-Route::middleware('auth')->group(function(){
+Route::post('/ai/shop-description', [AIController::class, 'shopDescription'])
+    ->name('ai.shop-description');
 
+Route::middleware('auth')->group(function () {
 
     Route::get('/posts',
-        [PostController::class,'index']
+        [PostController::class, 'index']
     )->name('posts.index');
 
-
-
     Route::post('/posts',
-        [PostController::class,'store']
+        [PostController::class, 'store']
     )->name('posts.store');
 
-
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])
+        ->name('posts.destroy');
 
     Route::post('/posts/{post}/like',
-        [LikeController::class,'store']
+        [LikeController::class, 'store']
     )->name('posts.like');
 
-
-
     Route::post('/posts/{post}/comment',
-        [CommentController::class,'store']
+        [CommentController::class, 'store']
     )->name('comments.store');
 
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('comments.destroy');
 
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
 
     Route::post(
         '/listing/{listing}/review',
-        [ReviewController::class,'store']
+        [ReviewController::class, 'store']
     )
-    ->name('review.store');
+        ->name('review.store');
 
     Route::middleware('auth')->post(
-    '/shops/{shop}/follow',
-    [ShopFollowController::class, 'toggle']
-)->name('shops.follow');
+        '/shops/{shop}/follow',
+        [ShopFollowController::class, 'toggle']
+    )->name('shops.follow');
 
 });
 
@@ -216,7 +204,7 @@ Route::get('/notifications/{notification}', function ($id) {
         ->notifications()
         ->findOrFail($id);
 
-    if (!$notification->read_at) {
+    if (! $notification->read_at) {
         $notification->markAsRead();
     }
 
@@ -250,16 +238,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get(
         '/seller/listing/{listing}/edit',
-        [EditController::class,'edit']
+        [EditController::class, 'edit']
     )
-    ->name('seller.edit');
-
+        ->name('seller.edit');
 
     Route::put(
         '/seller/listing/{listing}',
-        [EditController::class,'update']
+        [EditController::class, 'update']
     )
-    ->name('seller.listing.update');
+        ->name('seller.listing.update');
 
 });
 
@@ -292,45 +279,38 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-
     Route::get(
         '/checkout',
-        [CheckoutController::class,'checkout']
+        [CheckoutController::class, 'checkout']
     )
-    ->name('checkout');
-
-
+        ->name('checkout');
 
     Route::get(
         '/checkout/success/{order}',
-        [CheckoutController::class,'success']
+        [CheckoutController::class, 'success']
     )
-    ->name('checkout.success');
-
+        ->name('checkout.success');
 
 });
 
 Route::post(
     '/listing/{listing}/lead',
-    [LeadController::class,'store']
+    [LeadController::class, 'store']
 )->name('lead.store');
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
 
-Route::post(
-'/cart/add/{listing}',
-[CartController::class,'add']
-)
-->name('cart.add');
+    Route::post(
+        '/cart/add/{listing}',
+        [CartController::class, 'add']
+    )
+        ->name('cart.add');
 
-
-
-Route::post(
-'/wishlist/add/{listing}',
-[WishlistController::class,'add']
-)
-->name('wishlist.add');
-
+    Route::post(
+        '/wishlist/add/{listing}',
+        [WishlistController::class, 'add']
+    )
+        ->name('wishlist.add');
 
 });
 
@@ -356,29 +336,28 @@ Route::post(
     [StripeWebhookController::class, 'handleWebhook']
 );
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
 
     Route::get('/pricing',
-        [SubscriptionController::class,'index']
+        [SubscriptionController::class, 'index']
     )->name('plans.index');
 
-
     Route::post('/subscription/checkout/{plan}',
-        [SubscriptionController::class,'checkout']
+        [SubscriptionController::class, 'checkout']
     )->name('subscription.checkout');
 
     Route::get('/subscription/success',
-function(){
+        function () {
 
-    return view('subscription.success');
+            return view('subscription.success');
 
-})
-->name('subscription.success');
+        })
+        ->name('subscription.success');
 
 });
 
-Route::get('/bot', [BotController::class,'index'])->name('bot');
-Route::post('/bot/chat', [BotController::class,'chat']);
+Route::get('/bot', [BotController::class, 'index'])->name('bot');
+Route::post('/bot/chat', [BotController::class, 'chat']);
 
 // Route::view('/', 'pages.home')->name('home');
 // Route::view('about', 'pages.about')->name('about');
@@ -418,7 +397,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/resumes/{id}/pdf', [ResumeController::class, 'pdf'])->name('resumes.pdf');
     Route::delete('/resumes/{id}', [ResumeController::class, 'destroy'])->name('resumes.destroy');
 
-    Route::get('/cv/{slug}', [ResumeController::class,'public'])->name('resume.public');
+    Route::get('/cv/{slug}', [ResumeController::class, 'public'])->name('resume.public');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 'middleware' => ['role:superadministrator|administrator']], function () {
@@ -451,20 +430,20 @@ Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middlew
     Route::get('/create', CreateComponent::class)->name('admin.create');
 
     Route::get(
-            'digital-products',
-            [DigitalProductController::class, 'index']
-        )
+        'digital-products',
+        [DigitalProductController::class, 'index']
+    )
         ->name('digital-products.index');
 
     Route::get('/digital-products/create',
         [DigitalProductController::class, 'create']
     )
-    ->name('digital-products.create');
+        ->name('digital-products.create');
 
     Route::post('/digital-products',
         [DigitalProductController::class, 'store']
     )
-    ->name('digital-products.store');
+        ->name('digital-products.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -474,29 +453,26 @@ Route::middleware('auth')->group(function () {
         [DigitalProductController::class, 'download']
     )->name('digital-products.download');
 
-     Route::middleware('auth')->post(
-    '/digital-products/{slug}/checkout',
-    [DigitalProductController::class, 'checkout']
+    Route::middleware('auth')->post(
+        '/digital-products/{slug}/checkout',
+        [DigitalProductController::class, 'checkout']
     )->name('digital-products.checkout');
 
     Route::get(
-    '/digital-products/{slug}/success',
-    [DigitalProductController::class, 'success']
+        '/digital-products/{slug}/success',
+        [DigitalProductController::class, 'success']
     )->name('digital-products.success');
 
-   Route::middleware('auth')->get(
-    '/downloads/{token}',
-    [DownloadController::class, 'download']
+    Route::middleware('auth')->get(
+        '/downloads/{token}',
+        [DownloadController::class, 'download']
     )->name('downloads.download');
 
     Route::get('/digital-products/{slug}',
-    [DigitalProductController::class, 'show']
+        [DigitalProductController::class, 'show']
     )->name('digital-products.show');
 
 });
-
-   
-
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage', 'middleware' => ['role:superadministrator|administrator']], function () {
     Route::resource('user', UserController::class);
@@ -528,38 +504,34 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
 
     Route::middleware(['auth'])->group(function () {
 
-    Route::get('project-explorer',
-        [ProjectExplorerController::class, 'index']
-    )->name('project-explorer');
+        Route::get('project-explorer',
+            [ProjectExplorerController::class, 'index']
+        )->name('project-explorer');
 
-    Route::resource('leads', LeadsController::class);
+        Route::resource('leads', LeadsController::class);
 
-    Route::resource(
-    'invoices',
-    InvoiceController::class
-);
+        Route::resource(
+            'invoices',
+            InvoiceController::class
+        );
 
+        Route::get(
+            'invoices/{invoice}/download',
+            [
+                InvoiceController::class,
+                'download',
+            ]
+        )
+            ->name('invoices.download');
 
+        Route::post(
+            'invoices/{invoice}/status',
+            [
+                InvoiceController::class,
+                'updateStatus',
+            ]
+        )
+            ->name('invoices.status');
 
-Route::get(
-    'invoices/{invoice}/download',
-    [
-    InvoiceController::class,
-    'download'
-    ]
-)
-->name('invoices.download');
-
-
-
-Route::post(
-'invoices/{invoice}/status',
-[
-InvoiceController::class,
-'updateStatus'
-]
-)
-->name('invoices.status');
-
-});
+    });
 });

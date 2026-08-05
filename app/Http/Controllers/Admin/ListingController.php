@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Listing;
-use Illuminate\Http\Request;
 use Artesaos\SEOTools\Facades\SEOMeta;
+use Illuminate\Http\Request;
 
 class ListingController extends Controller
 {

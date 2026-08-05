@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Role;
-use App\Models\User;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Http\Actions\User\CreateUser;
 use App\Http\Actions\User\UpdateUser;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\Role;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -21,7 +21,7 @@ class UserController extends Controller
         $userCount = User::count();
 
         if (request()->has('search')) {
-            $users->where('name', 'Like', '%' . request()->input('search') . '%');
+            $users->where('name', 'Like', '%'.request()->input('search').'%');
         }
 
         if (request()->query('sort')) {

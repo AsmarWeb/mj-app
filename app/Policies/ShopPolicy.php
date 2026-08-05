@@ -5,8 +5,6 @@ namespace App\Policies;
 use App\Models\Shop;
 use App\Models\User;
 
-use Illuminate\Auth\Access\Response;
-
 class ShopPolicy
 {
     /**
@@ -17,6 +15,7 @@ class ShopPolicy
         if ($user->shops()->exists()) {
             abort(403, 'You already have a shop.');
         }
+
         return true;
     }
 
@@ -60,6 +59,7 @@ class ShopPolicy
         if ($request->user()->shops()->exists()) {
             abort(403, 'You already have a shop.');
         }
+
         return true;
     }
 

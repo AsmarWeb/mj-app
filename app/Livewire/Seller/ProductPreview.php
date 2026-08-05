@@ -11,14 +11,19 @@ class ProductPreview extends Component
     public ?Listing $listing = null;
 
     public $title = '';
+
     public $description = '';
+
     public $price = 0;
+
     public $quantity = 1;
 
     public $condition = 'new';
+
     public $price_condition = 'fixed';
 
     public $features = [];
+
     public $keywords = [];
 
     public $image = null;

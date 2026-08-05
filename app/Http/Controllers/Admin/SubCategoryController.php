@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\StoreSubCategoryRequest;
 use App\Http\Requests\UpdateSubCategoryRequest;
 use App\Models\Category;
@@ -18,6 +17,7 @@ class SubCategoryController extends Controller
     {
         $subcategories = SubCategory::paginate(5);
         $subcategoryCount = SubCategory::count();
+
         return view('admin.subcategories.index', compact('subcategories', 'subcategoryCount'));
     }
 
@@ -62,13 +62,14 @@ class SubCategoryController extends Controller
     public function edit($id)
     {
         $subcategory_info = SubCategory::findOrFail($id);
+
         return view('admin.subcategories.edit', compact('subcategory_info'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSubCategoryRequest $request,  $id)
+    public function update(UpdateSubCategoryRequest $request, $id)
     {
         $category_name = Category::where('id', $request->category_id)->value('category_name');
 
@@ -91,6 +92,7 @@ class SubCategoryController extends Controller
     public function destroy(SubCategory $subCategory)
     {
         $subCategory->delete();
+
         return redirect()->route('subcategories.index')->with('message', 'SubCategory deleted Successfully');
     }
 }

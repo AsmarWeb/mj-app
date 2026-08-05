@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Plan;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PlanSeeder extends Seeder
@@ -33,7 +32,6 @@ class PlanSeeder extends Seeder
             'billing_period' => 'monthly',
         ]);
 
-
         Plan::create([
             'name' => 'Basic',
             'slug' => 'basic',
@@ -54,7 +52,6 @@ class PlanSeeder extends Seeder
             'billing_period' => 'monthly',
         ]);
 
-
         Plan::create([
             'name' => 'Pro',
             'slug' => 'pro',
@@ -74,7 +71,6 @@ class PlanSeeder extends Seeder
             'is_free' => false,
             'billing_period' => 'monthly',
         ]);
-
 
         // Plan::create([
         //     'name' => 'Business Yearly',

@@ -13,8 +13,6 @@ class Page extends Model
 
     protected $table = 'pages';
 
-    
-
     protected $fillable = [
         'name',
         'slug',
@@ -40,7 +38,7 @@ class Page extends Model
         'developer',
     ];
 
-    static public function getSlug($slug)
+    public static function getSlug($slug)
     {
         return self::where('slug', '=', $slug)->first();
     }

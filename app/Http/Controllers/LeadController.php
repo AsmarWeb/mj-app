@@ -13,19 +13,18 @@ class LeadController extends Controller
 
         Lead::create([
 
-            'shop_id'=>$listing->shop_id,
+            'shop_id' => $listing->shop_id,
 
-            'listing_id'=>$listing->id,
+            'listing_id' => $listing->id,
 
-            'user_id'=>auth()->id(),
+            'user_id' => auth()->id(),
 
-            'type'=>$request->type,
+            'type' => $request->type,
 
         ]);
 
-
         return response()->json([
-            'success'=>true
+            'success' => true,
         ]);
 
     }

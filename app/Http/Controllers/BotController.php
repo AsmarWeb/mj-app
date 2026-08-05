@@ -27,8 +27,7 @@ class BotController extends Controller
         $best = null;
         $score = 0;
 
-
-        foreach($items as $item){
+        foreach ($items as $item) {
 
             similar_text(
                 $input,
@@ -36,8 +35,7 @@ class BotController extends Controller
                 $percent
             );
 
-
-            if($percent > $score){
+            if ($percent > $score) {
 
                 $score = $percent;
                 $best = $item;
@@ -45,18 +43,16 @@ class BotController extends Controller
             }
         }
 
-
-        if($best && $score > 40){
+        if ($best && $score > 40) {
 
             return response()->json([
-                'reply' => $best->answer
+                'reply' => $best->answer,
             ]);
 
         }
 
-
         return response()->json([
-            'reply' => "Sorry, I couldn't find an answer."
+            'reply' => "Sorry, I couldn't find an answer.",
         ]);
     }
 }

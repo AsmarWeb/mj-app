@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subscriber;
-use Illuminate\Http\Request;
 
 class SubscriberController extends Controller
 {
@@ -17,7 +16,7 @@ class SubscriberController extends Controller
         $subscriberCount = Subscriber::count();
 
         if (request()->has('search')) {
-            $subscribers->where('email', 'Like', '%' . request()->input('search') . '%');
+            $subscribers->where('email', 'Like', '%'.request()->input('search').'%');
         }
 
         if (request()->query('sort')) {

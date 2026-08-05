@@ -16,11 +16,9 @@ class Developer extends Model
         'website',
         'bio',
         'avatar',
-        'approved'
+        'approved',
 
     ];
-
-
 
     public function user()
     {

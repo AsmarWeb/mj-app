@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
-use Illuminate\Http\Request;
 
 class LeadsController extends Controller
 {
@@ -18,8 +17,8 @@ class LeadsController extends Controller
             'listing',
             'user',
         ])
-        ->latest()
-        ->paginate(20);
+            ->latest()
+            ->paginate(20);
 
         return view('admin.leads.index', compact('leads'));
     }

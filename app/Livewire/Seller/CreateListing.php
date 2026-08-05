@@ -7,29 +7,36 @@ use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Section;
 use App\Models\Subcategory;
+use App\Notifications\ListingCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Notifications\ListingCreatedNotification;
 
 class CreateListing extends Component
 {
     use WithFileUploads;
 
     public $title;
+
     public $title_ar;
+
     public $description;
+
     public $price;
+
     public $quantity = 1;
 
     public $brand_id;
+
     public $section_id;
+
     public $category_id;
+
     public $subcategory_id;
 
     public $condition = 'new';
+
     public $price_condition = 'fixed';
 
     public $keywords = [];
@@ -37,6 +44,7 @@ class CreateListing extends Component
     public $keyword = '';
 
     public $shipping_method;
+
     public $delivery_days;
 
     public $status = 'draft';
@@ -46,14 +54,17 @@ class CreateListing extends Component
     public $feature = '';
 
     public $image;
-    
+
     public $video;
 
     public $images = [];
 
     public $subscription;
+
     public $plan;
+
     public $usedListings = 0;
+
     public $canCreate = true;
 
     public function mount()
@@ -72,6 +83,7 @@ class CreateListing extends Component
 
         if (! $this->subscription) {
             $this->canCreate = false;
+
             return;
         }
 
@@ -79,12 +91,12 @@ class CreateListing extends Component
 
         // Count published listings
         $this->usedListings = $shop->listings()
-        ->where('status', 'published')
-        ->where(function ($query) {
-        $query->whereNull('expires_at')
-              ->orWhere('expires_at', '>', now());
-              })
-              ->count();
+            ->where('status', 'published')
+            ->where(function ($query) {
+                $query->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })
+            ->count();
 
         // Check plan limit
         $this->canCreate = $this->usedListings < $this->plan->listing_limit;
@@ -117,12 +129,12 @@ class CreateListing extends Component
             'price_condition' => 'required',
 
             'shipping_method' => 'required|string|max:255',
-        
+
             'delivery_days' => 'required|integer|min:1',
 
             'image' => 'required|image|max:2048',
 
-            'video' => ['nullable','file','mimes:mp4,mov,webm','max:51200'],
+            'video' => ['nullable', 'file', 'mimes:mp4,mov,webm', 'max:51200'],
 
             'images.*' => 'image|max:2048',
 
@@ -146,143 +158,119 @@ class CreateListing extends Component
         $this->features = array_values($this->features);
     }
 
-
     public function addKeyword()
     {
-    if($this->keyword){
+        if ($this->keyword) {
 
-        $this->keywords[] = $this->keyword;
+            $this->keywords[] = $this->keyword;
 
-        $this->keyword = '';
+            $this->keyword = '';
 
+        }
     }
-    }
-    
+
     public function removeKeyword($index)
     {
-    unset($this->keywords[$index]);
+        unset($this->keywords[$index]);
 
-    $this->keywords = array_values($this->keywords);
+        $this->keywords = array_values($this->keywords);
     }
 
     private function checkStorageLimit($user)
     {
-    $subscription = $user->shop
-        ->subscriptions()
-        ->where('status', 'active')
-        ->with('plan')
-        ->latest()
-        ->first();
+        $subscription = $user->shop
+            ->subscriptions()
+            ->where('status', 'active')
+            ->with('plan')
+            ->latest()
+            ->first();
 
-
-    if (!$subscription) {
-        return false;
-    }
-
-
-    $plan = $subscription->plan;
-
-
-    // Current used storage in MB
-    $usedStorage = 0;
-
-
-    $files = Listing::where('user_id', $user->id)
-        ->get();
-
-
-    foreach ($files as $listing) {
-
-
-        // Main image
-        if ($listing->image) {
-
-            $path = storage_path(
-                'app/public/products/'.$listing->image
-            );
-
-            if (file_exists($path)) {
-                $usedStorage += filesize($path);
-            }
-
+        if (! $subscription) {
+            return false;
         }
 
+        $plan = $subscription->plan;
 
+        // Current used storage in MB
+        $usedStorage = 0;
 
-        // Gallery images
-        if ($listing->images) {
+        $files = Listing::where('user_id', $user->id)
+            ->get();
 
-            foreach ($listing->images as $image) {
+        foreach ($files as $listing) {
 
+            // Main image
+            if ($listing->image) {
 
                 $path = storage_path(
-                    'app/public/products/'.$image
+                    'app/public/products/'.$listing->image
                 );
-
 
                 if (file_exists($path)) {
                     $usedStorage += filesize($path);
                 }
 
+            }
 
+            // Gallery images
+            if ($listing->images) {
+
+                foreach ($listing->images as $image) {
+
+                    $path = storage_path(
+                        'app/public/products/'.$image
+                    );
+
+                    if (file_exists($path)) {
+                        $usedStorage += filesize($path);
+                    }
+
+                }
+
+            }
+
+            if ($this->video) {
+                $newStorage += $this->video->getSize();
             }
 
         }
 
-        if ($this->video) {
-            $newStorage += $this->video->getSize();
+        // Convert bytes to MB
+        $usedStorage = $usedStorage / 1024 / 1024;
+
+        // New upload size
+        $newStorage = 0;
+
+        if ($this->image) {
+
+            $newStorage += $this->image->getSize();
+
         }
 
-    }
+        foreach ($this->images as $image) {
 
+            $newStorage += $image->getSize();
 
+        }
 
-    // Convert bytes to MB
-    $usedStorage = $usedStorage / 1024 / 1024;
+        $newStorage = $newStorage / 1024 / 1024;
 
+        if (($usedStorage + $newStorage) > $plan->storage_limit) {
 
+            session()->flash(
+                'error',
+                'Storage limit reached. You are using '
+                .round($usedStorage, 2)
+                .' MB out of '
+                .$plan->storage_limit
+                .' MB.'
+            );
 
-    // New upload size
-    $newStorage = 0;
+            return false;
 
+        }
 
-    if ($this->image) {
-
-        $newStorage += $this->image->getSize();
-
-    }
-
-
-    foreach ($this->images as $image) {
-
-        $newStorage += $image->getSize();
-
-    }
-
-
-    $newStorage = $newStorage / 1024 / 1024;
-
-
-
-    if (($usedStorage + $newStorage) > $plan->storage_limit) {
-
-
-        session()->flash(
-            'error',
-            "Storage limit reached. You are using "
-            .round($usedStorage,2)
-            ." MB out of "
-            .$plan->storage_limit
-            ." MB."
-        );
-
-
-        return false;
-
-    }
-
-
-    return true;
+        return true;
     }
 
     public function save($status = 'published')
@@ -290,6 +278,7 @@ class CreateListing extends Component
         // Double-check on the server
         if (! $this->canCreate) {
             session()->flash('error', 'You have reached your plan limit. Please upgrade your subscription.');
+
             return;
         }
 
@@ -297,13 +286,13 @@ class CreateListing extends Component
 
         $user = Auth::user();
 
-        if (!$this->checkStorageLimit($user)) {
+        if (! $this->checkStorageLimit($user)) {
             return;
         }
 
         $shop = $user->shop;
 
-        if (!$shop) {
+        if (! $shop) {
 
             session()->flash('error', 'Please create a shop first.');
 
@@ -316,7 +305,7 @@ class CreateListing extends Component
             ->latest()
             ->first();
 
-        if (!$subscription) {
+        if (! $subscription) {
 
             session()->flash('error', 'Please subscribe first.');
 
@@ -332,7 +321,7 @@ class CreateListing extends Component
             return;
         }
 
-        $listing = new Listing();
+        $listing = new Listing;
 
         $listing->sku = now()->format('YmdHis');
 
@@ -369,7 +358,7 @@ class CreateListing extends Component
         $listing->active = true;
 
         $listing->keywords = $this->keywords;
-        
+
         $listing->shipping_method = $this->shipping_method;
 
         $listing->delivery_days = $this->delivery_days;
@@ -390,47 +379,44 @@ class CreateListing extends Component
 
         // Upload main image
         if ($this->image) {
-            $imageName = Carbon::now()->timestamp . '.' . $this->image->extension();
+            $imageName = Carbon::now()->timestamp.'.'.$this->image->extension();
             $this->image->storeAs('products', $imageName, 'public');
             $listing->image = $imageName;
-            }
+        }
 
         // Upload product video
 
-
         if ($this->video) {
 
-    
-        $videoName = Carbon::now()->timestamp 
-        . '_video.' 
-        . $this->video->extension();
+            $videoName = Carbon::now()->timestamp
+            .'_video.'
+            .$this->video->extension();
 
+            $this->video->storeAs(
+                'products/videos',
+                $videoName,
+                'public'
 
-    
-        $this->video->storeAs(
-        'products/videos',
-        $videoName,
-        'public'
-    
-        );
+            );
 
-        $listing->video = $videoName;
+            $listing->video = $videoName;
         }
-            
+
         // Upload gallery images
         $gallery = [];
         if ($this->images) {
             foreach ($this->images as $key => $image) {
-                $imgName = Carbon::now()->timestamp . '_' . $key . '.' . $image->extension();
+                $imgName = Carbon::now()->timestamp.'_'.$key.'.'.$image->extension();
                 $image->storeAs('products', $imgName, 'public');
-                $gallery[] = $imgName;}
-                $listing->images = $gallery;
+                $gallery[] = $imgName;
             }
+            $listing->images = $gallery;
+        }
 
         $listing->save();
-        
+
         if ($listing->status === 'published') {
-        $user->notify(new ListingCreatedNotification($listing));
+            $user->notify(new ListingCreatedNotification($listing));
         }
 
         session()->flash('success', 'Product published successfully.');
@@ -456,24 +442,24 @@ class CreateListing extends Component
     public function updated($property)
     {
         $this->dispatch('previewUpdated', [
-    
-        'title' => $this->title,
-    
-        'description' => $this->description,
-    
-        'price' => $this->price,
-    
-        'quantity' => $this->quantity,
-    
-        'condition' => $this->condition,
-    
-        'price_condition' => $this->price_condition,
-    
-        'features' => $this->features,
-    
-        'keywords' => $this->keywords,
-    
-        'image' => $this->image ? $this->image->temporaryUrl() : null,
+
+            'title' => $this->title,
+
+            'description' => $this->description,
+
+            'price' => $this->price,
+
+            'quantity' => $this->quantity,
+
+            'condition' => $this->condition,
+
+            'price_condition' => $this->price_condition,
+
+            'features' => $this->features,
+
+            'keywords' => $this->keywords,
+
+            'image' => $this->image ? $this->image->temporaryUrl() : null,
         ]);
     }
-} 
+}

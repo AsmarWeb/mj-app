@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('listing_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->enum('type', ['whatsapp','phone']);
+            $table->enum('type', ['whatsapp', 'phone']);
             $table->timestamps();
         });
     }

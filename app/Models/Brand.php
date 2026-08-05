@@ -16,7 +16,7 @@ class Brand extends Model
         'brand_name_ar',
         'slug',
         'subcategory_id',
-        'subcategory_name'
+        'subcategory_name',
     ];
 
     public function listing()

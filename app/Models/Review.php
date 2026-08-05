@@ -12,7 +12,7 @@ class Review extends Model
         'listing_id',
         'rating',
         'comment',
-        'approved'
+        'approved',
 
     ];
 
@@ -20,8 +20,6 @@ class Review extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
 
     public function listing()
     {

@@ -17,6 +17,7 @@ class MainHeader extends Component
     {
         $setting = Setting::find(1);
         $sections = Section::orderBy('name', 'ASC')->where('status', 'active')->inRandomOrder()->get()->take(12);
+
         return view('components.main-header', ['setting' => $setting, 'sections' => $sections]);
     }
 }

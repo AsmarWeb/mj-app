@@ -23,7 +23,7 @@ return [
     'array' => 'يجب أن يكون :attribute مصفوفة.',
     'before' => 'يجب أن يكون :attribute تاريخًا قبل :date.',
     'before_or_equal' => 'يجب أن يكون :attribute تاريخًا يسبق أو يساوي :date.',
-    "between" => [
+    'between' => [
         'numeric' => 'يجب أن يكون :attribute بين: min و: max.',
         'file' => 'يجب أن يكون :attribute بين: min و: max كيلوبايت.',
         'string' => 'يجب أن يكون :attribute بين: min و: max أحرف.',
@@ -76,7 +76,7 @@ return [
         'string' => 'يجب أن يكون :attribute أقل من أو يساوي: value character.',
         'array' => 'يجب ألا تحتوي :attribute على أكثر من: value items.',
     ],
-    "max" => [
+    'max' => [
         'numeric' => ' :attribute قد لا تكون أكبر من: max.',
         'file' => 'قد لا يكون :attribute أكبر من: max كيلوبايت.',
         'string' => 'لا يجوز أن يكون :attribute أكبر من: max character.',
@@ -104,7 +104,7 @@ return [
     'required_without' => 'حقل :attributes مطلوب عندماتكون :values غير موجودة.',
     'required_without_all' => 'حقل :attribute مطلوب في حالة عدم وجود أي من:values.',
     'same' => ':attribute و :other يجب ان تكونا متطابقتان',
-    "size" => [
+    'size' => [
         'numeric' => 'يجب أن يكون: attribute: size.',
         'file' => 'يجب أن يكون: attribute: size كيلوبايت.',
         'string' => 'يجب أن يكون: attribute: حجم الأحرف.',

@@ -16,6 +16,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::paginate(5);
+
         return view('admin.brands.index', compact('brands'));
     }
 
@@ -61,6 +62,7 @@ class BrandController extends Controller
     public function edit($id)
     {
         $brand_info = Brand::findOrFail($id);
+
         return view('admin.brands.edit', compact('brand_info'));
     }
 
@@ -89,6 +91,7 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         $brand->delete();
+
         return redirect()->route('brands.index')->with('message', 'Brand deleted Successfully');
     }
 }

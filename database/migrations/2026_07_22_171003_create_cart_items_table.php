@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('listing_id')->constrained()->cascadeOnDelete();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->integer('quantity')->default(1);
-            $table->decimal('price',10,2);
+            $table->decimal('price', 10, 2);
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,15 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-
 class Listing extends Model
 {
-    use SoftDeletes;
     use HasFactory;
     use HasSlug;
-
+    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
     protected $table = 'listings';
 
     protected static function boot()
@@ -28,7 +28,7 @@ class Listing extends Model
 
         static::creating(function ($model) {
             $model->user_id = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
-            $model->updated_by = NULL;
+            $model->updated_by = null;
         });
 
         static::updating(function ($model) {
@@ -59,10 +59,10 @@ class Listing extends Model
         'price_condition',
         'condition',
         'shipping_method',
-        'delivery_days', 
+        'delivery_days',
         'featured',
-        'featured_at'
-    ]; 
+        'featured_at',
+    ];
 
     protected $casts = [
         'features' => 'array',
@@ -78,7 +78,7 @@ class Listing extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'sku' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
+            'sku' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
@@ -136,18 +136,15 @@ class Listing extends Model
     public function getRatingAttribute()
     {
         return $this->reviews()
-        ->where('approved', true)
-        ->avg('rating');
+            ->where('approved', true)
+            ->avg('rating');
     }
-
-    
 
     /**
      * Scope a query to only include the product with the highest price.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeHighestPrice($query)
     {
@@ -157,9 +154,8 @@ class Listing extends Model
     /**
      * Scope a query to only include the product with the lowest price.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeLowestPrice($query)
     {
@@ -169,8 +165,7 @@ class Listing extends Model
     /**
      * Scope a query to only include active products.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     *
+     * @param  Builder  $query
      * @return void
      */
     public function scopeActive($query)
@@ -187,13 +182,13 @@ class Listing extends Model
 
     public function getUrlAttribute()
     {
-    return route('listing.show', [
-        'shop' => $this->shop->slug,
-        'section' => $this->section->slug,
-        'category' => $this->category->slug,
-        'subcategories' => optional($this->subcategories)->slug ?? 'all',
-        'brand' => optional($this->brand)->slug ?? 'general',
-        'listing' => $this->slug,
-    ]);
+        return route('listing.show', [
+            'shop' => $this->shop->slug,
+            'section' => $this->section->slug,
+            'category' => $this->category->slug,
+            'subcategories' => optional($this->subcategories)->slug ?? 'all',
+            'brand' => optional($this->brand)->slug ?? 'general',
+            'listing' => $this->slug,
+        ]);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
-use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
@@ -17,7 +16,7 @@ class ContactController extends Controller
         $contactCount = Contact::count();
 
         if (request()->has('search')) {
-            $contacts->where('email', 'Like', '%' . request()->input('search') . '%');
+            $contacts->where('email', 'Like', '%'.request()->input('search').'%');
         }
 
         if (request()->query('sort')) {

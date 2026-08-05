@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Permission;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
-use Illuminate\Http\Request;
+use App\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -19,7 +18,7 @@ class PermissionController extends Controller
         $permissionCount = Permission::count();
 
         if (request()->has('search')) {
-            $permissions->where('name', 'Like', '%' . request()->input('search') . '%');
+            $permissions->where('name', 'Like', '%'.request()->input('search').'%');
         }
 
         if (request()->query('sort')) {
@@ -53,7 +52,6 @@ class PermissionController extends Controller
     public function store(StorePermissionRequest $request)
     {
         Permission::create($request->all());
-
 
         return redirect()->route('permission.index')
             ->with('message', __('Permission created successfully.'));

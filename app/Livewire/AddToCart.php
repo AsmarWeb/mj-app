@@ -46,15 +46,15 @@ class AddToCart extends Component
             $item->increment('quantity', $this->quantity);
         } else {
             $cart->items()->create([
-    
-            'listing_id' => $this->listing->id,
-    
-            'shop_id'    => $this->listing->shop_id,
-    
-            'price'      => $this->listing->price,
-    
-            'quantity'   => $this->quantity,
-        ]);
+
+                'listing_id' => $this->listing->id,
+
+                'shop_id' => $this->listing->shop_id,
+
+                'price' => $this->listing->price,
+
+                'quantity' => $this->quantity,
+            ]);
         }
 
         $this->added = true;
@@ -62,10 +62,10 @@ class AddToCart extends Component
         $this->dispatch('cart-updated');
 
         $this->dispatch('notify', [
-        'type' => 'success',
-        'title' => 'Added to Basket',
-        'message' => $this->listing->title,
-    ]);
+            'type' => 'success',
+            'title' => 'Added to Basket',
+            'message' => $this->listing->title,
+        ]);
     }
 
     public function render()

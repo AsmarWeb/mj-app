@@ -11,5 +11,5 @@ class Subscriber extends Model
 
     protected $table = 'subscribers';
 
-    protected $fillable = ['email', 'token','active'];
+    protected $fillable = ['email', 'token', 'active'];
 }

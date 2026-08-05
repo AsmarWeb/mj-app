@@ -6,7 +6,6 @@ use App\Models\Shop;
 use App\Observers\ShopObserver;
 use Illuminate\Support\ServiceProvider;
 
-
 class AppServiceProvider extends ServiceProvider
 {
     /**

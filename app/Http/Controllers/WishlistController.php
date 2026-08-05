@@ -3,42 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
     public function add(Listing $listing)
-{
-    $wishlist = auth()->user()
-        ->wishlists()
-        ->where('listing_id', $listing->id)
-        ->first();
+    {
+        $wishlist = auth()->user()
+            ->wishlists()
+            ->where('listing_id', $listing->id)
+            ->first();
 
+        if ($wishlist) {
 
-    if ($wishlist) {
+            $wishlist->delete();
 
-        $wishlist->delete();
+            return back()->with(
+                'success',
+                'Removed from wishlist'
+            );
+
+        }
+
+        auth()->user()
+            ->wishlists()
+            ->create([
+                'listing_id' => $listing->id,
+            ]);
 
         return back()->with(
             'success',
-            'Removed from wishlist'
+            'Added to wishlist'
         );
-
     }
-
-
-    auth()->user()
-        ->wishlists()
-        ->create([
-            'listing_id' => $listing->id
-        ]);
-
-
-    return back()->with(
-        'success',
-        'Added to wishlist'
-    );
 }
-
-}
-

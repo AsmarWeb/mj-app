@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class DigitalProduct extends Model
@@ -82,7 +82,7 @@ class DigitalProduct extends Model
                 $count = static::where('slug', 'LIKE', "{$slug}%")->count();
 
                 $product->slug = $count
-                    ? "{$slug}-" . ($count + 1)
+                    ? "{$slug}-".($count + 1)
                     : $slug;
             }
 
@@ -95,7 +95,6 @@ class DigitalProduct extends Model
             $product->is_free ??= false;
         });
     }
-
 
     public function digitalCategory()
     {
@@ -113,18 +112,18 @@ class DigitalProduct extends Model
     public function scopeDigital($query)
     {
         return $query
-        ->where('is_digital', true)
-        ->where('shop_id', 1);
-    } 
+            ->where('is_digital', true)
+            ->where('shop_id', 1);
+    }
 
     public function getImageUrlAttribute()
     {
-        return asset('storage/digital-products' . $this->image);
+        return asset('storage/digital-products'.$this->image);
     }
 
     public function getFileUrlAttribute()
     {
-        return asset('storage/digital-products/' . $this->file);
+        return asset('storage/digital-products/'.$this->file);
     }
 
     public function getFormattedPriceAttribute()
@@ -133,6 +132,6 @@ class DigitalProduct extends Model
             return 'Free';
         }
 
-        return '$' . number_format($this->price, 2);
+        return '$'.number_format($this->price, 2);
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Listing;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,9 +20,8 @@ class EditController extends Controller
 
         return view('listings.edit', [
             'listing' => $listing,
-        ]); 
+        ]);
     }
-
 
     /**
      * Update listing
@@ -30,7 +29,6 @@ class EditController extends Controller
     public function update(Request $request, Listing $listing)
     {
         abort_if($listing->user_id !== Auth::id(), 403);
-
 
         $validated = $request->validate([
 
@@ -48,17 +46,14 @@ class EditController extends Controller
 
             'price_condition' => 'required',
 
-             // Shipping
+            // Shipping
             'shipping_method' => 'required|string|max:255',
 
             'delivery_days' => 'required|integer|min:1',
 
-
             'image' => 'nullable|image|max:2048',
 
         ]);
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -68,7 +63,6 @@ class EditController extends Controller
 
         if ($request->hasFile('image')) {
 
-
             // delete old image
             if ($listing->image) {
 
@@ -77,11 +71,9 @@ class EditController extends Controller
 
             }
 
-
             $imageName = time()
                 .'.'
                 .$request->image->extension();
-
 
             $request->image->storeAs(
                 'products',
@@ -89,12 +81,9 @@ class EditController extends Controller
                 'public'
             );
 
-
             $validated['image'] = $imageName;
 
         }
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -104,8 +93,6 @@ class EditController extends Controller
 
         $listing->update($validated);
 
-
-
         return redirect()
             ->route('profile')
             ->with(
@@ -113,4 +100,4 @@ class EditController extends Controller
                 'Product updated successfully.'
             );
     }
-} 
+}

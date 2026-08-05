@@ -15,55 +15,49 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique()->nullable()->after('id');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-    // Personal Information
-    $table->string('full_name');
-    $table->string('job_title')->nullable();
-    $table->string('email');
-    $table->string('phone')->nullable();
-    $table->string('website')->nullable();
-    $table->string('address')->nullable();
+            // Personal Information
+            $table->string('full_name');
+            $table->string('job_title')->nullable();
+            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->string('address')->nullable();
 
-    // Profile Photo
-    $table->string('photo')->nullable();
+            // Profile Photo
+            $table->string('photo')->nullable();
 
+            // Main Sections
+            $table->text('summary')->nullable();
 
-    // Main Sections
-    $table->text('summary')->nullable();
+            $table->json('experiences')->nullable();
 
-    $table->json('experiences')->nullable();
+            $table->json('educations')->nullable();
 
-    $table->json('educations')->nullable();
+            $table->json('skills')->nullable();
 
-    $table->json('skills')->nullable();
+            // Extra Sections
+            $table->json('projects')->nullable();
 
+            $table->json('certificates')->nullable();
 
-    // Extra Sections
-    $table->json('projects')->nullable();
+            $table->json('languages')->nullable();
 
-    $table->json('certificates')->nullable();
+            $table->json('awards')->nullable();
 
-    $table->json('languages')->nullable();
+            $table->json('volunteer')->nullable();
 
-    $table->json('awards')->nullable();
+            $table->json('references')->nullable();
 
-    $table->json('volunteer')->nullable();
+            // Design Settings
 
-    $table->json('references')->nullable();
+            $table->string('template')
+                ->default('modern');
 
+            $table->string('accent_color')
+                ->default('#2563eb');
 
-
-    // Design Settings
-
-    $table->string('template')
-        ->default('modern');
-
-
-    $table->string('accent_color')
-        ->default('#2563eb');
-
-
-    $table->string('font')
-        ->default('Inter');
+            $table->string('font')
+                ->default('Inter');
             $table->timestamps();
         });
     }

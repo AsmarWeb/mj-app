@@ -14,17 +14,17 @@ return [
     */
 
     'form' => [
-        "button" => "Search",
-        "placeholder" => "What are you looking for?"
+        'button' => 'Search',
+        'placeholder' => 'What are you looking for?',
     ],
 
     'main' => [
-        "title" => "Explore the latest trending shops.",
-        "subtitle" => "Try the experience of creating an online shop and adding products, or search for property, jobs and more in the world.",
-        "Sell Smarter" => "Sell Smarter",
-        "Get Found" => "Get Found",
-        "With" => "with",
-        "AI tools" => "murwaj.com"
+        'title' => 'Explore the latest trending shops.',
+        'subtitle' => 'Try the experience of creating an online shop and adding products, or search for property, jobs and more in the world.',
+        'Sell Smarter' => 'Sell Smarter',
+        'Get Found' => 'Get Found',
+        'With' => 'with',
+        'AI tools' => 'murwaj.com',
     ],
 
 ];

@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Models\Shop;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -15,9 +14,7 @@ class ShopCreatedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Shop $shop)
-    {
-    }
+    public function __construct(public Shop $shop) {}
 
     /**
      * Get the notification's delivery channels.
@@ -26,7 +23,7 @@ class ShopCreatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail','database'];
+        return ['mail', 'database'];
     }
 
     public function toDatabase(object $notifiable): array
@@ -46,11 +43,11 @@ class ShopCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Your shop is ready!')
-                    ->greeting('Congratulations!')
-                    ->line("Your shop '{$this->shop->name}' has been created successfully.")
-                    ->action('Manage Shop', route('shop.edit'))
-                    ->line('Thank you for using our platform.');
+            ->subject('Your shop is ready!')
+            ->greeting('Congratulations!')
+            ->line("Your shop '{$this->shop->name}' has been created successfully.")
+            ->action('Manage Shop', route('shop.edit'))
+            ->line('Thank you for using our platform.');
     }
 
     /**

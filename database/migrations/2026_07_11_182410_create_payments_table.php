@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('invoice_id')->nullable();
             $table->string('method')->nullable(); // card, apple_pay...
             $table->string('payment_provider')->default('stripe');
-            $table->enum('status', ['pending','paid','failed','refunded',]);
+            $table->enum('status', ['pending', 'paid', 'failed', 'refunded']);
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });

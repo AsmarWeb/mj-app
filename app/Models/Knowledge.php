@@ -12,7 +12,7 @@ class Knowledge extends Model
     protected $table = 'knowledge';
 
     protected $fillable = [
-       'question',
-       'answer'
+        'question',
+        'answer',
     ];
 }

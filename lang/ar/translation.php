@@ -15,6 +15,6 @@ return [
 
     'arabic' => 'العربية',
 
-    'english' => 'English'
+    'english' => 'English',
 
 ];

@@ -2,12 +2,9 @@
 
 namespace App\Livewire;
 
-use App\Models\Listing;
 use App\Models\Shop;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Component;
 
 class ShopComponent extends Component
 {

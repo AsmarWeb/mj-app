@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Permission;
-use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use Illuminate\Http\Request;
+use App\Models\Permission;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -20,7 +19,7 @@ class RoleController extends Controller
         $roleCount = Role::count();
 
         if (request()->has('search')) {
-            $roles->where('name', 'Like', '%' . request()->input('search') . '%');
+            $roles->where('name', 'Like', '%'.request()->input('search').'%');
         }
 
         if (request()->query('sort')) {

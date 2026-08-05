@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -32,6 +31,6 @@ class CategorySeeder extends Seeder
             ['id' => 16, 'code' => '116', 'parent_id' => 0, 'section_id' => 1, 'section_name' => 'Sales', 'bg_color' => '#28a745', 'category_name_ar' => 'الكتب والأفلام والموسيقى', 'category_name' => 'Books, Movies & Music',    'slug' => 'books, movies & music',                          'image' => 'musics.png',                       'status' => 'active'],
             ['id' => 17, 'code' => '117', 'parent_id' => 0, 'section_id' => 1, 'section_name' => 'Sales', 'bg_color' => '#982fd5', 'category_name_ar' => 'لوازم الورق والحفلات',  'category_name' => 'Paper & Party Supplies',   'slug' => 'paper & party supplies',                           'image' => '',                       'status' => 'active'],
         ];
-        Category::insert($categoryRecords); 
+        Category::insert($categoryRecords);
     }
 }

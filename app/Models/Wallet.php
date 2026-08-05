@@ -13,7 +13,6 @@ class Wallet extends Model
         'total_earned',
     ];
 
-
     public function shop()
     {
         return $this->belongsTo(Shop::class);

@@ -14,17 +14,17 @@ return [
     */
 
     'user' => [
-        "login" => "انضم إلي",
+        'login' => 'انضم إلي',
     ],
 
-    'locale' => "English",
+    'locale' => 'English',
 
     'main' => [
-        "discover" => "اكتشف",
-        "sell" => "ابدأ البيع",
-        "services" => "الخدمات",
-        "about" => "نبذة عنا",
-        "posts" => "المشاركات",
-    ]
+        'discover' => 'اكتشف',
+        'sell' => 'ابدأ البيع',
+        'services' => 'الخدمات',
+        'about' => 'نبذة عنا',
+        'posts' => 'المشاركات',
+    ],
 
 ];

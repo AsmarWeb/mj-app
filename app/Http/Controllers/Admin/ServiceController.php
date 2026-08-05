@@ -15,6 +15,7 @@ class ServiceController extends Controller
     {
         $services = Service::paginate(3);
         $serviceCount = Service::count();
+
         return view('admin.services.index', compact('services', 'serviceCount'));
     }
 
@@ -58,6 +59,7 @@ class ServiceController extends Controller
     public function edit($id)
     {
         $service_info = Service::findOrFail($id);
+
         return view('admin.services.edit', compact('service_info'));
     }
 
@@ -82,6 +84,7 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $service->delete();
+
         return redirect()->route('services.index')->with('message', 'Service deleted Successfully');
     }
 }

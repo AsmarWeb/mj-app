@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('shop_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('plan_id')->nullable()->constrained()->nullOnDelete();
-            $table->enum('status', ['active','expired','cancelled'])->nullable();
+            $table->enum('status', ['active', 'expired', 'cancelled'])->nullable();
             $table->foreignId('user_id');
             $table->string('payment_provider')->nullable();
             $table->string('payment_id')->nullable();

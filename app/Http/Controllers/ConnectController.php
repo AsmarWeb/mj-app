@@ -3,22 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Stripe\Stripe;
 use Stripe\Account;
 use Stripe\AccountLink;
 use Stripe\Exception\ApiErrorException;
+use Stripe\Stripe;
 
 class ConnectController extends Controller
 {
-
     public function createAccount(Request $request)
     {
         $user = $request->user();
 
         $shop = $user->shop;
 
-
-        if (!$shop) {
+        if (! $shop) {
 
             return redirect()
                 ->route('shop.create', 1)
@@ -26,17 +24,13 @@ class ConnectController extends Controller
 
         }
 
-
         Stripe::setApiKey(
             config('cashier.secret')
         );
 
-
         try {
 
-
-            if (!$shop->stripe_account_id) {
-
+            if (! $shop->stripe_account_id) {
 
                 $account = Account::create([
 
@@ -48,15 +42,11 @@ class ConnectController extends Controller
 
                 ]);
 
-
-
                 // Save manually to avoid fillable problems
 
                 $shop->stripe_account_id = $account->id;
 
                 $shop->save();
-
-
 
                 // Reload database value
 
@@ -64,9 +54,7 @@ class ConnectController extends Controller
 
             }
 
-
-
-            if (!$shop->stripe_account_id) {
+            if (! $shop->stripe_account_id) {
 
                 return back()->with(
                     'error',
@@ -75,16 +63,11 @@ class ConnectController extends Controller
 
             }
 
-
-
             return $this->onboarding(
                 $shop->stripe_account_id
             );
 
-
-
         } catch (ApiErrorException $e) {
-
 
             return back()->with(
                 'error',
@@ -95,14 +78,10 @@ class ConnectController extends Controller
 
     }
 
-
-
-
-
     public function onboarding($accountId)
     {
 
-        if (!$accountId) {
+        if (! $accountId) {
 
             return redirect()
                 ->route('dashboard')
@@ -113,14 +92,11 @@ class ConnectController extends Controller
 
         }
 
-
         Stripe::setApiKey(
             config('cashier.secret')
         );
 
-
         try {
-
 
             $link = AccountLink::create([
 
@@ -138,16 +114,11 @@ class ConnectController extends Controller
 
             ]);
 
-
-
             return redirect(
                 $link->url
             );
 
-
-
         } catch (ApiErrorException $e) {
-
 
             return back()->with(
                 'error',
@@ -158,17 +129,12 @@ class ConnectController extends Controller
 
     }
 
-
-
-
-
     public function success(Request $request)
     {
 
         $shop = $request->user()->shop;
 
-
-        if (!$shop || !$shop->stripe_account_id) {
+        if (! $shop || ! $shop->stripe_account_id) {
 
             return redirect()
                 ->route('dashboard')
@@ -179,28 +145,20 @@ class ConnectController extends Controller
 
         }
 
-
         Stripe::setApiKey(
             config('cashier.secret')
         );
 
-
         try {
-
 
             $account = Account::retrieve(
                 $shop->stripe_account_id
             );
 
-
-
             $shop->stripe_connected =
                 $account->details_submitted;
 
-
             $shop->save();
-
-
 
             return redirect()
                 ->route('dashboard')
@@ -209,10 +167,7 @@ class ConnectController extends Controller
                     'Stripe connected successfully.'
                 );
 
-
-
         } catch (ApiErrorException $e) {
-
 
             return redirect()
                 ->route('dashboard')
@@ -225,10 +180,6 @@ class ConnectController extends Controller
 
     }
 
-
-
-
-
     public function refresh()
     {
 
@@ -236,5 +187,4 @@ class ConnectController extends Controller
             ->route('connect.create');
 
     }
-
 }

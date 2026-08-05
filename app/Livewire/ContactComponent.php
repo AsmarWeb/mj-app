@@ -4,22 +4,24 @@ namespace App\Livewire;
 
 use App\Mail\ContactMailable;
 use App\Models\Contact;
-use App\Models\Country;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class ContactComponent extends Component
 {
     public string $fullname = '';
+
     public string $email = '';
+
     public string $phone = '';
+
     public string $message = '';
 
     protected $rules = [
         'fullname' => 'required',
         'email' => 'required|string|regex:/^([a-z0-9+-]+)(.[a-z0-9+-]+)*@([a-z0-9-]+.)+[a-z]{2,6}$/ix|email:rfc,dns,filter|max:255',
         'phone' => 'required',
-        'message' => 'required'
+        'message' => 'required',
     ];
 
     public function updated($fields)
@@ -31,7 +33,7 @@ class ContactComponent extends Component
     {
         $this->validate();
 
-        $contact = new Contact();
+        $contact = new Contact;
         $contact->fullname = $this->fullname;
         $contact->email = $this->email;
         $contact->phone = $this->phone;

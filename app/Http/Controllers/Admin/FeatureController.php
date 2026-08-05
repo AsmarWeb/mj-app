@@ -15,6 +15,7 @@ class FeatureController extends Controller
     {
         $features = Feature::paginate(3);
         $featureCount = Feature::count();
+
         return view('admin.features.index', compact('features', 'featureCount'));
     }
 
@@ -58,6 +59,7 @@ class FeatureController extends Controller
     public function edit($id)
     {
         $feature_info = Feature::findOrFail($id);
+
         return view('admin.features.edit', compact('feature_info'));
     }
 
@@ -82,6 +84,7 @@ class FeatureController extends Controller
     public function destroy(Feature $feature)
     {
         $feature->delete();
+
         return redirect()->route('features.index')->with('message', 'Feature deleted Successfully');
     }
 }

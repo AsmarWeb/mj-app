@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Section;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SectionSeeder extends Seeder
@@ -20,7 +19,6 @@ class SectionSeeder extends Seeder
             ['id' => 4, 'name_ar' => 'مزاد', 'name' => 'Auction',   'slug' => 'auction',  'image' => 'auction.png',  'status' => 'active'],
             ['id' => 5, 'name_ar' => 'فعاليات', 'name' => 'Events',   'slug' => 'events',  'image' => 'events.png',  'status' => 'active'],
         ];
-
 
         Section::insert($sectionRecords);
     }

@@ -14,19 +14,19 @@ return [
     */
 
     'main' => [
-        "title" => "We're launching soon",
-        "subtitle" => "Enter your email to be the first to know when we launch."
+        'title' => "We're launching soon",
+        'subtitle' => 'Enter your email to be the first to know when we launch.',
     ],
 
     'expect' => [
-        "title" => "What to expect",
-        "subtitle" => "Learn how to start an online store, from picking a business structure to designing your shop, this guide has you covered.",
-        "td" => "No Result found!"
+        'title' => 'What to expect',
+        'subtitle' => 'Learn how to start an online store, from picking a business structure to designing your shop, this guide has you covered.',
+        'td' => 'No Result found!',
     ],
 
     'subscribe' => [
-        "subscribe" => "Subscribe",
-        "email" => "Enter your email",
-    ]
+        'subscribe' => 'Subscribe',
+        'email' => 'Enter your email',
+    ],
 
 ];

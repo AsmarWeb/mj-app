@@ -15,6 +15,7 @@ class MainCategory extends Component
     public function render(): View|Closure|string
     {
         $categories = Category::orderBy('category_name', 'ASC')->where('status', 'active')->inRandomOrder()->get()->take(12);
+
         return view('components.main-category', ['categories' => $categories]);
     }
 }

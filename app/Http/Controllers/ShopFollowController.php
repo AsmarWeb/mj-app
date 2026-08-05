@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shop;
-use Illuminate\Http\Request;
 
 class ShopFollowController extends Controller
 {
     public function toggle(Shop $shop)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 

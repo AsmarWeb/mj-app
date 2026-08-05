@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Stripe\Account;
 
 class Shop extends Model
 {
@@ -41,7 +42,7 @@ class Shop extends Model
         'verified',
         'verified_at',
         'verified_by',
-        'phone', 
+        'phone',
         'whatsapp',
         'allow_phone',
         'allow_whatsapp',
@@ -49,7 +50,7 @@ class Shop extends Model
         'stripe_connected',
     ];
 
-    protected $dates = ['published_at']; 
+    protected $dates = ['published_at'];
 
     protected $casts = [
         'verified' => 'boolean',
@@ -98,34 +99,34 @@ class Shop extends Model
 
     public function plan()
     {
-    return $this->belongsTo(Plan::class);
+        return $this->belongsTo(Plan::class);
     }
 
     public function orders(): HasMany
     {
-    return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class);
     }
 
     public function payments()
     {
-    return $this->hasMany(Payment::class);
+        return $this->hasMany(Payment::class);
     }
 
     public function wallet()
     {
-    return $this->hasOne(Wallet::class);
+        return $this->hasOne(Wallet::class);
     }
 
     public function businessCard()
     {
-    return $this->hasOne(BusinessCard::class);
+        return $this->hasOne(BusinessCard::class);
     }
 
     public function activeSubscription()
     {
-    return $this->hasOne(Subscription::class)
-        ->where('status', 'active')
-        ->latestOfMany();
+        return $this->hasOne(Subscription::class)
+            ->where('status', 'active')
+            ->latestOfMany();
     }
 
     public function scopePublished($query)
@@ -157,17 +158,17 @@ class Shop extends Model
 
     public function country()
     {
-    return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Country::class, 'country_id');
     }
 
     public function state()
     {
-    return $this->belongsTo(State::class, 'state_id');
+        return $this->belongsTo(State::class, 'state_id');
     }
 
     public function city()
     {
-    return $this->belongsTo(City::class, 'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function followers()
@@ -177,46 +178,41 @@ class Shop extends Model
 
     public function ratings()
     {
-    return $this->hasMany(ShopRating::class);
+        return $this->hasMany(ShopRating::class);
     }
 
     public function canReceiveOrder()
     {
-    // No plan = no orders
-    if (!$this->plan) {
-        return false;
-    }
+        // No plan = no orders
+        if (! $this->plan) {
+            return false;
+        }
 
+        // Unlimited orders
+        if ($this->plan->order_limit == 0) {
+            return true;
+        }
 
-    // Unlimited orders
-    if ($this->plan->order_limit == 0) {
-        return true;
-    }
+        $ordersThisPeriod = $this->orders()
+            ->whereIn('status', [
+                'processing',
+                'completed',
+            ])
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
-
-    $ordersThisPeriod = $this->orders()
-    ->whereIn('status', [
-        'processing',
-        'completed'
-    ])
-    ->whereMonth('created_at', now()->month)
-    ->whereYear('created_at', now()->year)
-    ->count();
-
-
-    return $ordersThisPeriod < $this->plan->order_limit;
+        return $ordersThisPeriod < $this->plan->order_limit;
     }
 
     public function stripeReady()
     {
-    $account = \Stripe\Account::retrieve(
-        $this->stripe_account_id
-    );
+        $account = Account::retrieve(
+            $this->stripe_account_id
+        );
 
-
-    return
-        $account->charges_enabled &&
-        $account->payouts_enabled;
+        return
+            $account->charges_enabled &&
+            $account->payouts_enabled;
     }
-
 }

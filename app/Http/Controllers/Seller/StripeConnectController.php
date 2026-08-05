@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Stripe\Stripe;
 use Stripe\Account;
 use Stripe\AccountLink;
+use Stripe\Stripe;
 
 class StripeConnectController extends Controller
 {
@@ -16,7 +15,7 @@ class StripeConnectController extends Controller
 
         Stripe::setApiKey(config('cashier.secret'));
 
-        if (!$shop->stripe_account_id) {
+        if (! $shop->stripe_account_id) {
 
             $account = Account::create([
                 'type' => 'express',

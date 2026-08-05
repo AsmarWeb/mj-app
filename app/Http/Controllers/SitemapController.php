@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Country;
-use Illuminate\Http\Request;
-use Spatie\Sitemap\Sitemap;
-use Spatie\Sitemap\Tags\Url;
-
+use App\Models\Developer;
 use App\Models\Listing;
 use App\Models\Shop;
-use App\Models\Developer;
 
 class SitemapController extends Controller
 {
@@ -21,7 +17,6 @@ class SitemapController extends Controller
 
         $content .= '<sitemapindex 
         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
 
         $maps = [
 
@@ -37,10 +32,7 @@ class SitemapController extends Controller
 
         ];
 
-
-
-        foreach($maps as $map){
-
+        foreach ($maps as $map) {
 
             $content .= '
 
@@ -54,54 +46,43 @@ class SitemapController extends Controller
 
         }
 
-
-
         $content .= '</sitemapindex>';
-
-
 
         return response(
             $content,
             200
         )
-        ->header(
-            'Content-Type',
-            'application/xml'
-        );
-
+            ->header(
+                'Content-Type',
+                'application/xml'
+            );
 
     }
 
     public function pages()
-{
+    {
 
+        $content = '<?xml version="1.0" encoding="UTF-8"?>';
 
-$content = '<?xml version="1.0" encoding="UTF-8"?>';
+        $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-$content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        $pages = [
 
+            '/',
 
+            '/about',
 
-$pages = [
+            '/contact',
 
-    '/',
+            '/pricing',
 
-    '/about',
+            '/developers',
 
-    '/contact',
+        ];
 
-    '/pricing',
+        foreach ($pages as $page) {
 
-    '/developers',
-
-];
-
-
-
-foreach($pages as $page){
-
-
-$content .= '
+            $content .= '
 
 <url>
 
@@ -111,53 +92,40 @@ $content .= '
 
 </url>';
 
+        }
 
+        $content .= '</urlset>';
 
-}
+        return response($content)
+            ->header(
+                'Content-Type',
+                'application/xml'
+            );
 
+    }
 
+    public function products()
+    {
 
-$content .= '</urlset>';
+        $content = '<?xml version="1.0" encoding="UTF-8"?>';
 
+        $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
+        Listing::where('status', 'active')
+            ->chunk(1000, function ($listings) use (&$content) {
 
-return response($content)
-->header(
-    'Content-Type',
-    'application/xml'
-);
+                foreach ($listings as $listing) {
 
-
-}
-
-public function products()
-{
-
-
-$content = '<?xml version="1.0" encoding="UTF-8"?>';
-
-
-$content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
-
-
-Listing::where('status','active')
-->chunk(1000,function($listings) use (&$content){
-
-
-foreach($listings as $listing){
-
-
-$content .= '
+                    $content .= '
 
 <url>
 
 <loc>'.
-route(
-'listing.show',
-$listing->slug
-)
-.'</loc>
+                    route(
+                        'listing.show',
+                        $listing->slug
+                    )
+                    .'</loc>
 
 <changefreq>weekly</changefreq>
 
@@ -165,171 +133,131 @@ $listing->slug
 
 </url>';
 
+                }
 
-}
+            });
 
+        $content .= '</urlset>';
 
+        return response($content)
+            ->header(
+                'Content-Type',
+                'application/xml'
+            );
 
-});
+    }
 
+    public function shops()
+    {
 
+        $content = '<?xml version="1.0" encoding="UTF-8"?>';
 
-$content .= '</urlset>';
+        $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
+        Shop::where('status', 'active')
+            ->chunk(1000, function ($shops) use (&$content) {
 
+                foreach ($shops as $shop) {
 
-return response($content)
-->header(
-'Content-Type',
-'application/xml'
-);
-
-
-}
-
-public function shops()
-{
-
-
-$content = '<?xml version="1.0" encoding="UTF-8"?>';
-
-
-$content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
-
-
-Shop::where('status','active')
-->chunk(1000,function($shops) use (&$content){
-
-
-foreach($shops as $shop){
-
-
-$content .= '
+                    $content .= '
 
 <url>
 
 <loc>'.
-route(
-'shop',
-$shop->slug
-)
-.'</loc>
+                    route(
+                        'shop',
+                        $shop->slug
+                    )
+                    .'</loc>
 
 <priority>0.8</priority>
 
 </url>';
 
+                }
 
+            });
 
-}
+        $content .= '</urlset>';
 
+        return response($content)
+            ->header(
+                'Content-Type',
+                'application/xml'
+            );
 
-});
+    }
 
+    public function developers()
+    {
 
+        $content = '<?xml version="1.0" encoding="UTF-8"?>';
 
-$content .= '</urlset>';
+        $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
+        Developer::where('approved', true)
+            ->each(function ($developer) use (&$content) {
 
-
-return response($content)
-->header(
-'Content-Type',
-'application/xml'
-);
-
-
-
-}
-
-public function developers()
-{
-
-
-$content = '<?xml version="1.0" encoding="UTF-8"?>';
-
-
-$content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
-
-
-Developer::where('approved',true)
-->each(function($developer) use (&$content){
-
-
-$content .= '
+                $content .= '
 
 <url>
 
 <loc>'.
-route(
-'developers.show',
-$developer->id
-)
-.'</loc>
+                route(
+                    'developers.show',
+                    $developer->id
+                )
+                .'</loc>
 
 </url>';
 
+            });
 
-});
+        $content .= '</urlset>';
 
+        return response($content)
+            ->header(
+                'Content-Type',
+                'application/xml'
+            );
 
+    }
 
-$content .= '</urlset>';
+    public function categories()
+    {
+        $content = '<?xml version="1.0" encoding="UTF-8"?>';
 
-
-
-return response($content)
-->header(
-'Content-Type',
-'application/xml'
-);
-
-
-
-}
-
-public function categories()
-{
-    $content = '<?xml version="1.0" encoding="UTF-8"?>';
-
-    $content .= '
+        $content .= '
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ';
 
+        Category::where('status', 'active')
+            ->chunk(1000, function ($categories) use (&$content) {
 
-    Category::where('status', 'active')
-        ->chunk(1000, function ($categories) use (&$content) {
+                foreach ($categories as $category) {
 
+                    $lastModified = $category->updated_at
+                        ? $category->updated_at->toAtomString()
+                        : now()->toAtomString();
 
-            foreach ($categories as $category) {
-
-
-                $lastModified = $category->updated_at
-                    ? $category->updated_at->toAtomString()
-                    : now()->toAtomString();
-
-
-
-                $content .= '
+                    $content .= '
 
                 <url>
 
                     <loc>'
-                        . htmlspecialchars(
-                            route(
-                                'discover.category',
-                                $category->slug
-                            ),
-                            ENT_XML1,
-                            'UTF-8'
-                        )
-                    . '</loc>
+                            .htmlspecialchars(
+                                route(
+                                    'discover.category',
+                                    $category->slug
+                                ),
+                                ENT_XML1,
+                                'UTF-8'
+                            )
+                        .'</loc>
 
                     <lastmod>'
-                        . $lastModified .
-                    '</lastmod>
+                            .$lastModified.
+                        '</lastmod>
 
                     <changefreq>weekly</changefreq>
 
@@ -337,33 +265,28 @@ public function categories()
 
                 </url>';
 
-            }
+                }
 
+            });
 
-        });
+        $content .= '</urlset>';
 
+        return response($content)
+            ->header(
+                'Content-Type',
+                'application/xml'
+            );
+    }
 
-
-    $content .= '</urlset>';
-
-
-
-    return response($content)
-        ->header(
-            'Content-Type',
-            'application/xml'
-        );
-}
-
-public function page()
-{
-    return view('sitemap.index', [
-        'categories' => Category::where('status', 'active')->take(20)->get(),
-        'shops' => Shop::latest()->take(20)->get(),
-        'products' => Listing::latest()->take(20)->get(),
-        'countries' => Country::withCount('shops')
-            ->orderBy('name')
-            ->get(), 
-    ]);
-}
+    public function page()
+    {
+        return view('sitemap.index', [
+            'categories' => Category::where('status', 'active')->take(20)->get(),
+            'shops' => Shop::latest()->take(20)->get(),
+            'products' => Listing::latest()->take(20)->get(),
+            'countries' => Country::withCount('shops')
+                ->orderBy('name')
+                ->get(),
+        ]);
+    }
 }

@@ -12,10 +12,9 @@ class DigitalCategory extends Model
         'name_ar',
         'slug',
         'image',
-        'status'
+        'status',
 
     ];
-
 
     public function digitalProduct()
     {

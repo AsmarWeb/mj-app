@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Section extends Model
@@ -14,20 +13,19 @@ class Section extends Model
     protected $table = 'sections';
 
     public $orderable = [
-        'id', 'name', 'name_ar', 'image'
+        'id', 'name', 'name_ar', 'image',
     ];
 
     protected $fillable = [
         'name',
         'name_ar',
         'slug',
-        'image'
+        'image',
     ];
 
     public static function tree()
     {
         $allCategories = Category::where('parent_id', 0)->where('status', 'active')->get();
-
 
         $rootCategories = $allCategories->whereNull('parent_id');
 

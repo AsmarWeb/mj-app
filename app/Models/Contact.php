@@ -15,7 +15,7 @@ class Contact extends Model
         'fullname',
         'email',
         'phone',
-        'message'
+        'message',
     ];
 
     protected $guarded = [];

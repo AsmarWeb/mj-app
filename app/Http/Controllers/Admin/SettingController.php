@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\File;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class SettingController extends Controller
 {
@@ -16,8 +15,9 @@ class SettingController extends Controller
     public function index()
     {
         $setting = Setting::find(1);
+
         return view('admin.settings.index', compact('setting'));
-    } 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -80,7 +80,7 @@ class SettingController extends Controller
         $setting->map = $request->map;
 
         if ($request->hasFile('logo')) {
-            $uploadPath = 'storage/setting-suggest/' . $setting->logo;
+            $uploadPath = 'storage/setting-suggest/'.$setting->logo;
             if (File::exists($uploadPath)) {
                 unlink($uploadPath);
             }
@@ -91,7 +91,7 @@ class SettingController extends Controller
         }
 
         if ($request->hasFile('favicon')) {
-            $uploadPath = 'storage/setting-suggest/' . $setting->favicon;
+            $uploadPath = 'storage/setting-suggest/'.$setting->favicon;
             if (File::exists($uploadPath)) {
                 unlink($uploadPath);
             }
@@ -102,6 +102,7 @@ class SettingController extends Controller
         }
 
         $setting->update();
+
         return redirect()->route('settings.index')->with('message', 'Setting updated successfully.');
     }
 

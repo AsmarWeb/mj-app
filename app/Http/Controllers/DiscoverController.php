@@ -4,12 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Listing;
-use Artesaos\SEOTools\Facades\SEOMeta;
-use App\Models\Page;
 use App\Models\Shop;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Artesaos\SEOTools\Facades\SEOMeta;
 
 class DiscoverController extends Controller
 {
@@ -26,21 +22,20 @@ class DiscoverController extends Controller
 
         $categories = Category::where('status', 'active')->get();
         $listings = Listing::latest()
-        ->paginate(10);
+            ->paginate(10);
 
         $shops = Shop::with('user')->latest()
-        ->paginate(3); 
+            ->paginate(3);
 
         $topCreators = Shop::withCount('listings')
-        ->with('user')
-        ->orderByDesc('listings_count')
-        ->orderByDesc('rating')
-        ->take(4)
-        ->get();
+            ->with('user')
+            ->orderByDesc('listings_count')
+            ->orderByDesc('rating')
+            ->take(4)
+            ->get();
 
-
-        return view('pages.discover')->with(compact('title', 'description', 'keywords', 'categories', 'listings','shops','topCreators'));
-    }  
+        return view('pages.discover')->with(compact('title', 'description', 'keywords', 'categories', 'listings', 'shops', 'topCreators'));
+    }
 
     public function category(Category $category)
     {
@@ -53,41 +48,34 @@ class DiscoverController extends Controller
         SEOMeta::setKeywords($keywords);
 
         return view('pages.category')->with(compact('title', 'description', 'keywords', 'category'));
-    } 
+    }
 
     public function show($shop, $section, $category, $subcategories, $brand, $listing)
     {
         $listing = Listing::where('slug', $listing)
-
-        ->whereHas('shop', function ($query) use ($shop) {
-            $query->where('slug', $shop);
-        })
-
-        ->whereHas('section', function ($query) use ($section) {
-            $query->where('slug', $section);
-        })
-
-        ->whereHas('category', function ($query) use ($category) {
-            $query->where('slug', $category);
-        })
-
-        ->whereHas('subcategories', function ($query) use ($subcategories) {
-            $query->where('slug', $subcategories);
-        })
-
-        ->whereHas('brand', function ($query) use ($brand) {
-            $query->where('slug', $brand);
-        })
-
-        ->with([
-            'shop',
-            'section',
-            'category',
-            'subcategories',
-            'brand'
-        ])
-        
-        ->firstOrFail();
+            ->whereHas('shop', function ($query) use ($shop) {
+                $query->where('slug', $shop);
+            })
+            ->whereHas('section', function ($query) use ($section) {
+                $query->where('slug', $section);
+            })
+            ->whereHas('category', function ($query) use ($category) {
+                $query->where('slug', $category);
+            })
+            ->whereHas('subcategories', function ($query) use ($subcategories) {
+                $query->where('slug', $subcategories);
+            })
+            ->whereHas('brand', function ($query) use ($brand) {
+                $query->where('slug', $brand);
+            })
+            ->with([
+                'shop',
+                'section',
+                'category',
+                'subcategories',
+                'brand',
+            ])
+            ->firstOrFail();
 
         $title = $listing->title;
         $description = $listing->description;

@@ -1,10 +1,37 @@
 {{-- DESCRIPTION --}}
 <div>
-    <label class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-        Shop Description
-    </label>
 
-    <textarea rows="5" name="description" id="description" placeholder="Tell customers about your store..."
+    <div class="flex items-center justify-between mb-2">
+
+        <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Shop Description
+        </label>
+
+        <button type="button" id="generate-description"
+            class="
+            inline-flex
+            items-center
+            gap-2
+            px-4
+            py-2
+            rounded-full
+            bg-gradient-to-r
+            from-orange-500
+            to-red-500
+            text-white
+            text-sm
+            font-semibold
+            hover:opacity-90
+            transition
+            ">
+
+            ✨ AI Generate
+
+        </button>
+
+    </div>
+
+    <textarea rows="6" name="description" id="description" placeholder="Tell customers about your store..."
         class="
         w-full
         rounded-2xl
@@ -19,6 +46,9 @@
         outline-none
         ">{{ old('description', $shop?->description) }}</textarea>
 
+    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        ✨ AI can create a professional description based on your shop information.
+    </p>
 
     @error('description')
         <p class="text-red-500 mt-2 text-sm">
@@ -183,16 +213,6 @@ font-semibold
     </p>
 
 
-
-    <input type="hidden" name="country_id">
-
-
-    <input type="hidden" name="state_id">
-
-
-    <input type="hidden" name="city_id">
-
-
     <input type="hidden" name="latitude" id="latitude">
 
 
@@ -206,187 +226,239 @@ font-semibold
 
 
 
-{{-- COUNTRY --}}
-<div class="mt-10">
+{{-- LOCATION --}}
 
+<div class="mt-10 space-y-6">
 
-    <label class="block mb-4 font-semibold">
-        Country
-    </label>
+    <div>
+        <label for="country_id" class="block text-sm font-bold mb-2">
+            🌍 Country
+        </label>
 
+        <select id="country_id" name="country_id"
+            class="w-full rounded-2xl border border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 px-5 py-4 focus:ring-2 focus:ring-orange-500">
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <option value="">Select a country</option>
 
+            @foreach ($countries as $country)
+                <option value="{{ $country->id }}" @selected(old('country_id', $shop?->country_id) == $country->id)>
 
-        @foreach ($countries as $country)
-            <label class="cursor-pointer">
+                    {{ $country->name }}
 
+                </option>
+            @endforeach
 
-                <input type="radio" name="country_id" value="{{ $country->id }}" class="hidden peer"
-                    @checked(old('country_id', $shop?->country_id) == $country->id)>
-
-
-                <div
-                    class="
-p-5
-rounded-2xl
-border
-
-dark:border-neutral-700
-dark:bg-neutral-900
-
-transition
-
-peer-checked:bg-orange-500
-peer-checked:text-white
-peer-checked:border-orange-500
-
-hover:border-orange-500
-">
-
-                    🌍
-
-                    <p class="mt-2 font-semibold">
-                        {{ $country->name }}
-                    </p>
-
-                </div>
-
-
-            </label>
-        @endforeach
-
-
+        </select>
     </div>
 
+
+
+    <div>
+        <label for="state_id" class="block text-sm font-bold mb-2">
+            🏛️ State / Emirate
+        </label>
+
+        <select id="state_id" name="state_id"
+            class="w-full rounded-2xl border border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 px-5 py-4 focus:ring-2 focus:ring-orange-500"
+            {{ old('country_id', $shop?->country_id) ? '' : 'disabled' }}>
+
+            <option value="">Select a state</option>
+
+            @foreach ($states as $state)
+                <option value="{{ $state->id }}" data-country="{{ $state->country_id }}"
+                    @selected(old('state_id', $shop?->state_id) == $state->id)>
+
+                    {{ $state->name }}
+
+                </option>
+            @endforeach
+
+        </select>
+    </div>
+
+
+
+    <div>
+        <label for="city_id" class="block text-sm font-bold mb-2">
+            🏙️ City
+        </label>
+
+        <select id="city_id" name="city_id"
+            class="w-full rounded-2xl border border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 px-5 py-4 focus:ring-2 focus:ring-orange-500"
+            {{ old('state_id', $shop?->state_id) ? '' : 'disabled' }}>
+
+            <option value="">Select a city</option>
+
+            @foreach ($cities as $city)
+                <option value="{{ $city->id }}" data-state="{{ $city->state_id }}" @selected(old('city_id', $shop?->city_id) == $city->id)>
+
+                    {{ $city->name }}
+
+                </option>
+            @endforeach
+
+        </select>
+    </div>
 
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
 
+        const country = document.getElementById('country_id');
+        const state = document.getElementById('state_id');
+        const city = document.getElementById('city_id');
 
+        const stateOptions = [...state.options];
+        const cityOptions = [...city.options];
 
+        function loadStates(selectedState = null) {
 
-{{-- STATE --}}
-@if (old('country_id', $shop?->country_id))
+            const countryId = country.value;
 
-    <div class="mt-10">
+            state.innerHTML = '<option value="">Select a state</option>';
 
-        <label class="block mb-4 font-semibold">
-            State
-        </label>
+            stateOptions.forEach(option => {
 
+                if (
+                    option.value &&
+                    option.dataset.country == countryId
+                ) {
+                    state.appendChild(option.cloneNode(true));
+                }
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            });
 
+            state.disabled = !countryId;
 
-            @foreach ($states->where('country_id', old('country_id', $shop?->country_id)) as $state)
-                <label class="cursor-pointer">
+            if (selectedState) {
+                state.value = selectedState;
+            }
 
+            loadCities(city.dataset.selected);
 
-                    <input type="radio" name="state_id" value="{{ $state->id }}" class="hidden peer"
-                        @checked(old('state_id', $shop?->state_id) == $state->id)>
+        }
 
+        function loadCities(selectedCity = null) {
 
-                    <div
-                        class="
-p-5
-rounded-2xl
-border
+            const stateId = state.value;
 
-dark:bg-neutral-900
-dark:border-neutral-700
+            city.innerHTML = '<option value="">Select a city</option>';
 
-peer-checked:bg-orange-500
-peer-checked:text-white
-peer-checked:border-orange-500
+            cityOptions.forEach(option => {
 
-hover:border-orange-500
-">
+                if (
+                    option.value &&
+                    option.dataset.state == stateId
+                ) {
+                    city.appendChild(option.cloneNode(true));
+                }
 
-                        🏛️
+            });
 
-                        <p class="mt-2 font-semibold">
-                            {{ $state->name }}
-                        </p>
+            city.disabled = !stateId;
 
+            if (selectedCity) {
+                city.value = selectedCity;
+            }
 
-                    </div>
+        }
 
+        state.dataset.selected = "{{ old('state_id', $shop?->state_id) }}";
+        city.dataset.selected = "{{ old('city_id', $shop?->city_id) }}";
 
-                </label>
-            @endforeach
+        loadStates(state.dataset.selected);
 
+        country.addEventListener('change', () => {
 
-        </div>
+            loadStates();
 
+        });
 
-    </div>
+        state.addEventListener('change', () => {
 
-@endif
+            loadCities();
 
+        });
 
+    });
+</script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
 
+        const button = document.getElementById('generate-description');
+        const textarea = document.getElementById('description');
 
+        if (!button || !textarea) return;
 
+        button.addEventListener('click', async () => {
 
-{{-- CITY --}}
-@if (old('state_id', $shop?->state_id))
+            const selectedSection = document.querySelector('input[name="section_id"]:checked');
 
+            const section = selectedSection ?
+                selectedSection.closest('label').querySelector('.font-bold')?.textContent.trim() :
+                '';
 
-    <div class="mt-10">
+            const country = document.getElementById('country_id')?.selectedOptions[0]?.text
+                .trim() || '';
+            const state = document.getElementById('state_id')?.selectedOptions[0]?.text.trim() ||
+                '';
+            const city = document.getElementById('city_id')?.selectedOptions[0]?.text.trim() || '';
 
+            if (!section || !country || !state || !city) {
+                alert('Please select a shop type, country, state and city.');
+                return;
+            }
 
-        <label class="block mb-4 font-semibold">
-            City
-        </label>
+            button.disabled = true;
+            button.innerHTML = '⏳ Generating...';
 
+            try {
 
+                const response = await fetch("{{ url('/ai/shop-description') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .content
+                    },
+                    body: JSON.stringify({
+                        section: section,
+                        country: country,
+                        state: state,
+                        city: city
+                    })
+                });
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                const data = await response.json().catch(() => null);
 
+                if (!response.ok) {
+                    console.error(data);
+                    throw new Error(data?.message || `HTTP ${response.status}`);
+                }
 
-            @foreach ($cities->where('state_id', old('state_id', $shop?->state_id)) as $city)
-                <label class="cursor-pointer">
+                if (data && data.description) {
+                    textarea.value = data.description;
+                } else {
+                    alert("The server did not return a description.");
+                }
 
+            } catch (error) {
 
-                    <input type="radio" name="city_id" value="{{ $city->id }}" class="hidden peer"
-                        @checked(old('city_id', $shop?->city_id) == $city->id)>
+                console.error("AI Error:", error);
+                alert(error.message);
 
+            } finally {
 
-                    <div
-                        class="
-p-5
-rounded-2xl
-border
+                button.disabled = false;
+                button.innerHTML = "✨ AI Generate";
 
-dark:bg-neutral-900
-dark:border-neutral-700
+            }
 
-peer-checked:bg-orange-500
-peer-checked:text-white
-peer-checked:border-orange-500
+        });
 
-hover:border-orange-500
-">
-
-                        🏙️
-
-                        <p class="mt-2 font-semibold">
-                            {{ $city->name }}
-                        </p>
-
-                    </div>
-
-
-                </label>
-            @endforeach
-
-
-        </div>
-
-
-    </div>
-
-
-@endif
+    });
+</script>

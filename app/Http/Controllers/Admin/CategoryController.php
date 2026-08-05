@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Models\Section;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -20,6 +19,7 @@ class CategoryController extends Controller
     {
         $categories = Category::paginate(5);
         $categoryCount = Category::count();
+
         return view('admin.categories.index', compact('categories', 'categoryCount'));
     }
 
@@ -75,6 +75,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category_info = Category::findOrFail($id);
+
         return view('admin.categories.edit', compact('category_info'));
     }
 
@@ -96,7 +97,7 @@ class CategoryController extends Controller
         $category->bg_color = $request->bg_color;
 
         if ($request->hasFile('image')) {
-            $uploadPath = 'storage/category-suggest/' . $category->image;
+            $uploadPath = 'storage/category-suggest/'.$category->image;
             if (File::exists($uploadPath)) {
                 unlink($uploadPath);
             }
@@ -117,6 +118,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+
         return redirect()->route('categories.index')->with('message', 'Category deleted Successfully');
     }
 }

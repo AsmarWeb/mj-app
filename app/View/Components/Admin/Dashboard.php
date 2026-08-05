@@ -21,11 +21,12 @@ class Dashboard extends Component
         $shopCount = Shop::count();
         $listingCount = Listing::count();
         $subscriberCount = Subscriber::count();
+
         return view('components.admin.dashboard', [
             'userCount' => $userCount,
             'shopCount' => $shopCount,
             'listingCount' => $listingCount,
-            'subscriberCount' => $subscriberCount
+            'subscriberCount' => $subscriberCount,
         ]);
     }
 }

@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
@@ -28,18 +28,18 @@ class SocialAuthController extends Controller
                 'name' => $socialUser->getName() ?? $socialUser->getNickname(),
                 'password' => bcrypt(Str::random(16)),
             ]
-        ); 
+        );
 
         // Only save the profile photo if the user doesn't already have one
-    
-        if (!$user->profile_photo_path && $socialUser->getAvatar()) {
+
+        if (! $user->profile_photo_path && $socialUser->getAvatar()) {
             $contents = Http::get($socialUser->getAvatar())->body();
-            $filename = 'profile-photos/' . Str::uuid() . '.jpg';
+            $filename = 'profile-photos/'.Str::uuid().'.jpg';
             Storage::disk('public')->put($filename, $contents);
-            $user->profile_photo_path = $filename; 
+            $user->profile_photo_path = $filename;
             $user->save();
         }
-        
+
         // Every user should have the "user" role
         if (! $user->hasRole('user')) {
             $user->addRole('user');

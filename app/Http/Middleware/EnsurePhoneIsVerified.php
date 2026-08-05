@@ -11,7 +11,7 @@ class EnsurePhoneIsVerified
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -21,14 +21,13 @@ class EnsurePhoneIsVerified
             return redirect()->route('login');
         }
 
-
         if (! $user->phone_verified_at) {
 
             return redirect()
                 ->route('profile.show')
                 ->with('error', 'Please verify your phone number before continuing.');
         }
-        
+
         return $next($request);
     }
 }

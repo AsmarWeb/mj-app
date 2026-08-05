@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->decimal('price',8,2);
+            $table->decimal('price', 8, 2);
             $table->string('stripe_price')->nullable()->unique();
             $table->integer('listing_limit')->default(1);
             $table->integer('listing_duration')->nullable();
@@ -25,9 +25,9 @@ return new class extends Migration
             $table->boolean('mobile_app')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_free')->default(false);
-            $table->enum('billing_period', ['monthly','yearly'])->default('monthly');
+            $table->enum('billing_period', ['monthly', 'yearly'])->default('monthly');
             $table->timestamps();
-        }); 
+        });
     }
 
     /**

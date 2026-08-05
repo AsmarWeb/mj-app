@@ -14,21 +14,21 @@ return new class extends Migration
         Schema::create('shop_ratings', function (Blueprint $table) {
             $table->id();
 
-    $table->foreignId('shop_id')
-        ->constrained()
-        ->cascadeOnDelete();
+            $table->foreignId('shop_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->foreignId('user_id')
-        ->constrained()
-        ->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->unsignedTinyInteger('rating');
+            $table->unsignedTinyInteger('rating');
 
-    $table->text('review')->nullable();
+            $table->text('review')->nullable();
 
-    $table->timestamps();
+            $table->timestamps();
 
-    $table->unique(['shop_id', 'user_id']);
+            $table->unique(['shop_id', 'user_id']);
         });
     }
 
