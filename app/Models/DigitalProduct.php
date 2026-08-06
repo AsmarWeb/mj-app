@@ -11,63 +11,74 @@ class DigitalProduct extends Model
     use HasFactory;
 
     protected $fillable = [
+    'type',
 
-        'title',
-        'title_ar',
+    'title',
+    'title_ar',
 
-        'description',
-        'description_ar',
+    'description',
+    'description_ar',
 
-        'slug',
+    'slug',
 
-        'price',
-        'is_free',
+    'price',
+    'is_free',
 
-        'image',
-        'file',
+    'image',
+    'file',
 
-        'version',
-        'compatible_with',
-        'file_size',
-        'included_files',
+    'version',
+    'compatible_with',
+    'file_size',
+    'included_files',
+    'license',
 
-        'license',
+    'preview_url',
+    'video_url',
 
-        'preview_url',
-        'video_url',
+    'requirements',
+    'installation',
+    'changelog',
 
-        'requirements',
-        'installation',
-        'changelog',
+    'gallery',
 
-        'gallery',
+    // POD
+    'base_product',
+    'base_cost',
+    'supplier_id',
 
-        'downloads',
-        'favorites',
+    'downloads',
+    'favorites',
+    'rating',
+    'reviews',
 
-        'rating',
-        'reviews',
+    'featured',
 
-        'featured',
+    'digital_category_id',
 
-        'digital_category_id',
+    // Ownership
+    'user_id',       // Admin
+    'designer_id',   // Optional invited designer
+    'commission',
 
-        'user_id',
+    'requires_approval',
 
-        'status',
-
-    ];
+    'status',
+];
 
     protected $casts = [
-        'gallery' => 'array',
 
-        'featured' => 'boolean',
+    'gallery' => 'array',
 
-        'is_free' => 'boolean',
+    'featured' => 'boolean',
 
-        'price' => 'decimal:2',
+    'is_free' => 'boolean',
 
-    ];
+    'price' => 'decimal:2',
+
+    'base_cost' => 'decimal:2',
+
+];
 
     protected static function boot()
     {
@@ -133,5 +144,29 @@ class DigitalProduct extends Model
         }
 
         return '$'.number_format($this->price, 2);
+    }
+
+    public function owner()
+    {
+    return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    public function designer()
+    {
+    return $this->belongsTo(User::class, 'designer_id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function orderItems()
+    {
+    return $this->hasMany(
+        OrderItem::class,
+        'digital_product_id'
+    );
     }
 }

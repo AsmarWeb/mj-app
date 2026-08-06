@@ -115,6 +115,10 @@
                                 {{ __('Digital Products') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')">
+                                {{ __('Suppliers') }}
+                            </x-dropdown-link>
+
                             <x-dropdown-link href="{{ route('brands.index') }}" :active="request()->routeIs('brands.index')">
                                 {{ __('Brands') }}
                             </x-dropdown-link>

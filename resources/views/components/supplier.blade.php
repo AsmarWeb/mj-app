@@ -12,7 +12,7 @@
     @if (!@empty($meta_title))
         <title>{{ $meta_title }}</title>
     @else
-        <title>@yield('title', 'murwaj Ai')</title>
+        <title>@yield('title', 'murwaj supplier')</title>
     @endif
 
     <!-- FAVICON -->

@@ -213,4 +213,11 @@ class User extends Authenticatable implements LaratrustUser, MustVerifyEmail
     {
         return round($this->storageUsed() / 1024 / 1024, 2);
     }
+
+    public function supplier()
+    {
+    return $this->hasOne(
+        Supplier::class
+    );
+    }
 }

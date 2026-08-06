@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => Permission::class,
             'ability' => Ability::class,
             'phone.verified' => EnsurePhoneIsVerified::class,
+            'supplier' => \App\Http\Middleware\SupplierMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

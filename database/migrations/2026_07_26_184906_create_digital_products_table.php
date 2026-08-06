@@ -13,7 +13,21 @@ return new class extends Migration
     {
         Schema::create('digital_products', function (Blueprint $table) {
             $table->id();
-            // Basic Information
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product Type
+            |--------------------------------------------------------------------------
+            */
+
+            $table->enum('type', ['digital','pod','service',])->default('digital');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Basic Information
+            |--------------------------------------------------------------------------
+            */
+
             $table->string('title');
             $table->string('title_ar')->nullable();
 
@@ -31,7 +45,7 @@ return new class extends Migration
             $table->string('image');
 
             // Main downloadable file
-            $table->string('file');
+            $table->string('file')->nullable();
 
             // Product Information
             $table->string('version')->nullable();
@@ -66,6 +80,32 @@ return new class extends Migration
             // Gallery Images
             $table->json('gallery')->nullable();
 
+            /*
+            |--------------------------------------------------------------------------
+            | Print On Demand
+            |--------------------------------------------------------------------------
+            */
+
+            /*
+            |--------------------------------------------------------------------------
+            | POD Supplier
+            |--------------------------------------------------------------------------
+            */
+
+
+            $table->foreignId('supplier_id')->nullable()->constrained()->nullOnDelete();
+
+            $table->string('base_product')->nullable();
+            // T-Shirt, Mug, Hoodie...
+
+            $table->decimal('base_cost',10,2)->nullable();
+
+            $table->json('sizes')->nullable();
+            // ["S","M","L","XL"]
+
+            $table->json('colors')->nullable();
+            // ["Black","White","Blue"]
+
             // Marketplace Stats
             $table->unsignedBigInteger('downloads')->default(0);
 
@@ -83,9 +123,21 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('digital_categories')
                 ->nullOnDelete();
+            
 
-            // Seller
-            $table->bigInteger('shop_id')->unsigned()->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ownership
+            |--------------------------------------------------------------------------
+            */
+
+            $table->foreignId('designer_id')->nullable()->constrained('users')->nullOnDelete();
+
+            $table->unsignedTinyInteger('commission')->default(10);
+
+            $table->boolean('requires_approval')->default(true);
 
             // Status
             $table->enum('status', [
@@ -93,6 +145,12 @@ return new class extends Migration
                 'published',
                 'archived',
             ])->default('published');
+
+            $table->integer('processing_days')->nullable();
+            // 3-5 days
+
+            $table->boolean('fulfillment_enabled')->default(false);
+
             $table->timestamps();
         });
     }

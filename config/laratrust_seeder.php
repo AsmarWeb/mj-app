@@ -21,6 +21,10 @@ return [
             'users' => 'c,r,u,d',
             'profile' => 'r,u',
         ],
+        'supplier' => [
+            'payments' => 'c,r',
+            'profile' => 'r,u',
+        ],
         'seller' => [
             'payments' => 'c,r',
             'profile' => 'r,u',

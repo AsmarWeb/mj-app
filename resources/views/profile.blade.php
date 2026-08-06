@@ -451,102 +451,70 @@ mb-5
 
 
             @php
-                $downloads = auth()->user()->downloads()->with('product')->latest()->get();
+                $orders = \App\Models\Order::with('items')
+                    ->where('user_id', auth()->id())
+                    ->latest()
+                    ->get();
+
+                $paidOrders = $orders->where('payment_status', 'paid');
+
+                $totalSpent = $paidOrders->sum('total');
+
+                $productsPurchased = $orders->sum(function ($order) {
+                    return $order->items->sum('quantity');
+                });
             @endphp
 
-
-
-
             {{-- STATS --}}
-
-
-            <div class="
-grid
-md:grid-cols-4
-gap-6
-">
-
+            <div class="grid md:grid-cols-4 gap-6">
 
                 <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
-
-                    <div class="text-4xl">
-                        📦
-                    </div>
+                    <div class="text-4xl">🛍️</div>
 
                     <h2 class="text-3xl font-black mt-3 dark:text-white">
-
-                        {{ $downloads->count() }}
-
+                        {{ $orders->count() }}
                     </h2>
 
                     <p class="text-gray-500">
-                        Digital Products
+                        Total Orders
                     </p>
-
                 </div>
 
-
-
                 <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
-
-                    <div class="text-4xl">
-                        ⬇️
-                    </div>
+                    <div class="text-4xl">📦</div>
 
                     <h2 class="text-3xl font-black mt-3 dark:text-white">
-
-                        {{ $downloads->sum(fn($d) => optional($d->product)->downloads ?? 0) }}
-
+                        {{ $productsPurchased }}
                     </h2>
 
                     <p class="text-gray-500">
-                        Downloads
+                        Products Purchased
                     </p>
-
                 </div>
 
-
-
-
                 <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
-
-                    <div class="text-4xl">
-                        💳
-                    </div>
+                    <div class="text-4xl">💳</div>
 
                     <h2 class="text-3xl font-black mt-3 dark:text-white">
-
-                        {{ $downloads->where('paid', true)->count() }}
-
+                        {{ $paidOrders->count() }}
                     </h2>
 
                     <p class="text-gray-500">
-                        Paid Purchases
+                        Paid Orders
                     </p>
-
                 </div>
 
-
-
                 <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-6">
-
-                    <div class="text-4xl">
-                        🎁
-                    </div>
+                    <div class="text-4xl">💰</div>
 
                     <h2 class="text-3xl font-black mt-3 dark:text-white">
-
-                        {{ $downloads->where('paid', false)->count() }}
-
+                        AED {{ number_format($totalSpent, 2) }}
                     </h2>
 
                     <p class="text-gray-500">
-                        Free Downloads
+                        Total Spent
                     </p>
-
                 </div>
-
-
 
             </div>
 

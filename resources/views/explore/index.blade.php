@@ -416,37 +416,66 @@
 
 
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
 
             @forelse($digitalProducts as $product)
-                <div class="bg-white rounded-3xl shadow hover:shadow-xl transition overflow-hidden group">
+                <div
+                    class="bg-white rounded-3xl shadow-sm hover:shadow-2xl transition overflow-hidden group border border-gray-100">
 
 
                     {{-- IMAGE --}}
-                    <div class="relative h-56 overflow-hidden">
+                    <div class="relative h-60 overflow-hidden bg-gray-100">
 
 
-                        <img src="{{ asset('storage/' . $product->image) }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
 
+
+
+                        {{-- TYPE BADGE --}}
+
+                        <div class="absolute top-4 left-4">
+
+
+                            @if ($product->type === 'pod')
+                                <span class="bg-purple-600 text-white px-3 py-1.5 rounded-full text-xs font-bold">
+                                    👕 Print On Demand
+                                </span>
+                            @elseif($product->type === 'service')
+                                <span class="bg-blue-600 text-white px-3 py-1.5 rounded-full text-xs font-bold">
+                                    🛠 Service
+                                </span>
+                            @else
+                                <span class="bg-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold">
+                                    📦 Digital
+                                </span>
+                            @endif
+
+
+                        </div>
+
+
+
+
+                        {{-- FEATURED --}}
 
                         @if ($product->featured)
                             <span
-                                class="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs">
-
-                                Featured
-
+                                class="absolute top-4 right-4 bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-full text-xs font-bold">
+                                ⭐ Featured
                             </span>
                         @endif
 
 
+
+
+                        {{-- FREE --}}
+
                         @if ($product->is_free)
                             <span
-                                class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-xs">
-
+                                class="absolute bottom-4 left-4 bg-green-600 text-white px-3 py-1.5 rounded-full text-xs font-bold">
                                 FREE
-
                             </span>
                         @endif
 
@@ -457,31 +486,64 @@
 
 
 
-                    <div class="p-5">
+
+
+                    {{-- CONTENT --}}
+
+                    <div class="p-6">
+
 
 
                         {{-- CATEGORY --}}
 
-                        <span class="text-xs text-orange-500 font-semibold uppercase">
-
-                            {{ $product->category->category_name ?? 'Digital' }}
-
-                        </span>
+                        <div class="flex items-center justify-between">
 
 
+                            <span class="text-xs uppercase font-bold text-orange-500">
 
-                        <h3 class="font-bold text-lg mt-2 line-clamp-1">
+                                {{ $product->digitalCategory->category_name ?? 'General' }}
+
+                            </span>
+
+
+
+
+                            @if ($product->type === 'pod')
+                                <span class="text-xs text-gray-400">
+
+                                    {{ $product->base_product }}
+
+                                </span>
+                            @endif
+
+
+                        </div>
+
+
+
+
+
+                        {{-- TITLE --}}
+
+                        <h3 class="font-black text-lg mt-3 line-clamp-1">
+
 
                             {{ app()->getLocale() == 'ar' ? $product->title_ar : $product->title }}
+
 
                         </h3>
 
 
 
 
+
+                        {{-- DESCRIPTION --}}
+
                         <p class="text-gray-500 text-sm mt-2 line-clamp-2">
 
-                            {{ Str::limit(app()->getLocale() == 'ar' ? $product->description_ar : $product->description, 80) }}
+
+                            {{ Str::limit(app()->getLocale() == 'ar' ? $product->description_ar : $product->description, 90) }}
+
 
                         </p>
 
@@ -489,43 +551,97 @@
 
 
 
-                        <div class="flex justify-between items-center mt-5">
+
+
+
+                        {{-- POD OPTIONS --}}
+
+                        @if ($product->type === 'pod')
+                            <div class="flex gap-2 mt-4">
+
+
+                                @foreach (array_slice($product->colors ?? [], 0, 4) as $color)
+                                    <span class="w-5 h-5 rounded-full border"
+                                        style="background:{{ $color }}"></span>
+                                @endforeach
+
+
+                            </div>
+                        @endif
+
+
+
+
+
+
+
+                        {{-- PRICE --}}
+
+                        <div class="flex justify-between items-center mt-6">
 
 
                             <div>
 
+
                                 @if ($product->is_free)
-                                    <span class="text-green-600 font-bold">
+                                    <span class="text-green-600 font-black text-lg">
                                         Free
                                     </span>
                                 @else
-                                    <span class="font-bold text-xl">
+                                    <span class="font-black text-2xl">
+
                                         ${{ number_format($product->price, 2) }}
+
                                     </span>
                                 @endif
+
+
 
                             </div>
 
 
 
 
+
                             <a href="{{ route('digital-products.show', $product->slug) }}"
-                                class="bg-orange-500 text-white px-4 py-2 rounded-xl hover:bg-orange-600">
+                                class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl font-bold transition">
 
                                 View
 
                             </a>
 
 
-                        </div>
-
-
-
-                        <div class="mt-3 text-xs text-gray-400">
-
-                            {{ number_format($product->downloads) }} downloads
 
                         </div>
+
+
+
+
+
+
+
+                        {{-- STATS --}}
+
+                        <div class="flex justify-between mt-5 pt-4 border-t text-xs text-gray-400">
+
+
+                            <span>
+                                ⬇ {{ number_format($product->downloads) }}
+                            </span>
+
+
+                            <span>
+                                ❤️ {{ number_format($product->favorites) }}
+                            </span>
+
+
+                            <span>
+                                ⭐ {{ number_format($product->rating, 1) }}
+                            </span>
+
+
+                        </div>
+
 
 
 

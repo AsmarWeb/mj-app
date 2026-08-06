@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ShopsController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubscriberController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\BotController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\PodDigitalCheckoutController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ReviewController;
@@ -48,6 +50,8 @@ use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SupplierDashboardController;
+use App\Http\Controllers\SupplierInvitationController;
 use App\Http\Controllers\User\EditController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WishlistController;
@@ -293,6 +297,18 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::middleware('auth')->group(function () {
+
+    Route::post('/checkout/pod-digital', [PodDigitalCheckoutController::class, 'checkout'])
+        ->name('pod.checkout');
+
+    Route::get('/checkout/pod-digital/success', [PodDigitalCheckoutController::class, 'success'])
+        ->name('pod.checkout.success');
+
+    Route::get('/checkout/pod-digital/cancel', [PodDigitalCheckoutController::class, 'cancel'])
+        ->name('pod.checkout.cancel');
+});
+
 Route::post(
     '/listing/{listing}/lead',
     [LeadController::class, 'store']
@@ -316,6 +332,77 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::view('/profile', 'profile')->name('profile');
+});
+
+Route::get(
+    '/supplier/invitation/{token}',
+    [SupplierInvitationController::class, 'accept']
+)->name('supplier.invitation');
+
+
+Route::post(
+    '/supplier/invitation/{token}',
+    [SupplierInvitationController::class, 'store']
+)->name('supplier.invitation.store');
+
+Route::middleware(['auth','supplier', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function(){
+
+
+    Route::get(
+        '/dashboard',
+        [
+            SupplierDashboardController::class,
+            'index'
+        ]
+    )
+    ->name('dashboard');
+
+
+
+    Route::get(
+        '/products',
+        function(){
+
+            return view(
+                'supplier.products.index'
+            );
+
+        }
+    )
+    ->name('products.index');
+
+
+
+
+    Route::get(
+        '/orders',
+        function(){
+
+            return view(
+                'supplier.orders.index'
+            );
+
+        }
+    )
+    ->name('orders.index');
+
+
+
+
+    Route::get(
+        '/payouts',
+        function(){
+
+            return view(
+                'supplier.payouts.index'
+            );
+
+        }
+    )
+    ->name('payouts.index');
+
+
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -534,4 +621,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
             ->name('invoices.status');
 
     });
+
+    Route::resource('suppliers',SupplierController::class);
 });
