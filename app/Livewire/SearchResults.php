@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Listing;
+use App\Models\DigitalProduct;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,7 +13,9 @@ class SearchResults extends Component
 
     public $search = '';
 
-    public $globalSearchUrl;
+    public $globalSearchUrl = null;
+
+    protected $paginationTheme = 'tailwind';
 
     protected $queryString = [
         'search' => [
@@ -32,39 +35,73 @@ class SearchResults extends Component
 
     public function render()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Marketplace Listings
+        |--------------------------------------------------------------------------
+        */
+
         $listings = Listing::query()
-
             ->where('status', 'published')
+            ->when($this->search, function ($query) {
 
-            ->where(function ($query) {
+                $query->where(function ($q) {
 
-                if ($this->search) {
-
-                    $query->where('title', 'like', "%{$this->search}%")
-                        ->orWhere('title_ar', 'like', "%{$this->search}%")
-                        ->orWhere('description', 'like', "%{$this->search}%")
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('title_ar', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%')
                         ->orWhereJsonContains('keywords', $this->search);
 
-                }
+                });
 
             })
-
             ->with([
                 'brand',
                 'category',
                 'shop',
             ])
-
             ->latest()
+            ->paginate(12);
 
-            ->paginate(20);
+        /*
+        |--------------------------------------------------------------------------
+        | Digital Products
+        |--------------------------------------------------------------------------
+        */
 
-        // Create global search link
-        if ($listings->total() == 0 && $this->search) {
+        $digitalProducts = DigitalProduct::query()
+            ->where('status', 'published')
+            ->when($this->search, function ($query) {
+
+                $query->where(function ($q) {
+
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%');
+
+                });
+
+            })
+            ->with([
+                'supplier',
+            ])
+            ->latest()
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Global Search
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $listings->total() == 0 &&
+            $digitalProducts->count() == 0 &&
+            !empty($this->search)
+        ) {
 
             $this->globalSearchUrl =
-                'https://www.google.com/search?q='
-                .urlencode($this->search);
+                'https://www.google.com/search?q=' .
+                urlencode($this->search);
 
         } else {
 
@@ -75,6 +112,10 @@ class SearchResults extends Component
         return view('livewire.search-results', [
 
             'listings' => $listings,
+
+            'digitalProducts' => $digitalProducts,
+
+            'globalSearchUrl' => $this->globalSearchUrl,
 
         ]);
     }

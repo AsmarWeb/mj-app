@@ -35,6 +35,8 @@ class ShopSeeder extends Seeder
             'verified_by' => 1,
             'user_id' => '1',
             'whatsapp' => '+971559650283',
+            'latitude'=>'25.2048',
+            'longitude'=>'55.2708',
         ];
         DB::table('shops')->insert($data);
     }
