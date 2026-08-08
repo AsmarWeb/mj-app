@@ -4,276 +4,611 @@
         <x-main-header />
     </x-slot>
 
+    <div class="min-h-screen">
 
-    <div class="min-h-screen py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        <div class="max-w-6xl mx-auto px-6">
+            {{-- =====================================================
+            ALERTS
+        ====================================================== --}}
+
+            @if (session('success'))
+                <div
+                    class="mb-6 flex items-start gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-green-800 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-300">
+
+                    <div
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
+                        ✓
+                    </div>
+
+                    <div>
+                        <p class="font-bold">Success</p>
+                        <p class="mt-1 text-sm">
+                            {{ session('success') }}
+                        </p>
+                    </div>
+
+                </div>
+            @endif
 
 
-            <h1 class="text-3xl font-bold mb-8">
-                🛒 Your Basket
-            </h1>
+            @if (session('error'))
+                <div
+                    class="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-800 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
 
+                    <div
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/50">
+                        !
+                    </div>
+
+                    <div>
+                        <p class="font-bold">Something went wrong</p>
+
+                        <p class="mt-1 text-sm">
+                            {{ session('error') }}
+                        </p>
+                    </div>
+
+                </div>
+            @endif
+
+
+            @if ($errors->any())
+                <div
+                    class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+
+                    <div class="flex items-center gap-3">
+
+                        <div
+                            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100 font-bold dark:bg-red-900/50">
+                            !
+                        </div>
+
+                        <div>
+                            <p class="font-bold">
+                                Please check the following:
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <ul class="mt-3 list-inside list-disc space-y-1 text-sm">
+
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+
+                    </ul>
+
+                </div>
+            @endif
+
+
+            {{-- =====================================================
+            PAGE HEADER
+        ====================================================== --}}
+
+            <div class="mb-8">
+
+                <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+
+                    <div>
+
+                        <div
+                            class="mb-3 inline-flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700 dark:bg-orange-500/10 dark:text-orange-400">
+
+                            <span>🛒</span>
+
+                            Shopping Basket
+
+                        </div>
+
+                        <h1 class="text-3xl font-black tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                            Your Basket
+                        </h1>
+
+                        <p class="mt-2 text-gray-500 dark:text-gray-400">
+                            Review your items before continuing to checkout.
+                        </p>
+
+                    </div>
+
+                    @if (isset($shops) && $shops->count())
+                        <a href="{{ route('explore') }}"
+                            class="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-300 hover:text-orange-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-orange-500 dark:hover:text-orange-400">
+
+                            ← Continue Shopping
+
+                        </a>
+                    @endif
+
+                </div>
+
+            </div>
+
+
+            {{-- =====================================================
+            CART
+        ====================================================== --}}
 
             @if (isset($shops) && $shops->count())
 
+                <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 
-                <div class="space-y-8">
+                    {{-- =================================================
+                    PRODUCTS
+                ================================================== --}}
 
+                    <div class="space-y-6 lg:col-span-2">
 
-                    @foreach ($shops as $shopId => $items)
-                        @php
-                            $shop = $items->first()->listing?->shop;
-                        @endphp
+                        @foreach ($shops as $shopId => $items)
+                            @php
+                                $shop = $items->first()->listing?->shop;
 
-
-                        @if ($shop)
-                            <div class="bg-white rounded-3xl shadow-sm p-6">
-
-
-                                <div class="flex justify-between items-center mb-5">
-
-                                    <h2 class="text-xl font-bold">
-                                        {{ $shop->name }}
-                                    </h2>
+                                $shopTotal = $items->sum(function ($item) {
+                                    return $item->price * $item->quantity;
+                                });
+                            @endphp
 
 
-                                    @if ($shop->allow_whatsapp && $shop->whatsapp)
-                                        <a href="https://wa.me/{{ preg_replace('/\D/', '', $shop->whatsapp) }}"
-                                            target="_blank" class="text-green-600 font-semibold">
+                            @if ($shop)
+                                <div
+                                    class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
 
-                                            WhatsApp
+                                    {{-- SHOP HEADER --}}
 
-                                        </a>
-                                    @endif
+                                    <div
+                                        class="flex flex-col gap-4 border-b border-gray-100 bg-gray-50/80 p-5 dark:border-gray-800 dark:bg-gray-800/40 sm:flex-row sm:items-center sm:justify-between">
 
-                                </div>
+                                        <div class="flex items-center gap-3">
 
+                                            <div
+                                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500 font-black text-white shadow-sm">
 
+                                                {{ strtoupper(substr($shop->name, 0, 1)) }}
 
-                                @foreach ($items as $item)
-                                    @if ($item->listing)
-                                        <div class="flex gap-5 border-b pb-5 mb-5">
+                                            </div>
 
+                                            <div>
 
-                                            <img src="{{ asset('storage/products/' . $item->listing->image) }}"
-                                                class="w-28 h-28 rounded-xl object-cover">
-
-
-
-                                            <div class="flex-1">
-
-
-                                                <h3 class="font-semibold text-lg">
-
-                                                    {{ $item->listing->title }}
-
-                                                </h3>
-
-
-
-                                                <p class="text-gray-500">
-
-                                                    {{ $shop->name }}
-
+                                                <p
+                                                    class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                                    Shop
                                                 </p>
 
+                                                <h2 class="font-bold text-gray-900 dark:text-white">
+                                                    {{ $shop->name }}
+                                                </h2>
+
+                                            </div>
+
+                                        </div>
 
 
-                                                <div class="flex items-center gap-3 mt-4">
+                                        @if ($shop->allow_whatsapp && $shop->whatsapp)
+                                            <a href="https://wa.me/{{ preg_replace('/\D/', '', $shop->whatsapp) }}"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-green-600">
+
+                                                <span>💬</span>
+
+                                                Contact Shop
+
+                                            </a>
+                                        @endif
+
+                                    </div>
 
 
-                                                    <div class="flex items-center rounded-xl border">
+                                    {{-- ITEMS --}}
+
+                                    <div class="p-5">
+
+                                        @foreach ($items as $item)
+                                            @if ($item->listing)
+                                                <div
+                                                    class="flex flex-col gap-5 border-b border-gray-100 py-5 first:pt-0 last:border-b-0 last:pb-0 dark:border-gray-800 sm:flex-row">
+
+                                                    {{-- IMAGE --}}
+
+                                                    <a href="{{ $item->listing->url }}" class="shrink-0">
+
+                                                        @if ($item->listing->image)
+                                                            <img src="{{ asset('storage/products/' . $item->listing->image) }}"
+                                                                alt="{{ $item->listing->title }}"
+                                                                class="h-28 w-28 rounded-2xl object-cover ring-1 ring-gray-200 dark:ring-gray-700">
+                                                        @else
+                                                            <div
+                                                                class="flex h-28 w-28 items-center justify-center rounded-2xl bg-gray-100 text-4xl dark:bg-gray-800">
+                                                                📦
+                                                            </div>
+                                                        @endif
+
+                                                    </a>
 
 
-                                                        <form method="POST"
-                                                            action="{{ route('cart.decrease', $item->id) }}">
+                                                    {{-- DETAILS --}}
 
-                                                            @csrf
+                                                    <div class="min-w-0 flex-1">
 
-                                                            <button class="w-10 h-10 hover:bg-gray-100">
+                                                        <a href="{{ $item->listing->url }}"
+                                                            class="line-clamp-2 text-lg font-bold text-gray-900 transition hover:text-orange-600 dark:text-white dark:hover:text-orange-400">
 
-                                                                −
+                                                            {{ $item->listing->title }}
 
-                                                            </button>
-
-                                                        </form>
+                                                        </a>
 
 
+                                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
 
-                                                        <span class="px-5 font-bold">
+                                                            Sold by {{ $shop->name }}
 
-                                                            {{ $item->quantity }}
-
-                                                        </span>
-
+                                                        </p>
 
 
-                                                        <form method="POST"
-                                                            action="{{ route('cart.increase', $item->id) }}">
+                                                        <p
+                                                            class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
 
-                                                            @csrf
+                                                            {{ $shop->currency }}
+                                                            {{ number_format($item->price, 2) }}
 
-                                                            <button class="w-10 h-10 hover:bg-gray-100">
+                                                            <span class="font-normal text-gray-400">
+                                                                each
+                                                            </span>
 
-                                                                +
+                                                        </p>
 
-                                                            </button>
 
-                                                        </form>
+                                                        {{-- QUANTITY --}}
 
+                                                        <div class="mt-4 flex flex-wrap items-center gap-4">
+
+                                                            <div
+                                                                class="inline-flex items-center overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+
+                                                                <form method="POST"
+                                                                    action="{{ route('cart.decrease', $item->id) }}">
+
+                                                                    @csrf
+
+                                                                    <button type="submit"
+                                                                        aria-label="Decrease quantity"
+                                                                        class="flex h-10 w-10 items-center justify-center text-lg font-bold text-gray-600 transition hover:bg-gray-100 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-800">
+
+                                                                        −
+
+                                                                    </button>
+
+                                                                </form>
+
+
+                                                                <span
+                                                                    class="flex h-10 min-w-[42px] items-center justify-center border-x border-gray-200 px-2 text-sm font-bold text-gray-900 dark:border-gray-700 dark:text-white">
+
+                                                                    {{ $item->quantity }}
+
+                                                                </span>
+
+
+                                                                <form method="POST"
+                                                                    action="{{ route('cart.increase', $item->id) }}">
+
+                                                                    @csrf
+
+                                                                    <button type="submit"
+                                                                        aria-label="Increase quantity"
+                                                                        class="flex h-10 w-10 items-center justify-center text-lg font-bold text-gray-600 transition hover:bg-gray-100 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-800">
+
+                                                                        +
+
+                                                                    </button>
+
+                                                                </form>
+
+                                                            </div>
+
+
+                                                            <span class="text-sm text-gray-500 dark:text-gray-400">
+
+                                                                {{ $item->quantity }}
+                                                                {{ $item->quantity == 1 ? 'item' : 'items' }}
+
+                                                            </span>
+
+                                                        </div>
 
                                                     </div>
 
 
+                                                    {{-- PRICE --}}
+
+                                                    <div
+                                                        class="flex flex-row items-center justify-between gap-4 sm:flex-col sm:items-end">
+
+                                                        <p class="text-lg font-black text-gray-900 dark:text-white">
+
+                                                            {{ $shop->currency }}
+
+                                                            {{ number_format($item->price * $item->quantity, 2) }}
+
+                                                        </p>
+
+
+                                                        <form method="POST"
+                                                            action="{{ route('cart.destroy', $item->id) }}">
+
+                                                            @csrf
+
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                onclick="return confirm('Are you sure you want to remove this item?')"
+                                                                class="text-sm font-semibold text-red-500 transition hover:text-red-700 dark:text-red-400">
+
+                                                                Remove
+
+                                                            </button>
+
+                                                        </form>
+
+                                                    </div>
 
                                                 </div>
+                                            @endif
+                                        @endforeach
 
 
-                                            </div>
+                                        {{-- SHOP TOTAL --}}
 
+                                        <div
+                                            class="mt-5 flex items-center justify-between rounded-2xl bg-gray-50 p-4 dark:bg-gray-800/60">
 
+                                            <span class="font-semibold text-gray-600 dark:text-gray-300">
+                                                Shop Total
+                                            </span>
 
+                                            <span class="text-lg font-black text-gray-900 dark:text-white">
 
-                                            <div class="text-right">
+                                                {{ $shop->currency }}
 
+                                                {{ number_format($shopTotal, 2) }}
 
-                                                <p class="font-bold text-lg">
-
-                                                    {{ $shop->currency }}
-
-                                                    {{ number_format($item->price * $item->quantity, 2) }}
-
-                                                </p>
-
-
-
-
-                                                <form method="POST" action="{{ route('cart.destroy', $item->id) }}">
-
-                                                    @csrf
-                                                    @method('DELETE')
-
-
-                                                    <button onclick="return confirm('Remove this item?')"
-                                                        class="mt-4 text-red-600">
-
-                                                        Remove
-
-                                                    </button>
-
-
-                                                </form>
-
-
-
-                                            </div>
-
+                                            </span>
 
                                         </div>
-                                    @endif
-                                @endforeach
+
+                                    </div>
+
+                                </div>
+                            @endif
+                        @endforeach
+
+                    </div>
 
 
+                    {{-- =================================================
+                    ORDER SUMMARY
+                ================================================== --}}
+
+                    <div class="lg:col-span-1">
+
+                        <div class="sticky top-6 space-y-5">
+
+                            {{-- SUMMARY --}}
+
+                            <div
+                                class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+
+                                <h2 class="text-xl font-black text-gray-900 dark:text-white">
+                                    Order Summary
+                                </h2>
 
 
-                                <div class="flex justify-between font-bold">
+                                <div class="mt-6 space-y-4">
+
+                                    <div class="flex justify-between text-sm">
+
+                                        <span class="text-gray-500 dark:text-gray-400">
+                                            Subtotal
+                                        </span>
+
+                                        <span class="font-semibold text-gray-900 dark:text-white">
+                                            AED {{ number_format($total, 2) }}
+                                        </span>
+
+                                    </div>
 
 
-                                    <span>
-                                        Shop Total
-                                    </span>
+                                    <div class="flex justify-between text-sm">
+
+                                        <span class="text-gray-500 dark:text-gray-400">
+                                            Shipping
+                                        </span>
+
+                                        <span class="font-semibold text-green-600">
+                                            Calculated at checkout
+                                        </span>
+
+                                    </div>
 
 
-                                    <span>
+                                    <div class="border-t border-gray-100 pt-4 dark:border-gray-800">
 
-                                        {{ $shop->currency }}
+                                        <div class="flex items-end justify-between">
 
-                                        {{ number_format(
-                                            $items->sum(function ($item) {
-                                                return $item->price * $item->quantity;
-                                            }),
-                                            2,
-                                        ) }}
+                                            <div>
 
-                                    </span>
+                                                <p class="font-bold text-gray-900 dark:text-white">
+                                                    Total
+                                                </p>
 
+                                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                    Before shipping and taxes
+                                                </p>
+
+                                            </div>
+
+                                            <p class="text-2xl font-black text-orange-600">
+
+                                                AED {{ number_format($total, 2) }}
+
+                                            </p>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
 
+                                {{-- CHECKOUT --}}
+
+                                <a href="{{ route('checkout') }}"
+                                    class="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-4 text-center font-bold text-white shadow-lg shadow-orange-500/20 transition hover:from-orange-600 hover:to-red-600 hover:shadow-orange-500/30">
+
+                                    Proceed to Checkout
+
+                                    <span>→</span>
+
+                                </a>
+
+
+                                <a href="{{ route('explore') }}"
+                                    class="mt-3 flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+
+                                    Continue Shopping
+
+                                </a>
 
                             </div>
-                        @endif
-                    @endforeach
 
 
-                </div>
+                            {{-- TRUST INFORMATION --}}
+
+                            <div
+                                class="rounded-3xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+
+                                <h3 class="font-bold text-gray-900 dark:text-white">
+                                    Shopping with confidence
+                                </h3>
+
+                                <div class="mt-4 space-y-4">
+
+                                    <div class="flex gap-3">
+
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-100 dark:bg-green-500/10">
+                                            🔒
+                                        </div>
+
+                                        <div>
+
+                                            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                                Secure checkout
+                                            </p>
+
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                Your checkout information is protected.
+                                            </p>
+
+                                        </div>
+
+                                    </div>
 
 
+                                    <div class="flex gap-3">
+
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-500/10">
+                                            📦
+                                        </div>
+
+                                        <div>
+
+                                            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                                Multiple shops
+                                            </p>
+
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                Items can come from different marketplace sellers.
+                                            </p>
+
+                                        </div>
+
+                                    </div>
 
 
-                <div class="mt-8 bg-white rounded-3xl p-6 shadow-sm">
+                                    <div class="flex gap-3">
 
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-100 dark:bg-orange-500/10">
+                                            💬
+                                        </div>
 
-                    <div class="flex justify-between text-2xl font-bold">
+                                        <div>
 
+                                            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                                Seller support
+                                            </p>
 
-                        <span>
-                            Total
-                        </span>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                Contact participating sellers through WhatsApp.
+                                            </p>
 
+                                        </div>
 
-                        <span>
+                                    </div>
 
-                            AED {{ number_format($total, 2) }}
+                                </div>
 
-                        </span>
+                            </div>
 
+                        </div>
 
                     </div>
-
-
-
-                    <a href="{{ route('checkout') }}"
-                        class="block mt-6 text-center bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-xl font-bold">
-
-                        Proceed to Checkout
-
-                    </a>
-
 
                 </div>
             @else
-                <div class="bg-white rounded-3xl p-10 text-center">
+                {{-- =====================================================
+                EMPTY BASKET
+            ====================================================== --}}
 
+                <div
+                    class="mx-auto max-w-2xl rounded-[2rem] border border-gray-200 bg-white px-6 py-16 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
 
-                    <div class="text-6xl mb-5">
+                    <div
+                        class="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-orange-100 text-5xl dark:bg-orange-500/10">
+
                         🛒
+
                     </div>
 
 
-                    <h2 class="text-2xl font-bold">
-
+                    <h2 class="mt-7 text-3xl font-black text-gray-900 dark:text-white">
                         Your basket is empty
-
                     </h2>
 
 
+                    <p class="mx-auto mt-3 max-w-md text-gray-500 dark:text-gray-400">
+
+                        Looks like you haven't added anything yet.
+                        Explore our marketplace and find something you like.
+
+                    </p>
+
 
                     <a href="{{ route('explore') }}"
-                        class="inline-block mt-5 bg-orange-600 text-white px-8 py-3 rounded-xl">
+                        class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 px-7 py-4 font-bold text-white shadow-lg shadow-orange-500/20 transition hover:from-orange-600 hover:to-red-600">
 
-                        Continue Shopping
+                        Explore Marketplace
+
+                        <span>→</span>
 
                     </a>
 
-
                 </div>
 
-
             @endif
-
 
         </div>
 
@@ -281,6 +616,5 @@
 
 
     <x-main-footer />
-
 
 </x-main-layout>

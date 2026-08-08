@@ -1081,7 +1081,7 @@ p-5
 
 
                                     @if ($product->image)
-                                        <img src="{{ Storage::url($product->image) }}"
+                                        <img src="{{ asset('storage/products/' . $product->image) }}"
                                             class="
 w-16
 h-16

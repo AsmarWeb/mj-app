@@ -1,23 +1,44 @@
 <div class="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl overflow-hidden sticky top-24">
 
     {{-- Image --}}
-    <div class="relative">
+    {{-- Product Image / Preview --}}
 
-        @if ($image)
-            <img src="{{ is_string($image) ? Storage::url($image) : $image->temporaryUrl() }}"
-                class="w-full h-72 object-cover">
-        @elseif(isset($listing) && $listing->image)
-            <img src="{{ Storage::url($listing->image) }}" class="w-full h-72 object-cover">
+    <div class="relative h-72 w-full overflow-hidden bg-gray-100 dark:bg-neutral-800">
+
+        ```
+        @php
+            $imageUrl = null;
+
+            // Livewire temporary upload
+            if ($image && is_object($image) && method_exists($image, 'temporaryUrl')) {
+                $imageUrl = $image->temporaryUrl();
+            }
+
+            // Existing stored image path
+            elseif ($image && is_string($image)) {
+                $imageUrl = \Illuminate\Support\Facades\Storage::url($image);
+            }
+
+            // Existing listing image
+            elseif (isset($listing) && !empty($listing->image)) {
+                $imageUrl = \Illuminate\Support\Facades\Storage::url($listing->image);
+            }
+        @endphp
+
+        @if ($imageUrl)
+            <img src="{{ $imageUrl }}" alt="{{ $listing->title ?? 'Product Preview' }}"
+                class="h-full w-full object-cover">
         @else
-            <div class="h-72 bg-gray-100 dark:bg-neutral-800 flex items-center justify-center">
+            <div class="flex h-full w-full items-center justify-center">
 
                 <div class="text-center">
 
-                    <div class="text-6xl mb-3">
+                    <div
+                        class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-4xl shadow-sm dark:bg-neutral-900">
                         📦
                     </div>
 
-                    <p class="text-gray-400">
+                    <p class="text-sm font-medium text-gray-400 dark:text-gray-500">
                         Product Preview
                     </p>
 
@@ -25,8 +46,10 @@
 
             </div>
         @endif
+        ```
 
     </div>
+
 
 
 

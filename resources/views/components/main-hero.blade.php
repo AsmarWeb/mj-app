@@ -176,12 +176,10 @@
 
 
         {{-- =========================================================
-MARKETPLACE SHOP MAP
-========================================================= --}}
+          MARKETPLACE SHOP MAP
+         ========================================================= --}}
 
         <section class="mt-16 px-4 sm:px-6 lg:px-8">
-
-            ```
             <div class="mx-auto max-w-7xl">
 
                 {{-- Header --}}
@@ -679,23 +677,23 @@ LEAFLET
                     ${
                         shopUrl !== '#'
                         ? `
-                                                            <a
-                                                                href="${shopUrl}"
-                                                                style="
-                                                                    display:block;
-                                                                    margin-top:14px;
-                                                                    padding:10px 16px;
-                                                                    border-radius:10px;
-                                                                    background:#f97316;
-                                                                    color:#ffffff;
-                                                                    text-decoration:none;
-                                                                    font-size:13px;
-                                                                    font-weight:700;
-                                                                "
-                                                            >
-                                                                Visit Shop →
-                                                            </a>
-                                                        `
+                                                                            <a
+                                                                                href="${shopUrl}"
+                                                                                style="
+                                                                                    display:block;
+                                                                                    margin-top:14px;
+                                                                                    padding:10px 16px;
+                                                                                    border-radius:10px;
+                                                                                    background:#f97316;
+                                                                                    color:#ffffff;
+                                                                                    text-decoration:none;
+                                                                                    font-size:13px;
+                                                                                    font-weight:700;
+                                                                                "
+                                                                            >
+                                                                                Visit Shop →
+                                                                            </a>
+                                                                        `
                         : ''
                     }
 
