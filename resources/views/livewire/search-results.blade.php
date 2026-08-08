@@ -46,7 +46,7 @@
                     <div
                         class="group bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden shadow hover:shadow-2xl transition">
 
-                        <a href="{{ route('listing.show', $listing) }}">
+                        <a href="{{ $listing->url }}">
 
                             <img src="{{ $listing->image ? asset('storage/products/' . $listing->image) : asset('images/no-image.png') }}"
                                 class="h-56 w-full object-cover group-hover:scale-105 transition duration-300">
@@ -131,7 +131,7 @@
                     <div
                         class="group bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden shadow hover:shadow-2xl transition">
 
-                        <a href="{{ route('digital-products.show', $product->slug) }}">
+                        <a href="{{ $product->url }}">
 
                             <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/no-image.png') }}"
                                 class="h-56 w-full object-cover group-hover:scale-105 transition duration-300">

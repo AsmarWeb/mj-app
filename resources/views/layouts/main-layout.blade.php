@@ -117,29 +117,102 @@
     class="font-sans antialiased leading-normal tracking-normal">
     <x-banner />
 
-    <div class="w-full min-h-screen bg-white dark:bg-gray-900">
 
-        <!-- Page Heading -->
+    <div
+        class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300
+           dark:bg-slate-950 dark:text-white">
+
+        {{-- Header --}}
         @if (isset($header))
-            <header class="absolute inset-x-0 top-0 z-50">
-                <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
+            <header
+                class="sticky top-0 z-50 border-b border-slate-200/70
+                   bg-white/90 backdrop-blur-xl
+                   dark:border-slate-800/70 dark:bg-slate-950/90">
+
+                <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
+
             </header>
         @endif
 
-        <!-- Page Content -->
-        <main class="relative isolate pt-24 flex-1 xl:pt-[5.5rem]">
-            <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+
+        {{-- Main Content --}}
+        <main class="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden">
+
+            {{-- Background decoration --}}
+            <div class="pointer-events-none absolute inset-x-0 -top-40 -z-10
+                   transform-gpu overflow-hidden blur-3xl
+                   sm:-top-80"
                 aria-hidden="true">
-                <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-                    style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)">
+
+                <div class="relative left-1/2 aspect-[1155/678]
+                       w-[36rem] -translate-x-1/2 rotate-[30deg]
+                       bg-gradient-to-tr from-orange-400
+                       via-pink-400 to-indigo-500
+                       opacity-20
+                       dark:opacity-10
+                       sm:w-[72rem]"
+                    style="
+                    clip-path: polygon(
+                        74.1% 44.1%,
+                        100% 61.6%,
+                        97.5% 26.9%,
+                        85.5% 0.1%,
+                        80.7% 2%,
+                        72.5% 32.5%,
+                        60.2% 62.4%,
+                        52.4% 68.1%,
+                        47.5% 58.3%,
+                        45.2% 34.5%,
+                        27.5% 76.7%,
+                        0.1% 64.9%,
+                        17.9% 100%,
+                        27.6% 76.8%,
+                        76.1% 97.7%,
+                        74.1% 44.1%
+                    );
+                ">
                 </div>
             </div>
-            {{-- @include('cookie-consent::index') --}}
-            {{ $slot }}
+
+
+            {{-- Secondary background glow --}}
+            <div class="pointer-events-none absolute right-0 top-1/3
+                   -z-10 h-96 w-96 rounded-full
+                   bg-orange-400/10 blur-3xl
+                   dark:bg-orange-500/5"
+                aria-hidden="true">
+            </div>
+
+
+            {{-- Page Content --}}
+            <div class="relative">
+
+                {{-- Cookie Consent --}}
+                {{-- @include('cookie-consent::index') --}}
+
+                {{ $slot }}
+
+            </div>
+
         </main>
+
+
+        {{-- Optional footer --}}
+        @isset($footer)
+            <footer class="border-t border-slate-200 bg-white
+                   dark:border-slate-800 dark:bg-slate-950">
+
+                <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                    {{ $footer }}
+                </div>
+
+            </footer>
+        @endisset
+
     </div>
+
 
     <script>
         // Reloj
