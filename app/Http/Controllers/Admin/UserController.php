@@ -7,6 +7,7 @@ use App\Http\Actions\User\UpdateUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 use App\Models\User;
 
@@ -70,7 +71,9 @@ class UserController extends Controller
         $roles = Role::all();
         $userHasRoles = array_column(json_decode($user->roles, true), 'id');
 
-        return view('admin.user.show', compact('user', 'roles', 'userHasRoles'));
+        $sessions = DB::table('sessions') ->where('user_id', $user->id) ->orderByDesc('last_activity') ->get();
+
+        return view('admin.user.show', compact('user', 'roles', 'userHasRoles','sessions'));
     }
 
     /**

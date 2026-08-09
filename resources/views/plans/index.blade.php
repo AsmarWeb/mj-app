@@ -4,313 +4,923 @@
         <x-main-header></x-main-header>
     </x-slot>
 
-    <div class="min-h-screen py-16">
+    @php
+        /*
+         * Values supplied by SubscriptionController:
+         *
+         * $plans
+         * $subscription
+         * $currentPlan
+         */
+        $plans = $plans ?? collect();
 
+        /*
+         * The subscription is the source of truth.
+         * Only the exact attached plan is considered current.
+         */
+        $currentPlanId = $currentPlan?->id;
 
-        {{-- Hero --}}
-        <div class="max-w-5xl mx-auto text-center px-6">
+        $hasActiveSubscription = $subscription !== null && $currentPlan !== null;
 
-            <span class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 font-semibold">
-                🚀 Murwaj Seller Plans
-            </span>
+        $isFreePlan = !$hasActiveSubscription;
 
+    @endphp
 
-            <h1 class="mt-6 text-5xl font-bold text-slate-900 dark:text-white">
-                Choose the perfect plan for your shop
-            </h1>
+    <div class="min-h-screen bg-[#faf8f5] text-slate-900">
 
+        {{-- ================================================= --}}
+        {{-- TOP AMBIENT BACKGROUND --}}
+        {{-- ================================================= --}}
 
-            <p class="mt-4 text-lg text-slate-500 dark:text-slate-100">
-                Start selling today and upgrade as your business grows.
-            </p>
+        <div class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[560px] overflow-hidden">
 
+            <div
+                class="absolute left-1/2 top-[-220px] h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-orange-200/30 blur-3xl">
+            </div>
+
+            <div class="absolute right-[-150px] top-[120px] h-[350px] w-[350px] rounded-full bg-amber-200/20 blur-3xl">
+            </div>
+
+            <div class="absolute left-[-150px] top-[200px] h-[350px] w-[350px] rounded-full bg-orange-100/30 blur-3xl">
+            </div>
 
         </div>
 
 
+        {{-- ================================================= --}}
+        {{-- ERROR MESSAGES --}}
+        {{-- ================================================= --}}
 
-        {{-- Plans --}}
-        <div class="max-w-7xl mx-auto px-6 mt-16">
+        @if ($errors->any())
 
+            <div class="relative z-10 mx-auto mb-6 max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
 
-            <div class="grid gap-8 md:grid-cols-3">
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-5 shadow-sm">
 
-                @php
-                    $user = auth()->user();
+                    <div class="flex items-start gap-3">
 
-                    $isFree = !$user->subscriptions()->exists();
-                @endphp
-
-                {{-- Free Plan --}}
-                @if ($isFree)
-                    <div
-                        class="relative rounded-3xl bg-slate-100 border-2 border-dashed border-slate-300 overflow-hidden">
-
-                        <div
-                            class="absolute top-0 right-0 bg-green-600 text-white px-5 py-2 rounded-bl-2xl text-sm font-bold">
-                            Current Plan
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 text-lg">
+                            ⚠️
                         </div>
 
-                        <div class="p-8">
-                            <h2 class="text-3xl font-bold text-slate-900">
-                                Free
-                            </h2>
+                        <div class="flex-1">
 
-                            <p class="mt-2 text-gray-500">
-                                Your default seller account before subscribing.
-                            </p>
+                            <h3 class="font-bold text-red-900">
+                                Something went wrong
+                            </h3>
 
-                            <div class="mt-6 flex items-end gap-2">
-                                <span class="text-5xl font-black text-slate-900">
-                                    $0
-                                </span>
+                            <ul class="mt-2 space-y-1 text-sm text-red-700">
 
-                                <span class="text-gray-500 mb-2">
-                                    /Forever
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="px-8 pb-8">
-                            <div class="border-t pt-6">
-
-                                <h3 class="font-bold mb-5">
-                                    Plan Features
-                                </h3>
-
-                                <ul class="space-y-4 text-sm text-slate-700">
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
-                                        1 Active Product
+                                @foreach ($errors->all() as $error)
+                                    <li class="flex gap-2">
+                                        <span>•</span>
+                                        <span>{{ $error }}</span>
                                     </li>
+                                @endforeach
 
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
-                                        100 MB Storage
-                                    </li>
+                            </ul>
 
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
-                                        Listings live for 30 days
-                                    </li>
-
-                                    <li class="flex gap-3">
-                                        <span class="text-red-500">✖</span>
-                                        No Featured Listings
-                                    </li>
-
-                                    <li class="flex gap-3">
-                                        <span class="text-red-500">✖</span>
-                                        No Video Uploads
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <button disabled
-                                class="mt-8 w-full py-4 rounded-2xl font-bold bg-gray-300 text-gray-600 cursor-not-allowed">
-                                Your Current Plan
-                            </button>
                         </div>
 
                     </div>
-                @endif
 
+                </div>
+
+            </div>
+
+        @endif
+
+
+        {{-- ================================================= --}}
+        {{-- SESSION ERROR --}}
+        {{-- ================================================= --}}
+
+        @if (session('error'))
+            <div class="relative z-10 mx-auto mb-6 max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-5 shadow-sm">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100">
+                            ⚠️
+                        </div>
+
+                        <p class="font-semibold text-red-700">
+                            {{ session('error') }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        @endif
+
+
+        {{-- ================================================= --}}
+        {{-- SESSION SUCCESS --}}
+        {{-- ================================================= --}}
+
+        @if (session('success'))
+            <div class="relative z-10 mx-auto mb-6 max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100">
+                            ✓
+                        </div>
+
+                        <p class="font-semibold text-emerald-700">
+                            {{ session('success') }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        @endif
+
+
+        {{-- ================================================= --}}
+        {{-- HERO / CURRENT PLAN --}}
+        {{-- ================================================= --}}
+
+        <section class="relative z-10 mx-auto max-w-7xl px-4 pb-12 pt-10 sm:px-6 sm:pt-14 lg:px-8">
+
+            <div
+                class="relative overflow-hidden rounded-[2rem] border border-orange-200/70 bg-[#171411] shadow-2xl shadow-orange-950/10">
+
+                {{-- Decorative glow --}}
+
+                <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-orange-500/20 blur-3xl"></div>
+
+                <div class="absolute -bottom-40 left-1/3 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl"></div>
+
+                <div class="absolute right-16 top-16 h-32 w-32 rounded-full border border-orange-400/10"></div>
+
+                <div class="absolute right-24 top-24 h-16 w-16 rounded-full border border-orange-400/10"></div>
+
+
+                <div class="relative grid gap-10 p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center lg:p-14">
+
+                    {{-- Hero content --}}
+
+                    <div>
+
+                        <div
+                            class="mb-5 inline-flex items-center gap-2 rounded-full border border-orange-400/20 bg-orange-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-orange-300">
+
+                            <span
+                                class="h-1.5 w-1.5 rounded-full bg-orange-400 shadow-[0_0_12px_rgba(251,146,60,0.9)]"></span>
+
+                            Premium Seller Membership
+
+                        </div>
+
+
+                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400">
+                            Your Current Plan
+                        </p>
+
+
+                        <h1 class="mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl">
+
+                            {{ $currentPlan?->name ?? 'Free Plan' }}
+
+                        </h1>
+
+
+                        @if ($hasActiveSubscription)
+                            <p class="mt-5 max-w-2xl text-base leading-7 text-stone-300">
+
+                                You're currently enjoying the
+                                <strong class="text-orange-300">
+                                    {{ $currentPlan->name }}
+                                </strong>
+                                seller experience.
+
+                                Upgrade whenever you're ready to unlock
+                                more opportunities and grow your business.
+
+                            </p>
+                        @else
+                            <p class="mt-5 max-w-2xl text-base leading-7 text-stone-300">
+
+                                You're currently on the free seller plan.
+                                Take your business to the next level with
+                                premium tools designed to help you sell more
+                                and present your products professionally.
+
+                            </p>
+                        @endif
+
+
+                        {{-- Trust points --}}
+
+                        <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-stone-300">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-orange-400">✓</span>
+                                Secure payments
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-orange-400">✓</span>
+                                Upgrade anytime
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-orange-400">✓</span>
+                                Built for sellers
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Current status --}}
+
+                    <div class="lg:min-w-[230px]">
+
+                        <div class="rounded-3xl border border-white/10 bg-white/[0.05] p-6 backdrop-blur">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-xs font-bold uppercase tracking-[0.18em] text-stone-400">
+                                    Membership
+                                </span>
+
+                                @if ($hasActiveSubscription)
+                                    <span
+                                        class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                                        ✓
+                                    </span>
+                                @else
+                                    <span
+                                        class="flex h-9 w-9 items-center justify-center rounded-full bg-orange-500/10 text-orange-400">
+                                        ✦
+                                    </span>
+                                @endif
+
+                            </div>
+
+
+                            <div class="mt-5">
+
+                                @if ($hasActiveSubscription)
+                                    <div class="flex items-center gap-2 text-sm font-bold text-emerald-400">
+
+                                        <span
+                                            class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]"></span>
+
+                                        Active
+
+                                    </div>
+                                @else
+                                    <div class="text-sm font-bold text-orange-300">
+                                        Free Membership
+                                    </div>
+                                @endif
+
+
+                                <p class="mt-2 text-sm leading-6 text-stone-400">
+
+                                    {{ $hasActiveSubscription
+                                        ? 'Your membership is active and ready to help your shop grow.'
+                                        : 'Choose a premium plan when you are ready to grow.' }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================================================= --}}
+        {{-- PLANS INTRO --}}
+        {{-- ================================================= --}}
+
+        <section class="relative z-10 mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+
+            <div class="text-center">
+
+                <div
+                    class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-orange-600">
+
+                    <span class="h-px w-8 bg-orange-300"></span>
+
+                    Seller Memberships
+
+                    <span class="h-px w-8 bg-orange-300"></span>
+
+                </div>
+
+
+                <h2 class="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
+
+                    Invest in the growth of your shop.
+
+                </h2>
+
+
+                <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-500">
+
+                    Choose a plan that gives your products the visibility,
+                    capacity, and tools they deserve.
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================================================= --}}
+        {{-- PLANS --}}
+        {{-- ================================================= --}}
+
+        <section class="relative z-10 mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+
+            <div class="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
+
+
+                {{-- ================================================= --}}
+                {{-- FREE PLAN --}}
+                {{-- ================================================= --}}
+
+                <div
+                    class="group relative flex flex-col overflow-hidden rounded-[2rem] border bg-white transition duration-300
+            {{ $isFreePlan
+                ? 'border-orange-400 ring-2 ring-orange-400/20 shadow-2xl shadow-orange-100'
+                : 'border-stone-200 shadow-sm hover:-translate-y-1 hover:shadow-xl' }}">
+
+
+                    @if ($isFreePlan)
+                        <div
+                            class="absolute right-0 top-0 rounded-bl-2xl bg-orange-500 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-200">
+                            ✓ Current Plan
+                        </div>
+                    @endif
+
+
+                    <div class="p-8 sm:p-9">
+
+                        <div class="flex items-center gap-4">
+
+                            <div
+                                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-2xl ring-1 ring-orange-100">
+                                🌱
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs font-bold uppercase tracking-[0.15em] text-stone-400">
+                                    Starter
+                                </p>
+
+                                <h3 class="mt-1 text-2xl font-black text-slate-950">
+                                    Free
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mt-8 flex items-end gap-2">
+
+                            <span class="text-5xl font-black tracking-tight text-slate-950">
+                                $0
+                            </span>
+
+                            <span class="mb-2 text-sm font-medium text-stone-400">
+                                forever
+                            </span>
+
+                        </div>
+
+
+                        <p class="mt-4 min-h-[52px] text-sm leading-6 text-stone-500">
+                            A simple way to start selling and discover the Murwaj marketplace.
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex flex-1 flex-col border-t border-stone-100 px-8 pb-8 sm:px-9 sm:pb-9">
+
+                        <h4 class="mt-7 mb-5 text-xs font-black uppercase tracking-[0.18em] text-stone-500">
+                            Included
+                        </h4>
+
+
+                        <ul class="space-y-4 text-sm text-stone-600">
+
+                            <li class="flex items-center gap-3">
+                                <span
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">✓</span>
+                                <span>1 Active Product</span>
+                            </li>
+
+                            <li class="flex items-center gap-3">
+                                <span
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">✓</span>
+                                <span>100 MB Storage</span>
+                            </li>
+
+                            <li class="flex items-center gap-3">
+                                <span
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">✓</span>
+                                <span>Listings live for 30 days</span>
+                            </li>
+
+                            <li class="flex items-center gap-3 text-stone-400">
+                                <span
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">×</span>
+                                <span>No Featured Listings</span>
+                            </li>
+
+                            <li class="flex items-center gap-3 text-stone-400">
+                                <span
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">×</span>
+                                <span>No Video Uploads</span>
+                            </li>
+
+                        </ul>
+
+
+                        <div class="mt-auto pt-9">
+
+                            @if ($isFreePlan)
+                                <button type="button" disabled
+                                    class="w-full cursor-not-allowed rounded-2xl border border-orange-100 bg-orange-50 px-5 py-4 text-sm font-bold text-orange-700">
+
+                                    ✓ You're on Free
+
+                                </button>
+                            @else
+                                <div
+                                    class="w-full rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-center text-sm font-semibold text-stone-500">
+                                    Free Plan
+                                </div>
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- ================================================= --}}
+                {{-- PAID PLANS --}}
+                {{-- ================================================= --}}
 
                 @foreach ($plans as $plan)
+                    @php
+
+                        /*
+                         * EXACT CURRENT PLAN.
+                         *
+                         * Never compare price or name here.
+                         */
+                        $isCurrentPlan = $currentPlanId !== null && (int) $currentPlanId === (int) $plan->id;
+
+                        $isUpgrade =
+                            $hasActiveSubscription &&
+                            $currentPlan &&
+                            (float) $plan->price > (float) $currentPlan->price;
+
+                        $isDowngrade =
+                            $hasActiveSubscription &&
+                            $currentPlan &&
+                            (float) $plan->price < (float) $currentPlan->price;
+                    @endphp
+
+
                     <div
-                        class="
-                    relative 
-                    rounded-3xl 
-                    bg-white 
-                    border 
-                    overflow-hidden
-                    shadow-sm 
-                    hover:shadow-2xl 
-                    transition
-                    {{ $plan->is_popular ? 'ring-2 ring-indigo-600' : '' }}
-                    ">
+                        class="group relative flex flex-col overflow-hidden rounded-[2rem] border bg-white transition duration-300
+                {{ $isCurrentPlan
+                    ? 'border-orange-400 ring-2 ring-orange-400/20 shadow-2xl shadow-orange-100'
+                    : 'border-stone-200 shadow-sm hover:-translate-y-1 hover:border-orange-200 hover:shadow-2xl hover:shadow-orange-100/60' }}">
 
 
-                        {{-- Popular Badge --}}
-                        @if ($plan->is_popular)
+                        {{-- ================================================= --}}
+                        {{-- PLAN BADGE --}}
+                        {{-- ================================================= --}}
+
+                        @if ($isCurrentPlan)
                             <div
-                                class="
-                            absolute 
-                            top-0 
-                            right-0
-                            bg-gradient-to-r 
-                            from-indigo-600 
-                            to-purple-600
-                            text-white
-                            px-5
-                            py-2
-                            rounded-bl-2xl
-                            text-sm
-                            font-bold
-                            ">
+                                class="absolute right-0 top-0 z-10 rounded-bl-2xl bg-orange-500 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-200">
+                                ✓ Current Plan
+                            </div>
+                        @elseif ($plan->is_popular)
+                            <div
+                                class="absolute right-0 top-0 z-10 rounded-bl-2xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-200">
 
-                                ⭐ Most Popular
+                                <span class="mr-1">✦</span>
+
+                                Most Popular
 
                             </div>
                         @endif
 
 
+                        {{-- ================================================= --}}
+                        {{-- PREMIUM PLAN HEADER --}}
+                        {{-- ================================================= --}}
 
-                        {{-- Header --}}
-                        <div class="p-8">
+                        <div class="relative p-8 sm:p-9">
+
+                            @if ($plan->is_popular)
+                                <div
+                                    class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500">
+                                </div>
+                            @endif
 
 
-                            <h2 class="text-3xl font-bold text-slate-900">
-                                {{ $plan->name }}
-                            </h2>
+                            <div class="flex items-center gap-4">
+
+                                <div
+                                    class="{{ $plan->is_popular
+                                        ? 'bg-orange-100 text-orange-600 ring-orange-200'
+                                        : 'bg-stone-100 text-stone-700 ring-stone-200' }}
+                            flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ring-1">
+
+                                    🚀
+
+                                </div>
 
 
-                            <p class="mt-2 text-gray-500">
-                                {{ $plan->description ?? 'Perfect plan for growing your business.' }}
+                                <div>
+
+                                    <p class="text-xs font-bold uppercase tracking-[0.15em] text-stone-400">
+                                        {{ $plan->is_popular ? 'Recommended' : 'Premium' }}
+                                    </p>
+
+                                    <h3 class="mt-1 text-2xl font-black text-slate-950">
+                                        {{ $plan->name }}
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="mt-8 flex items-end gap-2">
+
+                                <span class="text-5xl font-black tracking-tight text-slate-950">
+                                    ${{ number_format((float) $plan->price, 2) }}
+                                </span>
+
+                                <span class="mb-2 text-sm font-medium text-stone-400">
+                                    /{{ ucfirst($plan->billing_period) }}
+                                </span>
+
+                            </div>
+
+
+                            <p class="mt-4 min-h-[52px] text-sm leading-6 text-stone-500">
+                                {{ $plan->description ?? 'Premium tools and greater capacity to help your business grow.' }}
                             </p>
 
-
-
-                            <div class="mt-6 flex items-end gap-2">
-
-
-                                <span class="text-5xl font-black text-slate-900">
-
-                                    ${{ number_format($plan->price, 2) }}
-
-                                </span>
-
-
-                                <span class="text-gray-500 mb-2">
-
-                                    /{{ ucfirst($plan->billing_period) }}
-
-                                </span>
-
-
-                            </div>
-
-
-
                         </div>
 
 
+                        {{-- ================================================= --}}
+                        {{-- FEATURES --}}
+                        {{-- ================================================= --}}
 
-                        {{-- Features --}}
-                        <div class="px-8 pb-8">
+                        <div class="flex flex-1 flex-col border-t border-stone-100 px-8 pb-8 sm:px-9 sm:pb-9">
 
-
-                            <div class="border-t pt-6">
-
-
-                                <h3 class="font-bold mb-5">
-                                    Plan Features
-                                </h3>
+                            <h4 class="mt-7 mb-5 text-xs font-black uppercase tracking-[0.18em] text-stone-500">
+                                Everything included
+                            </h4>
 
 
+                            <ul class="space-y-4 text-sm text-stone-600">
 
-                                <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex items-start gap-3">
 
+                                    <span
+                                        class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
+                                        ✓
+                                    </span>
 
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
-                                        {{ $plan->listing_limit }} Active Products
-                                    </li>
+                                    <span>
+                                        <strong class="font-bold text-slate-950">
+                                            {{ $plan->listing_limit }}
+                                        </strong>
+                                        Active Products
+                                    </span>
 
-
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
-                                        {{ $plan->storage_limit }} MB Storage
-                                    </li>
-
-
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
-                                        Listings live {{ $plan->listing_duration }} days
-                                    </li>
+                                </li>
 
 
-                                    <li class="flex gap-3">
-                                        <span class="text-green-600">✔</span>
+                                <li class="flex items-start gap-3">
 
+                                    <span
+                                        class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
+                                        ✓
+                                    </span>
+
+                                    <span>
+                                        <strong class="font-bold text-slate-950">
+                                            {{ $plan->storage_limit }} MB
+                                        </strong>
+                                        Storage
+                                    </span>
+
+                                </li>
+
+
+                                <li class="flex items-start gap-3">
+
+                                    <span
+                                        class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
+                                        ✓
+                                    </span>
+
+                                    <span>
+                                        Listings live for
+                                        <strong class="font-bold text-slate-950">
+                                            {{ $plan->listing_duration }} days
+                                        </strong>
+                                    </span>
+
+                                </li>
+
+
+                                <li class="flex items-start gap-3">
+
+                                    <span
+                                        class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
+                                        ✓
+                                    </span>
+
+                                    <span>
                                         Featured Listings:
-                                        <b>
+                                        <strong class="font-bold text-slate-950">
                                             {{ $plan->featured_limit ?? 'Unlimited' }}
-                                        </b>
+                                        </strong>
+                                    </span>
 
-                                    </li>
+                                </li>
 
 
+                                <li class="flex items-start gap-3">
 
-                                    <li class="flex gap-3">
+                                    @if ($plan->video_upload)
+                                        <span
+                                            class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
+                                            ✓
+                                        </span>
 
-                                        @if ($plan->video_upload)
-                                            <span class="text-green-600">✔</span>
+                                        <span>
                                             Video Uploads Included
-                                        @else
-                                            <span class="text-red-500">✖</span>
+                                        </span>
+                                    @else
+                                        <span
+                                            class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">
+                                            ×
+                                        </span>
+
+                                        <span class="text-stone-400">
                                             No Video Uploads
-                                        @endif
+                                        </span>
+                                    @endif
 
-                                    </li>
+                                </li>
+
+                            </ul>
 
 
+                            {{-- ================================================= --}}
+                            {{-- CTA --}}
+                            {{-- ================================================= --}}
 
-                                </ul>
+                            <div class="mt-auto pt-9">
 
+                                @if ($isCurrentPlan)
+                                    <button type="button" disabled
+                                        class="w-full cursor-not-allowed rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-bold text-emerald-700">
+
+                                        <span class="flex items-center justify-center gap-2">
+                                            <span>✓</span>
+                                            You're on this plan
+                                        </span>
+
+                                    </button>
+                                @else
+                                    <form action="{{ route('subscription.checkout', ['plan' => $plan->id]) }}"
+                                        method="POST">
+
+                                        @csrf
+
+                                        <button type="submit"
+                                            class="{{ $plan->is_popular
+                                                ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-200 hover:from-orange-600 hover:to-amber-600'
+                                                : 'bg-[#1c1815] shadow-lg shadow-stone-200 hover:bg-orange-600' }}
+                                        group w-full rounded-2xl px-5 py-4 text-sm font-black text-white transition duration-300">
+
+                                            <span class="flex items-center justify-center gap-2">
+
+                                                @if (!$hasActiveSubscription)
+                                                    Choose {{ $plan->name }}
+                                                @elseif ($isUpgrade)
+                                                    Upgrade to {{ $plan->name }}
+                                                @elseif ($isDowngrade)
+                                                    Change to {{ $plan->name }}
+                                                @else
+                                                    Choose {{ $plan->name }}
+                                                @endif
+
+                                                <span
+                                                    class="transition-transform duration-200 group-hover:translate-x-1">
+                                                    →
+                                                </span>
+
+                                            </span>
+
+                                        </button>
+
+                                    </form>
+
+
+                                    <div class="mt-4 flex items-center justify-center gap-2 text-xs text-stone-400">
+
+                                        <span>🔒</span>
+
+                                        Secure checkout
+
+                                        <span>•</span>
+
+                                        Cancel anytime
+
+                                    </div>
+                                @endif
 
                             </div>
 
-
-
-
-                            {{-- Button --}}
-
-                            <form action="{{ route('subscription.checkout', $plan) }}" method="POST" class="mt-8">
-
-
-                                @csrf
-
-
-                                <button
-                                    class="
-                                w-full
-                                py-4
-                                rounded-2xl
-                                font-bold
-                                transition
-
-                                {{ $plan->is_popular
-                                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                                    : 'bg-slate-900 hover:bg-black text-white' }}
-                                ">
-
-
-                                    Subscribe Now 🚀
-
-
-                                </button>
-
-
-
-
-                            </form>
-
-
                         </div>
-
 
                     </div>
                 @endforeach
 
+            </div>
+
+        </section>
+
+
+        {{-- ================================================= --}}
+        {{-- TRUST SECTION --}}
+        {{-- ================================================= --}}
+
+        <section class="relative z-10 border-y border-stone-200/80 bg-white/70">
+
+            <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+
+                <div class="grid gap-8 md:grid-cols-3">
+
+                    <div class="flex items-start gap-4">
+
+                        <div
+                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                            🔒
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-bold text-slate-950">
+                                Secure Payments
+                            </h3>
+
+                            <p class="mt-1 text-sm leading-6 text-stone-500">
+                                Your payment information is handled through secure payment infrastructure.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex items-start gap-4">
+
+                        <div
+                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                            ⚡
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-bold text-slate-950">
+                                Upgrade Anytime
+                            </h3>
+
+                            <p class="mt-1 text-sm leading-6 text-stone-500">
+                                Move to a plan that fits your business as your shop grows.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex items-start gap-4">
+
+                        <div
+                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-bold text-slate-950">
+                                Built for Growth
+                            </h3>
+
+                            <p class="mt-1 text-sm leading-6 text-stone-500">
+                                More capacity and premium features give your products room to grow.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
+        </section>
 
-        </div>
 
+        {{-- ================================================= --}}
+        {{-- FINAL CTA --}}
+        {{-- ================================================= --}}
+
+        <section class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+
+            <div
+                class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 px-7 py-12 text-center shadow-2xl shadow-orange-200 sm:px-12">
+
+                <div class="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-white/10 blur-2xl"></div>
+
+                <div class="absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl"></div>
+
+
+                <div class="relative">
+
+                    <div
+                        class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-2xl text-white ring-1 ring-white/20">
+                        ✦
+                    </div>
+
+
+                    <h2 class="mt-6 text-3xl font-black tracking-tight text-white sm:text-4xl">
+                        Ready to grow your shop?
+                    </h2>
+
+
+                    <p class="mx-auto mt-4 max-w-xl text-sm leading-6 text-orange-50 sm:text-base">
+                        Choose the membership that gives your business
+                        the space, visibility, and tools it needs to thrive.
+                    </p>
+
+
+                    <div
+                        class="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-semibold text-orange-100">
+
+                        <span>✓ Secure checkout</span>
+
+                        <span>✓ Flexible plans</span>
+
+                        <span>✓ Seller-focused features</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
 
     </div>
 
     <x-main-footer></x-main-footer>
+
+
+
 </x-main-layout>

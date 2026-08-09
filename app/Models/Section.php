@@ -56,7 +56,7 @@ class Section extends Model
         return $this->hasMany(DigitalCategory::class, 'section_id', 'id');
     }
 
-    public function listing(): HasMany
+    public function listings(): HasMany
     {
         return $this->hasMany(Listing::class, 'section_id', 'id');
     }

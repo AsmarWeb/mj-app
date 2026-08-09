@@ -55,7 +55,9 @@ class ShopController extends Controller
             'city_id' => null,
             'logo' => null,
             'banner' => null,
-        ]);
+            'published_at' => now(),
+            'is_active' => true,
+        ]); 
 
         switch ($step) {
 

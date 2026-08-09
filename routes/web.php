@@ -129,11 +129,14 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::middleware('maintenance.check')->group(function () {
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::view('/ai-studio', 'ai-studio')->middleware('auth')->name('ai.studio');
+});
+
 // Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-Route::get('/category/{category}', [ExploreController::class, 'category'])->name('discover.category');
+Route::get('/explore/category/{category}', [ExploreController::class, 'category'])->name('discover.category');
+Route::get('/explore/section/{section}', [ExploreController::class, 'section'])->name('explore.section');
 Route::get('/categories', [ListingCategoryController::class, 'index'])->name('categories');
 Route::get('/countries', [ShopCountryController::class, 'index'])->name('countries');
 Route::get('about', [HomeController::class, 'about'])->name('about');

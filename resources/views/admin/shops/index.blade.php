@@ -1,245 +1,797 @@
 <x-admin>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <div class="flex items-center gap-x-3">
-                        <h2 class="text-lg font-medium text-gray-800 dark:text-white">Shops</h2>
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+
+        {{-- ========================================================= --}}
+        {{-- PAGE HEADER --}}
+        {{-- ========================================================= --}}
+
+        <div
+            class="relative mb-8 overflow-hidden rounded-[2rem]
+               border border-orange-100
+               bg-gradient-to-br from-white via-orange-50/60 to-amber-50
+               p-6 shadow-xl shadow-orange-100/40
+               dark:border-slate-800
+               dark:from-slate-950 dark:via-slate-900 dark:to-orange-950/20
+               dark:shadow-none sm:p-8">
+
+            {{-- Decorative glow --}}
+            <div
+                class="pointer-events-none absolute -right-20 -top-20 h-64 w-64
+                   rounded-full bg-orange-400/10 blur-3xl">
+            </div>
+
+            <div
+                class="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64
+                   rounded-full bg-amber-400/10 blur-3xl">
+            </div>
+
+            <div class="relative">
+
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+                    <div>
+
+                        <div class="mb-3 flex items-center gap-3">
+
+                            <span
+                                class="inline-flex h-11 w-11 items-center justify-center
+                                   rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500
+                                   text-xl text-white shadow-lg shadow-orange-200
+                                   dark:shadow-orange-950/40">
+                                🏪
+                            </span>
+
+                            <span
+                                class="text-xs font-bold uppercase tracking-[0.2em]
+                                   text-orange-600 dark:text-orange-400">
+                                Marketplace Management
+                            </span>
+
+                        </div>
+
+                        <h1
+                            class="text-3xl font-black tracking-tight
+                               text-slate-900 dark:text-white sm:text-4xl">
+                            All Shops
+                        </h1>
+
+                        <p
+                            class="mt-2 max-w-2xl text-sm leading-6
+                               text-slate-500 dark:text-slate-400">
+                            Manage, verify, edit and monitor every shop on your marketplace.
+                        </p>
+
+                    </div>
+
+                    {{-- Shop Count + Add --}}
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
 
                         <span
-                            class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">{{ $shopCount }}
-                            shops</span>
+                            class="inline-flex items-center justify-center rounded-full
+                               border border-orange-200 bg-orange-50 px-4 py-2
+                               text-sm font-bold text-orange-700
+                               dark:border-orange-500/20
+                               dark:bg-orange-500/10 dark:text-orange-400">
+
+                            {{ $shopCount }}
+                            {{ Str::plural('Shop', $shopCount) }}
+
+                        </span>
+
+                        <a href="{{ route('shops.create') }}"
+                            class="inline-flex items-center justify-center gap-2
+                               rounded-xl bg-gradient-to-r from-orange-600 to-amber-500
+                               px-5 py-3 text-sm font-bold text-white
+                               shadow-lg shadow-orange-200
+                               transition duration-200
+                               hover:-translate-y-0.5 hover:from-orange-700 hover:to-amber-600
+                               dark:shadow-orange-950/30">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+
+                            Add Shop
+
+                        </a>
+
                     </div>
+
                 </div>
 
-                <div class="flex items-center mt-4 gap-x-3">
-                    <a href="{{ route('shops.create') }}"
-                        class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-
-                        <span>{{ __('Add Shop') }}</span>
-                    </a>
-                </div>
             </div>
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+
+        </div>
+
+
+        {{-- ========================================================= --}}
+        {{-- FLASH MESSAGE --}}
+        {{-- ========================================================= --}}
+
+        @if (session('message'))
+            <div
+                class="mb-6 flex items-start gap-3 rounded-2xl
+                   border border-emerald-200 bg-emerald-50 p-5
+                   text-emerald-800 shadow-sm
+                   dark:border-emerald-900/50
+                   dark:bg-emerald-950/30 dark:text-emerald-300">
+
+                <div
+                    class="flex h-9 w-9 shrink-0 items-center justify-center
+                       rounded-full bg-emerald-500 font-bold text-white">
+                    ✓
+                </div>
+
+                <div>
+                    <p class="font-bold">Success</p>
+
+                    <p class="mt-1 text-sm">
+                        {{ session('message') }}
+                    </p>
+                </div>
+
+            </div>
+        @endif
+
+
+        {{-- ========================================================= --}}
+        {{-- SEARCH / FILTERS --}}
+        {{-- ========================================================= --}}
+
+        <div
+            class="mb-6 rounded-[1.5rem]
+               border border-slate-200 bg-white p-5 shadow-sm
+               dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+
+            <form method="GET" action="{{ url()->current() }}">
+
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_220px_auto]">
+
+                    {{-- Search --}}
+                    <div>
+
+                        <label for="shop-search"
+                            class="mb-2 block text-xs font-bold uppercase tracking-wider
+                               text-slate-500 dark:text-slate-400">
+                            Search Shops
+                        </label>
+
+                        <div class="relative">
+
+                            <div
+                                class="pointer-events-none absolute inset-y-0 left-0
+                                   flex items-center pl-4 text-slate-400">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m21 21-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z" />
+                                </svg>
+
+                            </div>
+
+                            <input type="search" name="search" id="shop-search" value="{{ request('search') }}"
+                                placeholder="Shop, owner, slug or location..." autocomplete="off"
+                                class="w-full rounded-xl border border-slate-200
+                                   bg-slate-50 py-3 pl-11 pr-4
+                                   text-sm text-slate-900 outline-none transition
+                                   placeholder:text-slate-400
+                                   focus:border-orange-500
+                                   focus:bg-white
+                                   focus:ring-4 focus:ring-orange-500/10
+                                   dark:border-slate-700
+                                   dark:bg-slate-800
+                                   dark:text-white
+                                   dark:placeholder:text-slate-500
+                                   dark:focus:border-orange-500">
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Verification --}}
+                    <div>
+
+                        <label for="verified"
+                            class="mb-2 block text-xs font-bold uppercase tracking-wider
+                               text-slate-500 dark:text-slate-400">
+                            Verification
+                        </label>
+
+                        <select name="verified" id="verified"
+                            class="w-full rounded-xl border border-slate-200
+                               bg-slate-50 px-4 py-3
+                               text-sm font-medium text-slate-700 outline-none transition
+                               focus:border-orange-500
+                               focus:bg-white
+                               focus:ring-4 focus:ring-orange-500/10
+                               dark:border-slate-700
+                               dark:bg-slate-800 dark:text-slate-200
+                               dark:focus:border-orange-500">
+
+                            <option value="">All Shops</option>
+
+                            <option value="1" @selected(request('verified') === '1')>
+                                Verified
+                            </option>
+
+                            <option value="0" @selected(request('verified') === '0')>
+                                Not Verified
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- Buttons --}}
+                    <div class="flex items-end gap-2">
+
+                        <button type="submit"
+                            class="inline-flex h-[46px] flex-1 items-center justify-center
+                               gap-2 rounded-xl
+                               bg-gradient-to-r from-orange-600 to-amber-500
+                               px-6 text-sm font-bold text-white
+                               shadow-lg shadow-orange-200 transition
+                               hover:from-orange-700 hover:to-amber-600
+                               dark:shadow-orange-950/30">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m21 21-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z" />
+                            </svg>
+
+                            Search
+
+                        </button>
+
+                        @if (request()->filled('search') || request()->filled('verified'))
+                            <a href="{{ url()->current() }}"
+                                class="inline-flex h-[46px] items-center justify-center
+                                   rounded-xl border border-slate-200 bg-white px-4
+                                   text-sm font-semibold text-slate-600 transition
+                                   hover:bg-slate-50
+                                   dark:border-slate-700
+                                   dark:bg-slate-800 dark:text-slate-300
+                                   dark:hover:bg-slate-700">
+
+                                Clear
+
+                            </a>
+                        @endif
+
+                    </div>
 
                 </div>
-                <div class="bg-gray-200 bg-opacity-25 overflow-scroll px-0 gap-6 lg:gap-8 p-6 lg:p-8">
-                    @if (session()->has('message'))
-                        <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
-                            <span class="font-medium">
-                                {{ session()->get('message') }}
+
+            </form>
+
+        </div>
+
+
+        {{-- ========================================================= --}}
+        {{-- SHOP DIRECTORY --}}
+        {{-- ========================================================= --}}
+
+        <div
+            class="overflow-hidden rounded-[1.5rem]
+               border border-slate-200 bg-white
+               shadow-xl shadow-slate-200/50
+               dark:border-slate-800 dark:bg-slate-900
+               dark:shadow-none">
+
+            {{-- Header --}}
+            <div
+                class="flex flex-col gap-3 border-b border-slate-100
+                   px-6 py-5 sm:flex-row sm:items-center sm:justify-between
+                   dark:border-slate-800">
+
+                <div>
+
+                    <h2 class="text-lg font-black text-slate-900 dark:text-white">
+                        Shop Directory
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+
+                        @if (request('search'))
+                            Results for
+                            <span class="font-semibold text-orange-600 dark:text-orange-400">
+                                "{{ request('search') }}"
                             </span>
-                        </div>
-                    @endif
-                    <div>
-                        {{-- <form method="GET">
-                            <label for="table-search" class="sr-only">Search</label>
-                            <div class="relative mt-1">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <input type="text" name="search" id="table-search"
-                                    value="{{ request()->input('search') }}"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Search for user">
-                            </div>
-                        </form> --}}
-                        <table
-                            class="mt-4 w-full min-w-max table-auto text-left divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead name="head" class="bg-gray-50 dark:bg-gray-800">
-                                <tr>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        #
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        @include('admin.includes.sort-link', [
-                                            'label' => 'User Name',
-                                            'attribute' => 'username',
-                                        ])
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        @include('admin.includes.sort-link', [
-                                            'label' => 'Name',
-                                            'attribute' => 'name',
-                                        ])
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        @include('admin.includes.sort-link', [
-                                            'label' => 'Slug',
-                                            'attribute' => 'slug',
-                                        ])
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        @include('admin.includes.sort-link', [
-                                            'label' => 'Location',
-                                            'attribute' => 'location',
-                                        ])
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Thumbnail
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Verified
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Published at
-                                    </th>
-                                    <th
-                                        class="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <slot name="body">
-                                @foreach ($shops as $shop)
-                                    <tr>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                <a class="text-sm leading-5 text-gray-800">{{ $shop->id }}</a>
-                                            </div>
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                <a class="text-sm leading-5 text-gray-800">
-                                                    {{ $shop->user->name }}</a>
-                                            </div>
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                <a href="{{ route('shops.show', $shop->id) }}"
-                                                    class="no-underline hover:underline text-cyan-600">{{ $shop->name }}</a>
-                                            </div>
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                <a href="#"
-                                                    class="no-underline hover:underline text-cyan-600">{{ $shop->slug }}</a>
-                                            </div>
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                {{ $shop->location }}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if ($shop->logo)
-                                                <img src="{{ Storage::disk('public')->url($shop->logo) }}"
-                                                    class="img-fluid" style="max-width:80px" alt="#">
-                                            @else
-                                                <img src="https://images.unsplash.com/photo-1622180203374-9524a54b734d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
-                                                    class="img-fluid" style="max-width:80px" alt="shop">
+                        @elseif (request('verified') === '1')
+                            Showing verified shops
+                        @elseif (request('verified') === '0')
+                            Showing unverified shops
+                        @else
+                            All registered shops
+                        @endif
+
+                    </p>
+
+                </div>
+
+                <div class="text-sm text-slate-500 dark:text-slate-400">
+
+                    Showing
+
+                    <span class="font-bold text-slate-900 dark:text-white">
+                        {{ $shops->firstItem() ?? 0 }}
+                    </span>
+
+                    –
+
+                    <span class="font-bold text-slate-900 dark:text-white">
+                        {{ $shops->lastItem() ?? 0 }}
+                    </span>
+
+                    of
+
+                    <span class="font-bold text-slate-900 dark:text-white">
+                        {{ $shops->total() }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {{-- ===================================================== --}}
+            {{-- TABLE --}}
+            {{-- ===================================================== --}}
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full min-w-[1250px] text-left">
+
+                    <thead
+                        class="border-b border-slate-200 bg-slate-50
+                           dark:border-slate-800 dark:bg-slate-950/60">
+
+                        <tr>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                #
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Owner
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Shop
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Slug
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Location
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Logo
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Status
+                            </th>
+
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Published
+                            </th>
+
+                            <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+
+                        @forelse ($shops as $shop)
+                            <tr
+                                class="group transition-colors
+                                   hover:bg-orange-50/40
+                                   dark:hover:bg-orange-950/10">
+
+                                {{-- ID --}}
+                                <td class="whitespace-nowrap px-6 py-5">
+
+                                    <span
+                                        class="text-sm font-bold text-slate-400
+                                           transition group-hover:text-orange-600">
+                                        #{{ $shop->id }}
+                                    </span>
+
+                                </td>
+
+
+                                {{-- OWNER --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div
+                                            class="flex h-10 w-10 shrink-0 items-center justify-center
+                                               rounded-full bg-gradient-to-br
+                                               from-orange-400 to-amber-500
+                                               text-sm font-black text-white shadow-sm">
+
+                                            {{ strtoupper(substr($shop->user?->name ?? 'U', 0, 1)) }}
+
+                                        </div>
+
+                                        <div class="min-w-0">
+
+                                            <p class="truncate font-semibold text-slate-900 dark:text-white">
+                                                {{ $shop->user?->name ?? 'Unknown User' }}
+                                            </p>
+
+                                            @if ($shop->user?->email)
+                                                <p class="truncate text-xs text-slate-400">
+                                                    {{ $shop->user->email }}
+                                                </p>
                                             @endif
-                                        </td>
-                                        <td>
-                                            @if ($shop->verified)
-                                                <div
-                                                    class="inline-flex items-center gap-2 rounded-full bg-emerald-500 text-white px-4 py-2 shadow">
 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-                                                        fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd"
-                                                            d="M16.707 5.293a1 1 0 010 1.414l-7.5 7.5a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L8.5 12.086l6.793-6.793a1 1 0 011.414 0z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
+                                        </div>
 
-                                                    Verified Seller
+                                    </div>
 
-                                                </div>
-                                            @else
-                                                <div
-                                                    class="inline-flex items-center gap-2 rounded-full bg-slate-200 text-slate-700 px-4 py-2">
+                                </td>
 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-                                                        fill="none" stroke="currentColor" stroke-width="2"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M12 8v4m0 4h.01M10.29 3.86L1.82 18A2 2 0 003.53 21h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                                                    </svg>
 
-                                                    Not Verified
+                                {{-- SHOP --}}
+                                <td class="px-6 py-5">
 
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <div class="flex items-center gap-3">
-                                                {{ $shop->published_at }}
+                                    <a href="{{ route('shops.show', $shop->id) }}"
+                                        class="font-bold text-slate-900 transition
+                                           hover:text-orange-600
+                                           dark:text-white
+                                           dark:hover:text-orange-400">
+
+                                        {{ $shop->name }}
+
+                                    </a>
+
+                                </td>
+
+
+                                {{-- SLUG --}}
+                                <td class="px-6 py-5">
+
+                                    <span
+                                        class="inline-flex rounded-lg bg-slate-100 px-3 py-1.5
+                                           font-mono text-xs font-medium text-slate-600
+                                           dark:bg-slate-800 dark:text-slate-300">
+
+                                        /{{ $shop->slug }}
+
+                                    </span>
+
+                                </td>
+
+
+                                {{-- LOCATION --}}
+                                <td class="px-6 py-5">
+
+                                    <div
+                                        class="flex max-w-[180px] items-center gap-2
+                                           text-sm text-slate-600 dark:text-slate-300">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-4 w-4 shrink-0 text-orange-500" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17.657 16.657L13.414 21.9a2 2 0 01-2.828 0l-4.243-5.243a8 8 0 1111.314 0z" />
+
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                                        </svg>
+
+                                        <span class="truncate">
+                                            {{ $shop->location ?: 'Not specified' }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- LOGO --}}
+                                <td class="px-6 py-5">
+
+                                    <div
+                                        class="h-12 w-12 overflow-hidden rounded-xl
+                                           border border-slate-200 bg-slate-100
+                                           shadow-sm
+                                           dark:border-slate-700 dark:bg-slate-800">
+
+                                        @if ($shop->logo)
+                                            <img src="{{ Storage::disk('public')->url($shop->logo) }}"
+                                                alt="{{ $shop->name }}" class="h-full w-full object-cover">
+                                        @else
+                                            <div
+                                                class="flex h-full w-full items-center justify-center
+                                                   bg-gradient-to-br from-orange-400 to-amber-500
+                                                   text-lg font-black text-white">
+
+                                                {{ strtoupper(substr($shop->name ?? 'S', 0, 1)) }}
+
                                             </div>
-                                        </td>
-                                        <td>
-                                            @if ($shop->verified)
-                                                <form action="{{ route('admin.shops.unverify', $shop) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <button
-                                                        class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white">
-                                                        Remove Verification
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('admin.shops.verify', $shop) }}" method="POST">
-                                                    @csrf
-                                                    <button
-                                                        class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
-                                                        Verify Shop
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </td>
-                                        <td class="p-4 border-b border-blue-gray-50">
-                                            <form action="{{ route('shops.destroy', $shop->id) }}" method="POST">
-                                                <a href="{{ route('shops.edit', $shop->id) }}"
-                                                    class="btn btn-info btn-sm">
-                                                    {{ __('Edit') }}
-                                                </a>
+                                        @endif
 
+                                    </div>
+
+                                </td>
+
+
+                                {{-- VERIFICATION --}}
+                                <td class="px-6 py-5">
+
+                                    @if ($shop->verified)
+                                        <span
+                                            class="inline-flex items-center gap-2 rounded-full
+                                               bg-orange-50 px-3 py-1.5
+                                               text-xs font-bold text-orange-700
+                                               ring-1 ring-inset ring-orange-200
+                                               dark:bg-orange-500/10
+                                               dark:text-orange-400
+                                               dark:ring-orange-500/20">
+
+                                            <span
+                                                class="flex h-4 w-4 items-center justify-center
+                                                   rounded-full bg-orange-500 text-white">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+
+                                                    <path fill-rule="evenodd"
+                                                        d="M16.707 5.293a1 1 0 010 1.414l-7.5 7.5a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L8.5 12.086l6.793-6.793a1 1 0 011.414 0z"
+                                                        clip-rule="evenodd" />
+
+                                                </svg>
+
+                                            </span>
+
+                                            Verified
+
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center gap-2 rounded-full
+                                               bg-slate-100 px-3 py-1.5
+                                               text-xs font-semibold text-slate-500
+                                               ring-1 ring-inset ring-slate-200
+                                               dark:bg-slate-800
+                                               dark:text-slate-400
+                                               dark:ring-slate-700">
+
+                                            <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+
+                                            Not Verified
+
+                                        </span>
+                                    @endif
+
+                                </td>
+
+
+                                {{-- PUBLISHED --}}
+                                <td class="whitespace-nowrap px-6 py-5">
+
+                                    @if ($shop->published_at)
+                                        <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                            {{ $shop->published_at->format('M d, Y') }}
+                                        </p>
+
+                                        <p class="text-xs text-slate-400">
+                                            {{ $shop->published_at->diffForHumans() }}
+                                        </p>
+                                    @else
+                                        <span
+                                            class="inline-flex rounded-full bg-slate-100 px-3 py-1
+                                               text-xs font-semibold text-slate-500
+                                               dark:bg-slate-800 dark:text-slate-400">
+                                            Not published
+                                        </span>
+                                    @endif
+
+                                </td>
+
+
+                                {{-- ACTIONS --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center justify-end gap-2">
+
+                                        {{-- View --}}
+                                        <a href="{{ route('shops.show', $shop->id) }}"
+                                            class="inline-flex items-center justify-center
+                                               rounded-lg border border-slate-200
+                                               bg-white px-3 py-2
+                                               text-xs font-bold text-slate-600
+                                               transition
+                                               hover:border-orange-200
+                                               hover:bg-orange-50
+                                               hover:text-orange-600
+                                               dark:border-slate-700
+                                               dark:bg-slate-800
+                                               dark:text-slate-300
+                                               dark:hover:bg-orange-950/30
+                                               dark:hover:text-orange-400">
+                                            View
+                                        </a>
+
+
+                                        {{-- Edit --}}
+                                        <a href="{{ route('shops.edit', $shop->id) }}"
+                                            class="inline-flex items-center justify-center
+                                               rounded-lg border border-slate-200
+                                               bg-white px-3 py-2
+                                               text-xs font-bold text-slate-600
+                                               transition
+                                               hover:border-orange-200
+                                               hover:bg-orange-50
+                                               hover:text-orange-600
+                                               dark:border-slate-700
+                                               dark:bg-slate-800
+                                               dark:text-slate-300
+                                               dark:hover:bg-orange-950/30
+                                               dark:hover:text-orange-400">
+                                            Edit
+                                        </a>
+
+
+                                        {{-- Verify / Unverify --}}
+                                        @if ($shop->verified)
+                                            <form action="{{ route('admin.shops.unverify', $shop) }}" method="POST">
                                                 @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('{{ __('Are you sure you want to delete?') }}')">
-                                                    {{ __('Delete') }}
+
+                                                <button type="submit"
+                                                    onclick="return confirm('Remove verification from {{ addslashes($shop->name) }}?')"
+                                                    class="inline-flex items-center justify-center
+                                                       rounded-lg bg-slate-900 px-3 py-2
+                                                       text-xs font-bold text-white transition
+                                                       hover:bg-red-600
+                                                       dark:bg-slate-700
+                                                       dark:hover:bg-red-600">
+                                                    Unverify
                                                 </button>
                                             </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                @if ($shops->isEmpty())
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="flex flecol justify-center items-center py-4 text-lg">
-                                                {{ __('No Result Found') }}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endif
-                            </slot>
-                        </table>
+                                        @else
+                                            <form action="{{ route('admin.shops.verify', $shop) }}" method="POST">
+                                                @csrf
 
-                        <div class="py-8">
-                            {{ $shops->links() }}
-                        </div>
-                    </div>
-                </div>
+                                                <button type="submit"
+                                                    class="inline-flex items-center justify-center
+                                                       rounded-lg bg-orange-600 px-3 py-2
+                                                       text-xs font-bold text-white
+                                                       shadow-sm transition
+                                                       hover:bg-orange-700">
+                                                    Verify
+                                                </button>
+                                            </form>
+                                        @endif
+
+
+                                        {{-- Delete --}}
+                                        <form action="{{ route('shops.destroy', $shop->id) }}" method="POST">
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                onclick="return confirm('Are you sure you want to delete {{ addslashes($shop->name) }}?')"
+                                                class="inline-flex items-center justify-center
+                                                   rounded-lg border border-red-200
+                                                   bg-red-50 px-3 py-2
+                                                   text-xs font-bold text-red-600
+                                                   transition
+                                                   hover:bg-red-600 hover:text-white
+                                                   dark:border-red-900/40
+                                                   dark:bg-red-950/20
+                                                   dark:text-red-400
+                                                   dark:hover:bg-red-600
+                                                   dark:hover:text-white">
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="9" class="px-6 py-20">
+
+                                    <div class="flex flex-col items-center justify-center text-center">
+
+                                        <div
+                                            class="flex h-20 w-20 items-center justify-center
+                                               rounded-3xl bg-orange-50 text-4xl
+                                               dark:bg-orange-500/10">
+                                            🏪
+                                        </div>
+
+                                        <h3
+                                            class="mt-5 text-xl font-black
+                                               text-slate-900 dark:text-white">
+                                            No shops found
+                                        </h3>
+
+                                        <p
+                                            class="mt-2 max-w-md text-sm
+                                               text-slate-500 dark:text-slate-400">
+
+                                            @if (request('search'))
+                                                No shops match
+                                                <strong>"{{ request('search') }}"</strong>.
+                                                Try another search.
+                                            @elseif (request('verified') === '1')
+                                                There are no verified shops.
+                                            @elseif (request('verified') === '0')
+                                                There are no unverified shops.
+                                            @else
+                                                There are no shops registered on the marketplace yet.
+                                            @endif
+
+                                        </p>
+
+                                        @if (request('search') || request('verified') !== null)
+                                            <a href="{{ url()->current() }}"
+                                                class="mt-5 rounded-xl
+                                                   bg-orange-600 px-5 py-3
+                                                   text-sm font-bold text-white
+                                                   transition hover:bg-orange-700">
+                                                Clear Filters
+                                            </a>
+                                        @endif
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
             </div>
+
+
+            {{-- ========================================================= --}}
+            {{-- PAGINATION --}}
+            {{-- ========================================================= --}}
+
+            @if ($shops->hasPages())
+                <div class="border-t border-slate-100 px-6 py-5
+                       dark:border-slate-800">
+
+                    {{ $shops->withQueryString()->links() }}
+
+                </div>
+            @endif
+
         </div>
+
     </div>
 </x-admin>

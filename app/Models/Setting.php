@@ -27,5 +27,10 @@ class Setting extends Model
         'tiktok',
         'copyright',
         'copyright_ar',
+        'maintenance_mode'
+    ];
+
+    protected $casts = [
+    'maintenance_mode' => 'boolean',
     ];
 }

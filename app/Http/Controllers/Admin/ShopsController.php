@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreShopRequest;
 use App\Models\Listing;
 use App\Models\Shop;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,13 +15,41 @@ class ShopsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $shops = Shop::latest('published_at')->published()->paginate(5);
-        $shopCount = Shop::count();
+    public function index(Request $request)
+{
+    $search = trim($request->input('search', ''));
+    $verified = $request->input('verified');
 
-        return view('admin.shops.index', compact('shops', 'shopCount'));
-    }
+    $shops = Shop::query()
+        ->with(['user', 'city', 'state'])
+        ->when($search !== '', function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+            });
+        })
+        ->when($verified !== null && $verified !== '', function ($query) use ($verified) {
+            $query->where('verified', (int) $verified);
+        })
+        ->latest('published_at')
+        ->paginate(10)
+        ->withQueryString();
+
+    $shopCount = Shop::count();
+
+    return view('admin.shops.index', compact(
+        'shops',
+        'shopCount',
+        'search',
+        'verified'
+    ));
+}
 
     /**
      * Show the form for creating a new resource.

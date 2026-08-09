@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('tiktok');
             $table->text('copyright')->nullable();
             $table->text('copyright_ar')->nullable();
+            $table->boolean('maintenance_mode')->default(false);
             $table->timestamps();
         });
     }

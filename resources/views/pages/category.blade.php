@@ -1,5 +1,5 @@
 <x-main-layout>
-    @section('title', 'Category | murwaj')
+    @section('title', $title)
     @section('description', "$description")
     @section('keywords', "$keywords")
 

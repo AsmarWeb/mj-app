@@ -77,6 +77,9 @@ class SettingController extends Controller
         $setting->copyright = $request->copyright;
         $setting->copyright_ar = $request->copyright_ar;
 
+         // Maintenance Mode
+        $setting->maintenance_mode = $request->boolean('maintenance_mode');
+
         $setting->map = $request->map;
 
         if ($request->hasFile('logo')) {

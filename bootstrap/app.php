@@ -33,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'ability' => Ability::class,
             'phone.verified' => EnsurePhoneIsVerified::class,
             'supplier' => \App\Http\Middleware\SupplierMiddleware::class,
+            'maintenance.check' => \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

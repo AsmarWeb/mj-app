@@ -600,7 +600,7 @@
                                 </span>
 
                                 <span class="font-semibold text-gray-900 dark:text-white">
-                                    {{ ucfirst($listing->product_type ?? 'Physical') }}
+                                    {{ ucfirst($listing->section->name ?? 'Physical') }}
                                 </span>
 
                             </div>
