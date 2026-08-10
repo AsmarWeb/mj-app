@@ -116,7 +116,7 @@
 
             <h2 class="text-3xl font-black text-gray-900 dark:text-white">
 
-                Featured Shops
+                {{ __('hero.main.featured') }}
 
             </h2>
 
@@ -199,11 +199,11 @@
                     </div>
 
                     <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                        Explore Our Shops
+                        {{ __('hero.explore.title') }}
                     </h2>
 
                     <p class="mx-auto mt-3 max-w-2xl text-gray-500 dark:text-gray-400">
-                        Discover shops and marketplace sellers from different locations around the world.
+                        {{ __('hero.explore.subtitle') }}
                     </p>
 
                 </div>
@@ -677,23 +677,23 @@ LEAFLET
                     ${
                         shopUrl !== '#'
                         ? `
-                                                                            <a
-                                                                                href="${shopUrl}"
-                                                                                style="
-                                                                                    display:block;
-                                                                                    margin-top:14px;
-                                                                                    padding:10px 16px;
-                                                                                    border-radius:10px;
-                                                                                    background:#f97316;
-                                                                                    color:#ffffff;
-                                                                                    text-decoration:none;
-                                                                                    font-size:13px;
-                                                                                    font-weight:700;
-                                                                                "
-                                                                            >
-                                                                                Visit Shop →
-                                                                            </a>
-                                                                        `
+                                                                                                    <a
+                                                                                                        href="${shopUrl}"
+                                                                                                        style="
+                                                                                                            display:block;
+                                                                                                            margin-top:14px;
+                                                                                                            padding:10px 16px;
+                                                                                                            border-radius:10px;
+                                                                                                            background:#f97316;
+                                                                                                            color:#ffffff;
+                                                                                                            text-decoration:none;
+                                                                                                            font-size:13px;
+                                                                                                            font-weight:700;
+                                                                                                        "
+                                                                                                    >
+                                                                                                        Visit Shop →
+                                                                                                    </a>
+                                                                                                `
                         : ''
                     }
 

@@ -72,7 +72,7 @@
             <div>
 
                 <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white">
-                    {{ __('Quick Links') }}
+                    {{ __('footer.main.quicklinks') }}
                 </h3>
 
                 <ul class="mt-5 space-y-3">
@@ -103,7 +103,7 @@
                         <li>
                             <a href="{{ route('explore') }}"
                                 class="text-sm text-gray-500 transition hover:text-orange-500 dark:text-gray-400 dark:hover:text-orange-400">
-                                {{ __('Browse Listings') }}
+                                {{ __('footer.main.browselistings') }}
                             </a>
                         </li>
                     @endif
@@ -112,7 +112,7 @@
                         <li>
                             <a href="{{ route('login') }}"
                                 class="text-sm text-gray-500 transition hover:text-orange-500 dark:text-gray-400 dark:hover:text-orange-400">
-                                {{ __('Sign In') }}
+                                {{ __('login.login') }}
                             </a>
                         </li>
                     @endif
@@ -128,7 +128,7 @@
             <div>
 
                 <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white">
-                    {{ __('Marketplace') }}
+                    {{ __('footer.main.marketplace') }}
                 </h3>
 
                 <ul class="mt-5 space-y-3">
@@ -137,7 +137,7 @@
                         <li>
                             <a href="{{ route('posts.index') }}"
                                 class="text-sm text-gray-500 transition hover:text-orange-500 dark:text-gray-400 dark:hover:text-orange-400">
-                                {{ __('Find Products') }}
+                                {{ __('footer.main.findproducts') }}
                             </a>
                         </li>
                     @endif
@@ -146,7 +146,7 @@
                         <li>
                             <a href="{{ route('register') }}"
                                 class="text-sm text-gray-500 transition hover:text-orange-500 dark:text-gray-400 dark:hover:text-orange-400">
-                                {{ __('Create Account') }}
+                                {{ __('footer.main.createaccount') }}
                             </a>
                         </li>
                     @endif
@@ -155,7 +155,7 @@
                         <li>
                             <a href="{{ route('login') }}"
                                 class="text-sm text-gray-500 transition hover:text-orange-500 dark:text-gray-400 dark:hover:text-orange-400">
-                                {{ __('Seller Login') }}
+                                {{ __('footer.main.sellerlogin') }}
                             </a>
                         </li>
                     @endif
@@ -164,7 +164,7 @@
                         <li>
                             <a href="{{ route('contact') }}"
                                 class="text-sm text-gray-500 transition hover:text-orange-500 dark:text-gray-400 dark:hover:text-orange-400">
-                                {{ __('Help & Support') }}
+                                {{ __('footer.main.help&support') }}
                             </a>
                         </li>
                     @endif
@@ -180,7 +180,7 @@
             <div>
 
                 <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white">
-                    {{ __('Contact Us') }}
+                    {{ __('footer.main.contactUs') }}
                 </h3>
 
                 <div class="mt-5 space-y-4">
@@ -206,7 +206,7 @@
 
                             <span>
                                 <span class="block text-xs text-gray-400">
-                                    {{ __('UAE Phone') }}
+                                    {{ __('footer.main.uaephone') }}
                                 </span>
 
                                 <span
@@ -240,7 +240,7 @@
 
                             <span>
                                 <span class="block text-xs text-gray-400">
-                                    {{ __('Second Phone') }}
+                                    {{ __('footer.main.secondphone') }}
                                 </span>
 
                                 <span
@@ -274,7 +274,7 @@
 
                             <span>
                                 <span class="block text-xs text-gray-400">
-                                    {{ __('Email') }}
+                                    {{ __('footer.main.email') }}
                                 </span>
 
                                 <span
@@ -311,7 +311,7 @@
 
                             <span>
                                 <span class="block text-xs text-gray-400">
-                                    {{ __('Location') }}
+                                    {{ __('footer.main.location') }}
                                 </span>
 
                                 <span class="mt-1 block text-sm text-gray-600 dark:text-gray-300">

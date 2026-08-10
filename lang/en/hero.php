@@ -25,6 +25,13 @@ return [
         'Get Found' => 'Get Found',
         'With' => 'with',
         'AI tools' => 'murwaj.com',
+        'featured'=>'Featured Shops',
+    ],
+
+    'explore'=>[
+           'title' => 'Explore Our Shops',
+           'subtitle' =>  'Discover shops and marketplace sellers from different
+                        locations around the world.',
     ],
 
 ];

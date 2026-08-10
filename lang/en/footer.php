@@ -19,6 +19,19 @@ return [
         'terms' => 'Teams',
         'policy' => 'Privacy',
         'sitemap' => 'Sitemap',
+        'quicklinks'=>'Quick Links',
+        'browselistings'=>'Browse Listings',
+        'marketplace' => 'Marketplace',
+        'findproducts'=>'Find Products',
+        'createaccount'=>'Create Account',
+        'sellerlogin'=> 'Seller Login',
+        'help&support' => 'Help & Support',
+        'contactUs' => 'Contact Us',
+        'uaephone'=> 'UAE Phone',
+        'secondphone' => 'Second Phone',
+        'email'=> 'Email',
+        'location'=>'Location',
     ],
+
 
 ];
