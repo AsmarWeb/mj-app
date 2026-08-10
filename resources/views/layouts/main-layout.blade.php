@@ -45,11 +45,11 @@
     {{-- Open Graph --}}
     <meta property="og:type" content="{{ $og_type ?? 'website' }}">
 
-    <meta property="og:title" content="{{ $meta_title ?? trim($__env->yieldContent('title', 'Murwaj Marketplace')) }}">
+    <meta property="og:title" content="{{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj')) }}">
 
 
     <meta property="og:description"
-        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on Murwaj Marketplace')) }}">
+        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on murwaj')) }}">
 
 
     <meta property="og:image" content="{{ $meta_image ?? asset('images/share-default.jpg') }}">
@@ -57,7 +57,7 @@
 
     <meta property="og:url" content="{{ url()->current() }}">
 
-    <meta property="og:site_name" content="murwaj Marketplace">
+    <meta property="og:site_name" content="murwaj">
 
 
 
@@ -66,12 +66,11 @@
     <meta name="twitter:card" content="summary_large_image">
 
 
-    <meta name="twitter:title"
-        content="{{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj Marketplace')) }}">
+    <meta name="twitter:title" content="{{ $meta_title ?? trim($__env->yieldContent('title', 'murwaj')) }}">
 
 
     <meta name="twitter:description"
-        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on murwaj Marketplace')) }}">
+        content="{{ $meta_description ?? trim($__env->yieldContent('description', 'Discover products on murwaj')) }}">
 
 
     <meta name="twitter:image" content="{{ $meta_image ?? asset('images/share-default.jpg') }}">

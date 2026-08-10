@@ -435,7 +435,7 @@
                                 </div>
 
 
-                                <a href="{{ route('explore', ['section' => $section->slug]) }}"
+                                <a href="{{ route('explore.section', $section->slug) }}"
                                     class="inline-flex items-center gap-2 text-sm font-bold text-orange-500
                               hover:text-orange-600">
 

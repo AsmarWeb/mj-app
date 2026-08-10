@@ -15,8 +15,8 @@ class SettingSeeder extends Seeder
         $data = [
             'description' => 'Platform where you can Get Found. Sell Smarter. Scale Your Creativity and Productivity.',
             'description_ar' => '.منصة تتيح لك الظهور والبيع بذكاء، وتنمية إبداعك وإنتاجيتك',
-            'short_des' => 'Notify me when App is launched :)',
-            'short_des_ar' => ' (: أعلمني عندما يكون التطبيق جاهزا',
+            'short_des' => 'murwaj.com your creative shop :)',
+            'short_des_ar' => ' (: مُروَّج.كم متجرك الإبداعي',
             'logo' => 'logo.png',
             'favicon' => 'favicon.png',
             'address' => 'NO. 1 Trade Center - Dubai, UAE',

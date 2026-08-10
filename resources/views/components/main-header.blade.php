@@ -1,6 +1,5 @@
 <header x-data="{
     mobileOpen: false,
-    darkMode: document.documentElement.classList.contains('dark')
 }" x-init="$watch('mobileOpen', value => {
     document.body.classList.toggle('overflow-hidden', value)
 })"
@@ -103,11 +102,9 @@
 
                 {{-- Theme Toggle --}}
                 <button type="button"
-                    @click="
-                    darkMode = !darkMode;
+                    @click="darkMode = !darkMode;
                     document.documentElement.classList.toggle('dark', darkMode);
-                    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-                "
+                    localStorage.setItem('theme', darkMode ? 'dark' : 'light');"
                     class="hidden h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 sm:flex"
                     aria-label="Toggle dark mode">
 
