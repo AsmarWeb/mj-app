@@ -40,7 +40,7 @@ p-6
 
 
                             <h2 class="text-xl font-black mb-5">
-                                Marketplace
+                                {{ __('posts.marketplace') }}
                             </h2>
 
 
@@ -61,7 +61,7 @@ rounded-2xl
 font-bold
 ">
 
-                                    🛒 Products Feed
+                                    🛒 {{ __('posts.products feed') }}
 
                                 </a>
 
@@ -71,7 +71,7 @@ font-bold
                                 <a href="{{ route('posts.index') }}"
                                     class="flex items-center gap-3 bg-gray-100 dark:bg-neutral-800 px-4 py-3 rounded-2xl font-bold ">
 
-                                    📦 Requests
+                                    📦 {{ __('posts.requests') }}
 
                                 </a>
 
@@ -91,7 +91,7 @@ rounded-2xl
 font-bold
 ">
 
-                                    🏪 Nearby Stores
+                                    🏪 {{ __('posts.nearby stores') }}
 
                                 </a>
 
@@ -117,7 +117,7 @@ p-6
 
                             <h2 class="font-black text-lg mb-4">
 
-                                Tips
+                                {{ __('posts.tips') }}
 
                             </h2>
 
@@ -131,22 +131,23 @@ dark:text-gray-300
 
 
                                 <li>
-                                    ✅ Add your location
+                                    ✅ {{ __('posts.add your location') }}
+
                                 </li>
 
 
                                 <li>
-                                    ✅ Describe what you need
+                                    ✅ {{ __('posts.describe what you need') }}
                                 </li>
 
 
                                 <li>
-                                    ✅ Sellers can reply
+                                    ✅ {{ __('posts.sellers can reply') }}
                                 </li>
 
 
                                 <li>
-                                    ✅ Add product images
+                                    ✅ {{ __('posts.add product images') }}
                                 </li>
 
 
@@ -334,14 +335,14 @@ text-2xl
 font-black
 ">
 
-                                    Looking for something?
+                                    {{ __('posts.looking for something?') }}
 
                                 </h2>
 
 
                                 <p class="text-gray-500 text-sm">
 
-                                    Ask nearby shops or online sellers
+                                    {{ __('posts.ask nearby shops or online sellers') }}
 
                                 </p>
 
@@ -514,7 +515,7 @@ Example:
             transition
             ">
 
-                                    🚀 Post Request
+                                    🚀 {{ __('posts.post request') }}
 
                                 </button>
 
@@ -1025,7 +1026,7 @@ text-center
 
                             <p class="text-gray-500">
 
-                                Be the first person looking for a product.
+                                {{ __('posts.be the first person looking for a product.') }}
 
                             </p>
 
@@ -1070,7 +1071,7 @@ p-5
 
                             <h2 class="font-black text-xl mb-5">
 
-                                🔥 Trending Products
+                                🔥 {{ __('posts.trending products') }}
 
                             </h2>
 
@@ -1163,7 +1164,7 @@ p-5
 
                             <h2 class="font-black text-xl mb-5">
 
-                                📍 Nearby Stores
+                                📍 {{ __('posts.nearby stores') }}
 
                             </h2>
 
@@ -1269,14 +1270,14 @@ text-2xl
 font-black
 ">
 
-                                Sell Products
+                                {{ __('posts.sell products') }}
 
                             </h2>
 
 
                             <p class="mt-2">
 
-                                Open your shop and reach more buyers.
+                                {{ __('posts.open your shop and reach more buyers.') }}
 
                             </p>
 
@@ -1293,7 +1294,7 @@ rounded-full
 font-bold
 ">
 
-                                Create Shop
+                                {{ __('posts.create shop') }}
 
                             </a>
 

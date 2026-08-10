@@ -136,16 +136,15 @@
 
                 <div>
                     <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                        Explore Murwaj
+                        {{ __('discover.explore murwaj') }}
                     </span>
 
                     <h2 class="mt-2 text-3xl font-black tracking-tight text-gray-900 dark:text-white md:text-4xl">
-                        Browse Marketplace
+                        {{ __('discover.browse marketplace') }}
                     </h2>
 
                     <p class="mt-3 max-w-2xl text-gray-500 dark:text-gray-400">
-                        Discover products, services, rentals, properties, auctions
-                        and events — all in one place.
+                        {{ __('discover.discover products') }}
                     </p>
                 </div>
 
@@ -262,11 +261,11 @@
 
                     <div>
                         <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                            Discover
+                            {{ __('discover.discover') }}
                         </span>
 
                         <h2 class="mt-2 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                            Explore Categories
+                            {{ __('discover.explore categories') }}
                         </h2>
                     </div>
 
@@ -274,7 +273,7 @@
                         class="hidden items-center gap-2 text-sm font-bold text-gray-600
                   hover:text-orange-500 dark:text-gray-300 sm:inline-flex">
 
-                        View All
+                        {{ __('discover.view all ') }}
                         <span>→</span>
 
                     </a>
@@ -347,16 +346,15 @@
                 <div class="mb-12">
 
                     <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                        Marketplace
+                        {{ __('discover.marketplace') }}
                     </span>
 
                     <h2 class="mt-2 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                        Products by Section
+                        {{ __('discover.products by section') }}
                     </h2>
 
                     <p class="mt-3 max-w-2xl text-gray-500 dark:text-gray-400">
-                        Explore the latest products, services, rentals, properties,
-                        auctions and events from Murwaj sellers.
+                        {{ __('discover.latest products') }}
                     </p>
 
                 </div>
@@ -439,7 +437,7 @@
                                     class="inline-flex items-center gap-2 text-sm font-bold text-orange-500
                               hover:text-orange-600">
 
-                                    View All
+                                    {{ __('discover.view all') }}
                                     <span>→</span>
 
                                 </a>
@@ -618,21 +616,21 @@
                             <div>
 
                                 <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                                    Handpicked
+                                    {{ __('discover.handpicked') }}
                                 </span>
 
                                 <h2 class="mt-2 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                                    Featured Products
+                                    {{ __('discover.featured products') }}
                                 </h2>
 
                                 <p class="mt-2 text-gray-500 dark:text-gray-400">
-                                    Quality products from Murwaj sellers.
+                                    {{ __('discover.quality products') }}
                                 </p>
 
                             </div>
 
                             <a href="#section-products" class="text-sm font-bold text-orange-500 hover:text-orange-600">
-                                View All →
+                                {{ __('discover.view all') }} →
                             </a>
 
                         </div>
@@ -752,21 +750,21 @@
                         <div>
 
                             <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                                Digital Marketplace
+                                {{ __('discover.digital marketplace') }}
                             </span>
 
                             <h2 class="mt-2 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                                Creative Digital Products
+                                {{ __('discover.creative digital') }}
                             </h2>
 
                             <p class="mt-3 text-gray-500 dark:text-gray-400">
-                                Templates, designs, software and creative assets.
+                                {{ __('discover.templates') }}
                             </p>
 
                         </div>
 
                         <a href="#" class="text-sm font-bold text-orange-500 hover:text-orange-600">
-                            View All →
+                            {{ __('discover.view all') }} →
                         </a>
 
                     </div>
@@ -1030,17 +1028,17 @@
                         <div>
 
                             <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                                Popular right now
+                                {{ __('discover.popular') }}
                             </span>
 
                             <h2 class="mt-2 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                                Trending Now <span class="text-orange-500">🔥</span>
+                                {{ __('discover.trending') }}<span class="text-orange-500">🔥</span>
                             </h2>
 
                         </div>
 
                         <a href="#section-products" class="text-sm font-bold text-orange-500 hover:text-orange-600">
-                            View All →
+                            {{ __('discover.view all') }} →
                         </a>
 
                     </div>
@@ -1161,17 +1159,17 @@
                             <div>
 
                                 <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                                    The community
+                                    {{ __('discover.community') }}
                                 </span>
 
                                 <h2 class="mt-2 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                                    Top Sellers
+                                    {{ __('discover.sellers') }}
                                 </h2>
 
                             </div>
 
                             <a href="#" class="text-sm font-bold text-orange-500">
-                                View All →
+                                {{ __('discover.view all') }} →
                             </a>
 
                         </div>
@@ -1298,19 +1296,18 @@
                        bg-orange-500/10 px-4 py-2 text-[10px] font-bold
                        uppercase tracking-[0.2em] text-orange-400">
 
-                                Grow with Murwaj
+                                {{ __('discover.grow') }}
 
                             </span>
 
 
                             <h2 class="mt-6 text-4xl font-black tracking-tight text-white md:text-6xl">
-                                Open your own shop.
+                                {{ __('discover.open') }}
                             </h2>
 
 
                             <p class="mt-5 max-w-xl text-lg leading-relaxed text-gray-400">
-                                Turn your products, skills and ideas into a business
-                                and reach customers through Murwaj.
+                                {{ __('discover.turn your products') }}
                             </p>
 
 
@@ -1320,7 +1317,7 @@
                        tracking-wider text-white shadow-lg shadow-orange-500/20
                        transition hover:-translate-y-0.5 hover:bg-orange-600">
 
-                                Start Selling
+                                {{ __('discover.start') }}
                                 <span>→</span>
 
                             </a>
@@ -1340,16 +1337,15 @@
                     <div class="mx-auto max-w-4xl px-6 py-20 text-center">
 
                         <span class="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
-                            Stay in the loop
+                            {{ __('discover.stay') }}
                         </span>
 
                         <h2 class="mt-3 text-3xl font-black text-gray-900 dark:text-white md:text-4xl">
-                            Join the Murwaj Community
+                            {{ __('discover.join') }}
                         </h2>
 
                         <p class="mx-auto mt-4 max-w-xl text-gray-500 dark:text-gray-400">
-                            Get updates about new products, sellers,
-                            exclusive deals and special offers.
+                            {{ __('discover.get updates') }}
                         </p>
 
                         <div class="mt-8">
