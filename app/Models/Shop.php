@@ -26,6 +26,7 @@ class Shop extends Model
         'banner',
         'type',
         'description',
+        'currency',
         'location',
         'latitude',
         'longitude',

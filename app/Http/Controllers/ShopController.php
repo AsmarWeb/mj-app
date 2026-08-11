@@ -63,14 +63,14 @@ class ShopController extends Controller
 
             case 1:
                 $request->validate([
-                    'name' => 'required|min:3|max:50',
-                    'name_ar' => 'required|min:3|max:50',
-                    'type' => 'required|in:freelance,local',
+                    'name' => ['required', 'string', 'max:255'],
+                    'name_ar' => ['nullable', 'string', 'max:255'],
+                    'type' => ['required', 'in:freelance,local'],
                 ]);
 
                 $shop->update([
                     'name' => $request->name,
-                    'name_ar' => $request->name,
+                    'name_ar' => $request->name_ar,
                     'type' => $request->type,
                 ]);
 
@@ -197,11 +197,14 @@ class ShopController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'name_ar' => ['nullable', 'string', 'max:255'],
+            'type' => ['required', 'in:freelance,local'],
             'description' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'max:2048'],
 
             'phone' => ['nullable', 'string', 'max:20'],
             'whatsapp' => ['nullable', 'string', 'max:20'],
+            'currency' => ['required', 'in:AED,USD,EUR,GBP,SAR,KWD,QAR,BHD,OMR'],
 
             'allow_phone' => ['nullable', 'boolean'],
             'allow_whatsapp' => ['nullable', 'boolean'],
@@ -219,10 +222,12 @@ class ShopController extends Controller
 
         $shop->update([
             'name' => $validated['name'],
+            'name_ar' => $validated['name_ar'],
             'description' => $validated['description'],
 
             'phone' => Auth::user()->phone,
             'whatsapp' => $validated['whatsapp'] ?? Auth::user()->phone,
+            'currency' => $request->currency,
 
             'allow_phone' => $request->boolean('allow_phone'),
             'allow_whatsapp' => $request->boolean('allow_whatsapp'),

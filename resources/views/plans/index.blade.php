@@ -12,19 +12,27 @@
          * $subscription
          * $currentPlan
          */
+
         $plans = $plans ?? collect();
 
         /*
-         * The subscription is the source of truth.
-         * Only the exact attached plan is considered current.
+         * The current plan comes from the active subscription.
          */
         $currentPlanId = $currentPlan?->id;
 
+        /*
+         * Active subscription exists only when we have both
+         * an active subscription and an attached plan.
+         */
         $hasActiveSubscription = $subscription !== null && $currentPlan !== null;
 
+        /*
+         * If there is no active paid subscription, the user
+         * is considered to be on the free plan.
+         */
         $isFreePlan = !$hasActiveSubscription;
-
     @endphp
+
 
     <div class="min-h-screen bg-[#faf8f5] text-slate-900">
 
@@ -154,8 +162,6 @@
             <div
                 class="relative overflow-hidden rounded-[2rem] border border-orange-200/70 bg-[#171411] shadow-2xl shadow-orange-950/10">
 
-                {{-- Decorative glow --}}
-
                 <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-orange-500/20 blur-3xl"></div>
 
                 <div class="absolute -bottom-40 left-1/3 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl"></div>
@@ -174,8 +180,8 @@
                         <div
                             class="mb-5 inline-flex items-center gap-2 rounded-full border border-orange-400/20 bg-orange-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-orange-300">
 
-                            <span
-                                class="h-1.5 w-1.5 rounded-full bg-orange-400 shadow-[0_0_12px_rgba(251,146,60,0.9)]"></span>
+                            <span class="h-1.5 w-1.5 rounded-full bg-orange-400 shadow-[0_0_12px_rgba(251,146,60,0.9)]">
+                            </span>
 
                             Premium Seller Membership
 
@@ -188,9 +194,7 @@
 
 
                         <h1 class="mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl">
-
                             {{ $currentPlan?->name ?? 'Free Plan' }}
-
                         </h1>
 
 
@@ -203,23 +207,20 @@
                                 </strong>
                                 seller experience.
 
-                                Upgrade whenever you're ready to unlock
-                                more opportunities and grow your business.
+                                Upgrade or change your plan anytime as your
+                                business grows.
 
                             </p>
                         @else
                             <p class="mt-5 max-w-2xl text-base leading-7 text-stone-300">
 
                                 You're currently on the free seller plan.
-                                Take your business to the next level with
-                                premium tools designed to help you sell more
-                                and present your products professionally.
+                                Upgrade whenever you're ready to unlock more
+                                products, storage, visibility, and premium tools.
 
                             </p>
                         @endif
 
-
-                        {{-- Trust points --}}
 
                         <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-stone-300">
 
@@ -235,7 +236,7 @@
 
                             <div class="flex items-center gap-2">
                                 <span class="text-orange-400">✓</span>
-                                Built for sellers
+                                Flexible plans
                             </div>
 
                         </div>
@@ -276,7 +277,8 @@
                                     <div class="flex items-center gap-2 text-sm font-bold text-emerald-400">
 
                                         <span
-                                            class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]"></span>
+                                            class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]">
+                                        </span>
 
                                         Active
 
@@ -291,7 +293,7 @@
                                 <p class="mt-2 text-sm leading-6 text-stone-400">
 
                                     {{ $hasActiveSubscription
-                                        ? 'Your membership is active and ready to help your shop grow.'
+                                        ? 'Your membership is active. You can upgrade or change your plan below.'
                                         : 'Choose a premium plan when you are ready to grow.' }}
 
                                 </p>
@@ -330,9 +332,7 @@
 
 
                 <h2 class="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
-
                     Invest in the growth of your shop.
-
                 </h2>
 
 
@@ -363,15 +363,16 @@
 
                 <div
                     class="group relative flex flex-col overflow-hidden rounded-[2rem] border bg-white transition duration-300
-            {{ $isFreePlan
-                ? 'border-orange-400 ring-2 ring-orange-400/20 shadow-2xl shadow-orange-100'
-                : 'border-stone-200 shadow-sm hover:-translate-y-1 hover:shadow-xl' }}">
-
+                    {{ $isFreePlan
+                        ? 'border-orange-400 ring-2 ring-orange-400/20 shadow-2xl shadow-orange-100'
+                        : 'border-stone-200 shadow-sm hover:-translate-y-1 hover:shadow-xl' }}">
 
                     @if ($isFreePlan)
                         <div
                             class="absolute right-0 top-0 rounded-bl-2xl bg-orange-500 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-200">
+
                             ✓ Current Plan
+
                         </div>
                     @endif
 
@@ -431,31 +432,41 @@
 
                             <li class="flex items-center gap-3">
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">✓</span>
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">
+                                    ✓
+                                </span>
                                 <span>1 Active Product</span>
                             </li>
 
                             <li class="flex items-center gap-3">
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">✓</span>
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">
+                                    ✓
+                                </span>
                                 <span>100 MB Storage</span>
                             </li>
 
                             <li class="flex items-center gap-3">
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">✓</span>
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">
+                                    ✓
+                                </span>
                                 <span>Listings live for 30 days</span>
                             </li>
 
                             <li class="flex items-center gap-3 text-stone-400">
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">×</span>
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">
+                                    ×
+                                </span>
                                 <span>No Featured Listings</span>
                             </li>
 
                             <li class="flex items-center gap-3 text-stone-400">
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">×</span>
+                                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">
+                                    ×
+                                </span>
                                 <span>No Video Uploads</span>
                             </li>
 
@@ -474,7 +485,9 @@
                             @else
                                 <div
                                     class="w-full rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-center text-sm font-semibold text-stone-500">
+
                                     Free Plan
+
                                 </div>
                             @endif
 
@@ -493,12 +506,19 @@
                     @php
 
                         /*
-                         * EXACT CURRENT PLAN.
+                         * Exact current plan.
                          *
-                         * Never compare price or name here.
+                         * This MUST use the plan ID attached to the
+                         * active subscription.
                          */
                         $isCurrentPlan = $currentPlanId !== null && (int) $currentPlanId === (int) $plan->id;
 
+                        /*
+                         * Determine upgrade/downgrade using price.
+                         *
+                         * This assumes all paid plans use the same
+                         * billing period/currency.
+                         */
                         $isUpgrade =
                             $hasActiveSubscription &&
                             $currentPlan &&
@@ -513,35 +533,32 @@
 
                     <div
                         class="group relative flex flex-col overflow-hidden rounded-[2rem] border bg-white transition duration-300
-                {{ $isCurrentPlan
-                    ? 'border-orange-400 ring-2 ring-orange-400/20 shadow-2xl shadow-orange-100'
-                    : 'border-stone-200 shadow-sm hover:-translate-y-1 hover:border-orange-200 hover:shadow-2xl hover:shadow-orange-100/60' }}">
+                        {{ $isCurrentPlan
+                            ? 'border-orange-400 ring-2 ring-orange-400/20 shadow-2xl shadow-orange-100'
+                            : 'border-stone-200 shadow-sm hover:-translate-y-1 hover:border-orange-200 hover:shadow-2xl hover:shadow-orange-100/60' }}">
 
 
-                        {{-- ================================================= --}}
                         {{-- PLAN BADGE --}}
-                        {{-- ================================================= --}}
 
                         @if ($isCurrentPlan)
                             <div
                                 class="absolute right-0 top-0 z-10 rounded-bl-2xl bg-orange-500 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-200">
+
                                 ✓ Current Plan
+
                             </div>
                         @elseif ($plan->is_popular)
                             <div
                                 class="absolute right-0 top-0 z-10 rounded-bl-2xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-orange-200">
 
                                 <span class="mr-1">✦</span>
-
                                 Most Popular
 
                             </div>
                         @endif
 
 
-                        {{-- ================================================= --}}
-                        {{-- PREMIUM PLAN HEADER --}}
-                        {{-- ================================================= --}}
+                        {{-- PLAN HEADER --}}
 
                         <div class="relative p-8 sm:p-9">
 
@@ -558,7 +575,7 @@
                                     class="{{ $plan->is_popular
                                         ? 'bg-orange-100 text-orange-600 ring-orange-200'
                                         : 'bg-stone-100 text-stone-700 ring-stone-200' }}
-                            flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ring-1">
+                                    flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ring-1">
 
                                     🚀
 
@@ -600,9 +617,7 @@
                         </div>
 
 
-                        {{-- ================================================= --}}
                         {{-- FEATURES --}}
-                        {{-- ================================================= --}}
 
                         <div class="flex flex-1 flex-col border-t border-stone-100 px-8 pb-8 sm:px-9 sm:pb-9">
 
@@ -621,10 +636,13 @@
                                     </span>
 
                                     <span>
+
                                         <strong class="font-bold text-slate-950">
                                             {{ $plan->listing_limit }}
                                         </strong>
+
                                         Active Products
+
                                     </span>
 
                                 </li>
@@ -638,10 +656,13 @@
                                     </span>
 
                                     <span>
+
                                         <strong class="font-bold text-slate-950">
                                             {{ $plan->storage_limit }} MB
                                         </strong>
+
                                         Storage
+
                                     </span>
 
                                 </li>
@@ -655,10 +676,13 @@
                                     </span>
 
                                     <span>
+
                                         Listings live for
+
                                         <strong class="font-bold text-slate-950">
                                             {{ $plan->listing_duration }} days
                                         </strong>
+
                                     </span>
 
                                 </li>
@@ -672,10 +696,13 @@
                                     </span>
 
                                     <span>
+
                                         Featured Listings:
+
                                         <strong class="font-bold text-slate-950">
                                             {{ $plan->featured_limit ?? 'Unlimited' }}
                                         </strong>
+
                                     </span>
 
                                 </li>
@@ -715,6 +742,8 @@
                             <div class="mt-auto pt-9">
 
                                 @if ($isCurrentPlan)
+                                    {{-- CURRENT PLAN --}}
+
                                     <button type="button" disabled
                                         class="w-full cursor-not-allowed rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-bold text-emerald-700">
 
@@ -725,28 +754,47 @@
 
                                     </button>
                                 @else
+                                    {{-- 
+                                        IMPORTANT:
+                                        The same route handles both:
+                                        
+                                        1. New customer -> Stripe Checkout
+                                        2. Existing customer -> Stripe subscription swap
+                                    --}}
+
                                     <form action="{{ route('subscription.checkout', ['plan' => $plan->id]) }}"
                                         method="POST">
 
                                         @csrf
 
                                         <button type="submit"
-                                            class="{{ $plan->is_popular
+                                            class="{{ $isUpgrade
                                                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-200 hover:from-orange-600 hover:to-amber-600'
-                                                : 'bg-[#1c1815] shadow-lg shadow-stone-200 hover:bg-orange-600' }}
-                                        group w-full rounded-2xl px-5 py-4 text-sm font-black text-white transition duration-300">
+                                                : ($isDowngrade
+                                                    ? 'bg-[#1c1815] shadow-lg shadow-stone-200 hover:bg-orange-600'
+                                                    : 'bg-[#1c1815] shadow-lg shadow-stone-200 hover:bg-orange-600') }}
+                                            group w-full rounded-2xl px-5 py-4 text-sm font-black text-white transition duration-300">
 
                                             <span class="flex items-center justify-center gap-2">
 
                                                 @if (!$hasActiveSubscription)
-                                                    Choose {{ $plan->name }}
+                                                    <span>
+                                                        Choose {{ $plan->name }}
+                                                    </span>
                                                 @elseif ($isUpgrade)
-                                                    Upgrade to {{ $plan->name }}
+                                                    <span>
+                                                        Upgrade to {{ $plan->name }}
+                                                    </span>
                                                 @elseif ($isDowngrade)
-                                                    Change to {{ $plan->name }}
+                                                    <span>
+                                                        Change to {{ $plan->name }}
+                                                    </span>
                                                 @else
-                                                    Choose {{ $plan->name }}
+                                                    <span>
+                                                        Choose {{ $plan->name }}
+                                                    </span>
                                                 @endif
+
 
                                                 <span
                                                     class="transition-transform duration-200 group-hover:translate-x-1">
@@ -764,11 +812,17 @@
 
                                         <span>🔒</span>
 
-                                        Secure checkout
+                                        @if ($isUpgrade)
+                                            Secure upgrade
+                                        @elseif ($isDowngrade)
+                                            Change anytime
+                                        @else
+                                            Secure checkout
+                                        @endif
 
                                         <span>•</span>
 
-                                        Cancel anytime
+                                        Flexible plans
 
                                     </div>
                                 @endif
@@ -904,10 +958,8 @@
                         class="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-semibold text-orange-100">
 
                         <span>✓ Secure checkout</span>
-
                         <span>✓ Flexible plans</span>
-
-                        <span>✓ Seller-focused features</span>
+                        <span>✓ Upgrade anytime</span>
 
                     </div>
 
@@ -919,8 +971,7 @@
 
     </div>
 
+
     <x-main-footer></x-main-footer>
-
-
 
 </x-main-layout>
