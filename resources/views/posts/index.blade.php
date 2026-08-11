@@ -1282,21 +1282,24 @@ font-black
                             </p>
 
 
-                            <a href="{{ route('shop.create', 1) }}"
-                                class="
-inline-block
-mt-5
-bg-white
-text-black
-px-6
-py-3
-rounded-full
-font-bold
-">
+                            @if (auth()->user()->shop)
+                                <a href="{{ route('shop', auth()->user()->shop->slug) }}"
+                                    class="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600">
 
-                                {{ __('posts.create shop') }}
 
-                            </a>
+                                    {{ __('posts.my shop') }}
+
+                                </a>
+                            @else
+                                <a href="{{ route('shop.create') }}"
+                                    class="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600">
+
+
+                                    {{ __('posts.create shop') }}
+
+                                </a>
+                            @endif
+
 
 
                         </div>

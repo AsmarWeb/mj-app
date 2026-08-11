@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminDeveloperController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\CreatorsController;
+use App\Http\Controllers\Admin\DevelopersController;
 use App\Http\Controllers\Admin\DigitalProductController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\InvoiceController;
@@ -110,22 +113,22 @@ Route::middleware('auth')->group(function () {
     Route::get(
         '/developers',
         [DeveloperController::class, 'index']
-    )->name('developers.index');
+    )->name('developer.index');
 
     Route::get(
-        '/developers/join',
+        '/developer/join',
         [DeveloperController::class, 'create']
-    )->name('developers.join');
+    )->name('developer.join');
 
     Route::post(
         '/developers',
         [DeveloperController::class, 'store']
-    )->name('developers.store');
+    )->name('developer.store');
 
     Route::get(
-        '/developer/{id}',
+        '/developer/{username}',
         [DeveloperController::class, 'show']
-    )->name('developers.show');
+    )->name('developer.show');
 
 });
 
@@ -626,4 +629,25 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     });
 
     Route::resource('suppliers',SupplierController::class);
+    
+    Route::get('/developers', [AdminDeveloperController::class, 'index'])
+            ->name('developers.index');
+
+    Route::get('/developers/{developer}', [AdminDeveloperController::class, 'show'])
+            ->name('developers.show');
+
+    Route::get('/developers/{developer}/edit', [AdminDeveloperController::class, 'edit'])
+            ->name('developers.edit');
+
+    Route::put('/developers/{developer}', [AdminDeveloperController::class, 'update'])
+            ->name('developers.update');
+
+    Route::patch('/developers/{developer}/approve', [AdminDeveloperController::class, 'approve'])
+            ->name('developers.approve');
+
+    Route::patch('/developers/{developer}/reject', [AdminDeveloperController::class, 'reject'])
+            ->name('developers.reject');
+
+    Route::delete('/developers/{developer}', [AdminDeveloperController::class, 'destroy'])
+            ->name('developers.destroy');
 });

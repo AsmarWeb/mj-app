@@ -70,7 +70,7 @@
                                         {{ $page->created_by_ar }}
                                         <br>
                                         <a class="underline decoration-orange-500 dark:text-white" target="_blank"
-                                            href="{{ route('developers.index') }}">{{ $page->developer }}</a>
+                                            href="{{ route('developer.index') }}">{{ $page->developer }}</a>
                                         {{ __('about.by') }}
                                     </p>
                                 @else
@@ -78,7 +78,7 @@
                                         {{ $page->created_by }}
                                         <br> {{ __('about.by') }}
                                         <a class="underline decoration-orange-500 dark:text-white" target="_blank"
-                                            href="{{ route('developers.index') }}">{{ $page->developer }}</a>
+                                            href="{{ route('developer.index') }}">{{ $page->developer }}</a>
                                     </p>
                                 @endif
                             </h4>

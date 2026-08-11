@@ -35,6 +35,7 @@ return [
     'sell products' => 'Sell Products',
     'open your shop and reach more buyers.' => 'Open your shop and reach more buyers.',
     'create shop' => 'Create Shop',
+    'my shop'=>'My Shop',
 
     'be the first person looking for a product.' => 'Be the first person looking for a product.',
 

@@ -263,6 +263,27 @@
                                 {{ __('Settings') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('developers.index') }}"
+                                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-orange-50 hover:text-orange-600 dark:text-slate-300 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
+                                <span class="text-lg">👨‍💻</span>
+
+                                <span>
+                                    Developers
+                                </span>
+
+                                @php
+                                    $pendingDeveloperCount = \App\Models\Developer::where('approved', false)->count();
+                                @endphp
+
+                                @if ($pendingDeveloperCount > 0)
+                                    <span
+                                        class="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-xs font-bold text-white">
+                                        {{ $pendingDeveloperCount }}
+                                    </span>
+                                @endif
+
+                            </x-dropdown-link>
+
                             <x-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Edit Profile') }}
                             </x-dropdown-link>

@@ -1,306 +1,344 @@
+{{-- ================================================================ --}}
 {{-- DESCRIPTION --}}
-<div>
+{{-- ================================================================ --}}
 
-    <div class="flex items-center justify-between mb-2">
+<div class="flex items-center justify-between mb-2">
 
-        <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-            Shop Description
-        </label>
+    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        Shop Description
+    </label>
 
-        <button type="button" id="generate-description"
-            class="
-            inline-flex
-            items-center
-            gap-2
-            px-4
-            py-2
-            rounded-full
-            bg-gradient-to-r
-            from-orange-500
-            to-red-500
-            text-white
-            text-sm
-            font-semibold
-            hover:opacity-90
-            transition
-            ">
-
-            ✨ AI Generate
-
-        </button>
-
-    </div>
-
-    <textarea rows="6" name="description" id="description" placeholder="Tell customers about your store..."
+    <button type="button" id="generate-description"
         class="
-        w-full
-        rounded-2xl
-        border-gray-300
-        dark:border-neutral-700
-        dark:bg-neutral-900
-        dark:text-white
-        px-4
-        py-3
-        focus:ring-2
-        focus:ring-orange-500
-        outline-none
-        ">{{ old('description', $shop?->description) }}</textarea>
+    inline-flex
+    items-center
+    gap-2
+    px-4
+    py-2
+    rounded-full
+    bg-gradient-to-r
+    from-orange-500
+    to-red-500
+    text-white
+    text-sm
+    font-semibold
+    hover:opacity-90
+    transition
+    ">
 
-    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-        ✨ AI can create a professional description based on your shop information.
-    </p>
+        ✨ AI Generate
 
-    @error('description')
-        <p class="text-red-500 mt-2 text-sm">
-            {{ $message }}
-        </p>
-    @enderror
+    </button>
 
 </div>
 
+<textarea rows="6" name="description" id="description" placeholder="Tell customers about your store..."
+    class="
+    w-full
+    rounded-2xl
+    border-gray-300
+    dark:border-neutral-700
+    dark:bg-neutral-900
+    dark:text-white
+    px-4
+    py-3
+    focus:ring-2
+    focus:ring-orange-500
+    outline-none
+    ">{{ old('description', $shop?->description) }}</textarea>
 
+<p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+    ✨ AI can create a professional description based on your shop information.
+</p>
 
+@error('description')
+    <p class="text-red-500 mt-2 text-sm">
+        {{ $message }} </p>
+@enderror
+
+{{-- ================================================================ --}}
 {{-- SHOP SECTION --}}
-<div class="mt-8">
+{{-- ================================================================ --}}
 
-    <label class="block mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-        Choose Your Shop Type
-    </label>
+<label class="block mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+    Choose Your Shop Type 🇦🇪
+</label>
 
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    @foreach ($sections as $section)
+        <label class="cursor-pointer">
 
-        @foreach ($sections as $section)
-            <label class="cursor-pointer">
+            <input type="radio" name="section_id" value="{{ $section->id }}" class="hidden peer"
+                @checked(old('section_id', $shop?->section_id) == $section->id)>
 
+            <div
+                class="
+            p-5
+            rounded-3xl
+            border
+            bg-white
+            dark:bg-neutral-900
+            dark:border-neutral-700
 
-                <input type="radio" name="section_id" value="{{ $section->id }}" class="hidden peer"
-                    @checked(old('section_id', $shop?->section_id) == $section->id)>
+            transition-all
 
+            hover:border-orange-500
+            hover:-translate-y-1
+            hover:shadow-lg
 
-                <div
-                    class="
-                    p-5
-                    rounded-3xl
-                    border
-                    bg-white
-                    dark:bg-neutral-900
-                    dark:border-neutral-700
+            peer-checked:bg-orange-500
+            peer-checked:text-white
+            peer-checked:border-orange-500
+            ">
 
-                    transition-all
+                <div class="text-4xl mb-3">
 
-                    hover:border-orange-500
-                    hover:-translate-y-1
-                    hover:shadow-lg
+                    @switch($section->slug)
+                        @case('sales')
+                            🛍️
+                        @break
 
-                    peer-checked:bg-orange-500
-                    peer-checked:text-white
-                    peer-checked:border-orange-500
-                    ">
+                        @case('real-estate')
+                            🏠
+                        @break
 
-                    <div class="text-4xl mb-3">
+                        @case('rental')
+                            🚗
+                        @break
 
-                        @switch($section->slug)
-                            @case('sales')
-                                🛍️
-                            @break
+                        @case('auction')
+                            🔨
+                        @break
 
-                            @case('real-estate')
-                                🏠
-                            @break
+                        @case('events')
+                            🎟️
+                        @break
 
-                            @case('rental')
-                                🚗
-                            @break
+                        @case('digital')
+                            💻
+                        @break
 
-                            @case('auction')
-                                🔨
-                            @break
-
-                            @case('events')
-                                🎟️
-                            @break
-
-                            @case('digital')
-                                💻
-                            @break
-
-                            @default
-                                📦
-                        @endswitch
-
-                    </div>
-
-
-                    <div class="font-bold">
-                        {{ $section->name }}
-                    </div>
-
+                        @default
+                            📦
+                    @endswitch
 
                 </div>
 
+                <div class="font-bold">
+                    {{ $section->name }}
+                </div>
 
-            </label>
+            </div>
+
+        </label>
+    @endforeach
+
+</div>
+
+@error('section_id')
+    <p class="text-red-500 mt-2 text-sm">
+        {{ $message }} </p>
+@enderror
+
+{{-- ================================================================ --}}
+{{-- SHOP LOCATION --}}
+{{-- ================================================================ --}}
+
+<h2 class="text-2xl font-bold mb-5 mt-8">
+    📍 Shop Location 🇦🇪
+</h2>
+
+<div class="relative">
+
+    <input type="text" name="location" id="location" value="{{ old('location', $shop?->location) }}"
+        placeholder="Detecting your location..."
+        class="
+    w-full
+    rounded-2xl
+    border-gray-300
+    px-5
+    py-4
+    pr-40
+    dark:border-neutral-700
+    dark:bg-neutral-900
+    dark:text-white
+    focus:ring-2
+    focus:ring-orange-500
+    outline-none
+    " />
+
+    <button type="button" onclick="detectLocation()"
+        class="
+    absolute
+    right-2
+    top-1/2
+    -translate-y-1/2
+    bg-orange-500
+    text-white
+    px-4
+    py-2
+    rounded-xl
+    font-semibold
+    hover:bg-orange-600
+    transition
+    ">
+
+        📍 Detect
+
+    </button>
+
+</div>
+
+<p id="location-status" class="text-sm text-gray-500 mt-2">
+    Your location helps customers find your shop across the UAE.
+</p>
+
+<input type="hidden" name="latitude" id="latitude">
+
+<input type="hidden" name="longitude" id="longitude">
+
+{{-- ================================================================ --}}
+{{-- COUNTRY --}}
+{{-- ================================================================ --}}
+
+<div class="mt-6">
+
+    <label for="country_id" class="block text-sm font-bold mb-2">
+        🌍 Country
+    </label>
+
+    <select id="country_id" name="country_id"
+        class="
+    w-full
+    rounded-2xl
+    border
+    border-gray-300
+    dark:border-neutral-700
+    dark:bg-neutral-900
+    dark:text-white
+    px-5
+    py-4
+    focus:ring-2
+    focus:ring-orange-500
+    outline-none
+    ">
+
+        <option value="">
+            Select a country
+        </option>
+
+        @foreach ($countries as $country)
+            <option value="{{ $country->id }}" @selected(old('country_id', $shop?->country_id) == $country->id)>
+                {{ $country->name }}
+            </option>
         @endforeach
 
+    </select>
 
-    </div>
-
-
-    @error('section_id')
+    @error('country_id')
         <p class="text-red-500 mt-2 text-sm">
             {{ $message }}
         </p>
     @enderror
 
+</div>
+
+{{-- ================================================================ --}}
+{{-- STATE / EMIRATE --}}
+{{-- ================================================================ --}}
+
+<div class="mt-5">
+
+    <label for="state_id" class="block text-sm font-bold mb-2">
+        🏛️ State / Emirate 🇦🇪
+    </label>
+
+    <select id="state_id" name="state_id"
+        class="
+    w-full
+    rounded-2xl
+    border
+    border-gray-300
+    dark:border-neutral-700
+    dark:bg-neutral-900
+    dark:text-white
+    px-5
+    py-4
+    focus:ring-2
+    focus:ring-orange-500
+    outline-none
+    "
+        {{ old('country_id', $shop?->country_id) ? '' : 'disabled' }}>
+
+        <option value="">
+            Select a state / emirate
+        </option>
+
+        @foreach ($states as $state)
+            <option value="{{ $state->id }}" data-country="{{ $state->country_id }}" @selected(old('state_id', $shop?->state_id) == $state->id)>
+                {{ $state->name }}
+            </option>
+        @endforeach
+
+    </select>
+
+    @error('state_id')
+        <p class="text-red-500 mt-2 text-sm">
+            {{ $message }}
+        </p>
+    @enderror
 
 </div>
 
+{{-- ================================================================ --}}
+{{-- CITY --}}
+{{-- ================================================================ --}}
+
+<div class="mt-5">
 
 
+    <label for="city_id" class="block text-sm font-bold mb-2">
+        🏙️ City
+    </label>
 
-{{-- LOCATION --}}
-<div class="mt-8">
+    <select id="city_id" name="city_id"
+        class="
+    w-full
+    rounded-2xl
+    border
+    border-gray-300
+    dark:border-neutral-700
+    dark:bg-neutral-900
+    dark:text-white
+    px-5
+    py-4
+    focus:ring-2
+    focus:ring-orange-500
+    outline-none
+    "
+        {{ old('state_id', $shop?->state_id) ? '' : 'disabled' }}>
 
-    <h2 class="text-2xl font-bold mb-5">
-        📍 Shop Location
-    </h2>
+        <option value="">
+            Select a city
+        </option>
 
+        @foreach ($cities as $city)
+            <option value="{{ $city->id }}" data-state="{{ $city->state_id }}" @selected(old('city_id', $shop?->city_id) == $city->id)>
+                {{ $city->name }}
+            </option>
+        @endforeach
 
-    <div class="relative">
+    </select>
 
-        <input type="text" name="location" id="location" value="{{ old('location', $shop?->location) }}"
-            placeholder="Detecting your location..." class="
-w-full
-rounded-2xl
-border-gray-300
-px-5
-py-4
-pr-40
-" />
-
-
-
-        <button type="button" onclick="detectLocation()"
-            class="
-absolute
-right-2
-top-1/2
--translate-y-1/2
-
-bg-orange-500
-text-white
-
-px-4
-py-2
-rounded-xl
-font-semibold
-">
-
-            📍 Detect
-
-        </button>
-
-
-    </div>
-
-
-
-    <p id="location-status" class="text-sm text-gray-500 mt-2">
-
-        Your location helps customers find your shop.
-
-    </p>
-
-
-    <input type="hidden" name="latitude" id="latitude">
-
-
-    <input type="hidden" name="longitude" id="longitude">
-
+    @error('city_id')
+        <p class="text-red-500 mt-2 text-sm">
+            {{ $message }}
+        </p>
+    @enderror
 
 </div>
 
-
-
-
-
-
-{{-- LOCATION --}}
-
-<div class="mt-10 space-y-6">
-
-    <div>
-        <label for="country_id" class="block text-sm font-bold mb-2">
-            🌍 Country
-        </label>
-
-        <select id="country_id" name="country_id"
-            class="w-full rounded-2xl border border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 px-5 py-4 focus:ring-2 focus:ring-orange-500">
-
-            <option value="">Select a country</option>
-
-            @foreach ($countries as $country)
-                <option value="{{ $country->id }}" @selected(old('country_id', $shop?->country_id) == $country->id)>
-
-                    {{ $country->name }}
-
-                </option>
-            @endforeach
-
-        </select>
-    </div>
-
-
-
-    <div>
-        <label for="state_id" class="block text-sm font-bold mb-2">
-            🏛️ State / Emirate
-        </label>
-
-        <select id="state_id" name="state_id"
-            class="w-full rounded-2xl border border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 px-5 py-4 focus:ring-2 focus:ring-orange-500"
-            {{ old('country_id', $shop?->country_id) ? '' : 'disabled' }}>
-
-            <option value="">Select a state</option>
-
-            @foreach ($states as $state)
-                <option value="{{ $state->id }}" data-country="{{ $state->country_id }}"
-                    @selected(old('state_id', $shop?->state_id) == $state->id)>
-
-                    {{ $state->name }}
-
-                </option>
-            @endforeach
-
-        </select>
-    </div>
-
-
-
-    <div>
-        <label for="city_id" class="block text-sm font-bold mb-2">
-            🏙️ City
-        </label>
-
-        <select id="city_id" name="city_id"
-            class="w-full rounded-2xl border border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 px-5 py-4 focus:ring-2 focus:ring-orange-500"
-            {{ old('state_id', $shop?->state_id) ? '' : 'disabled' }}>
-
-            <option value="">Select a city</option>
-
-            @foreach ($cities as $city)
-                <option value="{{ $city->id }}" data-state="{{ $city->state_id }}" @selected(old('city_id', $shop?->city_id) == $city->id)>
-
-                    {{ $city->name }}
-
-                </option>
-            @endforeach
-
-        </select>
-    </div>
-
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

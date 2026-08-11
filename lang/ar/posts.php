@@ -34,6 +34,7 @@ return [
     'sell products' => 'بيع المنتجات',
     'open your shop and reach more buyers.' => 'افتح متجرك واجذب المزيد من المشترين',
     'create shop' => 'أنشئ متجرك',
+    'my shop'=>'متجرك',
 
     'be the first person looking for a product.' => 'كن أول شخص يبحث عن منتج',
 ];
