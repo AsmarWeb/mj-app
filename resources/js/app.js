@@ -4,7 +4,6 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 
 import App from "./App.vue";
-import router from "./router";
 
 import LanguageSwitcher from "./components/LanguageSwitcher.vue";
 
@@ -19,7 +18,6 @@ const app = createApp(App);
 app.use(createPinia());
 
 // Vue Router
-app.use(router);
 
 // Global Components
 app.component("language-switcher", LanguageSwitcher);

@@ -10,6 +10,18 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- PWA --}}
+    <meta name="theme-color" content="#f97316">
+
+    <link rel="manifest" href="/build/manifest.webmanifest">
+
+    <link rel="apple-touch-icon" href="{{ asset('icons/pwa-192x192.png') }}">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="murwaj">
+
 
     {{-- Language --}}
     <meta http-equiv="content-language" content="{{ app()->getLocale() }}">
