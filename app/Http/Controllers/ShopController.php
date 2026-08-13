@@ -367,15 +367,42 @@ class ShopController extends Controller
 
     public function creators(Request $request)
     {
-        $shops = Shop::with('user')
-            ->withCount('listing')->when($request->search, function ($query) use ($request) {
-                $query->where('name', 'like', '%'.$request->search.'%')
-                    ->orWhere('slug', 'like', '%'.$request->search.'%');
-            })
-            ->latest()
-            ->paginate(12);
+    $search = trim($request->input('q', ''));
 
-        return view('shop.creators', compact('shops'));
+    $shops = Shop::query()
+        ->with([
+            'user',
+        ])
+        ->withCount('listings')
+        ->when($search !== '', function ($query) use ($search) {
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('name_ar', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+
+            });
+
+        })
+        ->latest()
+        ->paginate(12)
+        ->withQueryString();
+
+        // SEO
+    
+        $title = 'murwaj';
+    
+        $description = 'murwaj is an advertising group, to help your business grow through digital marketing.';
+
+        $keywords = 'murwaj.com, buy electronics, computers, apparel, fashion accessories, shoes, watches, furniture, home and kitchen goods, beauty, personal care, grocery, gourmet food.';
+    
+        return view('shop.creators', compact('shops', 'title', 'description', 'keywords'));
     }
 
     public function downloadBusinessCard($slug)

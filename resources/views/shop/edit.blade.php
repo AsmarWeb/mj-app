@@ -2,11 +2,11 @@
 
     <div class="min-h-screen bg-slate-50 dark:bg-slate-950">
 
-        {{-- ========================================================= --}}
-        {{-- HEADER --}}
-        {{-- ========================================================= --}}
-
         <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+            {{-- ========================================================= --}}
+            {{-- HEADER --}}
+            {{-- ========================================================= --}}
 
             <div class="mb-8">
 
@@ -17,22 +17,36 @@
 
                         <span class="h-2 w-2 rounded-full bg-orange-500"></span>
 
-                        UAE Marketplace
+                        <span lang="en">UAE Marketplace</span>
+                        <span class="text-orange-400">•</span>
+                        <span dir="rtl" lang="ar">سوق الإمارات</span>
 
                     </span>
 
-                    <span class="text-sm text-slate-400">
+                    <span class="text-sm text-slate-400" lang="en">
                         🇦🇪 Dubai · Abu Dhabi · Sharjah · UAE
+                    </span>
+
+                    <span class="text-sm text-slate-400" dir="rtl" lang="ar">
+                        🇦🇪 دبي · أبوظبي · الشارقة · الإمارات
                     </span>
 
                 </div>
 
                 <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-                    Edit Your Shop
+                    <span lang="en">Edit Your Shop</span>
+                    <span class="mx-2 text-slate-300">|</span>
+                    <span dir="rtl" lang="ar">تعديل متجرك</span>
                 </h1>
 
-                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400 sm:text-base">
-                    Keep your shop information, contact details and marketplace preferences up to date.
+                <p class="mt-2 max-w-3xl text-sm leading-7 text-slate-500 dark:text-slate-400">
+                    <span lang="en">
+                        Keep your shop information, contact details and marketplace preferences up to date.
+                    </span>
+                    <br>
+                    <span dir="rtl" lang="ar">
+                        حافظ على تحديث معلومات متجرك وبيانات الاتصال وتفضيلات السوق.
+                    </span>
                 </p>
 
             </div>
@@ -52,13 +66,17 @@
                     </div>
 
                     <div>
+
                         <p class="font-bold">
-                            Changes saved successfully
+                            <span lang="en">Changes saved successfully</span>
+                            <span class="mx-1">—</span>
+                            <span dir="rtl" lang="ar">تم حفظ التغييرات بنجاح</span>
                         </p>
 
                         <p class="mt-1 text-sm text-green-700/80 dark:text-green-300/70">
                             {{ session('success') }}
                         </p>
+
                     </div>
 
                 </div>
@@ -66,10 +84,11 @@
 
 
             {{-- ========================================================= --}}
-            {{-- VALIDATION SUMMARY --}}
+            {{-- VALIDATION --}}
             {{-- ========================================================= --}}
 
             @if ($errors->any())
+
                 <div
                     class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-5 text-red-700 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-300">
 
@@ -83,7 +102,9 @@
                         <div class="flex-1">
 
                             <p class="font-bold">
-                                Please check the information below.
+                                <span lang="en">Please check the information below.</span>
+                                <span class="mx-1">—</span>
+                                <span dir="rtl" lang="ar">يرجى التحقق من المعلومات أدناه.</span>
                             </p>
 
                             <ul class="mt-3 list-disc space-y-1 pl-5 text-sm">
@@ -97,8 +118,13 @@
                     </div>
 
                 </div>
+
             @endif
 
+
+            {{-- ========================================================= --}}
+            {{-- FORM --}}
+            {{-- ========================================================= --}}
 
             <form action="{{ route('shop.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
 
@@ -126,11 +152,15 @@
                             <div>
 
                                 <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                                    Shop Information
+                                    <span lang="en">Shop Information</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">معلومات المتجر</span>
                                 </h2>
 
                                 <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Tell customers about your business.
+                                    <span lang="en">Tell customers about your business.</span>
+                                    <br>
+                                    <span dir="rtl" lang="ar">أخبر العملاء عن نشاطك التجاري.</span>
                                 </p>
 
                             </div>
@@ -140,12 +170,14 @@
                     </div>
 
 
-
                     <div class="space-y-6 p-6 sm:p-8">
 
 
-                        {{-- Shop Arabic Name --}}
-                        <div dir="rtl">
+                        {{-- ================================================= --}}
+                        {{-- ARABIC SHOP NAME --}}
+                        {{-- ================================================= --}}
+
+                        <div dir="rtl" lang="ar">
 
                             <div class="flex items-center justify-between gap-3">
 
@@ -164,9 +196,8 @@
 
                             </div>
 
-
                             <input type="text" id="name_ar" name="name_ar"
-                                value="{{ old('name_ar', $shop?->name_ar) }}" placeholder="مثال: متجر دبي"
+                                value="{{ old('name_ar', $shop?->name_ar) }}" placeholder="مثال: متجر دبي للهواتف"
                                 dir="rtl" lang="ar" autocomplete="organization"
                                 class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-right text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500">
 
@@ -179,15 +210,23 @@
                         </div>
 
 
-                        {{-- Shop Name --}}
-                        <div>
+                        {{-- ================================================= --}}
+                        {{-- ENGLISH SHOP NAME --}}
+                        {{-- ================================================= --}}
 
-                            <label class="font-bold text-slate-700 dark:text-slate-300">
+                        <div dir="ltr" lang="en">
+
+                            <label for="name" class="font-bold text-slate-700 dark:text-slate-300">
+
                                 Shop Name
+                                <span class="mx-1 text-slate-300">|</span>
+                                <span dir="rtl" lang="ar">اسم المتجر</span>
+
                             </label>
 
-                            <input type="text" name="name" value="{{ old('name', $shop->name) }}"
-                                placeholder="e.g. Dubai Mobile Store"
+                            <input type="text" id="name" name="name" value="{{ old('name', $shop?->name) }}"
+                                placeholder="e.g. Dubai Mobile Store" dir="ltr" lang="en"
+                                autocomplete="organization"
                                 class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
                             @error('name')
@@ -199,16 +238,23 @@
                         </div>
 
 
-                        {{-- Description --}}
+                        {{-- ================================================= --}}
+                        {{-- DESCRIPTION --}}
+                        {{-- ================================================= --}}
+
                         <div>
 
-                            <label class="font-bold text-slate-700 dark:text-slate-300">
-                                Shop Description
+                            <label for="description" class="font-bold text-slate-700 dark:text-slate-300">
+
+                                <span lang="en">Shop Description</span>
+                                <span class="mx-1 text-slate-300">|</span>
+                                <span dir="rtl" lang="ar">وصف المتجر</span>
+
                             </label>
 
-                            <textarea name="description" rows="6"
-                                placeholder="Tell customers what your shop sells, where you're located and what makes your business special..."
-                                class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 leading-7 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">{{ old('description', $shop->description) }}</textarea>
+                            <textarea id="description" name="description" rows="6"
+                                placeholder="Tell customers what your shop sells, where you're located and what makes your business special... | أخبر العملاء بما يبيعه متجرك وموقعك وما يميز نشاطك التجاري..."
+                                class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 leading-7 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">{{ old('description', $shop?->description) }}</textarea>
 
                             @error('description')
                                 <p class="mt-2 text-sm text-red-500">
@@ -224,7 +270,7 @@
 
 
                 {{-- ========================================================= --}}
-                {{-- CONTACT --}}
+                {{-- CONTACT DETAILS --}}
                 {{-- ========================================================= --}}
 
                 <div
@@ -242,11 +288,16 @@
                             <div>
 
                                 <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                                    Contact Details
+                                    <span lang="en">Contact Details</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">بيانات الاتصال</span>
                                 </h2>
 
                                 <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Give UAE customers convenient ways to contact you.
+                                    <span lang="en">Give UAE customers convenient ways to contact you.</span>
+                                    <br>
+                                    <span dir="rtl" lang="ar">وفّر للعملاء في الإمارات طرقًا سهلة للتواصل
+                                        معك.</span>
                                 </p>
 
                             </div>
@@ -260,11 +311,16 @@
 
                         <div class="grid gap-6 md:grid-cols-2">
 
-                            {{-- Phone --}}
-                            <div>
 
-                                <label class="font-bold text-slate-700 dark:text-slate-300">
+                            {{-- PHONE --}}
+                            <div dir="ltr" lang="en">
+
+                                <label for="phone" class="font-bold text-slate-700 dark:text-slate-300">
+
                                     Phone Number
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">رقم الهاتف</span>
+
                                 </label>
 
                                 <div class="relative mt-2">
@@ -276,7 +332,7 @@
 
                                     <input id="phone" type="tel" name="phone"
                                         value="{{ old('phone', auth()->user()->phone) }}" autocomplete="tel"
-                                        placeholder="50 123 4567"
+                                        placeholder="50 123 4567" dir="ltr" lang="en"
                                         class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-20 pr-4 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
                                 </div>
@@ -290,11 +346,15 @@
                             </div>
 
 
-                            {{-- WhatsApp --}}
-                            <div>
+                            {{-- WHATSAPP --}}
+                            <div dir="ltr" lang="en">
 
-                                <label class="font-bold text-slate-700 dark:text-slate-300">
+                                <label for="whatsapp" class="font-bold text-slate-700 dark:text-slate-300">
+
                                     WhatsApp Number
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">رقم الواتساب</span>
+
                                 </label>
 
                                 <div class="relative mt-2">
@@ -304,9 +364,9 @@
                                         WhatsApp
                                     </span>
 
-                                    <input type="tel" name="whatsapp"
-                                        value="{{ old('whatsapp', $shop->whatsapp ?? auth()->user()->phone) }}"
-                                        placeholder="971501234567"
+                                    <input id="whatsapp" type="tel" name="whatsapp"
+                                        value="{{ old('whatsapp', $shop?->whatsapp ?? auth()->user()->phone) }}"
+                                        autocomplete="tel" placeholder="971501234567" dir="ltr" lang="en"
                                         class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-24 pr-4 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
                                 </div>
@@ -322,18 +382,23 @@
                         </div>
 
 
-                        {{-- Contact Preferences --}}
+                        {{-- CONTACT OPTIONS --}}
                         <div
                             class="mt-6 rounded-2xl border border-orange-100 bg-orange-50/70 p-5 dark:border-orange-500/10 dark:bg-orange-500/5">
 
                             <div class="mb-4">
 
                                 <h3 class="font-black text-slate-900 dark:text-white">
-                                    Contact Options
+                                    <span lang="en">Contact Options</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">خيارات الاتصال</span>
                                 </h3>
 
                                 <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                                    Choose which contact methods customers can see.
+                                    <span lang="en">Choose which contact methods customers can see.</span>
+                                    <br>
+                                    <span dir="rtl" lang="ar">اختر طرق الاتصال التي يمكن للعملاء
+                                        رؤيتها.</span>
                                 </p>
 
                             </div>
@@ -341,6 +406,8 @@
 
                             <div class="space-y-3">
 
+
+                                {{-- PHONE OPTION --}}
                                 <label
                                     class="flex cursor-pointer items-center justify-between rounded-xl bg-white p-4 transition hover:shadow-sm dark:bg-slate-900">
 
@@ -354,11 +421,15 @@
                                         <div>
 
                                             <p class="font-bold text-slate-800 dark:text-slate-200">
-                                                Show phone number
+                                                <span lang="en">Show phone number</span>
+                                                <span class="mx-1 text-slate-300">|</span>
+                                                <span dir="rtl" lang="ar">إظهار رقم الهاتف</span>
                                             </p>
 
                                             <p class="text-xs text-slate-400">
-                                                Allow customers to call you
+                                                <span lang="en">Allow customers to call you</span>
+                                                <span class="mx-1">|</span>
+                                                <span dir="rtl" lang="ar">السماح للعملاء بالاتصال بك</span>
                                             </p>
 
                                         </div>
@@ -366,12 +437,13 @@
                                     </div>
 
                                     <input type="checkbox" name="allow_phone" value="1"
-                                        {{ old('allow_phone', $shop->allow_phone) ? 'checked' : '' }}
+                                        {{ old('allow_phone', $shop?->allow_phone) ? 'checked' : '' }}
                                         class="h-5 w-5 rounded border-slate-300 text-orange-600 focus:ring-orange-500">
 
                                 </label>
 
 
+                                {{-- WHATSAPP OPTION --}}
                                 <label
                                     class="flex cursor-pointer items-center justify-between rounded-xl bg-white p-4 transition hover:shadow-sm dark:bg-slate-900">
 
@@ -385,11 +457,16 @@
                                         <div>
 
                                             <p class="font-bold text-slate-800 dark:text-slate-200">
-                                                Show WhatsApp
+                                                <span lang="en">Show WhatsApp</span>
+                                                <span class="mx-1 text-slate-300">|</span>
+                                                <span dir="rtl" lang="ar">إظهار الواتساب</span>
                                             </p>
 
                                             <p class="text-xs text-slate-400">
-                                                Let customers message you on WhatsApp
+                                                <span lang="en">Let customers message you on WhatsApp</span>
+                                                <span class="mx-1">|</span>
+                                                <span dir="rtl" lang="ar">السماح للعملاء بمراسلتك عبر
+                                                    الواتساب</span>
                                             </p>
 
                                         </div>
@@ -397,7 +474,7 @@
                                     </div>
 
                                     <input type="checkbox" name="allow_whatsapp" value="1"
-                                        {{ old('allow_whatsapp', $shop->allow_whatsapp) ? 'checked' : '' }}
+                                        {{ old('allow_whatsapp', $shop?->allow_whatsapp) ? 'checked' : '' }}
                                         class="h-5 w-5 rounded border-slate-300 text-orange-600 focus:ring-orange-500">
 
                                 </label>
@@ -430,11 +507,17 @@
                             <div>
 
                                 <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                                    Currency Preferences
+                                    <span lang="en">Currency Preferences</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">تفضيلات العملة</span>
                                 </h2>
 
                                 <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Choose the currency displayed for your shop and products.
+                                    <span lang="en">Choose the currency displayed for your shop and
+                                        products.</span>
+                                    <br>
+                                    <span dir="rtl" lang="ar">اختر العملة التي سيتم عرضها لمتجرك
+                                        ومنتجاتك.</span>
                                 </p>
 
                             </div>
@@ -450,56 +533,60 @@
 
                             <div>
 
-                                <label class="font-bold text-slate-700 dark:text-slate-300">
-                                    Shop Currency
+                                <label for="currency" class="font-bold text-slate-700 dark:text-slate-300">
+
+                                    <span lang="en">Shop Currency</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">عملة المتجر</span>
+
                                 </label>
 
                                 <select name="currency" id="currency"
                                     class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
                                     <option value="AED"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'AED' ? 'selected' : '' }}>
-                                        🇦🇪 AED — United Arab Emirates Dirham
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'AED' ? 'selected' : '' }}>
+                                        🇦🇪 AED — United Arab Emirates Dirham | الدرهم الإماراتي
                                     </option>
 
                                     <option value="USD"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'USD' ? 'selected' : '' }}>
-                                        🇺🇸 USD — US Dollar
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'USD' ? 'selected' : '' }}>
+                                        🇺🇸 USD — US Dollar | الدولار الأمريكي
                                     </option>
 
                                     <option value="EUR"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'EUR' ? 'selected' : '' }}>
-                                        🇪🇺 EUR — Euro
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'EUR' ? 'selected' : '' }}>
+                                        🇪🇺 EUR — Euro | اليورو
                                     </option>
 
                                     <option value="GBP"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'GBP' ? 'selected' : '' }}>
-                                        🇬🇧 GBP — British Pound
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'GBP' ? 'selected' : '' }}>
+                                        🇬🇧 GBP — British Pound | الجنيه الإسترليني
                                     </option>
 
                                     <option value="SAR"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'SAR' ? 'selected' : '' }}>
-                                        🇸🇦 SAR — Saudi Riyal
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'SAR' ? 'selected' : '' }}>
+                                        🇸🇦 SAR — Saudi Riyal | الريال السعودي
                                     </option>
 
                                     <option value="KWD"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'KWD' ? 'selected' : '' }}>
-                                        🇰🇼 KWD — Kuwaiti Dinar
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'KWD' ? 'selected' : '' }}>
+                                        🇰🇼 KWD — Kuwaiti Dinar | الدينار الكويتي
                                     </option>
 
                                     <option value="QAR"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'QAR' ? 'selected' : '' }}>
-                                        🇶🇦 QAR — Qatari Riyal
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'QAR' ? 'selected' : '' }}>
+                                        🇶🇦 QAR — Qatari Riyal | الريال القطري
                                     </option>
 
                                     <option value="BHD"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'BHD' ? 'selected' : '' }}>
-                                        🇧🇭 BHD — Bahraini Dinar
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'BHD' ? 'selected' : '' }}>
+                                        🇧🇭 BHD — Bahraini Dinar | الدينار البحريني
                                     </option>
 
                                     <option value="OMR"
-                                        {{ old('currency', $shop->currency ?? 'AED') === 'OMR' ? 'selected' : '' }}>
-                                        🇴🇲 OMR — Omani Rial
+                                        {{ old('currency', $shop?->currency ?? 'AED') === 'OMR' ? 'selected' : '' }}>
+                                        🇴🇲 OMR — Omani Rial | الريال العماني
                                     </option>
 
                                 </select>
@@ -525,12 +612,22 @@
                                     <div>
 
                                         <p class="font-bold text-orange-900 dark:text-orange-300">
-                                            UAE Marketplace
+                                            <span lang="en">UAE Marketplace</span>
+                                            <span class="mx-1">|</span>
+                                            <span dir="rtl" lang="ar">سوق الإمارات</span>
                                         </p>
 
                                         <p class="mt-1 text-sm leading-6 text-orange-800/70 dark:text-orange-300/70">
-                                            AED is the default currency for UAE sellers. You can change it if you
-                                            primarily sell to customers using another currency.
+                                            <span lang="en">
+                                                AED is the default currency for UAE sellers. You can change it if you
+                                                primarily sell to customers using another currency.
+                                            </span>
+                                            <br>
+                                            <span dir="rtl" lang="ar">
+                                                الدرهم الإماراتي هو العملة الافتراضية للبائعين في الإمارات. يمكنك
+                                                تغييرها
+                                                إذا كنت تبيع بشكل أساسي للعملاء الذين يستخدمون عملة أخرى.
+                                            </span>
                                         </p>
 
                                     </div>
@@ -565,11 +662,15 @@
                             <div>
 
                                 <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                                    Shop Logo
+                                    <span lang="en">Shop Logo</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">شعار المتجر</span>
                                 </h2>
 
                                 <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Use a clear image that represents your business.
+                                    <span lang="en">Use a clear image that represents your business.</span>
+                                    <br>
+                                    <span dir="rtl" lang="ar">استخدم صورة واضحة تمثل نشاطك التجاري.</span>
                                 </p>
 
                             </div>
@@ -583,11 +684,12 @@
 
                         <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
 
-                            @if ($shop->logo)
+                            @if ($shop?->logo)
                                 <div
                                     class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-1 shadow-sm dark:border-slate-700 dark:bg-slate-950">
 
-                                    <img src="{{ asset('storage/' . $shop->logo) }}" alt="{{ $shop->name }}"
+                                    <img src="{{ asset('storage/' . $shop->logo) }}"
+                                        alt="{{ $shop?->name }} | {{ $shop?->name_ar }}"
                                         class="h-28 w-28 rounded-xl object-cover">
 
                                 </div>
@@ -601,15 +703,23 @@
 
                             <div class="flex-1">
 
-                                <label class="font-bold text-slate-700 dark:text-slate-300">
-                                    Upload New Logo
+                                <label for="logo" class="font-bold text-slate-700 dark:text-slate-300">
+
+                                    <span lang="en">Upload New Logo</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">رفع شعار جديد</span>
+
                                 </label>
 
-                                <input type="file" name="logo" accept="image/jpeg,image/png,image/webp"
+                                <input id="logo" type="file" name="logo"
+                                    accept="image/jpeg,image/png,image/webp"
                                     class="mt-3 block w-full cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
 
                                 <p class="mt-2 text-xs text-slate-400">
-                                    JPG, PNG or WebP. A square image is recommended.
+                                    <span lang="en">JPG, PNG or WebP. A square image is recommended.</span>
+                                    <span class="mx-1">|</span>
+                                    <span dir="rtl" lang="ar">JPG أو PNG أو WebP. يفضل استخدام صورة
+                                        مربعة.</span>
                                 </p>
 
                                 @error('logo')
@@ -646,11 +756,15 @@
                             <div>
 
                                 <h2 class="text-xl font-black text-slate-900 dark:text-white">
-                                    Shop Type
+                                    <span lang="en">Shop Type</span>
+                                    <span class="mx-1 text-slate-300">|</span>
+                                    <span dir="rtl" lang="ar">نوع المتجر</span>
                                 </h2>
 
                                 <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Choose how you operate your business.
+                                    <span lang="en">Choose how you operate your business.</span>
+                                    <br>
+                                    <span dir="rtl" lang="ar">اختر طبيعة وطريقة عمل نشاطك التجاري.</span>
                                 </p>
 
                             </div>
@@ -663,12 +777,16 @@
                     <div class="p-6 sm:p-8">
 
                         <label class="font-bold text-slate-700 dark:text-slate-300">
-                            What type of shop is this?
+                            <span lang="en">What type of shop is this?</span>
+                            <span class="mx-1 text-slate-300">|</span>
+                            <span dir="rtl" lang="ar">ما نوع هذا المتجر؟</span>
                         </label>
+
 
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
 
-                            {{-- Freelance --}}
+
+                            {{-- FREELANCE --}}
                             <label class="group relative cursor-pointer">
 
                                 <input type="radio" name="type" value="freelance" class="peer sr-only"
@@ -676,33 +794,45 @@
 
                                 <div
                                     class="relative rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 transition-all duration-300
-                hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg
-                peer-checked:border-orange-500
-                peer-checked:bg-gradient-to-br peer-checked:from-orange-50 peer-checked:to-amber-50
-                peer-checked:shadow-xl peer-checked:shadow-orange-500/10
-                dark:border-slate-700 dark:bg-slate-800
-                dark:hover:border-orange-500/50
-                dark:peer-checked:border-orange-500
-                dark:peer-checked:from-orange-500/10 dark:peer-checked:to-amber-500/5">
+                                    hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg
+                                    peer-checked:border-orange-500
+                                    peer-checked:bg-gradient-to-br
+                                    peer-checked:from-orange-50
+                                    peer-checked:to-amber-50
+                                    peer-checked:shadow-xl
+                                    peer-checked:shadow-orange-500/10
+                                    dark:border-slate-700
+                                    dark:bg-slate-800
+                                    dark:hover:border-orange-500/50
+                                    dark:peer-checked:border-orange-500
+                                    dark:peer-checked:from-orange-500/10
+                                    dark:peer-checked:to-amber-500/5">
 
                                     <div class="flex items-start justify-between gap-4">
 
                                         <div class="flex items-center gap-4">
 
                                             <div
-                                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm
-                            dark:bg-slate-900">
+                                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm dark:bg-slate-900">
                                                 💼
                                             </div>
 
                                             <div>
 
                                                 <h3 class="font-black text-slate-900 dark:text-white">
-                                                    Freelance
+                                                    <span lang="en">Freelance</span>
+                                                    <span class="mx-1 text-slate-300">|</span>
+                                                    <span dir="rtl" lang="ar">عمل حر</span>
                                                 </h3>
 
                                                 <p class="mt-1 text-sm leading-5 text-slate-500 dark:text-slate-400">
-                                                    For independent professionals and freelancers.
+                                                    <span lang="en">
+                                                        For independent professionals and freelancers.
+                                                    </span>
+                                                    <br>
+                                                    <span dir="rtl" lang="ar">
+                                                        للمحترفين المستقلين وأصحاب الأعمال الحرة.
+                                                    </span>
                                                 </p>
 
                                             </div>
@@ -711,9 +841,7 @@
 
 
                                         <div
-                                            class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-300
-                        peer-checked:border-orange-500 peer-checked:bg-orange-500
-                        dark:border-slate-600">
+                                            class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 peer-checked:border-orange-500 peer-checked:bg-orange-500 dark:border-slate-600">
 
                                             <svg class="hidden h-3.5 w-3.5 text-white peer-checked:block"
                                                 fill="none" stroke="currentColor" stroke-width="3"
@@ -733,7 +861,7 @@
                             </label>
 
 
-                            {{-- Local --}}
+                            {{-- LOCAL --}}
                             <label class="group relative cursor-pointer">
 
                                 <input type="radio" name="type" value="local" class="peer sr-only"
@@ -741,33 +869,45 @@
 
                                 <div
                                     class="relative rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 transition-all duration-300
-                hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg
-                peer-checked:border-orange-500
-                peer-checked:bg-gradient-to-br peer-checked:from-orange-50 peer-checked:to-amber-50
-                peer-checked:shadow-xl peer-checked:shadow-orange-500/10
-                dark:border-slate-700 dark:bg-slate-800
-                dark:hover:border-orange-500/50
-                dark:peer-checked:border-orange-500
-                dark:peer-checked:from-orange-500/10 dark:peer-checked:to-amber-500/5">
+                                    hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg
+                                    peer-checked:border-orange-500
+                                    peer-checked:bg-gradient-to-br
+                                    peer-checked:from-orange-50
+                                    peer-checked:to-amber-50
+                                    peer-checked:shadow-xl
+                                    peer-checked:shadow-orange-500/10
+                                    dark:border-slate-700
+                                    dark:bg-slate-800
+                                    dark:hover:border-orange-500/50
+                                    dark:peer-checked:border-orange-500
+                                    dark:peer-checked:from-orange-500/10
+                                    dark:peer-checked:to-amber-500/5">
 
                                     <div class="flex items-start justify-between gap-4">
 
                                         <div class="flex items-center gap-4">
 
                                             <div
-                                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm
-                            dark:bg-slate-900">
+                                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm dark:bg-slate-900">
                                                 🇦🇪
                                             </div>
 
                                             <div>
 
                                                 <h3 class="font-black text-slate-900 dark:text-white">
-                                                    Local Shop
+                                                    <span lang="en">Local Shop</span>
+                                                    <span class="mx-1 text-slate-300">|</span>
+                                                    <span dir="rtl" lang="ar">متجر محلي</span>
                                                 </h3>
 
                                                 <p class="mt-1 text-sm leading-5 text-slate-500 dark:text-slate-400">
-                                                    For physical businesses serving customers locally.
+                                                    <span lang="en">
+                                                        For physical businesses serving customers locally.
+                                                    </span>
+                                                    <br>
+                                                    <span dir="rtl" lang="ar">
+                                                        للأنشطة التجارية الفعلية التي تخدم العملاء محليًا.
+                                                    </span>
                                                 </p>
 
                                             </div>
@@ -776,9 +916,7 @@
 
 
                                         <div
-                                            class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-300
-                        peer-checked:border-orange-500 peer-checked:bg-orange-500
-                        dark:border-slate-600">
+                                            class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 peer-checked:border-orange-500 peer-checked:bg-orange-500 dark:border-slate-600">
 
                                             <svg class="hidden h-3.5 w-3.5 text-white peer-checked:block"
                                                 fill="none" stroke="currentColor" stroke-width="3"
@@ -811,7 +949,6 @@
                 </div>
 
 
-
                 {{-- ========================================================= --}}
                 {{-- SAVE --}}
                 {{-- ========================================================= --}}
@@ -819,7 +956,8 @@
                 <div
                     class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-orange-500 via-orange-600 to-amber-500 p-6 text-white shadow-2xl shadow-orange-500/20 sm:p-8">
 
-                    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
+                    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl">
+                    </div>
 
                     <div class="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
@@ -828,16 +966,37 @@
                             <div
                                 class="mb-2 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur">
 
-                                🇦🇪 UAE Marketplace
+                                🇦🇪
+                                <span lang="en">UAE Marketplace</span>
+                                <span>•</span>
+                                <span dir="rtl" lang="ar">سوق الإمارات</span>
 
                             </div>
 
                             <h3 class="text-2xl font-black">
-                                Ready to save your changes?
+
+                                <span lang="en">Ready to save your changes?</span>
+
+                                <span class="mx-1">|</span>
+
+                                <span dir="rtl" lang="ar">
+                                    هل أنت مستعد لحفظ التغييرات؟
+                                </span>
+
                             </h3>
 
-                            <p class="mt-2 max-w-xl text-sm leading-6 text-white/80">
-                                Your updated shop information will be reflected across the marketplace.
+                            <p class="mt-2 max-w-xl text-sm leading-7 text-white/80">
+
+                                <span lang="en">
+                                    Your updated shop information will be reflected across the marketplace.
+                                </span>
+
+                                <br>
+
+                                <span dir="rtl" lang="ar">
+                                    ستظهر معلومات متجرك المحدثة في جميع أنحاء السوق.
+                                </span>
+
                             </p>
 
                         </div>
@@ -846,7 +1005,11 @@
                         <button type="submit"
                             class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 font-black text-orange-600 shadow-xl transition hover:-translate-y-0.5 hover:bg-orange-50">
 
-                            Save Changes
+                            <span lang="en">Save Changes</span>
+
+                            <span class="text-orange-300">|</span>
+
+                            <span dir="rtl" lang="ar">حفظ التغييرات</span>
 
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">

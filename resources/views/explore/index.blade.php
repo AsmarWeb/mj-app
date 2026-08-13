@@ -1037,7 +1037,7 @@
 
                         </div>
 
-                        <a href="#section-products" class="text-sm font-bold text-orange-500 hover:text-orange-600">
+                        <a href="{#section-products}" class="text-sm font-bold text-orange-500 hover:text-orange-600">
                             {{ __('discover.view all') }} →
                         </a>
 
@@ -1168,7 +1168,7 @@
 
                             </div>
 
-                            <a href="#" class="text-sm font-bold text-orange-500">
+                            <a href="{{ route('shop.creators') }}" class="text-sm font-bold text-orange-500">
                                 {{ __('discover.view all') }} →
                             </a>
 
@@ -1210,7 +1210,7 @@
 
 
                                     <p class="mt-1 text-sm text-gray-500">
-                                        {{ $shop->type ?: 'Murwaj Seller' }}
+                                        {{ $shop->type ?: 'murwaj Seller' }}
                                     </p>
 
 

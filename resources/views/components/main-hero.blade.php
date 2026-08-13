@@ -14,6 +14,38 @@
             ->values();
     @endphp
 
+    @php
+        $isArabic = app()->getLocale() === 'ar';
+
+        $searchTags = [
+            [
+                'en' => 'Furniture',
+                'ar' => 'أثاث',
+                'query' => 'Furniture',
+            ],
+            [
+                'en' => 'Cars',
+                'ar' => 'سيارات',
+                'query' => 'Cars',
+            ],
+            [
+                'en' => 'Property',
+                'ar' => 'عقارات',
+                'query' => 'Property',
+            ],
+            [
+                'en' => 'Events',
+                'ar' => 'فعاليات',
+                'query' => 'Events',
+            ],
+            [
+                'en' => 'Templates',
+                'ar' => 'قوالب',
+                'query' => 'Templates',
+            ],
+        ];
+    @endphp
+
 
     <div class="max-w-7xl mx-auto px-6 py-16 text-center">
 
@@ -88,20 +120,17 @@
 
         {{-- SEARCH TAGS --}}
 
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
-
-            @foreach (['Furniture', 'Cars', 'Property', 'Jobs', 'Templates'] as $tag)
-                <a href="{{ route('search', ['q' => $tag]) }}"
-                    class="px-5 py-2 rounded-full
-                          bg-gray-100 dark:bg-gray-800
-                          text-gray-700 dark:text-gray-200
-                          hover:bg-orange-600 hover:text-white transition">
-
-                    {{ $tag }}
-
+        <div class="mt-8 flex flex-wrap justify-center gap-3" dir="{{ $isArabic ? 'rtl' : 'ltr' }}">
+            @foreach ($searchTags as $tag)
+                <a href="{{ route('search', ['q' => $tag['query']]) }}"
+                    class="rounded-full bg-gray-100 px-5 py-2 text-sm font-semibold
+                   text-gray-700 transition
+                   hover:bg-orange-600 hover:text-white
+                   dark:bg-gray-800 dark:text-gray-200
+                   dark:hover:bg-orange-600 dark:hover:text-white">
+                    {{ $isArabic ? $tag['ar'] : $tag['en'] }}
                 </a>
             @endforeach
-
         </div>
 
 
@@ -676,23 +705,23 @@ LEAFLET
                     ${
                         shopUrl !== '#'
                         ? `
-                                                                                                                                                    <a
-                                                                                                                                                        href="${shopUrl}"
-                                                                                                                                                        style="
-                                                                                                                                                            display:block;
-                                                                                                                                                            margin-top:14px;
-                                                                                                                                                            padding:10px 16px;
-                                                                                                                                                            border-radius:10px;
-                                                                                                                                                            background:#f97316;
-                                                                                                                                                            color:#ffffff;
-                                                                                                                                                            text-decoration:none;
-                                                                                                                                                            font-size:13px;
-                                                                                                                                                            font-weight:700;
-                                                                                                                                                        "
-                                                                                                                                                    >
-                                                                                                                                                        Visit Shop →
-                                                                                                                                                    </a>
-                                                                                                                                                `
+                                                                                                                                                                                                                            <a
+                                                                                                                                                                                                                                href="${shopUrl}"
+                                                                                                                                                                                                                                style="
+                                                                                                                                                                                                                                    display:block;
+                                                                                                                                                                                                                                    margin-top:14px;
+                                                                                                                                                                                                                                    padding:10px 16px;
+                                                                                                                                                                                                                                    border-radius:10px;
+                                                                                                                                                                                                                                    background:#f97316;
+                                                                                                                                                                                                                                    color:#ffffff;
+                                                                                                                                                                                                                                    text-decoration:none;
+                                                                                                                                                                                                                                    font-size:13px;
+                                                                                                                                                                                                                                    font-weight:700;
+                                                                                                                                                                                                                                "
+                                                                                                                                                                                                                            >
+                                                                                                                                                                                                                                Visit Shop →
+                                                                                                                                                                                                                            </a>
+                                                                                                                                                                                                                        `
                         : ''
                     }
 

@@ -153,7 +153,7 @@ Route::middleware(['auth', 'verified', 'phone.verified'])->group(function () {
     Route::put('/shop/update', [ShopController::class, 'update'])->name('shop.update');
 
     Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
-    Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
+    Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators'); 
 
     Route::get('/shop/{slug}/business-card', [ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
     Route::get('/business-card/{slug}', [ShopController::class, 'businessCard'])->name('shop.public');
