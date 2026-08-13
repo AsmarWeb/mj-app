@@ -71,6 +71,8 @@ class Listing extends Model
         'published_at' => 'datetime',
         'expires_at' => 'datetime',
         'active' => 'boolean',
+        'featured' => 'boolean',
+        'featured_at' => 'datetime',
     ];
 
     protected $guarded = ['id', 'created_at', 'update_at'];

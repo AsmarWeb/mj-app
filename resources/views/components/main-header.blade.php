@@ -516,43 +516,83 @@
 
 
                 {{-- Language --}}
-                <div class="mt-2">
+                <div class="mt-2 px-1">
 
-                    <x-dropdown align="right" width="48">
+                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-1
+               dark:border-white/10 dark:bg-white/[0.04]"
+                        role="group" aria-label="{{ __('header.locale') }}">
 
-                        <x-slot name="trigger">
+                        {{-- Language label --}}
+                        <div
+                            class="flex items-center gap-2 px-3 py-2
+                   text-xs font-bold uppercase tracking-wider
+                   text-gray-500
+                   dark:text-gray-400">
+                            <span aria-hidden="true">🌐</span>
 
-                            <button
-                                class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900">
+                            <span>
+                                {{ __('header.locale') }}
+                            </span>
+                        </div>
 
-                                <span class="flex items-center gap-3">
-                                    🌐
-                                    {{ __('header.locale') }}
+
+                        {{-- Language buttons --}}
+                        <div class="grid grid-cols-2 gap-1">
+
+                            {{-- English --}}
+                            <a href="{{ route('locale', 'en') }}"
+                                class="flex min-h-[44px] items-center justify-center
+                       gap-2 rounded-lg px-3 py-2
+                       text-sm font-bold
+                       transition
+                       {{ app()->getLocale() === 'en'
+                           ? 'bg-white text-orange-600 shadow-sm dark:bg-gray-800 dark:text-orange-400'
+                           : 'text-gray-600 hover:bg-white hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white' }}"
+                                aria-current="{{ app()->getLocale() === 'en' ? 'page' : 'false' }}">
+                                <span aria-hidden="true">🇬🇧</span>
+
+                                <span>
+                                    {{ __('translation.english') }}
                                 </span>
 
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                </svg>
+                                @if (app()->getLocale() === 'en')
+                                    <svg class="h-4 w-4 text-orange-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="m5 12 4 4L19 6" />
+                                    </svg>
+                                @endif
+                            </a>
 
-                            </button>
 
-                        </x-slot>
+                            {{-- Arabic --}}
+                            <a href="{{ route('locale', 'ar') }}"
+                                class="flex min-h-[44px] items-center justify-center
+                       gap-2 rounded-lg px-3 py-2
+                       text-sm font-bold
+                       transition
+                       {{ app()->getLocale() === 'ar'
+                           ? 'bg-white text-orange-600 shadow-sm dark:bg-gray-800 dark:text-orange-400'
+                           : 'text-gray-600 hover:bg-white hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white' }}"
+                                aria-current="{{ app()->getLocale() === 'ar' ? 'page' : 'false' }}">
+                                <span aria-hidden="true">🇦🇪</span>
 
+                                <span>
+                                    {{ __('translation.arabic') }}
+                                </span>
 
-                        <x-slot name="content">
+                                @if (app()->getLocale() === 'ar')
+                                    <svg class="h-4 w-4 text-orange-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="m5 12 4 4L19 6" />
+                                    </svg>
+                                @endif
+                            </a>
 
-                            <x-dropdown-link href="{{ route('locale', 'en') }}">
-                                🇬🇧 {{ __('translation.english') }}
-                            </x-dropdown-link>
+                        </div>
 
-                            <x-dropdown-link href="{{ route('locale', 'ar') }}">
-                                🇦🇪 {{ __('translation.arabic') }}
-                            </x-dropdown-link>
-
-                        </x-slot>
-
-                    </x-dropdown>
+                    </div>
 
                 </div>
 

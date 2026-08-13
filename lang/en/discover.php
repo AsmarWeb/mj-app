@@ -23,7 +23,7 @@ return [
     'explore store' => 'Explore Store',
     'top creators' => 'Top Creators',
 
-    'explore murwaj'=>'Explore Murwaj',
+    'explore murwaj'=>'Explore murwaj',
     'browse marketplace'=>'Browse Marketplace',
     'discover products' => 'Discover products, services, rentals, properties, auctions
                         and events — all in one place.',

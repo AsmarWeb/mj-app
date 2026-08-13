@@ -13,85 +13,122 @@ return new class extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-            ->nullable()
-            ->after('id')
-            ->constrained()
-            ->nullOnDelete();
+            // Supplier owner / account
+    $table->foreignId('user_id')
+        ->nullable()
+        ->constrained()
+        ->nullOnDelete();
 
-
-        $table->uuid('invite_token')
+    // Invitation
+    $table->uuid('invite_token')
         ->nullable()
         ->unique();
 
+    $table->timestamp('invited_at')
+        ->nullable();
 
-        $table->timestamp('invited_at')
-            ->nullable();
-            // Basic Information
+    // =========================================================
+    // BASIC INFORMATION
+    // =========================================================
+
     $table->string('name');
-    $table->string('company')->nullable();
 
-    $table->string('email')->nullable();
-    $table->string('phone')->nullable();
+    $table->string('company')
+        ->nullable();
 
-     $table->string('whatsapp')
-                ->nullable()
-                ->after('phone');
+    $table->string('email')
+        ->nullable();
 
-    // UAE Information
-    $table->text('address')->nullable();
+    $table->string('phone')
+        ->nullable();
+
+    $table->string('whatsapp')
+        ->nullable();
+
+    // =========================================================
+    // UAE INFORMATION
+    // =========================================================
 
     $table->string('country')
         ->default('UAE');
 
-     $table->string('emirate')
-                ->nullable()
-                ->after('address');
+    $table->string('emirate')
+        ->nullable();
 
+    $table->text('address')
+        ->nullable();
 
     $table->string('vat_number')
         ->nullable();
 
+    // =========================================================
+    // SUPPLIER TYPE
+    // =========================================================
 
-    // Website / Integration
+    $table->enum('supplier_type', [
+        'pod',
+        'manufacturer',
+        'wholesaler',
+        'distributor',
+        'local'
+    ])->default('pod');
+
+    $table->enum('type', [
+        'local',
+        'printful',
+        'printify',
+        'other'
+    ])->default('local');
+
+    // =========================================================
+    // WEBSITE
+    // =========================================================
 
     $table->string('website')
         ->nullable();
 
+    // =========================================================
+    // API / INTEGRATION
+    // =========================================================
 
     $table->text('api_key')
         ->nullable();
 
+    $table->text('api_secret')
+        ->nullable();
 
-    // POD Supplier
+    $table->string('api_base_url')
+        ->nullable();
 
-    $table->enum('type', [
+    $table->boolean('api_enabled')
+        ->default(false);
 
-        'printful',
-        'printify',
-        'local',
-        'other'
+    // =========================================================
+    // MARKETPLACE
+    // =========================================================
 
-    ])->default('local');
-
-
-    // Marketplace commission
-
-    $table->decimal('commission',10,2)
+    $table->decimal('commission', 10, 2)
         ->default(0);
 
+    $table->enum('commission_type', [
+        'percentage',
+        'fixed'
+    ])->default('percentage');
 
+    // =========================================================
+    // STATUS
+    // =========================================================
 
-    $table->enum('status',[
-
+    $table->enum('status', [
         'active',
-        'inactive'
-
+        'inactive',
+        'pending',
+        'suspended'
     ])->default('active');
 
-    $table->string('supplier_type')
-                ->default('pod')
-                ->after('status');
+    // =========================================================
+    // TIMESTAMPS
+    // =========================================================
             $table->timestamps();
         });
     }

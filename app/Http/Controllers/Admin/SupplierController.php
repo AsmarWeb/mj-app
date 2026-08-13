@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use App\Models\User;
 use App\Mail\SupplierInvitationMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;

@@ -37,6 +37,7 @@ class Shop extends Model
         'rating',
         'published_at',
         'user_id',
+        'plan_id',
         'step',
         'is_completed',
         'is_active',

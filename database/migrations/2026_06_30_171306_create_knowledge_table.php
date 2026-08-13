@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->text('question');
             $table->text('answer');
+            $table->text('question_ar')->nullable()->after('question');
+            $table->longText('answer_ar')->nullable()->after('answer');
+            $table->string('category')->nullable()->after('answer_ar');
+            $table->boolean('is_active')->default(true)->after('category');
             $table->timestamps();
         });
     }
