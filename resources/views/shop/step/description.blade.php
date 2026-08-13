@@ -32,7 +32,7 @@
 
 </div>
 
-<textarea rows="6" name="description" id="description" placeholder="Tell customers about your store..."
+<textarea rows="6" name="description" id="description" placeholder="Tell customers about your store..." autofocus
     class="
     w-full
     rounded-2xl

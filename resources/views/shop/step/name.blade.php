@@ -5,7 +5,7 @@
     </label>
 
     <input type="text" id="name_ar" name="name_ar" value="{{ old('name_ar', $shop?->name_ar) }}"
-        placeholder="الاسم بالعربي" dir="rtl" class="w-full mt-2 border rounded-lg p-3 text-right">
+        placeholder="الاسم بالعربي" dir="rtl" autofocus class="w-full mt-2 border rounded-lg p-3 text-right">
 
     @error('name_ar')
         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
