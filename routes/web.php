@@ -129,17 +129,17 @@ Route::middleware('auth')->group(function () {
         '/developer/{username}',
         [DeveloperController::class, 'show']
     )->name('developer.show');
-
 });
 
 Route::middleware('maintenance.check')->group(function () {
-Route::get('/', [HomeController::class, 'home'])->name('home');
+    Route::get('/', [HomeController::class, 'home'])->name('home');
 });
 
 // Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/explore/category/{category}', [ExploreController::class, 'category'])->name('discover.category');
 Route::get('/explore/section/{section}', [ExploreController::class, 'section'])->name('explore.section');
+Route::get('/uae', [ExploreController::class, 'uae'])->name('uae');
 Route::get('/categories', [ListingCategoryController::class, 'index'])->name('categories');
 Route::get('/countries', [ShopCountryController::class, 'index'])->name('countries');
 Route::get('about', [HomeController::class, 'about'])->name('about');
@@ -153,11 +153,10 @@ Route::middleware(['auth', 'verified', 'phone.verified'])->group(function () {
     Route::put('/shop/update', [ShopController::class, 'update'])->name('shop.update');
 
     Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
-    Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators'); 
+    Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
 
     Route::get('/shop/{slug}/business-card', [ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
     Route::get('/business-card/{slug}', [ShopController::class, 'businessCard'])->name('shop.public');
-
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -169,28 +168,31 @@ Route::post('/ai/shop-description', [AIController::class, 'shopDescription'])
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/posts',
+    Route::get(
+        '/posts',
         [PostController::class, 'index']
     )->name('posts.index');
 
-    Route::post('/posts',
+    Route::post(
+        '/posts',
         [PostController::class, 'store']
     )->name('posts.store');
 
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])
         ->name('posts.destroy');
 
-    Route::post('/posts/{post}/like',
+    Route::post(
+        '/posts/{post}/like',
         [LikeController::class, 'store']
     )->name('posts.like');
 
-    Route::post('/posts/{post}/comment',
+    Route::post(
+        '/posts/{post}/comment',
         [CommentController::class, 'store']
     )->name('comments.store');
 
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -205,7 +207,6 @@ Route::middleware('auth')->group(function () {
         '/shops/{shop}/follow',
         [ShopFollowController::class, 'toggle']
     )->name('shops.follow');
-
 });
 
 Route::get('/notifications/{notification}', function ($id) {
@@ -219,7 +220,6 @@ Route::get('/notifications/{notification}', function ($id) {
     }
 
     return redirect($notification->data['url'] ?? route('dashboard'));
-
 })->name('notifications.read');
 
 // Route::middleware(['auth', 'verified','prefix' => 'seller', 'phone.verified'])
@@ -241,7 +241,6 @@ Route::middleware(['auth', 'role:seller'])->group(function () {
 
     Route::get('/seller/stripe/success', [StripeConnectController::class, 'success'])
         ->name('seller.stripe.success');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -257,7 +256,6 @@ Route::middleware('auth')->group(function () {
         [EditController::class, 'update']
     )
         ->name('seller.listing.update');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -284,7 +282,6 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/cart/{item}', [CartController::class, 'destroy'])
         ->name('cart.destroy');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -300,7 +297,6 @@ Route::middleware('auth')->group(function () {
         [CheckoutController::class, 'success']
     )
         ->name('checkout.success');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -333,7 +329,6 @@ Route::middleware('auth')->group(function () {
         [WishlistController::class, 'add']
     )
         ->name('wishlist.add');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -351,7 +346,7 @@ Route::post(
     [SupplierInvitationController::class, 'store']
 )->name('supplier.invitation.store');
 
-Route::middleware(['auth','supplier', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function(){
+Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
 
 
     Route::get(
@@ -361,54 +356,48 @@ Route::middleware(['auth','supplier', 'role:supplier'])->prefix('supplier')->nam
             'index'
         ]
     )
-    ->name('dashboard');
+        ->name('dashboard');
 
 
 
     Route::get(
         '/products',
-        function(){
+        function () {
 
             return view(
                 'supplier.products.index'
             );
-
         }
     )
-    ->name('products.index');
+        ->name('products.index');
 
 
 
 
     Route::get(
         '/orders',
-        function(){
+        function () {
 
             return view(
                 'supplier.orders.index'
             );
-
         }
     )
-    ->name('orders.index');
+        ->name('orders.index');
 
 
 
 
     Route::get(
         '/payouts',
-        function(){
+        function () {
 
             return view(
                 'supplier.payouts.index'
             );
-
         }
     )
-    ->name('payouts.index');
-
-
-
+        ->name('payouts.index');
 });
 
 Route::middleware('auth')->group(function () {
@@ -421,7 +410,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/phone/check', [PhoneVerificationController::class, 'check'])
         ->name('phone.check');
-
 });
 
 Route::post(
@@ -431,22 +419,24 @@ Route::post(
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/pricing',
+    Route::get(
+        '/pricing',
         [SubscriptionController::class, 'index']
     )->name('plans.index');
 
-    Route::post('/subscription/checkout/{plan}',
+    Route::post(
+        '/subscription/checkout/{plan}',
         [SubscriptionController::class, 'checkout']
     )->name('subscription.checkout');
 
-    Route::get('/subscription/success',
+    Route::get(
+        '/subscription/success',
         function () {
 
             return view('subscription.success');
-
-        })
+        }
+    )
         ->name('subscription.success');
-
 });
 
 Route::get('/bot', [BotController::class, 'index'])->name('bot');
@@ -475,7 +465,8 @@ Route::view('contact-us', 'pages.contact')->name('contact');
 // });
 
 Route::middleware([
-    'auth:sanctum', 'role:seller|administrator',
+    'auth:sanctum',
+    'role:seller|administrator',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -528,12 +519,14 @@ Route::group(['namespace' => 'App\Livewire\Admin', 'prefix' => 'admin', 'middlew
     )
         ->name('digital-products.index');
 
-    Route::get('/digital-products/create',
+    Route::get(
+        '/digital-products/create',
         [DigitalProductController::class, 'create']
     )
         ->name('digital-products.create');
 
-    Route::post('/digital-products',
+    Route::post(
+        '/digital-products',
         [DigitalProductController::class, 'store']
     )
         ->name('digital-products.store');
@@ -561,10 +554,10 @@ Route::middleware('auth')->group(function () {
         [DownloadController::class, 'download']
     )->name('downloads.download');
 
-    Route::get('/digital-products/{slug}',
+    Route::get(
+        '/digital-products/{slug}',
         [DigitalProductController::class, 'show']
     )->name('digital-products.show');
-
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage', 'middleware' => ['role:superadministrator|administrator']], function () {
@@ -597,7 +590,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
 
     Route::middleware(['auth'])->group(function () {
 
-        Route::get('project-explorer',
+        Route::get(
+            'project-explorer',
             [ProjectExplorerController::class, 'index']
         )->name('project-explorer');
 
@@ -625,29 +619,28 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
             ]
         )
             ->name('invoices.status');
-
     });
 
-    Route::resource('suppliers',SupplierController::class);
-    
+    Route::resource('suppliers', SupplierController::class);
+
     Route::get('/developers', [AdminDeveloperController::class, 'index'])
-            ->name('developers.index');
+        ->name('developers.index');
 
     Route::get('/developers/{developer}', [AdminDeveloperController::class, 'show'])
-            ->name('developers.show');
+        ->name('developers.show');
 
     Route::get('/developers/{developer}/edit', [AdminDeveloperController::class, 'edit'])
-            ->name('developers.edit');
+        ->name('developers.edit');
 
     Route::put('/developers/{developer}', [AdminDeveloperController::class, 'update'])
-            ->name('developers.update');
+        ->name('developers.update');
 
     Route::patch('/developers/{developer}/approve', [AdminDeveloperController::class, 'approve'])
-            ->name('developers.approve');
+        ->name('developers.approve');
 
     Route::patch('/developers/{developer}/reject', [AdminDeveloperController::class, 'reject'])
-            ->name('developers.reject');
+        ->name('developers.reject');
 
     Route::delete('/developers/{developer}', [AdminDeveloperController::class, 'destroy'])
-            ->name('developers.destroy');
+        ->name('developers.destroy');
 });

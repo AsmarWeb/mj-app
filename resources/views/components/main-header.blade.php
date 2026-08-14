@@ -44,7 +44,7 @@
                         {{ __('header.main.about') }}
                     </a>
 
-                    <a href="#" title="UAE" aria-label="Camel Riding"
+                    <a href="{{ route('uae') }}" title="UAE" aria-label="UAE"
                         class="group relative inline-flex h-10 items-center gap-2 overflow-hidden rounded-xl
            border border-amber-700/20
            bg-gradient-to-r from-[#f7e7c1] via-[#e9c98b] to-[#c99a52]
@@ -533,7 +533,7 @@
                 {{-- =====================================================
         UAE CAMEL RIDING
     ====================================================== --}}
-                <a href="#" @click="mobileOpen = false" title="UAE" aria-label="Camel Riding"
+                <a href="{{ route('uae') }}" @click="mobileOpen = false" title="UAE" aria-label="UAE"
                     class="group relative mt-2 flex items-center gap-3 overflow-hidden
                rounded-2xl border border-amber-700/20
                bg-gradient-to-r from-[#f7e7c1] via-[#e9c98b] to-[#c99a52]
