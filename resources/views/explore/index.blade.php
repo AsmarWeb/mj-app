@@ -273,7 +273,7 @@
                         class="hidden items-center gap-2 text-sm font-bold text-gray-600
                   hover:text-orange-500 dark:text-gray-300 sm:inline-flex">
 
-                        {{ __('discover.view all ') }}
+                        {{ __('discover.view all') }}
                         <span>→</span>
 
                     </a>

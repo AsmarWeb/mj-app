@@ -30,6 +30,7 @@ class CategorySeeder extends Seeder
             ['id' => 15, 'code' => '115', 'parent_id' => 0, 'section_id' => 1, 'section_name' => 'Sales', 'bg_color' => '#e69721', 'category_name_ar' => 'الهدايا',              'category_name' => 'Gifts',                    'slug' => 'gifts',                                            'image' => '',                       'status' => 'active'],
             ['id' => 16, 'code' => '116', 'parent_id' => 0, 'section_id' => 1, 'section_name' => 'Sales', 'bg_color' => '#28a745', 'category_name_ar' => 'الكتب والأفلام والموسيقى', 'category_name' => 'Books, Movies & Music',    'slug' => 'books, movies & music',                          'image' => 'musics.png',                       'status' => 'active'],
             ['id' => 17, 'code' => '117', 'parent_id' => 0, 'section_id' => 1, 'section_name' => 'Sales', 'bg_color' => '#982fd5', 'category_name_ar' => 'لوازم الورق والحفلات',  'category_name' => 'Paper & Party Supplies',   'slug' => 'paper & party supplies',                           'image' => '',                       'status' => 'active'],
+            ['id' => 18, 'code' => '118', 'parent_id' => 0, 'section_id' => 1, 'section_name' => 'Sales', 'bg_color' => '#8B5E34', 'category_name_ar' => 'المنتجات المحلية والتراثية', 'category_name' => 'Local & Traditional Products', 'slug' => 'local-traditional-products', 'image' => 'local-products.png', 'status' => 'active',]
         ];
         Category::insert($categoryRecords);
     }

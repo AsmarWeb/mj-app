@@ -19,7 +19,7 @@ class PlanSeeder extends Seeder
 
             'stripe_price' => null,
 
-            'listing_limit' => 1,
+            'listing_limit' => 5,
             'listing_duration' => 30,
             'order_limit' => 5,
             'storage_limit' => 100,

@@ -2,11 +2,14 @@
 
     @php
         $mapShops = $shops
+            ->filter(function ($shop) {
+                return $shop->type === 'local' && !is_null($shop->latitude) && !is_null($shop->longitude);
+            })
             ->map(function ($shop) {
                 return [
                     'name' => $shop->name,
-                    'lat' => $shop->latitude,
-                    'lng' => $shop->longitude,
+                    'lat' => (float) $shop->latitude,
+                    'lng' => (float) $shop->longitude,
                     'url' => route('shop', $shop->slug),
                     'logo' => $shop->logo ? Storage::disk('public')->url($shop->logo) : null,
                 ];
@@ -705,23 +708,23 @@ LEAFLET
                     ${
                         shopUrl !== '#'
                         ? `
-                                                                                                                                                                                                                            <a
-                                                                                                                                                                                                                                href="${shopUrl}"
-                                                                                                                                                                                                                                style="
-                                                                                                                                                                                                                                    display:block;
-                                                                                                                                                                                                                                    margin-top:14px;
-                                                                                                                                                                                                                                    padding:10px 16px;
-                                                                                                                                                                                                                                    border-radius:10px;
-                                                                                                                                                                                                                                    background:#f97316;
-                                                                                                                                                                                                                                    color:#ffffff;
-                                                                                                                                                                                                                                    text-decoration:none;
-                                                                                                                                                                                                                                    font-size:13px;
-                                                                                                                                                                                                                                    font-weight:700;
-                                                                                                                                                                                                                                "
-                                                                                                                                                                                                                            >
-                                                                                                                                                                                                                                Visit Shop →
-                                                                                                                                                                                                                            </a>
-                                                                                                                                                                                                                        `
+                                                                                                                                                                                                                                                            <a
+                                                                                                                                                                                                                                                                href="${shopUrl}"
+                                                                                                                                                                                                                                                                style="
+                                                                                                                                                                                                                                                                    display:block;
+                                                                                                                                                                                                                                                                    margin-top:14px;
+                                                                                                                                                                                                                                                                    padding:10px 16px;
+                                                                                                                                                                                                                                                                    border-radius:10px;
+                                                                                                                                                                                                                                                                    background:#f97316;
+                                                                                                                                                                                                                                                                    color:#ffffff;
+                                                                                                                                                                                                                                                                    text-decoration:none;
+                                                                                                                                                                                                                                                                    font-size:13px;
+                                                                                                                                                                                                                                                                    font-weight:700;
+                                                                                                                                                                                                                                                                "
+                                                                                                                                                                                                                                                            >
+                                                                                                                                                                                                                                                                Visit Shop →
+                                                                                                                                                                                                                                                            </a>
+                                                                                                                                                                                                                                                        `
                         : ''
                     }
 

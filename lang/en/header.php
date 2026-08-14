@@ -25,6 +25,9 @@ return [
         'services' => 'Services',
         'about' => 'About',
         'posts' => 'Posts',
+        'camel' => 'UAE',
+
+        'traditional products' => 'UAE Traditional Products',
     ],
 
 ];

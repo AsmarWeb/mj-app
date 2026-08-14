@@ -7,7 +7,7 @@
 
     {{-- =========================
     DESKTOP / MAIN HEADER
-========================== --}}
+    ========================== --}}
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         <div class="flex h-16 items-center justify-between gap-6">
@@ -20,7 +20,6 @@
                     <img src="{{ asset('storage/setting-suggest/' . $setting->logo) }}" alt="murwaj"
                         class="h-9 w-auto max-w-[130px] object-contain">
                 </a>
-
 
                 {{-- Desktop Navigation --}}
                 <nav class="ml-10 hidden items-center gap-7 lg:flex">
@@ -45,52 +44,95 @@
                         {{ __('header.main.about') }}
                     </a>
 
+                    <a href="#" title="UAE" aria-label="Camel Riding"
+                        class="group relative inline-flex h-10 items-center gap-2 overflow-hidden rounded-xl
+           border border-amber-700/20
+           bg-gradient-to-r from-[#f7e7c1] via-[#e9c98b] to-[#c99a52]
+           px-2.5 shadow-sm
+           transition-all duration-300
+           hover:-translate-y-0.5
+           hover:border-[#00732f]/50
+           hover:bg-gradient-to-r
+           hover:from-[#ce1126]/15
+           hover:via-white
+           hover:to-[#00732f]/15
+           hover:shadow-lg
+           dark:border-amber-400/20
+           dark:from-[#24261f]
+           dark:via-[#4a3b26]
+           dark:to-[#70532d]
+           dark:hover:border-[#00732f]/50
+           dark:hover:from-[#ce1126]/20
+           dark:hover:via-white/10
+           dark:hover:to-[#00732f]/20">
+
+                        {{-- UAE flag accent --}}
+                        <span
+                            class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5
+               bg-gradient-to-r from-[#ce1126] via-white via-white
+               to-[#00732f]
+               opacity-0 transition-opacity duration-300
+               group-hover:opacity-100">
+                        </span>
+
+                        {{-- Camel icon --}}
+                        <span
+                            class="relative flex h-7 w-7 shrink-0 items-center justify-center
+               rounded-lg bg-white/60 text-lg shadow-sm
+               transition-all duration-300
+               group-hover:scale-110
+               dark:bg-white/10">
+                            🐪
+                        </span>
+
+                        {{-- Text --}}
+                        <span
+                            class="relative hidden text-xs font-extrabold tracking-wide
+               text-amber-950 transition-colors duration-300
+               sm:block
+               group-hover:text-[#00732f]
+               dark:text-amber-100
+               dark:group-hover:text-white">
+                            {{ __('header.main.camel') }}
+                        </span>
+
+                    </a>
+
                 </nav>
 
             </div>
 
-
             {{-- =========================
             RIGHT ACTIONS
-        ========================== --}}
+            ========================== --}}
             <div class="flex items-center gap-2 sm:gap-3">
-
-                {{-- Local Time --}}
-                <div
-                    class="hidden xl:flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
-                    <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-
-                    <span>Local Time</span>
-
-                    <span class="text-gray-300 dark:text-gray-600">•</span>
-
-                    <span id="clock">--:--:--</span>
-                </div>
-
 
                 {{-- Ask AI --}}
                 <a href="{{ route('bot') }}" class="group relative hidden sm:inline-flex">
+
                     <span
-                        class="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500 opacity-50 blur transition duration-300 group-hover:opacity-90"></span>
+                        class="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500 opacity-50 blur transition duration-300 group-hover:opacity-90">
+                    </span>
 
                     <span
                         class="relative inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-semibold text-gray-800 dark:bg-gray-950 dark:text-white">
+
                         <svg class="h-4 w-4 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9.5 3.5l1.2 3.3L14 8l-3.3 1.2L9.5 12.5l-1.2-3.3L5 8l3.3-1.2L9.5 3.5zM17 12l.8 2.2L20 15l-2.2.8L17 18l-.8-2.2L14 15l2.2-.8L17 12z" />
                         </svg>
 
                         Ask AI
-                    </span>
-                </a>
 
+                    </span>
+
+                </a>
 
                 {{-- Sell --}}
                 <a href="{{ route('sell') }}"
                     class="hidden rounded-xl bg-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 hover:shadow-md sm:inline-flex">
                     {{ __('header.main.sell') }}
                 </a>
-
 
                 {{-- Cart --}}
                 @auth
@@ -99,70 +141,74 @@
                     </div>
                 @endauth
 
-
                 {{-- Theme Toggle --}}
                 <button type="button"
-                    @click="darkMode = !darkMode;
-                    document.documentElement.classList.toggle('dark', darkMode);
-                    localStorage.setItem('theme', darkMode ? 'dark' : 'light');"
+                    @click="
+                        darkMode = !darkMode;
+                        document.documentElement.classList.toggle('dark', darkMode);
+                        localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+                    "
                     class="hidden h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 sm:flex"
                     aria-label="Toggle dark mode">
 
-                    {{-- Moon --}}
                     <svg x-show="!darkMode" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                             d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+
                     </svg>
 
-                    {{-- Sun --}}
                     <svg x-show="darkMode" x-cloak class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
+
                         <circle cx="12" cy="12" r="4" stroke-width="1.8" />
+
                         <path stroke-width="1.8" stroke-linecap="round"
                             d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
+
                     </svg>
 
                 </button>
 
-
-                {{-- Language --}}
+                {{-- =========================
+                DESKTOP LANGUAGE
+                ========================== --}}
                 <div class="hidden sm:block">
 
-                    <x-dropdown align="right" width="48">
+                    <div
+                        class="flex items-center gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-800 dark:bg-gray-900">
 
-                        <x-slot name="trigger">
+                        <a href="{{ route('locale', 'en') }}"
+                            class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition
+                            {{ app()->getLocale() === 'en'
+                                ? 'bg-white text-orange-600 shadow-sm dark:bg-gray-800 dark:text-orange-400'
+                                : 'text-gray-500 hover:bg-white hover:text-orange-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-orange-400' }}">
 
-                            <button
-                                class="inline-flex items-center gap-1 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800">
+                            <span class="text-base leading-none">🇬🇧</span>
 
-                                {{ __('header.locale') }}
+                            <span class="hidden xl:inline">
+                                {{ __('translation.english') }}
+                            </span>
 
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                </svg>
+                        </a>
 
-                            </button>
+                        <a href="{{ route('locale', 'ar') }}"
+                            class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition
+                            {{ app()->getLocale() === 'ar'
+                                ? 'bg-white text-orange-600 shadow-sm dark:bg-gray-800 dark:text-orange-400'
+                                : 'text-gray-500 hover:bg-white hover:text-orange-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-orange-400' }}">
 
-                        </x-slot>
+                            <span class="text-base leading-none">🇦🇪</span>
 
+                            <span class="hidden xl:inline">
+                                {{ __('translation.arabic') }}
+                            </span>
 
-                        <x-slot name="content">
+                        </a>
 
-                            <x-dropdown-link href="{{ route('locale', 'en') }}">
-                                🇬🇧 {{ __('translation.english') }}
-                            </x-dropdown-link>
-
-                            <x-dropdown-link href="{{ route('locale', 'ar') }}">
-                                🇦🇪 {{ __('translation.arabic') }}
-                            </x-dropdown-link>
-
-                        </x-slot>
-
-                    </x-dropdown>
+                    </div>
 
                 </div>
-
 
                 {{-- USER --}}
                 @if (Route::has('login'))
@@ -178,9 +224,11 @@
                                     @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                         <button
                                             class="flex rounded-full ring-2 ring-transparent transition hover:ring-orange-500">
+
                                             <img class="h-9 w-9 rounded-full object-cover"
                                                 src="{{ Auth::user()->profile_photo_url }}"
                                                 alt="{{ Auth::user()->name }}">
+
                                         </button>
                                     @else
                                         <button
@@ -188,23 +236,26 @@
 
                                             <span
                                                 class="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
+
                                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+
                                             </span>
 
-                                            <span class="hidden lg:block max-w-[100px] truncate">
+                                            <span class="hidden max-w-[100px] truncate lg:block">
                                                 {{ Auth::user()->name }}
                                             </span>
 
                                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+
                                             </svg>
 
                                         </button>
                                     @endif
 
                                 </x-slot>
-
 
                                 <x-slot name="content">
 
@@ -220,9 +271,7 @@
 
                                     </div>
 
-
                                     <div class="border-t dark:border-gray-700"></div>
-
 
                                     @if (Auth::user()->hasRole('superadministrator|administrator'))
                                         <x-dropdown-link href="{{ route('admin.dashboard') }}">
@@ -242,9 +291,7 @@
                                         </x-dropdown-link>
                                     @endif
 
-
                                     <div class="my-1 border-t dark:border-gray-700"></div>
-
 
                                     <form method="POST" action="{{ route('logout') }}">
 
@@ -252,7 +299,9 @@
 
                                         <x-dropdown-link href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); this.closest('form').submit();">
+
                                             🚪 {{ __('Log Out') }}
+
                                         </x-dropdown-link>
 
                                     </form>
@@ -265,13 +314,14 @@
                     @else
                         <a href="{{ route('register') }}"
                             class="hidden rounded-xl bg-orange-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-700 sm:inline-flex">
+
                             {{ __('header.user.login') }}
+
                         </a>
 
                     @endauth
 
                 @endif
-
 
                 {{-- MOBILE MENU BUTTON --}}
                 <button type="button" @click="mobileOpen = true"
@@ -279,8 +329,10 @@
                     aria-label="Open menu">
 
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
+
                     </svg>
 
                 </button>
@@ -291,17 +343,16 @@
 
     </div>
 
-
     {{-- =========================
     MOBILE OVERLAY
-========================== --}}
+    ========================== --}}
     <div x-show="mobileOpen" x-cloak x-transition.opacity @click="mobileOpen = false"
-        class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"></div>
-
+        class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden">
+    </div>
 
     {{-- =========================
     MOBILE SIDEBAR
-========================== --}}
+    ========================== --}}
     <aside x-show="mobileOpen" x-cloak x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
@@ -313,20 +364,24 @@
             class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 px-5 dark:border-gray-800">
 
             <a href="{{ route('home') }}" @click="mobileOpen = false" class="flex items-center">
+
                 <img src="{{ asset('storage/setting-suggest/' . $setting->logo) }}" alt="murwaj"
                     class="h-8 w-auto max-w-[120px]">
-            </a>
 
+            </a>
 
             <button type="button" @click="mobileOpen = false"
                 class="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800">
+
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+
                 </svg>
+
             </button>
 
         </div>
-
 
         {{-- Sidebar Content --}}
         <div class="flex-1 overflow-y-auto px-5 py-6">
@@ -344,17 +399,19 @@
                         @else
                             <div
                                 class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-lg font-bold">
+
                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+
                             </div>
                         @endif
 
                         <div class="min-w-0">
 
-                            <p class="font-bold truncate">
+                            <p class="truncate font-bold">
                                 {{ Auth::user()->name }}
                             </p>
 
-                            <p class="text-xs text-orange-100 truncate">
+                            <p class="truncate text-xs text-orange-100">
                                 {{ Auth::user()->email }}
                             </p>
 
@@ -366,7 +423,6 @@
 
             @endauth
 
-
             {{-- Search --}}
             <form action="{{ route('search') }}" method="GET" class="mb-6">
 
@@ -374,8 +430,10 @@
 
                     <svg class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
+
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m21 21-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z" />
+
                     </svg>
 
                     <input type="search" name="q" placeholder="Search marketplace..."
@@ -385,7 +443,6 @@
 
             </form>
 
-
             {{-- Main Navigation --}}
             <div class="space-y-1">
 
@@ -393,48 +450,150 @@
                     Marketplace
                 </p>
 
-
+                {{-- Discover --}}
                 <a href="{{ route('explore') }}" @click="mobileOpen = false"
-                    class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-600 dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-900">
+                    class="group flex items-center gap-3 rounded-xl px-4 py-3 font-medium
+               text-gray-700 transition
+               hover:bg-orange-50 hover:text-orange-600
+               dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
+
+                    <span
+                        class="flex h-9 w-9 items-center justify-center rounded-lg
+                   bg-gray-100 text-base transition
+                   group-hover:scale-105 group-hover:bg-orange-100
+                   dark:bg-gray-900 dark:group-hover:bg-orange-500/20">
                         🔎
                     </span>
 
                     {{ __('header.main.discover') }}
+
                 </a>
 
 
+                {{-- Services --}}
                 <a href="{{ route('services') }}" @click="mobileOpen = false"
-                    class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-600 dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-900">
+                    class="group flex items-center gap-3 rounded-xl px-4 py-3 font-medium
+               text-gray-700 transition
+               hover:bg-orange-50 hover:text-orange-600
+               dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
+
+                    <span
+                        class="flex h-9 w-9 items-center justify-center rounded-lg
+                   bg-gray-100 text-base transition
+                   group-hover:scale-105 group-hover:bg-orange-100
+                   dark:bg-gray-900 dark:group-hover:bg-orange-500/20">
                         🛠️
                     </span>
 
                     {{ __('header.main.services') }}
+
                 </a>
 
 
+                {{-- Posts --}}
                 <a href="{{ route('posts.index') }}" @click="mobileOpen = false"
-                    class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-600 dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-900">
+                    class="group flex items-center gap-3 rounded-xl px-4 py-3 font-medium
+               text-gray-700 transition
+               hover:bg-orange-50 hover:text-orange-600
+               dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
+
+                    <span
+                        class="flex h-9 w-9 items-center justify-center rounded-lg
+                   bg-gray-100 text-base transition
+                   group-hover:scale-105 group-hover:bg-orange-100
+                   dark:bg-gray-900 dark:group-hover:bg-orange-500/20">
                         📰
                     </span>
 
                     {{ __('header.main.posts') }}
+
                 </a>
 
 
+                {{-- About --}}
                 <a href="{{ route('about') }}" @click="mobileOpen = false"
-                    class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-600 dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-900">
+                    class="group flex items-center gap-3 rounded-xl px-4 py-3 font-medium
+               text-gray-700 transition
+               hover:bg-orange-50 hover:text-orange-600
+               dark:text-gray-200 dark:hover:bg-orange-500/10 dark:hover:text-orange-400">
+
+                    <span
+                        class="flex h-9 w-9 items-center justify-center rounded-lg
+                   bg-gray-100 text-base transition
+                   group-hover:scale-105 group-hover:bg-orange-100
+                   dark:bg-gray-900 dark:group-hover:bg-orange-500/20">
                         ℹ️
                     </span>
 
                     {{ __('header.main.about') }}
+
+                </a>
+
+
+                {{-- =====================================================
+        UAE CAMEL RIDING
+    ====================================================== --}}
+                <a href="#" @click="mobileOpen = false" title="UAE" aria-label="Camel Riding"
+                    class="group relative mt-2 flex items-center gap-3 overflow-hidden
+               rounded-2xl border border-amber-700/20
+               bg-gradient-to-r from-[#f7e7c1] via-[#e9c98b] to-[#c99a52]
+               px-4 py-3 shadow-sm
+               transition-all duration-300
+               hover:-translate-y-0.5 hover:border-[#00732f]/40 hover:shadow-md
+               dark:border-amber-400/20
+               dark:from-[#24261f] dark:via-[#4a3b26] dark:to-[#70532d]">
+
+                    {{-- UAE flag accent --}}
+                    <span
+                        class="absolute bottom-0 left-0 h-1 w-full
+                   bg-gradient-to-r
+                   from-[#ce1126] via-white to-[#00732f]
+                   opacity-80">
+                    </span>
+
+                    {{-- Camel --}}
+                    <span
+                        class="relative flex h-9 w-9 shrink-0 items-center justify-center
+                   rounded-xl bg-white/60 text-lg shadow-sm
+                   transition-transform duration-300
+                   group-hover:scale-110
+                   dark:bg-white/10">
+                        🐪
+                    </span>
+
+                    {{-- Content --}}
+                    <span class="relative min-w-0 flex-1">
+
+                        <span
+                            class="block text-sm font-extrabold
+                       text-amber-950
+                       dark:text-amber-100">
+                            {{ __('header.main.camel') }}
+                        </span>
+
+                        <span
+                            class="mt-0.5 block text-[10px] font-medium
+                       text-amber-800/70
+                       dark:text-amber-200/60">
+                            {{ __('header.main.traditional products') }}
+                        </span>
+
+                    </span>
+
+                    {{-- Arrow --}}
+                    <svg class="relative h-4 w-4 shrink-0 text-amber-700
+                   transition-transform duration-300
+                   group-hover:translate-x-1
+                   dark:text-amber-300"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5l7 7-7 7" />
+
+                    </svg>
+
                 </a>
 
             </div>
-
 
             {{-- Actions --}}
             <div class="mt-7 space-y-3">
@@ -443,37 +602,39 @@
                     Quick Actions
                 </p>
 
-
-                {{-- AI --}}
                 <a href="{{ route('bot') }}" @click="mobileOpen = false"
                     class="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 px-4 py-3 font-semibold text-white shadow-lg">
+
                     ✨ Ask AI
+
                 </a>
 
-
-                {{-- Sell --}}
                 <a href="{{ route('sell') }}" @click="mobileOpen = false"
                     class="flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 py-3 font-semibold text-white transition hover:bg-orange-700">
-                    🏪 {{ __('header.main.sell') }}
-                </a>
 
+                    🏪 {{ __('header.main.sell') }}
+
+                </a>
 
                 @auth
 
                     <a href="{{ route('profile') }}" @click="mobileOpen = false"
                         class="flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-3 font-medium text-gray-700 dark:border-gray-800 dark:text-gray-200">
+
                         👤 My Profile
+
                     </a>
                 @else
                     <a href="{{ route('register') }}" @click="mobileOpen = false"
                         class="flex items-center justify-center rounded-xl border border-orange-500 px-4 py-3 font-semibold text-orange-600 dark:text-orange-400">
+
                         {{ __('header.user.login') }}
+
                     </a>
 
                 @endauth
 
             </div>
-
 
             {{-- Preferences --}}
             <div class="mt-7 border-t border-gray-200 pt-6 dark:border-gray-800">
@@ -482,74 +643,81 @@
                     Preferences
                 </p>
 
-
                 {{-- Dark Mode --}}
                 <button type="button"
                     @click="
-                    darkMode = !darkMode;
-                    document.documentElement.classList.toggle('dark', darkMode);
-                    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-                "
+                        darkMode = !darkMode;
+                        document.documentElement.classList.toggle('dark', darkMode);
+                        localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+                    "
                     class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-gray-700 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900">
 
                     <span class="flex items-center gap-3">
 
                         <span class="text-lg">
-                            <span x-show="!darkMode">🌙</span>
-                            <span x-show="darkMode" x-cloak>☀️</span>
+
+                            <span x-show="!darkMode">
+                                🌙
+                            </span>
+
+                            <span x-show="darkMode" x-cloak>
+                                ☀️
+                            </span>
+
                         </span>
 
                         <span>
-                            <span x-show="!darkMode">Dark Mode</span>
-                            <span x-show="darkMode" x-cloak>Light Mode</span>
+
+                            <span x-show="!darkMode">
+                                Dark Mode
+                            </span>
+
+                            <span x-show="darkMode" x-cloak>
+                                Light Mode
+                            </span>
+
                         </span>
 
                     </span>
 
-
                     <span class="h-6 w-11 rounded-full bg-gray-200 p-1 dark:bg-orange-600">
+
                         <span class="block h-4 w-4 rounded-full bg-white shadow transition-transform"
-                            :class="darkMode ? 'translate-x-5' : 'translate-x-0'"></span>
+                            :class="darkMode ? 'translate-x-5' : 'translate-x-0'">
+                        </span>
+
                     </span>
 
                 </button>
 
+                {{-- =========================
+                MOBILE LANGUAGE
+                ========================== --}}
+                <div class="mt-3">
 
-                {{-- Language --}}
-                <div class="mt-2 px-1">
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-slate-50 p-2 dark:border-white/10 dark:bg-white/5">
 
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-1
-               dark:border-white/10 dark:bg-white/[0.04]"
-                        role="group" aria-label="{{ __('header.locale') }}">
+                        <div class="mb-2 px-3 pt-1">
 
-                        {{-- Language label --}}
-                        <div
-                            class="flex items-center gap-2 px-3 py-2
-                   text-xs font-bold uppercase tracking-wider
-                   text-gray-500
-                   dark:text-gray-400">
-                            <span aria-hidden="true">🌐</span>
-
-                            <span>
+                            <p class="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
                                 {{ __('header.locale') }}
-                            </span>
+                            </p>
+
                         </div>
 
+                        <div class="grid grid-cols-2 gap-2">
 
-                        {{-- Language buttons --}}
-                        <div class="grid grid-cols-2 gap-1">
-
-                            {{-- English --}}
                             <a href="{{ route('locale', 'en') }}"
-                                class="flex min-h-[44px] items-center justify-center
-                       gap-2 rounded-lg px-3 py-2
-                       text-sm font-bold
-                       transition
-                       {{ app()->getLocale() === 'en'
-                           ? 'bg-white text-orange-600 shadow-sm dark:bg-gray-800 dark:text-orange-400'
-                           : 'text-gray-600 hover:bg-white hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white' }}"
-                                aria-current="{{ app()->getLocale() === 'en' ? 'page' : 'false' }}">
-                                <span aria-hidden="true">🇬🇧</span>
+                                class="flex items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-bold transition
+                                {{ app()->getLocale() === 'en'
+                                    ? 'bg-white text-orange-600 shadow-sm ring-1 ring-orange-200 dark:bg-gray-900 dark:text-orange-400 dark:ring-orange-500/20'
+                                    : 'text-slate-600 hover:bg-white hover:text-orange-600 dark:text-slate-300 dark:hover:bg-gray-900 dark:hover:text-orange-400' }}">
+
+                                <span
+                                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-lg dark:bg-blue-500/10">
+                                    🇬🇧
+                                </span>
 
                                 <span>
                                     {{ __('translation.english') }}
@@ -557,25 +725,26 @@
 
                                 @if (app()->getLocale() === 'en')
                                     <svg class="h-4 w-4 text-orange-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24" aria-hidden="true">
+                                        viewBox="0 0 24 24">
+
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="m5 12 4 4L19 6" />
+                                            d="M5 12l4 4L19 7" />
+
                                     </svg>
                                 @endif
+
                             </a>
 
-
-                            {{-- Arabic --}}
                             <a href="{{ route('locale', 'ar') }}"
-                                class="flex min-h-[44px] items-center justify-center
-                       gap-2 rounded-lg px-3 py-2
-                       text-sm font-bold
-                       transition
-                       {{ app()->getLocale() === 'ar'
-                           ? 'bg-white text-orange-600 shadow-sm dark:bg-gray-800 dark:text-orange-400'
-                           : 'text-gray-600 hover:bg-white hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white' }}"
-                                aria-current="{{ app()->getLocale() === 'ar' ? 'page' : 'false' }}">
-                                <span aria-hidden="true">🇦🇪</span>
+                                class="flex items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-bold transition
+                                {{ app()->getLocale() === 'ar'
+                                    ? 'bg-white text-orange-600 shadow-sm ring-1 ring-orange-200 dark:bg-gray-900 dark:text-orange-400 dark:ring-orange-500/20'
+                                    : 'text-slate-600 hover:bg-white hover:text-orange-600 dark:text-slate-300 dark:hover:bg-gray-900 dark:hover:text-orange-400' }}">
+
+                                <span
+                                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-lg dark:bg-emerald-500/10">
+                                    🇦🇪
+                                </span>
 
                                 <span>
                                     {{ __('translation.arabic') }}
@@ -583,11 +752,14 @@
 
                                 @if (app()->getLocale() === 'ar')
                                     <svg class="h-4 w-4 text-orange-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24" aria-hidden="true">
+                                        viewBox="0 0 24 24">
+
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="m5 12 4 4L19 6" />
+                                            d="M5 12l4 4L19 7" />
+
                                     </svg>
                                 @endif
+
                             </a>
 
                         </div>
@@ -597,7 +769,6 @@
                 </div>
 
             </div>
-
 
             {{-- Logout --}}
             @auth
@@ -610,8 +781,9 @@
 
                         <button type="submit"
                             class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium text-red-600 transition hover:bg-red-50 dark:hover:bg-red-950/20">
-                            🚪
-                            {{ __('Log Out') }}
+
+                            🚪 {{ __('Log Out') }}
+
                         </button>
 
                     </form>
@@ -622,15 +794,18 @@
 
         </div>
 
-
         {{-- Sidebar Footer --}}
         <div class="shrink-0 border-t border-gray-200 px-5 py-4 dark:border-gray-800">
 
             <div class="flex items-center justify-between text-xs text-gray-400">
 
-                <span>© {{ date('Y') }} murwaj</span>
+                <span>
+                    © {{ date('Y') }} murwaj
+                </span>
 
-                <span id="mobile-clock">--:--</span>
+                <span id="mobile-clock" class="tabular-nums">
+                    --:--
+                </span>
 
             </div>
 
@@ -640,8 +815,6 @@
 
 </header>
 
-{{-- Clock --}}
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -649,18 +822,14 @@
 
             const now = new Date();
 
-            const time = now.toLocaleTimeString([], {
+            const time = new Intl.DateTimeFormat('en-GB', {
+                timeZone: 'Asia/Dubai',
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit'
-            });
+                hourCycle: 'h23'
+            }).format(now);
 
-            const clock = document.getElementById('clock');
             const mobileClock = document.getElementById('mobile-clock');
-
-            if (clock) {
-                clock.textContent = time;
-            }
 
             if (mobileClock) {
                 mobileClock.textContent = time;
@@ -669,29 +838,7 @@
 
         updateClock();
 
-        setInterval(updateClock, 1000);
+        setInterval(updateClock, 60000);
 
     });
-</script>
-
-{{-- Theme initialization --}}
-
-<script>
-    (function() {
-
-        const savedTheme = localStorage.getItem('theme');
-
-        if (
-            savedTheme === 'dark' ||
-            (
-                !savedTheme &&
-                window.matchMedia('(prefers-color-scheme: dark)').matches
-            )
-        ) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-
-    })();
 </script>

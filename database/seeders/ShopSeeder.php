@@ -21,7 +21,7 @@ class ShopSeeder extends Seeder
             'banner' => 'shop-suggest/cover.jpg',
             'type' => 'freelance',
             'country_id' => '1',
-            'state_id' => '1',
+            'state_id' => '1', 
             'city_id' => '4',
             'location' => 'Dubai,UAE',
             'currency' => 'AED',

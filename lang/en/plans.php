@@ -40,7 +40,7 @@ return [
 
     'included' => 'Included',
 
-    'one_active_product' => '1 Active Product',
+    'one_active_product' => '5 Active Products',
     'storage_100_mb' => '100 MB Storage',
     'listings_30_days' => 'Listings live for 30 days',
     'no_featured_listings' => 'No Featured Listings',
