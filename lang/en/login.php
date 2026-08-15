@@ -18,4 +18,10 @@ return [
     'remember_me' => 'Remember me',
     'password_request' => 'Forgot your password?',
     'login' => 'Log in',
+
+    'or_continue_with' => 'Or continue with',
+
+    'no_account' => "Don't have an account?",
+
+    'register' => 'Create an account',
 ];

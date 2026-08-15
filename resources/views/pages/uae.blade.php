@@ -1,4 +1,10 @@
 @php
+    /*
+    |--------------------------------------------------------------------------
+    | LANGUAGE
+    |--------------------------------------------------------------------------
+    */
+
     $isArabic = app()->getLocale() === 'ar';
     $direction = $isArabic ? 'rtl' : 'ltr';
 
@@ -180,9 +186,10 @@
     @section('description', $description ?? $pageDescription)
     @section('keywords', $keywords ?? $pageKeywords)
 
-    {{-- ========================================================= --}}
-    {{-- FONT --}}
-    {{-- ========================================================= --}}
+
+    {{-- ============================================================= --}}
+    {{-- GOOGLE FONT --}}
+    {{-- ============================================================= --}}
 
     @push('styles')
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -196,6 +203,7 @@
     <div dir="{{ $direction }}" lang="{{ $isArabic ? 'ar-AE' : 'en-AE' }}"
         class="uae-page min-h-screen overflow-x-hidden bg-[#f7f4ed] text-[#171717] dark:bg-[#080808] dark:text-white">
 
+
         {{-- ========================================================= --}}
         {{-- HEADER --}}
         {{-- ========================================================= --}}
@@ -207,13 +215,22 @@
 
                 <div class="flex min-h-[78px] items-center justify-between gap-4 sm:h-[86px]">
 
+
+                    {{-- BRAND --}}
+
                     <a href="{{ route('uae') }}" class="group flex shrink-0 items-center gap-3">
 
                         <div
                             class="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[#c9a75e]/70 bg-gradient-to-br from-[#29210f] via-[#12100b] to-black shadow-[0_0_35px_rgba(201,167,94,.18)]">
-                            <span class="text-lg">🇦🇪</span>
+
+                            <span class="text-lg">
+                                🇦🇪
+                            </span>
+
                             <span class="absolute inset-1 rounded-full border border-[#d8b866]/20"></span>
+
                         </div>
+
 
                         <div class="hidden sm:block">
 
@@ -229,6 +246,8 @@
 
                     </a>
 
+
+                    {{-- NAVIGATION --}}
 
                     <nav class="hidden items-center gap-8 lg:flex">
 
@@ -310,7 +329,9 @@
                                     </span>
 
                                     <span id="watch-hour" class="watch-hand watch-hour"></span>
+
                                     <span id="watch-minute" class="watch-hand watch-minute"></span>
+
                                     <span id="watch-second" class="watch-hand watch-second"></span>
 
                                     <span
@@ -331,9 +352,9 @@
         </header>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- MOBILE TIME --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <div class="border-b border-[#c9a75e]/10 bg-[#11100e] px-4 py-3 text-center sm:hidden">
 
@@ -349,9 +370,9 @@
         </div>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- HERO --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <section class="relative overflow-hidden bg-[#10100e] text-white">
 
@@ -379,6 +400,9 @@
 
                 <div
                     class="grid min-h-[650px] items-center gap-14 py-16 lg:grid-cols-[.95fr_1.05fr] lg:gap-20 lg:py-24">
+
+
+                    {{-- HERO TEXT --}}
 
                     <div class="{{ $isArabic ? 'lg:order-2' : 'lg:order-1' }}">
 
@@ -428,14 +452,18 @@
 
 
                         <div class="mt-10 flex items-center gap-1.5">
+
                             <span class="h-1 w-10 bg-[#d71920]"></span>
                             <span class="h-1 w-10 bg-white"></span>
                             <span class="h-1 w-10 bg-[#00732f]"></span>
                             <span class="h-1 w-5 bg-black"></span>
+
                         </div>
 
                     </div>
 
+
+                    {{-- HERO IMAGE --}}
 
                     <div class="{{ $isArabic ? 'lg:order-1' : 'lg:order-2' }} relative">
 
@@ -447,7 +475,7 @@
                             <div class="relative aspect-[4/5] overflow-hidden">
 
                                 <img src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=928&auto=format&fit=crop"
-                                    alt="{{ $labels['uae_heritage'] }}"
+                                    alt="{{ $labels['uae_heritage'] }}" loading="eager"
                                     class="h-full w-full object-cover transition duration-[1200ms] hover:scale-[1.04]">
 
                                 <div
@@ -462,16 +490,19 @@
                                         <div class="flex items-center gap-4">
 
                                             <div class="flex h-10 w-7 shrink-0 overflow-hidden rounded-sm">
-                                                {{-- Red vertical section --}}
+
                                                 <span class="w-1/3 bg-[#D71920]"></span>
 
-                                                {{-- Green / White / Black horizontal stripes --}}
                                                 <span class="flex w-2/3 flex-col">
+
                                                     <span class="h-1/3 bg-[#00732F]"></span>
                                                     <span class="h-1/3 bg-white"></span>
                                                     <span class="h-1/3 bg-black"></span>
+
                                                 </span>
+
                                             </div>
+
 
                                             <div>
 
@@ -499,7 +530,9 @@
 
                                 <div class="text-center">
 
-                                    <div class="text-xl">🇦🇪</div>
+                                    <div class="text-xl">
+                                        🇦🇪
+                                    </div>
 
                                     <p class="mt-2 text-[10px] font-semibold text-[#d7bd82]">
                                         {{ $labels['authentic_uae'] }}
@@ -520,9 +553,9 @@
         </section>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- CATEGORIES --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <section id="categories" class="mx-auto max-w-7xl scroll-mt-24 px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
 
@@ -553,11 +586,16 @@
 
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
 
+
+                {{-- ALL PRODUCTS --}}
+
                 <a href="{{ route('uae') }}" class="category-card-dark group">
 
                     <div class="absolute -end-10 -top-10 h-32 w-32 rounded-full bg-[#c8a45d]/10 blur-2xl"></div>
 
-                    <div class="relative text-3xl">🇦🇪</div>
+                    <div class="relative text-3xl">
+                        🇦🇪
+                    </div>
 
                     <div class="relative">
 
@@ -574,15 +612,19 @@
                 </a>
 
 
+                {{-- SUBCATEGORIES --}}
+
                 @foreach ($subcategoriesCollection as $subcategory)
                     @php
+
                         $subcategoryName = $isArabic
-                            ? $subcategory->subcategory_name_ar ?? $subcategory->subcategory_name
-                            : $subcategory->subcategory_name;
+                            ? $subcategory->subcategory_name_ar ?? ($subcategory->subcategory_name ?? '')
+                            : $subcategory->subcategory_name ?? '';
 
                         $subcategorySlug = $subcategory->slug ?? '';
 
                         $icon = $categoryIcons[$subcategorySlug] ?? '✦';
+
                     @endphp
 
 
@@ -629,14 +671,17 @@
         </section>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- PRODUCTS --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <section id="products"
             class="scroll-mt-24 border-y border-black/[0.06] bg-white dark:border-white/10 dark:bg-[#0e0e0f]">
 
             <div class="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+
+                {{-- HEADER --}}
 
                 <div class="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
 
@@ -680,97 +725,214 @@
 
                 @if ($productsCollection->count())
 
-                    <div class="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+
+                    {{-- ================================================= --}}
+                    {{-- PRODUCT GRID --}}
+                    {{-- ================================================= --}}
+
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
 
                         @foreach ($productsCollection as $product)
                             @php
 
-                                $productTitle = $isArabic ? $product->title_ar ?? $product->title : $product->title;
+                                /*
+                                |--------------------------------------------------------------------------
+                                | TITLE
+                                |--------------------------------------------------------------------------
+                                */
+
+                                $productTitle = $isArabic
+                                    ? $product->title_ar ?? ($product->title ?? '')
+                                    : $product->title ?? '';
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | DESCRIPTION
+                                |--------------------------------------------------------------------------
+                                */
 
                                 $productDescription = $isArabic
-                                    ? $product->description_ar ?? $product->description
-                                    : $product->description;
+                                    ? $product->description_ar ?? ($product->description ?? '')
+                                    : $product->description ?? '';
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | IMAGE
+                                |--------------------------------------------------------------------------
+                                */
 
                                 $image = $product->image ?? null;
 
-                                if (!$image && !empty($product->images)) {
-                                    $images = is_array($product->images)
-                                        ? $product->images
-                                        : (method_exists($product->images, 'toArray')
-                                            ? $product->images->toArray()
-                                            : []);
+                                if (!$image && $product->images) {
+                                    $images = $product->images;
 
-                                    $firstImage = $images[0] ?? null;
+                                    /*
+                                    | JSON string
+                                    */
 
-                                    if (is_array($firstImage)) {
-                                        $image =
-                                            $firstImage['path'] ??
-                                            ($firstImage['image'] ?? ($firstImage['url'] ?? null));
-                                    } elseif (is_object($firstImage)) {
-                                        $image =
-                                            $firstImage->path ?? ($firstImage->image ?? ($firstImage->url ?? null));
-                                    } elseif (is_string($firstImage)) {
-                                        $image = $firstImage;
+                                    if (is_string($images)) {
+                                        $decodedImages = json_decode($images, true);
+
+                                        if (json_last_error() === JSON_ERROR_NONE) {
+                                            $images = $decodedImages;
+                                        } else {
+                                            $images = [];
+                                        }
+                                    }
+
+                                    /*
+                                    | Laravel Collection
+                                    */
+
+                                    if ($images instanceof \Illuminate\Support\Collection) {
+                                        $images = $images->toArray();
+                                    }
+
+                                    /*
+                                    | Image array
+                                    */
+
+                                    if (is_array($images)) {
+                                        $firstImage = $images[0] ?? null;
+
+                                        if (is_array($firstImage)) {
+                                            $image =
+                                                $firstImage['path'] ??
+                                                ($firstImage['image'] ??
+                                                    ($firstImage['url'] ?? ($firstImage['src'] ?? null)));
+                                        } elseif (is_object($firstImage)) {
+                                            $image =
+                                                $firstImage->path ??
+                                                ($firstImage->image ??
+                                                    ($firstImage->url ?? ($firstImage->src ?? null)));
+                                        } elseif (is_string($firstImage)) {
+                                            $image = $firstImage;
+                                        }
                                     }
                                 }
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | IMAGE URL
+                                |--------------------------------------------------------------------------
+                                */
 
                                 $imageUrl = null;
 
                                 if ($image) {
-                                    $imageUrl = filter_var($image, FILTER_VALIDATE_URL)
-                                        ? $image
-                                        : asset('storage/' . ltrim($image, '/'));
+                                    $image = trim((string) $image);
+
+                                    if (filter_var($image, FILTER_VALIDATE_URL)) {
+                                        $imageUrl = $image;
+                                    } elseif (str_starts_with($image, '/storage/')) {
+                                        $imageUrl = asset(ltrim($image, '/'));
+                                    } elseif (str_starts_with($image, 'storage/')) {
+                                        $imageUrl = asset($image);
+                                    } elseif (str_starts_with($image, '/')) {
+                                        $imageUrl = asset(ltrim($image, '/'));
+                                    } else {
+                                        $imageUrl = asset('storage/products/' . ltrim($image, '/'));
+                                    }
                                 }
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | SHOP
+                                |--------------------------------------------------------------------------
+                                */
 
                                 $shopName = null;
 
                                 if ($product->shop) {
                                     $shopName = $isArabic
-                                        ? $product->shop->name_ar ?? $product->shop->name
-                                        : $product->shop->name;
+                                        ? $product->shop->name_ar ?? ($product->shop->name ?? '')
+                                        : $product->shop->name ?? '';
                                 }
 
-                                $productSubcategory = null;
+                                /*
+                                |--------------------------------------------------------------------------
+                                | SUBCATEGORY
+                                |--------------------------------------------------------------------------
+                                */
+
                                 $subcategoryTitle = null;
 
-                                if (
-                                    isset($product->subcategories) &&
-                                    $product->subcategories &&
-                                    $product->subcategories->count()
-                                ) {
+                                if ($product->subcategories && $product->subcategories->count()) {
                                     $productSubcategory = $product->subcategories->first();
 
                                     $subcategoryTitle = $isArabic
                                         ? $productSubcategory->subcategory_name_ar ??
-                                            $productSubcategory->subcategory_name
-                                        : $productSubcategory->subcategory_name;
+                                            ($productSubcategory->subcategory_name ?? '')
+                                        : $productSubcategory->subcategory_name ?? '';
+                                }
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | URL
+                                |--------------------------------------------------------------------------
+                                */
+
+                                $productUrl = $product->url ?? null;
+
+                                $productUrl = $productUrl ? trim($productUrl) : '#';
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | PRICE
+                                |--------------------------------------------------------------------------
+                                */
+
+                                $formattedPrice = null;
+
+                                if ($product->price !== null && $product->price !== '') {
+                                    $formattedPrice = number_format((float) $product->price, 2);
                                 }
                             @endphp
 
 
-                            <article class="product-card group">
+                            {{-- ================================================= --}}
+                            {{-- PRODUCT CARD --}}
+                            {{-- ================================================= --}}
 
-                                <div class="relative aspect-[4/4.5] overflow-hidden bg-[#f3efe6] dark:bg-[#202022]">
+                            <article class="product-card group flex h-full flex-col">
+
+
+                                {{-- IMAGE --}}
+
+                                <div
+                                    class="relative aspect-[4/4.5] shrink-0 overflow-hidden bg-[#f3efe6] dark:bg-[#202022]">
 
                                     @if ($imageUrl)
                                         <img src="{{ $imageUrl }}" alt="{{ $productTitle }}" loading="lazy"
+                                            decoding="async"
                                             class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.06]">
                                     @else
-                                        <div class="flex h-full w-full items-center justify-center">
-                                            <span class="text-5xl opacity-20">🇦🇪</span>
+                                        <div
+                                            class="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#f3efe6] to-[#e8dfcc] dark:from-[#202022] dark:to-[#151515]">
+
+                                            <span class="text-5xl opacity-20">
+                                                🇦🇪
+                                            </span>
+
                                         </div>
                                     @endif
 
 
+                                    {{-- IMAGE HOVER --}}
+
                                     <div
-                                        class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition group-hover:opacity-100">
+                                        class="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition duration-500 group-hover:opacity-100">
                                     </div>
 
+
+                                    {{-- UAE BADGE --}}
 
                                     <span class="product-badge start-3">
                                         {{ $labels['uae_local'] }}
                                     </span>
 
+
+                                    {{-- COUNTRY --}}
 
                                     <span class="product-country end-3">
                                         🇦🇪
@@ -779,7 +941,12 @@
                                 </div>
 
 
-                                <div class="p-4 sm:p-5">
+                                {{-- CONTENT --}}
+
+                                <div class="flex flex-1 flex-col p-4 sm:p-5">
+
+
+                                    {{-- CATEGORY --}}
 
                                     @if ($subcategoryTitle)
                                         <p class="product-category">
@@ -788,19 +955,23 @@
                                     @endif
 
 
+                                    {{-- TITLE --}}
+
                                     <h3 class="product-title">
                                         {{ $productTitle }}
                                     </h3>
 
 
+                                    {{-- DESCRIPTION --}}
+
                                     @if ($productDescription)
                                         <p class="product-description">
-
                                             {{ \Illuminate\Support\Str::limit(strip_tags($productDescription), 90) }}
-
                                         </p>
                                     @endif
 
+
+                                    {{-- SELLER --}}
 
                                     @if ($shopName)
                                         <div class="mt-5 flex items-center gap-2.5">
@@ -825,28 +996,51 @@
                                     @endif
 
 
-                                    <div
-                                        class="mt-5 flex items-end justify-between border-t border-black/[0.06] pt-4 dark:border-white/10">
+                                    {{-- PRICE + VIEW --}}
 
-                                        <div>
+                                    <div class="mt-auto pt-5">
 
-                                            <p class="price-label">
-                                                {{ $labels['price'] }}
-                                            </p>
+                                        <div
+                                            class="flex flex-col gap-4 border-t border-black/[0.06] pt-4 dark:border-white/10 sm:flex-row sm:items-end sm:justify-between">
 
 
-                                            @if ($product->price !== null)
-                                                <span class="product-price">
-                                                    AED {{ number_format((float) $product->price, 2) }}
+                                            {{-- PRICE --}}
+
+                                            <div class="min-w-0">
+
+                                                <p class="price-label">
+                                                    {{ $labels['price'] }}
+                                                </p>
+
+
+                                                @if ($formattedPrice !== null)
+                                                    <span class="product-price">
+                                                        AED {{ $formattedPrice }}
+                                                    </span>
+                                                @else
+                                                    <span class="product-price text-sm text-slate-400">
+                                                        —
+                                                    </span>
+                                                @endif
+
+                                            </div>
+
+
+                                            {{-- VIEW BUTTON --}}
+
+                                            @if ($productUrl !== '#')
+                                                <a href="{{ $productUrl }}" class="product-view-button"
+                                                    aria-label="{{ $labels['view'] }} - {{ $productTitle }}">
+                                                    {{ $labels['view'] }}
+                                                </a>
+                                            @else
+                                                <span class="product-view-button product-view-disabled"
+                                                    aria-disabled="true">
+                                                    {{ $labels['view'] }}
                                                 </span>
                                             @endif
 
                                         </div>
-
-
-                                        <span class="product-uae">
-                                            {{ $labels['uae'] }}
-                                        </span>
 
                                     </div>
 
@@ -858,12 +1052,18 @@
                     </div>
 
 
+                    {{-- PAGINATION --}}
+
                     @if (method_exists($productsCollection, 'hasPages') && $productsCollection->hasPages())
                         <div class="mt-12 border-t border-black/[0.07] pt-7 dark:border-white/10">
                             {{ $productsCollection->links() }}
                         </div>
                     @endif
                 @else
+                    {{-- ================================================= --}}
+                    {{-- EMPTY STATE --}}
+                    {{-- ================================================= --}}
+
                     <div class="py-24 text-center">
 
                         <div
@@ -897,13 +1097,14 @@
         </section>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- HERITAGE --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <section class="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
 
             <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+
 
                 <div>
 
@@ -935,6 +1136,7 @@
 
 
                     <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+
 
                         <div class="heritage-card">
 
@@ -981,7 +1183,7 @@
                     <div class="relative aspect-[4/4.5] overflow-hidden">
 
                         <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?q=85&w=1400&auto=format&fit=crop"
-                            alt="{{ $labels['united_arab_emirates'] }}" loading="lazy"
+                            alt="{{ $labels['united_arab_emirates'] }}" loading="lazy" decoding="async"
                             class="h-full w-full object-cover transition duration-1000 hover:scale-105">
 
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
@@ -1012,9 +1214,9 @@
         </section>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- SELLER --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <section id="seller" class="relative scroll-mt-24 overflow-hidden bg-[#131313] text-white">
 
@@ -1025,6 +1227,7 @@
 
                 <div
                     class="flex flex-col gap-10 border border-[#c8a45d]/20 p-7 sm:p-10 lg:flex-row lg:items-center lg:justify-between lg:p-12">
+
 
                     <div class="max-w-2xl">
 
@@ -1068,19 +1271,22 @@
         </section>
 
 
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
         {{-- FOOTER --}}
-        {{-- ========================================================= --}}
+        {{-- ============================================================= --}}
 
         <footer class="bg-[#090909] px-5 py-10 text-white sm:px-6">
 
             <div class="mx-auto flex max-w-7xl flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
 
+
                 <div>
 
                     <div class="flex items-center gap-3">
 
-                        <span class="text-xl">🇦🇪</span>
+                        <span class="text-xl">
+                            🇦🇪
+                        </span>
 
                         <span class="footer-brand">
                             {{ $labels['uae_collection'] }}
@@ -1117,13 +1323,13 @@
 
 
     {{-- ============================================================= --}}
-    {{-- TYPOGRAPHY + DESIGN --}}
+    {{-- STYLES --}}
     {{-- ============================================================= --}}
 
     <style>
         /*
         |--------------------------------------------------------------------------
-        | UAE TYPOGRAPHY
+        | BASE
         |--------------------------------------------------------------------------
         */
 
@@ -1132,11 +1338,10 @@
             font-family:
                 "IBM Plex Sans Arabic",
                 "Noto Sans Arabic",
-                "Tahoma",
-                "Arial",
+                Tahoma,
+                Arial,
                 sans-serif;
         }
-
 
         .uae-page {
             font-weight: 400;
@@ -1145,17 +1350,25 @@
             text-rendering: optimizeLegibility;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .uae-page ::selection {
+            background: #c9a75e;
+            color: #111;
+        }
+
 
         /*
         |--------------------------------------------------------------------------
-        | RTL ARABIC
+        | RTL
         |--------------------------------------------------------------------------
         */
 
         [dir="rtl"] .uae-page {
             letter-spacing: 0;
         }
-
 
         [dir="rtl"] .hero-title,
         [dir="rtl"] .section-title,
@@ -1180,7 +1393,6 @@
             letter-spacing: .08em;
         }
 
-
         .brand-subtitle {
             margin-top: 4px;
             color: #d5b66e;
@@ -1193,7 +1405,7 @@
 
         /*
         |--------------------------------------------------------------------------
-        | NAVIGATION
+        | NAV
         |--------------------------------------------------------------------------
         */
 
@@ -1211,7 +1423,6 @@
                 transform .25s ease;
         }
 
-
         .nav-link::after {
             content: "";
             position: absolute;
@@ -1220,17 +1431,14 @@
             bottom: -8px;
             height: 1px;
             transform: scaleX(0);
-            transform-origin: center;
             background: #d5b66e;
             transition: transform .25s ease;
         }
-
 
         .nav-link:hover {
             color: #d8bb75;
             transform: translateY(-1px);
         }
-
 
         .nav-link:hover::after {
             transform: scaleX(1);
@@ -1239,7 +1447,7 @@
 
         /*
         |--------------------------------------------------------------------------
-        | CLOCK LABELS
+        | CLOCK
         |--------------------------------------------------------------------------
         */
 
@@ -1251,7 +1459,6 @@
             letter-spacing: .08em;
         }
 
-
         .clock-location {
             margin-top: 3px;
             color: rgba(255, 255, 255, .52);
@@ -1259,7 +1466,6 @@
             line-height: 1.6;
             font-weight: 500;
         }
-
 
         .mobile-location {
             color: #c9a75e;
@@ -1282,7 +1488,6 @@
             letter-spacing: .04em;
         }
 
-
         .hero-title {
             max-width: 850px;
             color: white;
@@ -1292,14 +1497,12 @@
             letter-spacing: -.025em;
         }
 
-
         .hero-description {
             max-width: 700px;
             margin-top: 28px;
             color: rgba(255, 255, 255, .72);
             font-size: 17px;
             line-height: 2;
-            font-weight: 400;
         }
 
 
@@ -1329,13 +1532,11 @@
                 filter .3s ease;
         }
 
-
         .luxury-button:hover {
             transform: translateY(-2px);
             filter: brightness(1.05);
             box-shadow: 0 20px 45px -12px rgba(211, 174, 93, .65);
         }
-
 
         .luxury-button-outline {
             display: inline-flex;
@@ -1357,13 +1558,11 @@
                 transform .3s ease;
         }
 
-
         .luxury-button-outline:hover {
             transform: translateY(-2px);
             border-color: #c9a75e;
             background: rgba(201, 167, 94, .1);
         }
-
 
         .button-arrow {
             font-size: 17px;
@@ -1373,7 +1572,7 @@
 
         /*
         |--------------------------------------------------------------------------
-        | SECTION TYPOGRAPHY
+        | SECTION
         |--------------------------------------------------------------------------
         */
 
@@ -1385,11 +1584,9 @@
             letter-spacing: .08em;
         }
 
-
         .section-label-dark {
             color: #d4b66f;
         }
-
 
         .section-title {
             color: #171717;
@@ -1399,11 +1596,9 @@
             letter-spacing: -.025em;
         }
 
-
         .dark .section-title {
             color: white;
         }
-
 
         .section-description {
             max-width: 700px;
@@ -1411,9 +1606,7 @@
             color: #64748b;
             font-size: 15px;
             line-height: 1.9;
-            font-weight: 400;
         }
-
 
         .dark .section-description {
             color: #94a3b8;
@@ -1442,13 +1635,11 @@
                 border-color .3s ease;
         }
 
-
         .category-card {
             border: 1px solid rgba(0, 0, 0, .07);
             background: white;
             box-shadow: 0 5px 20px rgba(0, 0, 0, .025);
         }
-
 
         .category-card-dark {
             background: #151515;
@@ -1456,18 +1647,15 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
         }
 
-
         .category-card:hover,
         .category-card-dark:hover {
             transform: translateY(-5px);
         }
 
-
         .category-card:hover {
             border-color: #c8a45d;
             box-shadow: 0 20px 40px -25px rgba(150, 110, 35, .45);
         }
-
 
         .category-icon {
             display: flex;
@@ -1480,12 +1668,6 @@
             font-size: 21px;
         }
 
-
-        .dark .category-icon {
-            background: rgba(255, 255, 255, .05);
-        }
-
-
         .category-title {
             margin-top: 20px;
             color: #171717;
@@ -1494,11 +1676,9 @@
             font-weight: 700;
         }
 
-
         .category-card-dark .category-title {
             color: white;
         }
-
 
         .category-subtitle {
             margin-top: 5px;
@@ -1508,13 +1688,11 @@
             font-weight: 500;
         }
 
-
         .category-arrow {
             color: #cbd5e1;
             font-size: 16px;
             transition: color .25s ease;
         }
-
 
         .category-card:hover .category-arrow {
             color: #a17d35;
@@ -1544,11 +1722,14 @@
 
         /*
         |--------------------------------------------------------------------------
-        | PRODUCT CARDS
+        | PRODUCT CARD
         |--------------------------------------------------------------------------
         */
 
         .product-card {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
             overflow: hidden;
             border: 1px solid rgba(0, 0, 0, .07);
             background: white;
@@ -1559,12 +1740,10 @@
                 box-shadow .5s ease;
         }
 
-
         .dark .product-card {
             border-color: rgba(255, 255, 255, .10);
             background: #151515;
         }
-
 
         .product-card:hover {
             transform: translateY(-5px);
@@ -1573,9 +1752,16 @@
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | PRODUCT BADGES
+        |--------------------------------------------------------------------------
+        */
+
         .product-badge {
             position: absolute;
             top: 12px;
+            z-index: 5;
             background: rgba(21, 21, 21, .92);
             padding: 6px 10px;
             color: white;
@@ -1585,10 +1771,10 @@
             backdrop-filter: blur(10px);
         }
 
-
         .product-country {
             position: absolute;
             top: 12px;
+            z-index: 5;
             background: rgba(255, 255, 255, .92);
             padding: 6px 8px;
             color: #171717;
@@ -1599,6 +1785,12 @@
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | PRODUCT CONTENT
+        |--------------------------------------------------------------------------
+        */
+
         .product-category {
             margin-bottom: 8px;
             color: #a17d35;
@@ -1606,7 +1798,6 @@
             line-height: 1.6;
             font-weight: 600;
         }
-
 
         .product-title {
             min-height: 3rem;
@@ -1616,11 +1807,9 @@
             font-weight: 700;
         }
 
-
         .dark .product-title {
             color: white;
         }
-
 
         .product-description {
             min-height: 2.8rem;
@@ -1628,14 +1817,18 @@
             color: #64748b;
             font-size: 13px;
             line-height: 1.7;
-            font-weight: 400;
         }
-
 
         .dark .product-description {
             color: #94a3b8;
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | SELLER
+        |--------------------------------------------------------------------------
+        */
 
         .seller-icon {
             display: flex;
@@ -1650,12 +1843,10 @@
             font-size: 14px;
         }
 
-
         .dark .seller-icon {
             border-color: rgba(255, 255, 255, .10);
             background: rgba(255, 255, 255, .05);
         }
-
 
         .seller-name {
             overflow: hidden;
@@ -1667,11 +1858,9 @@
             font-weight: 600;
         }
 
-
         .dark .seller-name {
             color: #cbd5e1;
         }
-
 
         .seller-label {
             margin-top: 2px;
@@ -1682,13 +1871,18 @@
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | PRICE
+        |--------------------------------------------------------------------------
+        */
+
         .price-label {
             color: #94a3b8;
             font-size: 10px;
             line-height: 1.5;
             font-weight: 500;
         }
-
 
         .product-price {
             display: block;
@@ -1699,17 +1893,61 @@
             font-weight: 700;
         }
 
-
         .dark .product-price {
             color: white;
         }
 
 
-        .product-uae {
-            color: #a17d35;
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW PRODUCT BUTTON
+        |--------------------------------------------------------------------------
+        */
+
+        .product-view-button {
+            display: inline-flex;
+            min-height: 40px;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f97316;
+            padding: .65rem 1rem;
+            color: white;
             font-size: 11px;
-            line-height: 1.5;
-            font-weight: 600;
+            line-height: 1.4;
+            font-weight: 800;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(249, 115, 22, .18);
+            transition:
+                background .25s ease,
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .product-view-button:hover {
+            background: #ea580c;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, .25);
+        }
+
+        .product-view-button:focus-visible {
+            outline: 2px solid #fb923c;
+            outline-offset: 3px;
+        }
+
+        .product-view-disabled {
+            cursor: not-allowed;
+            background: #cbd5e1;
+            box-shadow: none;
+            opacity: .8;
+        }
+
+        .product-view-disabled:hover {
+            transform: none;
+            background: #cbd5e1;
+            box-shadow: none;
         }
 
 
@@ -1728,16 +1966,9 @@
             letter-spacing: -.025em;
         }
 
-
-        .dark .heritage-title {
-            color: white;
-        }
-
-
         .heritage-title span {
             color: #a17d35;
         }
-
 
         .heritage-description {
             max-width: 650px;
@@ -1745,14 +1976,7 @@
             color: #475569;
             font-size: 16px;
             line-height: 2;
-            font-weight: 400;
         }
-
-
-        .dark .heritage-description {
-            color: #cbd5e1;
-        }
-
 
         .heritage-card {
             border: 1px solid rgba(0, 0, 0, .07);
@@ -1760,13 +1984,6 @@
             padding: 1.35rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, .025);
         }
-
-
-        .dark .heritage-card {
-            border-color: rgba(255, 255, 255, .10);
-            background: #151515;
-        }
-
 
         .heritage-icon {
             display: flex;
@@ -1779,12 +1996,6 @@
             font-size: 20px;
         }
 
-
-        .dark .heritage-icon {
-            background: rgba(255, 255, 255, .05);
-        }
-
-
         .heritage-card-title {
             margin-top: 15px;
             color: #171717;
@@ -1793,29 +2004,17 @@
             font-weight: 700;
         }
 
-
-        .dark .heritage-card-title {
-            color: white;
-        }
-
-
         .heritage-card-text {
             margin-top: 8px;
             color: #64748b;
             font-size: 13px;
             line-height: 1.8;
-            font-weight: 400;
-        }
-
-
-        .dark .heritage-card-text {
-            color: #94a3b8;
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | SELLER
+        | SELLER SECTION
         |--------------------------------------------------------------------------
         */
 
@@ -1827,13 +2026,11 @@
             font-weight: 700;
         }
 
-
         .seller-description {
             margin-top: 18px;
             color: rgba(255, 255, 255, .62);
             font-size: 16px;
             line-height: 1.95;
-            font-weight: 400;
         }
 
 
@@ -1851,14 +2048,12 @@
             backdrop-filter: blur(16px);
         }
 
-
         .overlay-label {
             color: #d7bd82;
             font-size: 10px;
             line-height: 1.6;
             font-weight: 600;
         }
-
 
         .overlay-title {
             margin-top: 4px;
@@ -1882,7 +2077,6 @@
             font-weight: 600;
         }
 
-
         .footer-country {
             margin-top: 7px;
             color: rgba(255, 255, 255, .38);
@@ -1890,7 +2084,6 @@
             line-height: 1.6;
             font-weight: 500;
         }
-
 
         .footer-time-label {
             margin-top: 4px;
@@ -1918,7 +2111,6 @@
                 inset 0 0 0 1px rgba(255, 255, 255, .18);
         }
 
-
         .uae-watch:hover {
             transform: translateY(-2px) scale(1.035);
 
@@ -1926,7 +2118,6 @@
                 0 18px 50px -10px rgba(218, 179, 91, .68),
                 0 0 0 1px rgba(255, 255, 255, .1);
         }
-
 
         .uae-watch::after {
             content: "";
@@ -1943,13 +2134,11 @@
                     #d9bd70);
         }
 
-
         [dir="rtl"] .uae-watch::after {
             right: auto;
             left: -5px;
             border-radius: 3px 0 0 3px;
         }
-
 
         .watch-hand {
             position: absolute;
@@ -1964,14 +2153,12 @@
             pointer-events: none;
         }
 
-
         .watch-hour {
             width: 2px;
             height: 14px;
             background: #15110a;
             z-index: 25;
         }
-
 
         .watch-minute {
             width: 1.4px;
@@ -1980,29 +2167,11 @@
             z-index: 26;
         }
 
-
         .watch-second {
             width: .7px;
             height: 21px;
             background: #a11919;
             z-index: 27;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | GENERAL
-        |--------------------------------------------------------------------------
-        */
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-
-        .uae-page ::selection {
-            background: #c9a75e;
-            color: #111;
         }
 
 
@@ -2019,24 +2188,20 @@
                 line-height: 1.25;
             }
 
-
             .hero-description {
                 font-size: 15px;
                 line-height: 1.9;
             }
-
 
             .section-title {
                 font-size: 1.9rem;
                 line-height: 1.3;
             }
 
-
             .section-description {
                 font-size: 14px;
                 line-height: 1.85;
             }
-
 
             .category-card,
             .category-card-dark {
@@ -2044,31 +2209,22 @@
                 padding: 1.15rem;
             }
 
-
             .category-title {
                 font-size: 13px;
                 line-height: 1.65;
             }
-
 
             .product-title {
                 font-size: 14px;
                 line-height: 1.6;
             }
 
-
             .product-description {
                 font-size: 12px;
                 line-height: 1.7;
             }
 
-
-            .heritage-description {
-                font-size: 15px;
-                line-height: 1.9;
-            }
-
-
+            .heritage-description,
             .seller-description {
                 font-size: 15px;
                 line-height: 1.9;
@@ -2076,6 +2232,12 @@
 
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | SMALL MOBILE
+        |--------------------------------------------------------------------------
+        */
 
         @media (max-width: 480px) {
 
@@ -2086,26 +2248,27 @@
                 font-size: 13px;
             }
 
-
             .hero-description {
                 font-size: 15px;
                 line-height: 1.95;
             }
 
-
             .product-card {
                 box-shadow: 0 3px 12px rgba(0, 0, 0, .03);
             }
-
 
             .product-title {
                 min-height: 3rem;
                 font-size: 14px;
             }
 
-
             .product-price {
                 font-size: 15px;
+            }
+
+            .product-view-button {
+                width: 100%;
+                min-height: 42px;
             }
 
         }
@@ -2113,7 +2276,7 @@
 
 
     {{-- ============================================================= --}}
-    {{-- UAE CLOCK --}}
+    {{-- UAE CLOCK JAVASCRIPT --}}
     {{-- ============================================================= --}}
 
     <script>
@@ -2121,9 +2284,7 @@
 
             'use strict';
 
-
             const timezone = 'Asia/Dubai';
-
 
             const hourHand =
                 document.getElementById('watch-hour');
@@ -2134,10 +2295,8 @@
             const secondHand =
                 document.getElementById('watch-second');
 
-
             const desktopDigital =
                 document.getElementById('uae-digital-time');
-
 
             const mobileDigital =
                 document.getElementById('uae-digital-time-mobile');
@@ -2145,15 +2304,16 @@
 
             function getUaeTime() {
 
-                const parts =
-                    new Intl.DateTimeFormat('en-US', {
+                const parts = new Intl.DateTimeFormat(
+                    'en-US', {
                         timeZone: timezone,
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
                         hour12: false,
                         hourCycle: 'h23'
-                    }).formatToParts(new Date());
+                    }
+                ).formatToParts(new Date());
 
 
                 const values = {};
@@ -2189,11 +2349,9 @@
                 const secondDegrees =
                     seconds * 6;
 
-
                 const minuteDegrees =
                     minutes * 6 +
                     seconds * 0.1;
-
 
                 const hourDegrees =
                     (hours % 12) * 30 +
@@ -2244,11 +2402,12 @@
 
             updateUaeClock();
 
-
             setInterval(updateUaeClock, 1000);
 
         })();
     </script>
 
+
     <x-main-footer></x-main-footer>
+
 </x-main-layout>

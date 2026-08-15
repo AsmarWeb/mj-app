@@ -28,22 +28,22 @@ class SubCategorySeeder extends Seeder
             ['id' => 10, 'category_id' => 1, 'category_name' => 'Electronics', 'subcategory_name' => 'Gadgets', 'subcategory_name_ar' => 'الأدوات', 'slug' => 'gadgets', 'status' => 'active'],
 
             // =========================================================
-            // 2. Local & Traditional Products
+            // 2. Home & Living
             // =========================================================
-            ['id' => 11, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Dates & Date Products', 'subcategory_name_ar' => 'التمور ومنتجاتها', 'slug' => 'dates-date-products', 'status' => 'active'],
-            ['id' => 12, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Arabic Sweets & Desserts', 'subcategory_name_ar' => 'الحلويات العربية', 'slug' => 'arabic-sweets-desserts', 'status' => 'active'],
-            ['id' => 13, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Honey & Natural Products', 'subcategory_name_ar' => 'العسل والمنتجات الطبيعية', 'slug' => 'honey-natural-products', 'status' => 'active'],
-            ['id' => 14, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Spices & Traditional Ingredients', 'subcategory_name_ar' => 'التوابل والمكونات التقليدية', 'slug' => 'spices-traditional-ingredients', 'status' => 'active'],
-            ['id' => 15, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Arabic Coffee & Tea', 'subcategory_name_ar' => 'القهوة والشاي العربي', 'slug' => 'arabic-coffee-tea', 'status' => 'active'],
-            ['id' => 16, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Clothing', 'subcategory_name_ar' => 'الملابس التقليدية', 'slug' => 'traditional-clothing', 'status' => 'active'],
-            ['id' => 17, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Perfumes & Oud', 'subcategory_name_ar' => 'العطور والعود', 'slug' => 'perfumes-oud', 'status' => 'active'],
-            ['id' => 18, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Bakhoor & Incense', 'subcategory_name_ar' => 'البخور والعود المعطر', 'slug' => 'bakhoor-incense', 'status' => 'active'],
-            ['id' => 19, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Handicrafts', 'subcategory_name_ar' => 'الحرف اليدوية التقليدية', 'slug' => 'traditional-handicrafts', 'status' => 'active'],
-            ['id' => 20, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Pottery & Ceramics', 'subcategory_name_ar' => 'الفخار والسيراميك', 'slug' => 'pottery-ceramics', 'status' => 'active'],
-            ['id' => 21, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Palm & Date Palm Products', 'subcategory_name_ar' => 'منتجات النخيل وسعف النخيل', 'slug' => 'palm-date-palm-products', 'status' => 'active'],
-            ['id' => 22, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Home Décor', 'subcategory_name_ar' => 'الديكور المنزلي التقليدي', 'slug' => 'traditional-home-decor', 'status' => 'active'],
-            ['id' => 23, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'UAE Souvenirs & Gifts', 'subcategory_name_ar' => 'الهدايا والتذكارات الإماراتية', 'slug' => 'uae-souvenirs-gifts', 'status' => 'active'],
-            ['id' => 24, 'category_id' => 2, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Accessories & Jewelry', 'subcategory_name_ar' => 'الإكسسوارات والمجوهرات التقليدية', 'slug' => 'traditional-accessories-jewelry', 'status' => 'active'],
+            ['id' => 11, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Furniture', 'subcategory_name_ar' => 'الأثاث', 'slug' => 'furniture', 'status' => 'active'],
+            ['id' => 12, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Home Decor', 'subcategory_name_ar' => 'ديكور المنزل', 'slug' => 'home-decor', 'status' => 'active'],
+            ['id' => 13, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Kitchen & Dining', 'subcategory_name_ar' => 'المطبخ وتناول الطعام', 'slug' => 'kitchen-dining', 'status' => 'active'],
+            ['id' => 14, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Bedroom', 'subcategory_name_ar' => 'غرفة النوم', 'slug' => 'bedroom', 'status' => 'active'],
+            ['id' => 15, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Living Room', 'subcategory_name_ar' => 'غرفة المعيشة', 'slug' => 'living-room', 'status' => 'active'],
+            ['id' => 16, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Bathroom', 'subcategory_name_ar' => 'الحمام', 'slug' => 'bathroom', 'status' => 'active'],
+            ['id' => 17, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Lighting', 'subcategory_name_ar' => 'الإضاءة', 'slug' => 'lighting', 'status' => 'active'],
+            ['id' => 18, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Garden & Outdoor', 'subcategory_name_ar' => 'الحديقة والمساحات الخارجية', 'slug' => 'garden-outdoor', 'status' => 'active'],
+            ['id' => 19, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Home Appliances', 'subcategory_name_ar' => 'الأجهزة المنزلية', 'slug' => 'home-appliances', 'status' => 'active'],
+            ['id' => 20, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Storage & Organization', 'subcategory_name_ar' => 'التخزين والتنظيم', 'slug' => 'storage-organization', 'status' => 'active'],
+            ['id' => 21, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Curtains & Carpets', 'subcategory_name_ar' => 'الستائر والسجاد', 'slug' => 'curtains-carpets', 'status' => 'active'],
+            ['id' => 22, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Cleaning & Household Supplies', 'subcategory_name_ar' => 'مستلزمات التنظيف والمنزل', 'slug' => 'cleaning-household-supplies', 'status' => 'active'],
+            ['id' => 23, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Wall Art & Mirrors', 'subcategory_name_ar' => 'لوحات الحائط والمرايا', 'slug' => 'wall-art-mirrors', 'status' => 'active'],
+            ['id' => 24, 'category_id' => 2, 'category_name' => 'Home & Living', 'subcategory_name' => 'Traditional Home Items', 'subcategory_name_ar' => 'الأدوات المنزلية التقليدية', 'slug' => 'traditional-home-items', 'status' => 'active'],
 
             // =========================================================
             // 3. Cooking
@@ -208,6 +208,37 @@ class SubCategorySeeder extends Seeder
             ['id' => 126, 'category_id' => 17, 'category_name' => 'Paper & Party Supplies', 'subcategory_name' => 'Party Tableware', 'subcategory_name_ar' => 'مستلزمات مائدة الحفلات', 'slug' => 'party-tableware', 'status' => 'active'],
             ['id' => 127, 'category_id' => 17, 'category_name' => 'Paper & Party Supplies', 'subcategory_name' => 'Invitations & Cards', 'subcategory_name_ar' => 'الدعوات والبطاقات', 'slug' => 'invitations-cards', 'status' => 'active'],
             ['id' => 128, 'category_id' => 17, 'category_name' => 'Paper & Party Supplies', 'subcategory_name' => 'Wrapping & Gift Packaging', 'subcategory_name_ar' => 'التغليف وتعبئة الهدايا', 'slug' => 'wrapping-gift-packaging', 'status' => 'active'],
+
+            // =========================================================
+            // 18. Local & Traditional Products
+            // =========================================================
+            ['id' => 129, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Dates & Date Products', 'subcategory_name_ar' => 'التمور ومنتجاتها', 'slug' => 'dates-date-products', 'status' => 'active'],
+
+            ['id' => 130, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Arabic Sweets & Desserts', 'subcategory_name_ar' => 'الحلويات العربية', 'slug' => 'arabic-sweets-desserts', 'status' => 'active'],
+
+            ['id' => 131, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Honey & Natural Products', 'subcategory_name_ar' => 'العسل والمنتجات الطبيعية', 'slug' => 'honey-natural-products', 'status' => 'active'],
+
+            ['id' => 132, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Spices & Traditional Ingredients', 'subcategory_name_ar' => 'التوابل والمكونات التقليدية', 'slug' => 'spices-traditional-ingredients', 'status' => 'active'],
+
+            ['id' => 133, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Arabic Coffee & Tea', 'subcategory_name_ar' => 'القهوة والشاي العربي', 'slug' => 'arabic-coffee-tea', 'status' => 'active'],
+
+            ['id' => 134, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Clothing', 'subcategory_name_ar' => 'الملابس التقليدية', 'slug' => 'traditional-clothing', 'status' => 'active'],
+
+            ['id' => 135, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Perfumes & Oud', 'subcategory_name_ar' => 'العطور والعود', 'slug' => 'perfumes-oud', 'status' => 'active'],
+
+            ['id' => 136, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Bakhoor & Incense', 'subcategory_name_ar' => 'البخور والعود المعطر', 'slug' => 'bakhoor-incense', 'status' => 'active'],
+
+            ['id' => 137, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Handicrafts', 'subcategory_name_ar' => 'الحرف اليدوية التقليدية', 'slug' => 'traditional-handicrafts', 'status' => 'active'],
+
+            ['id' => 138, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Pottery & Ceramics', 'subcategory_name_ar' => 'الفخار والسيراميك', 'slug' => 'pottery-ceramics', 'status' => 'active'],
+
+            ['id' => 139, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Palm & Date Palm Products', 'subcategory_name_ar' => 'منتجات النخيل وسعف النخيل', 'slug' => 'palm-date-palm-products', 'status' => 'active'],
+
+            ['id' => 140, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Home Décor', 'subcategory_name_ar' => 'الديكور المنزلي التقليدي', 'slug' => 'traditional-home-decor', 'status' => 'active'],
+
+            ['id' => 141, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'UAE Souvenirs & Gifts', 'subcategory_name_ar' => 'الهدايا والتذكارات الإماراتية', 'slug' => 'uae-souvenirs-gifts', 'status' => 'active'],
+
+            ['id' => 142, 'category_id' => 18, 'category_name' => 'Local & Traditional Products', 'subcategory_name' => 'Traditional Accessories & Jewelry', 'subcategory_name_ar' => 'الإكسسوارات والمجوهرات التقليدية', 'slug' => 'traditional-accessories-jewelry', 'status' => 'active'],
         ];
         SubCategory::insert($subcategoryRecords);
     }

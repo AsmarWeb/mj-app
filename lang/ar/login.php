@@ -18,4 +18,10 @@ return [
     'remember_me' => 'تذكرني',
     'password_request' => 'نسيت كلمة المرور؟',
     'login' => 'تسجيل الدخول',
+
+    'or_continue_with' => 'أو المتابعة باستخدام',
+
+    'no_account' => 'ليس لديك حساب؟',
+
+    'register' => 'إنشاء حساب',
 ];

@@ -11,42 +11,117 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
-    public function redirect($provider)
+    /**
+     * Redirect the user to the selected social provider.
+     */
+    public function redirect(string $provider)
     {
+        abort_unless(
+            in_array($provider, ['google', 'facebook'], true),
+            404
+        );
+
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callback($provider)
+    /**
+     * Handle the callback from the social provider.
+     */
+    public function callback(string $provider)
     {
+        abort_unless(
+            in_array($provider, ['google', 'facebook'], true),
+            404
+        );
+
         $socialUser = Socialite::driver($provider)->user();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Email
+        |--------------------------------------------------------------------------
+        */
+
+        $email = $socialUser->getEmail();
+
+        // Social login should not continue without a verified email.
+        if (! $email) {
+            return redirect()
+                ->route('login')
+                ->withErrors([
+                    'email' => 'Unable to retrieve your email address from ' .
+                        ucfirst($provider) .
+                        '. Please try another login method.',
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | User
+        |--------------------------------------------------------------------------
+        */
 
         $user = User::updateOrCreate(
             [
-                'email' => $socialUser->getEmail(),
+                'email' => $email,
             ],
             [
-                'name' => $socialUser->getName() ?? $socialUser->getNickname(),
-                'password' => bcrypt(Str::random(16)),
+                'name' => $socialUser->getName()
+                    ?? $socialUser->getNickname()
+                    ?? 'User',
+
+                // Social users do not need to know this password.
+                'password' => bcrypt(Str::random(32)),
             ]
         );
 
-        // Only save the profile photo if the user doesn't already have one
+        /*
+        |--------------------------------------------------------------------------
+        | Profile Photo
+        |--------------------------------------------------------------------------
+        */
 
         if (! $user->profile_photo_path && $socialUser->getAvatar()) {
-            $contents = Http::get($socialUser->getAvatar())->body();
-            $filename = 'profile-photos/'.Str::uuid().'.jpg';
-            Storage::disk('public')->put($filename, $contents);
-            $user->profile_photo_path = $filename;
-            $user->save();
+            try {
+                $response = Http::timeout(10)
+                    ->get($socialUser->getAvatar());
+
+                if ($response->successful()) {
+                    $filename = 'profile-photos/' . Str::uuid() . '.jpg';
+
+                    Storage::disk('public')->put(
+                        $filename,
+                        $response->body()
+                    );
+
+                    $user->profile_photo_path = $filename;
+                    $user->save();
+                }
+            } catch (\Throwable $e) {
+                // Do not prevent login if the provider's avatar cannot be downloaded.
+            }
         }
 
-        // Every user should have the "user" role
+        /*
+        |--------------------------------------------------------------------------
+        | User Role
+        |--------------------------------------------------------------------------
+        */
+
         if (! $user->hasRole('user')) {
             $user->addRole('user');
         }
 
-        Auth::login($user);
+        /*
+        |--------------------------------------------------------------------------
+        | Login
+        |--------------------------------------------------------------------------
+        */
 
-        return redirect('/profile');
+        Auth::login($user, true);
+
+        request()->session()->regenerate();
+
+        return redirect()->intended('/profile');
     }
 }
