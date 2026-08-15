@@ -156,7 +156,7 @@
 
 
                 {{-- Form --}}
-                <form action="{{ route('developers.store') }}" method="POST" enctype="multipart/form-data"
+                <form action="{{ route('developer.store') }}" method="POST" enctype="multipart/form-data"
                     class="p-6 sm:p-10 lg:p-12">
 
                     @csrf
