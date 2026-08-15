@@ -221,40 +221,114 @@ class ExploreController extends Controller
         return view('pages.category')->with(compact('title', 'description', 'keywords', 'category', 'products'));
     }
 
-    public function show($shop, $section, $category, $subcategories, $brand, $listing)
-    {
-        $listing = Listing::where('slug', $listing)
+    public function show(
+        $shop,
+        $section,
+        $category,
+        $subcategories,
+        $brand,
+        $listing
+    ) {
+        // =========================================================
+        // FIND LISTING
+        // =========================================================
+
+        $listingModel = Listing::query()
+            ->where('slug', $listing)
+
+            // SHOP
             ->whereHas('shop', function ($query) use ($shop) {
                 $query->where('slug', $shop);
             })
+
+            // SECTION
             ->whereHas('section', function ($query) use ($section) {
                 $query->where('slug', $section);
             })
+
+            // CATEGORY
             ->whereHas('category', function ($query) use ($category) {
                 $query->where('slug', $category);
             })
-            ->whereHas('subcategories', function ($query) use ($subcategories) {
+
+            // SUBCATEGORY
+            ->whereHas('subcategory', function ($query) use ($subcategories) {
                 $query->where('slug', $subcategories);
             })
-            ->whereHas('brand', function ($query) use ($brand) {
-                $query->where('slug', $brand);
-            })
+
+            // LOAD RELATIONSHIPS
             ->with([
                 'shop',
                 'section',
                 'category',
-                'subcategories',
+                'subcategory',
                 'brand',
             ])
+
             ->firstOrFail();
+
+        // =========================================================
+        // CHECK BRAND
+        // =========================================================
+
+        /*
+    |--------------------------------------------------------------------------
+    | Existing database brand
+    |--------------------------------------------------------------------------
+    */
+
+        if ($listingModel->brand_id) {
+
+            if (
+                ! $listingModel->brand ||
+                $listingModel->brand->slug !== $brand
+            ) {
+                abort(404);
+            }
+
+            /*
+    |--------------------------------------------------------------------------
+    | Local brand
+    |--------------------------------------------------------------------------
+    */
+        } elseif (filled($listingModel->local_brand_name)) {
+
+            $localBrandSlug = \Illuminate\Support\Str::slug(
+                $listingModel->local_brand_name
+            );
+
+            if ($localBrandSlug !== $brand) {
+                abort(404);
+            }
+
+            /*
+    |--------------------------------------------------------------------------
+    | Unbranded
+    |--------------------------------------------------------------------------
+    */
+        } else {
+
+            if ($brand !== 'unbranded') {
+                abort(404);
+            }
+        }
+
+        // =========================================================
+        // WISHLIST
+        // =========================================================
 
         $inWishlist = false;
 
         if (auth()->check()) {
+
             $inWishlist = Wishlist::where('user_id', auth()->id())
-                ->where('listing_id', $listing->id)
+                ->where('listing_id', $listingModel->id)
                 ->exists();
         }
+
+        // =========================================================
+        // CART
+        // =========================================================
 
         $inCart = false;
 
@@ -264,19 +338,39 @@ class ExploreController extends Controller
 
                 $query->where('user_id', auth()->id());
             })
-                ->where('listing_id', $listing->id)
+                ->where('listing_id', $listingModel->id)
                 ->exists();
         }
 
-        $title = $listing->title;
-        $description = $listing->description;
-        $keywords = $listing->keywords;
+        // =========================================================
+        // SEO
+        // =========================================================
+
+        $title = $listingModel->title;
+
+        $description = $listingModel->description;
+
+        $keywords = $listingModel->keywords;
 
         SEOMeta::setTitle($title);
         SEOMeta::setDescription($description);
         SEOMeta::setKeywords($keywords);
 
-        return view('listings.show', compact('listing', 'title', 'description', 'keywords', 'inWishlist', 'inCart'));
+        // =========================================================
+        // VIEW
+        // =========================================================
+
+        return view(
+            'listings.show',
+            [
+                'listing' => $listingModel,
+                'title' => $title,
+                'description' => $description,
+                'keywords' => $keywords,
+                'inWishlist' => $inWishlist,
+                'inCart' => $inCart,
+            ]
+        );
     }
 
     public function uae(Request $request)

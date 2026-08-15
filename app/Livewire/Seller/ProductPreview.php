@@ -12,13 +12,23 @@ class ProductPreview extends Component
 {
     public ?Listing $listing = null;
 
+    // =========================================================
+    // BASIC
+    // =========================================================
+
     public string $title = '';
+
+    public string $title_ar = '';
 
     public string $description = '';
 
     public $price = 0;
 
     public $quantity = 1;
+
+    // =========================================================
+    // PRODUCT
+    // =========================================================
 
     public string $condition = 'new';
 
@@ -28,308 +38,333 @@ class ProductPreview extends Component
 
     public array $keywords = [];
 
-    /*
-    |--------------------------------------------------------------------------
-    | IMPORTANT
-    |--------------------------------------------------------------------------
-    |
-    | This can contain:
-    |
-    | 1. Temporary Livewire URL:
-    |    http://localhost/livewire/preview-file/...
-    |
-    | 2. Existing filename:
-    |    123456789.jpg
-    |
-    */
+    // =========================================================
+    // BRAND
+    // =========================================================
+
+    public $brand_id = null;
+
+    public string $local_brand_name = '';
+
+    public string $local_brand_name_ar = '';
+
+    // =========================================================
+    // CATEGORY
+    // =========================================================
+
+    public $section_id = null;
+
+    public $category_id = null;
+
+    public $subcategory_id = null;
+
+    // =========================================================
+    // IMAGE
+    // =========================================================
+
     public ?string $image = null;
 
+    // =========================================================
+    // MOUNT
+    // =========================================================
 
-    /*
-    |--------------------------------------------------------------------------
-    | Mount
-    |--------------------------------------------------------------------------
-    */
     public function mount(?Listing $listing = null): void
     {
-        if (!$listing || !$listing->exists) {
+        if (! $listing || ! $listing->exists) {
             return;
         }
 
         $this->listing = $listing;
 
-        $this->title = $listing->title ?? '';
+        $this->title =
+            $listing->title ?? '';
 
-        $this->description = $listing->description ?? '';
+        $this->title_ar =
+            $listing->title_ar ?? '';
 
-        $this->price = $listing->price ?? 0;
+        $this->description =
+            $listing->description ?? '';
 
-        $this->quantity = $listing->quantity ?? 1;
+        $this->price =
+            $listing->price ?? 0;
 
-        $this->condition = $listing->condition ?? 'new';
+        $this->quantity =
+            $listing->quantity ?? 1;
 
-        $this->price_condition = $listing->price_condition ?? 'fixed';
+        $this->condition =
+            $listing->condition ?? 'new';
 
-        $this->features = is_array($listing->features)
+        $this->price_condition =
+            $listing->price_condition ?? 'fixed';
+
+        $this->features =
+            is_array($listing->features)
             ? $listing->features
             : [];
 
-        $this->keywords = is_array($listing->keywords)
+        $this->keywords =
+            is_array($listing->keywords)
             ? $listing->keywords
             : [];
 
-        /*
-        |--------------------------------------------------------------------------
-        | Existing listing image
-        |--------------------------------------------------------------------------
-        |
-        | Database contains:
-        |
-        | products.jpg
-        |
-        | File exists at:
-        |
-        | storage/app/public/products/products.jpg
-        |
-        */
-        $this->image = $listing->image;
+        $this->brand_id =
+            $listing->brand_id;
+
+        $this->local_brand_name =
+            $listing->local_brand_name ?? '';
+
+        $this->local_brand_name_ar =
+            $listing->local_brand_name_ar ?? '';
+
+        $this->section_id =
+            $listing->section_id;
+
+        $this->category_id =
+            $listing->category_id;
+
+        $this->subcategory_id =
+            $listing->subcategory_id;
+
+        $this->image =
+            $listing->image;
     }
 
+    // =========================================================
+    // IMAGE URL
+    // =========================================================
 
-    /*
-    |--------------------------------------------------------------------------
-    | Image URL
-    |--------------------------------------------------------------------------
-    */
     #[Computed]
     public function imageUrl(): ?string
     {
-        /*
-        |--------------------------------------------------------------------------
-        | No image
-        |--------------------------------------------------------------------------
-        */
-        if (!$this->image) {
-            return $this->getListingImageUrl();
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Temporary Livewire image
-        |--------------------------------------------------------------------------
-        |
-        | CreateListing sends:
-        |
-        | $this->image->temporaryUrl()
-        |
-        | Therefore this is already a browser-ready URL.
-        |--------------------------------------------------------------------------
-        */
-        if (
-            is_string($this->image) &&
-            (
-                str_starts_with($this->image, 'http://') ||
-                str_starts_with($this->image, 'https://') ||
-                str_starts_with($this->image, '/livewire/')
-            )
-        ) {
-            return $this->image;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Existing stored image
-        |--------------------------------------------------------------------------
-        |
-        | Database value:
-        |
-        | abc123.jpg
-        |
-        | Actual file:
-        |
-        | storage/app/public/products/abc123.jpg
-        |--------------------------------------------------------------------------
-        */
-        if (is_string($this->image)) {
-
-            $filename = ltrim($this->image, '/');
+        if ($this->image) {
 
             /*
-            | Prevent:
-            | products/products/image.jpg
+            |--------------------------------------------------------------------------
+            | Temporary URL
+            |--------------------------------------------------------------------------
             */
-            if (str_starts_with($filename, 'products/')) {
-                $path = $filename;
-            } else {
-                $path = 'products/' . $filename;
+
+            if (
+                str_starts_with(
+                    $this->image,
+                    'http://'
+                ) ||
+                str_starts_with(
+                    $this->image,
+                    'https://'
+                ) ||
+                str_starts_with(
+                    $this->image,
+                    '/livewire/'
+                )
+            ) {
+                return $this->image;
             }
 
             /*
             |--------------------------------------------------------------------------
-            | Verify the file actually exists
+            | Stored image
             |--------------------------------------------------------------------------
             */
-            $fullPath = storage_path('app/public/' . $path);
 
-            if (file_exists($fullPath)) {
-                return Storage::url($path);
+            $filename =
+                ltrim($this->image, '/');
+
+            $path =
+                str_starts_with(
+                    $filename,
+                    'products/'
+                )
+                ? $filename
+                : 'products/' . $filename;
+
+            if (
+                Storage::disk('public')
+                ->exists($path)
+            ) {
+                return Storage::disk('public')
+                    ->url($path);
             }
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Fallback to listing image
-        |--------------------------------------------------------------------------
-        */
         return $this->getListingImageUrl();
     }
 
+    // =========================================================
+    // LISTING IMAGE
+    // =========================================================
 
-    /*
-    |--------------------------------------------------------------------------
-    | Existing Listing Image
-    |--------------------------------------------------------------------------
-    */
     private function getListingImageUrl(): ?string
     {
-        if (!$this->listing?->image) {
+        if (! $this->listing?->image) {
             return null;
         }
 
-        $filename = ltrim($this->listing->image, '/');
+        $filename =
+            ltrim(
+                $this->listing->image,
+                '/'
+            );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Prevent duplicate products/ directory
-        |--------------------------------------------------------------------------
-        */
-        if (str_starts_with($filename, 'products/')) {
-            $path = $filename;
-        } else {
-            $path = 'products/' . $filename;
-        }
+        $path =
+            str_starts_with(
+                $filename,
+                'products/'
+            )
+            ? $filename
+            : 'products/' . $filename;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Check physical file
-        |--------------------------------------------------------------------------
-        */
-        $fullPath = storage_path('app/public/' . $path);
-
-        if (!file_exists($fullPath)) {
-            return null;
-        }
-
-        return Storage::url($path);
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Preview Updates
-    |--------------------------------------------------------------------------
-    */
-    #[On('previewUpdated')]
-    public function previewUpdated(array $data): void
-    {
-        /*
-        |--------------------------------------------------------------------------
-        | Text
-        |--------------------------------------------------------------------------
-        */
-        if (array_key_exists('title', $data)) {
-            $this->title = (string) $data['title'];
-        }
-
-        if (array_key_exists('description', $data)) {
-            $this->description = (string) $data['description'];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Price
-        |--------------------------------------------------------------------------
-        */
-        if (array_key_exists('price', $data)) {
-            $this->price = $data['price'];
-        }
-
-        if (array_key_exists('quantity', $data)) {
-            $this->quantity = $data['quantity'];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Product settings
-        |--------------------------------------------------------------------------
-        */
-        if (array_key_exists('condition', $data)) {
-            $this->condition = (string) $data['condition'];
-        }
-
-        if (array_key_exists('price_condition', $data)) {
-            $this->price_condition = (string) $data['price_condition'];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Features
-        |--------------------------------------------------------------------------
-        */
-        if (array_key_exists('features', $data)) {
-            $this->features = is_array($data['features'])
-                ? $data['features']
-                : [];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Keywords
-        |--------------------------------------------------------------------------
-        */
-        if (array_key_exists('keywords', $data)) {
-            $this->keywords = is_array($data['keywords'])
-                ? $data['keywords']
-                : [];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Image
-        |--------------------------------------------------------------------------
-        |
-        | CreateListing sends the temporaryUrl().
-        |
-        | Example:
-        |
-        | https://example.com/livewire/preview-file/...
-        |
-        |--------------------------------------------------------------------------
-        */
         if (
-            array_key_exists('image', $data) &&
-            !empty($data['image'])
+            ! Storage::disk('public')
+                ->exists($path)
         ) {
-            $this->image = (string) $data['image'];
+            return null;
+        }
+
+        return Storage::disk('public')
+            ->url($path);
+    }
+
+    // =========================================================
+    // PREVIEW EVENT
+    // =========================================================
+
+    #[On('previewUpdated')]
+    public function previewUpdated(
+        $title = null,
+        $title_ar = null,
+        $description = null,
+        $price = null,
+        $quantity = null,
+        $condition = null,
+        $price_condition = null,
+        $features = null,
+        $keywords = null,
+        $image = null,
+        $local_brand_name = null,
+        $local_brand_name_ar = null,
+        $brand_id = null,
+        $section_id = null,
+        $category_id = null,
+        $subcategory_id = null
+    ): void {
+
+        // -----------------------------------------------------
+        // Basic
+        // -----------------------------------------------------
+
+        if ($title !== null) {
+            $this->title = (string) $title;
+        }
+
+        if ($title_ar !== null) {
+            $this->title_ar = (string) $title_ar;
+        }
+
+        if ($description !== null) {
+            $this->description =
+                (string) $description;
+        }
+
+        if ($price !== null) {
+            $this->price = $price;
+        }
+
+        if ($quantity !== null) {
+            $this->quantity = $quantity;
+        }
+
+        // -----------------------------------------------------
+        // Product
+        // -----------------------------------------------------
+
+        if ($condition !== null) {
+            $this->condition =
+                (string) $condition;
+        }
+
+        if ($price_condition !== null) {
+            $this->price_condition =
+                (string) $price_condition;
+        }
+
+        if ($features !== null) {
+            $this->features =
+                is_array($features)
+                ? $features
+                : [];
+        }
+
+        if ($keywords !== null) {
+            $this->keywords =
+                is_array($keywords)
+                ? $keywords
+                : [];
+        }
+
+        // -----------------------------------------------------
+        // Image
+        // -----------------------------------------------------
+
+        if (
+            $image !== null &&
+            $image !== ''
+        ) {
+            $this->image =
+                (string) $image;
+        }
+
+        // -----------------------------------------------------
+        // Brand
+        // -----------------------------------------------------
+
+        if ($local_brand_name !== null) {
+
+            $this->local_brand_name =
+                (string) $local_brand_name;
+        }
+
+        if ($local_brand_name_ar !== null) {
+
+            $this->local_brand_name_ar =
+                (string) $local_brand_name_ar;
+        }
+
+        if ($brand_id !== null) {
+            $this->brand_id = $brand_id;
+        } elseif (
+            $this->local_brand_name !== '' ||
+            $this->local_brand_name_ar !== ''
+        ) {
+            $this->brand_id = null;
+        }
+
+        // -----------------------------------------------------
+        // Category
+        // -----------------------------------------------------
+
+        if ($section_id !== null) {
+            $this->section_id = $section_id;
+        }
+
+        if ($category_id !== null) {
+            $this->category_id = $category_id;
+        }
+
+        if ($subcategory_id !== null) {
+            $this->subcategory_id =
+                $subcategory_id;
         }
     }
 
+    // =========================================================
+    // RENDER
+    // =========================================================
 
-    /*
-    |--------------------------------------------------------------------------
-    | Render
-    |--------------------------------------------------------------------------
-    */
     public function render()
     {
-        return view('livewire.seller.product-preview');
+        return view(
+            'livewire.seller.product-preview'
+        );
     }
 }

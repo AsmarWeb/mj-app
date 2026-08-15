@@ -10,6 +10,7 @@ use App\Models\Subcategory;
 use App\Notifications\ListingCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -17,59 +18,101 @@ class CreateListing extends Component
 {
     use WithFileUploads;
 
-    public $title;
+    // =========================================================
+    // BASIC
+    // =========================================================
 
-    public $title_ar;
-
-    public $description;
-
+    public $title = '';
+    public $title_ar = '';
+    public $description = '';
     public $price;
-
     public $quantity = 1;
 
-    public $brand_id;
+    // =========================================================
+    // CATEGORY
+    // =========================================================
 
-    public $section_id;
+    public $section_id = null;
+    public $category_id = null;
+    public $subcategory_id = null;
 
-    public $category_id;
+    // =========================================================
+    // BRAND
+    // =========================================================
 
-    public $subcategory_id;
+    /*
+     * existing  = database brand
+     * local     = seller's own brand
+     * unbranded = no brand
+     */
+    public $brand_type = 'unbranded';
+
+    /*
+     * IMPORTANT:
+     * This property may ONLY contain:
+     *
+     * integer brand ID
+     * OR
+     * null
+     *
+     * Never "local"
+     * Never "unbranded"
+     */
+    public $brand_id = null;
+
+    public $local_brand_name = '';
+    public $local_brand_name_ar = '';
+
+    // =========================================================
+    // PRODUCT
+    // =========================================================
 
     public $condition = 'new';
-
     public $price_condition = 'fixed';
 
     public $keywords = [];
-
     public $keyword = '';
 
-    public $shipping_method;
-
-    public $delivery_days;
-
-    public $status = 'draft';
-
     public $features = [];
-
     public $feature = '';
 
+    // =========================================================
+    // SHIPPING
+    // =========================================================
+
+    public $shipping_method = '';
+    public $delivery_days;
+
+    // =========================================================
+    // MEDIA
+    // =========================================================
+
     public $image;
-
     public $video;
-
     public $images = [];
 
+    // =========================================================
+    // SUBSCRIPTION
+    // =========================================================
+
     public $subscription;
-
     public $plan;
-
     public $usedListings = 0;
-
     public $canCreate = true;
 
-    public function mount()
+    // =========================================================
+    // MOUNT
+    // =========================================================
+
+    public function mount(): void
     {
-        $shop = auth()->user()->shop;
+        $user = Auth::user();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        $shop = $user->shop;
 
         if (! $shop) {
             abort(403, 'Please create a shop first.');
@@ -81,220 +124,503 @@ class CreateListing extends Component
             ->latest()
             ->first();
 
-        if (! $this->subscription) {
+        if (! $this->subscription || ! $this->subscription->plan) {
             $this->canCreate = false;
-
             return;
         }
 
         $this->plan = $this->subscription->plan;
 
-        // Count published listings
-        $this->usedListings = $shop->listings()
-            ->where('status', 'published')
-            ->where(function ($query) {
-                $query->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
-            })
-            ->count();
-
-        // Check plan limit
-        $this->canCreate = $this->usedListings < $this->plan->listing_limit;
+        $this->refreshListingLimit();
     }
 
-    protected function rules()
+    // =========================================================
+    // VALIDATION
+    // =========================================================
+
+    protected function rules(): array
     {
         return [
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
 
-            'title' => 'required|max:255',
+            'title_ar' => [
+                'required',
+                'string',
+                'max:255',
+            ],
 
-            'title_ar' => 'required|max:255',
+            'description' => [
+                'required',
+                'string',
+            ],
 
-            'description' => 'required',
+            'price' => [
+                'required',
+                'numeric',
+                'min:1',
+            ],
 
-            'price' => 'required|numeric|min:1',
+            'quantity' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
 
-            'quantity' => 'required|integer|min:1',
+            'section_id' => [
+                'required',
+                'integer',
+                'exists:sections,id',
+            ],
 
-            'brand_id' => 'required',
+            'category_id' => [
+                'required',
+                'integer',
+                'exists:categories,id',
+            ],
 
-            'section_id' => 'required',
+            'subcategory_id' => [
+                'required',
+                'integer',
+                'exists:subcategories,id',
+            ],
 
-            'category_id' => 'required',
+            'brand_type' => [
+                'required',
+                'in:existing,local,unbranded',
+            ],
 
-            'subcategory_id' => 'required',
+            /*
+             * NEVER receives "local" or "unbranded".
+             */
+            'brand_id' => [
+                'nullable',
+                'integer',
+                'exists:brands,id',
+            ],
 
-            'condition' => 'required',
+            'local_brand_name' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
 
-            'price_condition' => 'required',
+            'local_brand_name_ar' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
 
-            'shipping_method' => 'required|string|max:255',
+            'condition' => [
+                'required',
+                'string',
+                'max:50',
+            ],
 
-            'delivery_days' => 'required|integer|min:1',
+            'price_condition' => [
+                'required',
+                'string',
+                'max:50',
+            ],
 
-            'image' => 'required|image|max:2048',
+            'shipping_method' => [
+                'required',
+                'string',
+                'max:255',
+            ],
 
-            'video' => ['nullable', 'file', 'mimes:mp4,mov,webm', 'max:51200'],
+            'delivery_days' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
 
-            'images.*' => 'image|max:2048',
+            'image' => [
+                'required',
+                'image',
+                'max:2048',
+            ],
 
+            'video' => [
+                'nullable',
+                'file',
+                'mimes:mp4,mov,webm',
+                'max:51200',
+            ],
+
+            'images.*' => [
+                'image',
+                'max:2048',
+            ],
+
+            'keywords.*' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'features.*' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
         ];
     }
 
-    public function addFeature()
+    // =========================================================
+    // CATEGORY
+    // =========================================================
+
+    public function selectSection($sectionId): void
     {
-        if ($this->feature) {
+        $this->section_id = (int) $sectionId;
 
-            $this->features[] = $this->feature;
+        $this->category_id = null;
+        $this->subcategory_id = null;
 
-            $this->feature = '';
-        }
+        $this->resetBrandSelection();
     }
 
-    public function removeFeature($index)
+    public function selectCategory($categoryId): void
     {
-        unset($this->features[$index]);
+        $this->category_id = (int) $categoryId;
+
+        $this->subcategory_id = null;
+
+        $this->resetBrandSelection();
+    }
+
+    public function selectSubcategory($subcategoryId): void
+    {
+        $this->subcategory_id = (int) $subcategoryId;
+
+        $this->resetBrandSelection();
+    }
+
+    // =========================================================
+    // BRAND
+    // =========================================================
+
+    public function selectBrand($brandId): void
+    {
+        $brandId = (int) $brandId;
+
+        if ($brandId <= 0) {
+            $this->addError(
+                'brand_id',
+                'Invalid brand selected.'
+            );
+
+            return;
+        }
+
+        $brandExists = Brand::where('id', $brandId)
+            ->where('subcategory_id', $this->subcategory_id)
+            ->exists();
+
+        if (! $brandExists) {
+            $this->addError(
+                'brand_id',
+                'The selected brand is invalid for this subcategory.'
+            );
+
+            return;
+        }
+
+        $this->brand_type = 'existing';
+
+        /*
+         * ONLY INTEGER HERE
+         */
+        $this->brand_id = $brandId;
+
+        $this->clearLocalBrand();
+
+        $this->resetValidation([
+            'brand_id',
+            'local_brand_name',
+            'local_brand_name_ar',
+        ]);
+    }
+
+    public function useLocalBrand(): void
+    {
+        $this->brand_type = 'local';
+
+        /*
+         * IMPORTANT:
+         * Local brand has no database brand ID.
+         */
+        $this->brand_id = null;
+
+        $this->resetValidation([
+            'brand_id',
+            'local_brand_name',
+            'local_brand_name_ar',
+        ]);
+    }
+
+    public function selectUnbranded(): void
+    {
+        $this->brand_type = 'unbranded';
+
+        /*
+         * Unbranded also has no database brand ID.
+         */
+        $this->brand_id = null;
+
+        $this->clearLocalBrand();
+
+        $this->resetValidation([
+            'brand_id',
+            'local_brand_name',
+            'local_brand_name_ar',
+        ]);
+    }
+
+    private function resetBrandSelection(): void
+    {
+        $this->brand_type = 'unbranded';
+        $this->brand_id = null;
+
+        $this->clearLocalBrand();
+    }
+
+    private function clearLocalBrand(): void
+    {
+        $this->local_brand_name = '';
+        $this->local_brand_name_ar = '';
+    }
+
+    // =========================================================
+    // FEATURES
+    // =========================================================
+
+    public function addFeature(): void
+    {
+        $value = trim((string) $this->feature);
+
+        if ($value === '') {
+            return;
+        }
+
+        if (! in_array($value, $this->features, true)) {
+            $this->features[] = $value;
+        }
+
+        $this->feature = '';
+    }
+
+    public function removeFeature($index): void
+    {
+        if (isset($this->features[$index])) {
+            unset($this->features[$index]);
+        }
 
         $this->features = array_values($this->features);
     }
 
-    public function addKeyword()
+    // =========================================================
+    // KEYWORDS
+    // =========================================================
+
+    public function addKeyword(): void
     {
-        if ($this->keyword) {
+        $value = trim((string) $this->keyword);
 
-            $this->keywords[] = $this->keyword;
-
-            $this->keyword = '';
-
+        if ($value === '') {
+            return;
         }
+
+        if (! in_array($value, $this->keywords, true)) {
+            $this->keywords[] = $value;
+        }
+
+        $this->keyword = '';
     }
 
-    public function removeKeyword($index)
+    public function removeKeyword($index): void
     {
-        unset($this->keywords[$index]);
+        if (isset($this->keywords[$index])) {
+            unset($this->keywords[$index]);
+        }
 
         $this->keywords = array_values($this->keywords);
     }
 
-    private function checkStorageLimit($user)
+    // =========================================================
+    // LISTING LIMIT
+    // =========================================================
+
+    private function refreshListingLimit(): void
     {
-        $subscription = $user->shop
-            ->subscriptions()
+        $shop = Auth::user()?->shop;
+
+        if (! $shop || ! $this->plan) {
+            $this->usedListings = 0;
+            $this->canCreate = false;
+
+            return;
+        }
+
+        $this->usedListings = $shop->listings()
+            ->where('status', 'published')
+            ->where(function ($query) {
+                $query
+                    ->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })
+            ->count();
+
+        $this->canCreate =
+            $this->usedListings < (int) $this->plan->listing_limit;
+    }
+
+    // =========================================================
+    // STORAGE
+    // =========================================================
+
+    private function checkStorageLimit($user): bool
+    {
+        $shop = $user->shop;
+
+        if (! $shop) {
+            session()->flash(
+                'error',
+                'Please create a shop first.'
+            );
+
+            return false;
+        }
+
+        $subscription = $shop->subscriptions()
             ->where('status', 'active')
             ->with('plan')
             ->latest()
             ->first();
 
-        if (! $subscription) {
+        if (! $subscription || ! $subscription->plan) {
+            session()->flash(
+                'error',
+                'Please subscribe first.'
+            );
+
             return false;
         }
 
         $plan = $subscription->plan;
 
-        // Current used storage in MB
         $usedStorage = 0;
 
-        $files = Listing::where('user_id', $user->id)
-            ->get();
+        $listings = Listing::where('user_id', $user->id)->get();
 
-        foreach ($files as $listing) {
+        foreach ($listings as $listing) {
 
-            // Main image
             if ($listing->image) {
-
                 $path = storage_path(
-                    'app/public/products/'.$listing->image
+                    'app/public/products/' .
+                        ltrim($listing->image, '/')
                 );
 
-                if (file_exists($path)) {
+                if (is_file($path)) {
                     $usedStorage += filesize($path);
                 }
-
             }
 
-            // Gallery images
-            if ($listing->images) {
-
+            if (is_array($listing->images)) {
                 foreach ($listing->images as $image) {
 
-                    $path = storage_path(
-                        'app/public/products/'.$image
-                    );
-
-                    if (file_exists($path)) {
-                        $usedStorage += filesize($path);
+                    if (! is_string($image) || $image === '') {
+                        continue;
                     }
 
+                    $path = storage_path(
+                        'app/public/products/' .
+                            ltrim($image, '/')
+                    );
+
+                    if (is_file($path)) {
+                        $usedStorage += filesize($path);
+                    }
                 }
-
             }
 
-            if ($this->video) {
-                $newStorage += $this->video->getSize();
-            }
+            if ($listing->video) {
+                $path = storage_path(
+                    'app/public/products/videos/' .
+                        ltrim($listing->video, '/')
+                );
 
+                if (is_file($path)) {
+                    $usedStorage += filesize($path);
+                }
+            }
         }
 
-        // Convert bytes to MB
-        $usedStorage = $usedStorage / 1024 / 1024;
-
-        // New upload size
         $newStorage = 0;
 
         if ($this->image) {
-
             $newStorage += $this->image->getSize();
+        }
 
+        if ($this->video) {
+            $newStorage += $this->video->getSize();
         }
 
         foreach ($this->images as $image) {
-
-            $newStorage += $image->getSize();
-
+            if ($image) {
+                $newStorage += $image->getSize();
+            }
         }
 
-        $newStorage = $newStorage / 1024 / 1024;
+        $usedStorageMb = $usedStorage / 1024 / 1024;
+        $newStorageMb = $newStorage / 1024 / 1024;
 
-        if (($usedStorage + $newStorage) > $plan->storage_limit) {
-
+        if (
+            ($usedStorageMb + $newStorageMb)
+            > (float) $plan->storage_limit
+        ) {
             session()->flash(
                 'error',
-                'Storage limit reached. You are using '
-                .round($usedStorage, 2)
-                .' MB out of '
-                .$plan->storage_limit
-                .' MB.'
+                'Storage limit reached. You are using ' .
+                    round($usedStorageMb, 2) .
+                    ' MB out of ' .
+                    $plan->storage_limit .
+                    ' MB.'
             );
 
             return false;
-
         }
 
         return true;
     }
 
+    // =========================================================
+    // SAVE
+    // =========================================================
+
     public function save($status = 'published')
     {
-        // Double-check on the server
-        if (! $this->canCreate) {
-            session()->flash('error', 'You have reached your plan limit. Please upgrade your subscription.');
-
-            return;
+        if (! in_array($status, ['published', 'draft'], true)) {
+            abort(400, 'Invalid listing status.');
         }
-
-        $this->validate();
 
         $user = Auth::user();
 
-        if (! $this->checkStorageLimit($user)) {
-            return;
+        if (! $user) {
+            abort(403);
         }
 
         $shop = $user->shop;
 
         if (! $shop) {
-
-            session()->flash('error', 'Please create a shop first.');
+            session()->flash(
+                'error',
+                'Please create a shop first.'
+            );
 
             return;
         }
@@ -305,161 +631,433 @@ class CreateListing extends Component
             ->latest()
             ->first();
 
-        if (! $subscription) {
-
-            session()->flash('error', 'Please subscribe first.');
+        if (! $subscription || ! $subscription->plan) {
+            session()->flash(
+                'error',
+                'Please subscribe first.'
+            );
 
             return;
         }
 
         $plan = $subscription->plan;
 
-        if ($shop->listings()->count() >= $plan->listing_limit) {
+        if ($status === 'published') {
+            $this->refreshListingLimit();
 
-            session()->flash('error', 'Listing limit reached.');
+            if (! $this->canCreate) {
+                session()->flash(
+                    'error',
+                    'You have reached your plan limit. Please upgrade your subscription.'
+                );
 
+                return;
+            }
+        }
+
+        /*
+         * IMPORTANT:
+         * Normalize brand_id BEFORE validation.
+         *
+         * This prevents accidental values such as:
+         * "local"
+         * "unbranded"
+         */
+        if ($this->brand_type !== 'existing') {
+            $this->brand_id = null;
+        } else {
+            if (
+                $this->brand_id === null ||
+                $this->brand_id === ''
+            ) {
+                $this->brand_id = null;
+            } else {
+                $this->brand_id = (int) $this->brand_id;
+            }
+        }
+
+        $this->validate();
+
+        // -----------------------------------------------------
+        // BRAND VALIDATION
+        // -----------------------------------------------------
+
+        $localBrandName = null;
+        $localBrandNameAr = null;
+
+        if ($this->brand_type === 'existing') {
+
+            if (! $this->brand_id) {
+                $this->addError(
+                    'brand_id',
+                    'Please select a brand.'
+                );
+
+                return;
+            }
+
+            $brandExists = Brand::where('id', $this->brand_id)
+                ->where('subcategory_id', $this->subcategory_id)
+                ->exists();
+
+            if (! $brandExists) {
+                $this->addError(
+                    'brand_id',
+                    'The selected brand is invalid for this subcategory.'
+                );
+
+                return;
+            }
+        } elseif ($this->brand_type === 'local') {
+
+            if (! filled($this->local_brand_name)) {
+                $this->addError(
+                    'local_brand_name',
+                    'English local brand name is required.'
+                );
+
+                return;
+            }
+
+            if (! filled($this->local_brand_name_ar)) {
+                $this->addError(
+                    'local_brand_name_ar',
+                    'Arabic local brand name is required.'
+                );
+
+                return;
+            }
+
+            $this->brand_id = null;
+
+            $localBrandName = trim($this->local_brand_name);
+            $localBrandNameAr = trim($this->local_brand_name_ar);
+        } else {
+
+            $this->brand_id = null;
+        }
+
+        // -----------------------------------------------------
+        // STORAGE
+        // -----------------------------------------------------
+
+        if (! $this->checkStorageLimit($user)) {
             return;
         }
 
-        $listing = new Listing;
-
-        $listing->sku = now()->format('YmdHis');
-
-        $listing->title = $this->title;
-
-        $listing->title_ar = $this->title_ar;
-
-        $listing->description = $this->description;
-
-        $listing->price = $this->price;
-
-        $listing->quantity = $this->quantity;
-
-        $listing->brand_id = $this->brand_id;
-
-        $listing->section_id = $this->section_id;
-
-        $listing->category_id = $this->category_id;
-
-        $listing->subcategory_id = $this->subcategory_id;
-
-        $listing->condition = $this->condition;
-
-        $listing->price_condition = $this->price_condition;
-
-        $listing->keywords = $this->keywords;
-
-        $listing->features = $this->features;
-
-        $listing->shop_id = $shop->id;
-
-        $listing->user_id = $user->id;
-
-        $listing->active = true;
-
-        $listing->keywords = $this->keywords;
-
-        $listing->shipping_method = $this->shipping_method;
-
-        $listing->delivery_days = $this->delivery_days;
-
-        $listing->status = $status;
+        // -----------------------------------------------------
+        // FINAL LISTING LIMIT
+        // -----------------------------------------------------
 
         if ($status === 'published') {
+
+            $currentListings = $shop->listings()
+                ->where('status', 'published')
+                ->where(function ($query) {
+                    $query
+                        ->whereNull('expires_at')
+                        ->orWhere('expires_at', '>', now());
+                })
+                ->count();
+
+            if ($currentListings >= (int) $plan->listing_limit) {
+                session()->flash(
+                    'error',
+                    'Listing limit reached.'
+                );
+
+                return;
+            }
+        }
+
+        // =====================================================
+        // CREATE
+        // =====================================================
+
+        $listing = new Listing();
+
+        $listing->sku =
+            now()->format('YmdHis') .
+            '-' .
+            uniqid();
+
+        $listing->title = trim($this->title);
+        $listing->title_ar = trim($this->title_ar);
+        $listing->description = trim($this->description);
+
+        $listing->price = $this->price;
+        $listing->quantity = $this->quantity;
+
+        $listing->section_id = (int) $this->section_id;
+        $listing->category_id = (int) $this->category_id;
+        $listing->subcategory_id = (int) $this->subcategory_id;
+
+        // =====================================================
+        // BRAND
+        // =====================================================
+
+        /*
+         * This is now ALWAYS:
+         *
+         * integer
+         * OR null
+         */
+        $listing->brand_id = $this->brand_id
+            ? (int) $this->brand_id
+            : null;
+
+        $listing->local_brand_name = $localBrandName;
+        $listing->local_brand_name_ar = $localBrandNameAr;
+
+        // =====================================================
+        // PRODUCT
+        // =====================================================
+
+        $listing->condition = $this->condition;
+        $listing->price_condition = $this->price_condition;
+
+        $listing->keywords = array_values(
+            array_filter(
+                $this->keywords,
+                fn($value) =>
+                is_string($value) && trim($value) !== ''
+            )
+        );
+
+        $listing->features = array_values(
+            array_filter(
+                $this->features,
+                fn($value) =>
+                is_string($value) && trim($value) !== ''
+            )
+        );
+
+        // =====================================================
+        // SHOP
+        // =====================================================
+
+        $listing->shop_id = $shop->id;
+        $listing->user_id = $user->id;
+        $listing->active = true;
+
+        // =====================================================
+        // SHIPPING
+        // =====================================================
+
+        $listing->shipping_method = $this->shipping_method;
+        $listing->delivery_days = $this->delivery_days;
+        $listing->status = $status;
+
+        // =====================================================
+        // PUBLISHED
+        // =====================================================
+
+        if ($status === 'published') {
+
             $listing->published_at = now();
 
             $listing->expires_at = $plan->listing_duration
-            ? now()->addDays($plan->listing_duration)
-            : null;
+                ? now()->addDays(
+                    (int) $plan->listing_duration
+                )
+                : null;
+        } else {
+
+            $listing->published_at = null;
+            $listing->expires_at = null;
         }
 
-        $listing->expires_at = $plan->listing_duration
-            ? now()->addDays($plan->listing_duration)
-            : null;
+        // =====================================================
+        // MAIN IMAGE
+        // =====================================================
 
-        // Upload main image
         if ($this->image) {
-            $imageName = Carbon::now()->timestamp.'.'.$this->image->extension();
-            $this->image->storeAs('products', $imageName, 'public');
+
+            $imageName =
+                Carbon::now()->format('YmdHis') .
+                '_main_' .
+                uniqid() .
+                '.' .
+                $this->image->extension();
+
+            $this->image->storeAs(
+                'products',
+                $imageName,
+                'public'
+            );
+
             $listing->image = $imageName;
         }
 
-        // Upload product video
+        // =====================================================
+        // VIDEO
+        // =====================================================
 
         if ($this->video) {
 
-            $videoName = Carbon::now()->timestamp
-            .'_video.'
-            .$this->video->extension();
+            $videoName =
+                Carbon::now()->format('YmdHis') .
+                '_video_' .
+                uniqid() .
+                '.' .
+                $this->video->extension();
 
             $this->video->storeAs(
                 'products/videos',
                 $videoName,
                 'public'
-
             );
 
             $listing->video = $videoName;
         }
 
-        // Upload gallery images
+        // =====================================================
+        // GALLERY
+        // =====================================================
+
         $gallery = [];
-        if ($this->images) {
-            foreach ($this->images as $key => $image) {
-                $imgName = Carbon::now()->timestamp.'_'.$key.'.'.$image->extension();
-                $image->storeAs('products', $imgName, 'public');
-                $gallery[] = $imgName;
+
+        foreach ($this->images as $key => $image) {
+
+            if (! $image) {
+                continue;
             }
-            $listing->images = $gallery;
+
+            $imageName =
+                Carbon::now()->format('YmdHis') .
+                '_gallery_' .
+                $key .
+                '_' .
+                uniqid() .
+                '.' .
+                $image->extension();
+
+            $image->storeAs(
+                'products',
+                $imageName,
+                'public'
+            );
+
+            $gallery[] = $imageName;
         }
 
-        $listing->save();
+        $listing->images = ! empty($gallery)
+            ? $gallery
+            : null;
+
+        // =====================================================
+        // DATABASE
+        // =====================================================
+
+        DB::transaction(function () use ($listing) {
+            $listing->save();
+        });
+
+        // =====================================================
+        // NOTIFICATION
+        // =====================================================
 
         if ($listing->status === 'published') {
-            $user->notify(new ListingCreatedNotification($listing));
+            $user->notify(
+                new ListingCreatedNotification($listing)
+            );
         }
 
-        session()->flash('success', 'Product published successfully.');
+        // =====================================================
+        // SUCCESS
+        // =====================================================
+
+        session()->flash(
+            'success',
+            $status === 'published'
+                ? 'Product published successfully.'
+                : 'Product saved successfully.'
+        );
 
         return redirect()->route('profile');
     }
 
+    // =========================================================
+    // RENDER
+    // =========================================================
+
     public function render()
     {
-        return view('livewire.seller.create-listing', [
+        $locale = app()->getLocale();
 
-            'sections' => Section::all(),
+        return view(
+            'livewire.seller.create-listing',
+            [
+                'sections' => Section::query()
+                    ->orderBy(
+                        $locale === 'ar'
+                            ? 'name_ar'
+                            : 'name'
+                    )
+                    ->get(),
 
-            'categories' => Category::all(),
+                'categories' => Category::query()
+                    ->orderBy(
+                        $locale === 'ar'
+                            ? 'category_name_ar'
+                            : 'category_name'
+                    )
+                    ->get(),
 
-            'subcategories' => Subcategory::all(),
+                'subcategories' => Subcategory::query()
+                    ->orderBy(
+                        $locale === 'ar'
+                            ? 'subcategory_name_ar'
+                            : 'subcategory_name'
+                    )
+                    ->get(),
 
-            'brands' => Brand::all(),
-
-        ]);
+                'brands' => Brand::query()
+                    ->orderBy(
+                        $locale === 'ar'
+                            ? 'brand_name_ar'
+                            : 'brand_name'
+                    )
+                    ->get(),
+            ]
+        );
     }
 
-    public function updated($property)
+    // =========================================================
+    // LIVE PREVIEW
+    // =========================================================
+
+    public function updated($property): void
     {
-        $this->dispatch('previewUpdated', [
+        $imageUrl = null;
 
-            'title' => $this->title,
+        if ($this->image) {
+            try {
+                $imageUrl = $this->image->temporaryUrl();
+            } catch (\Throwable $e) {
+                $imageUrl = null;
+            }
+        }
 
-            'description' => $this->description,
-
-            'price' => $this->price,
-
-            'quantity' => $this->quantity,
-
-            'condition' => $this->condition,
-
-            'price_condition' => $this->price_condition,
-
-            'features' => $this->features,
-
-            'keywords' => $this->keywords,
-
-            'image' => $this->image ? $this->image->temporaryUrl() : null,
-        ]);
+        $this->dispatch(
+            'previewUpdated',
+            title: $this->title,
+            title_ar: $this->title_ar,
+            description: $this->description,
+            price: $this->price,
+            quantity: $this->quantity,
+            condition: $this->condition,
+            price_condition: $this->price_condition,
+            features: $this->features,
+            keywords: $this->keywords,
+            image: $imageUrl,
+            local_brand_name: $this->local_brand_name,
+            local_brand_name_ar: $this->local_brand_name_ar,
+            brand_id: $this->brand_id,
+            brand_type: $this->brand_type,
+            section_id: $this->section_id,
+            category_id: $this->category_id,
+            subcategory_id: $this->subcategory_id
+        );
     }
 }

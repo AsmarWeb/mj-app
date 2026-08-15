@@ -1,33 +1,70 @@
 @php
     /*
     |--------------------------------------------------------------------------
-    | Preview values
+    | PREVIEW VALUES
     |--------------------------------------------------------------------------
     */
-    $previewTitle = $title ?: $listing?->title ?? 'Your Product Title';
 
-    $previewDescription = $description ?: $listing?->description ?? 'Your product description will appear here.';
+    $previewTitle = filled($title) ? $title : $listing?->title ?? 'Your Product Title';
 
-    $previewPrice = $price ?? ($listing?->price ?? 0);
+    $previewDescription = filled($description)
+        ? $description
+        : $listing?->description ?? 'Your product description will appear here.';
 
-    $previewQuantity = $quantity ?? ($listing?->quantity ?? 1);
+    $previewPrice = $price !== null && $price !== '' ? $price : $listing?->price ?? 0;
 
-    $previewCondition = $condition ?: $listing?->condition ?? 'New';
+    $previewQuantity = $quantity !== null && $quantity !== '' ? $quantity : $listing?->quantity ?? 1;
 
-    $previewPriceCondition = $price_condition ?: $listing?->price_condition ?? 'Fixed';
+    $previewCondition = filled($condition) ? $condition : $listing?->condition ?? 'new';
+
+    $previewPriceCondition = filled($price_condition) ? $price_condition : $listing?->price_condition ?? 'fixed';
 
     /*
     |--------------------------------------------------------------------------
-    | Image
+    | BRAND
     |--------------------------------------------------------------------------
-    |
-    | imageUrl() handles:
-    |
-    | - Livewire temporary URL
-    | - Existing products/{filename}
-    |
     */
+
+    $previewLocalBrandName = $listing?->local_brand_name;
+
+    $previewLocalBrandNameAr = $listing?->local_brand_name_ar;
+
+    $previewBrand = $listing?->brand;
+
+    $hasLocalBrand = filled($previewLocalBrandName) || filled($previewLocalBrandNameAr);
+
+    $hasExistingBrand = $previewBrand !== null;
+
+    /*
+    |--------------------------------------------------------------------------
+    | IMAGE
+    |--------------------------------------------------------------------------
+    */
+
     $previewImage = $this->imageUrl;
+
+    /*
+    |--------------------------------------------------------------------------
+    | FEATURES
+    |--------------------------------------------------------------------------
+    */
+
+    $validFeatures = collect($features ?? [])
+        ->filter(fn($feature) => is_string($feature) && trim($feature) !== '')
+        ->map(fn($feature) => trim($feature))
+        ->values();
+
+    /*
+    |--------------------------------------------------------------------------
+    | KEYWORDS
+    |--------------------------------------------------------------------------
+    */
+
+    $validKeywords = collect($keywords ?? [])
+        ->filter(fn($keyword) => is_string($keyword) && trim($keyword) !== '')
+        ->map(fn($keyword) => trim($keyword))
+        ->values();
+
 @endphp
 
 
@@ -38,22 +75,20 @@
            dark:bg-neutral-950 dark:ring-white/10">
 
     {{-- =========================================================
-        PRODUCT MEDIA
+        PRODUCT IMAGE
     ========================================================== --}}
+
     <div class="relative h-[420px] overflow-hidden
                bg-neutral-100 dark:bg-neutral-900">
 
         @if ($previewImage)
-            {{-- Product Image --}}
             <img src="{{ $previewImage }}" alt="{{ $previewTitle }}" class="h-full w-full object-cover" loading="eager">
 
-            {{-- Image gradient --}}
             <div
                 class="pointer-events-none absolute inset-x-0 bottom-0 h-48
                        bg-gradient-to-t from-black/70 via-black/20 to-transparent">
             </div>
         @else
-            {{-- Empty image state --}}
             <div class="flex h-full w-full items-center justify-center">
 
                 <div class="px-6 text-center">
@@ -83,9 +118,8 @@
         @endif
 
 
-        {{-- =====================================================
-            LIVE PREVIEW
-        ====================================================== --}}
+        {{-- LIVE PREVIEW --}}
+
         <div class="absolute left-4 top-4 z-10">
 
             <span
@@ -114,9 +148,8 @@
         </div>
 
 
-        {{-- =====================================================
-            FAVORITE
-        ====================================================== --}}
+        {{-- FAVORITE --}}
+
         <button type="button" disabled aria-label="Favorite product"
             class="absolute right-4 top-4 z-10
                    flex h-11 w-11 items-center justify-center
@@ -128,14 +161,12 @@
         </button>
 
 
-        {{-- =====================================================
-            IMAGE BOTTOM INFORMATION
-        ====================================================== --}}
+        {{-- IMAGE INFORMATION --}}
+
         @if ($previewImage)
             <div class="absolute bottom-4 left-4 right-4 z-10
                        flex items-end justify-between">
 
-                {{-- Condition --}}
                 <span
                     class="inline-flex rounded-full
                            bg-white/95 px-3 py-1.5
@@ -144,8 +175,6 @@
                     {{ $previewCondition }}
                 </span>
 
-
-                {{-- Preview --}}
                 <span
                     class="rounded-full bg-black/60
                            px-3 py-1.5
@@ -163,17 +192,16 @@
     {{-- =========================================================
         PRODUCT INFORMATION
     ========================================================== --}}
+
     <div class="p-5 sm:p-6">
 
 
-        {{-- =====================================================
-            SELLER
-        ====================================================== --}}
+        {{-- SELLER --}}
+
         <div class="mb-5 flex items-center justify-between">
 
             <div class="flex items-center gap-3">
 
-                {{-- Store Avatar --}}
                 <div
                     class="flex h-11 w-11 shrink-0 items-center
                            justify-center rounded-full
@@ -182,8 +210,6 @@
                     🛍️
                 </div>
 
-
-                {{-- Store --}}
                 <div>
 
                     <p class="text-sm font-bold
@@ -195,17 +221,13 @@
                                text-xs text-neutral-400">
                         <span class="text-yellow-500">★</span>
 
-                        <span>
-                            New seller
-                        </span>
+                        <span>New seller</span>
                     </div>
 
                 </div>
 
             </div>
 
-
-            {{-- Shop --}}
             <span
                 class="rounded-full bg-orange-50
                        px-3 py-1.5 text-xs font-bold
@@ -221,15 +243,15 @@
         {{-- =====================================================
             TITLE
         ====================================================== --}}
+
         <div>
 
             <h2
-                class="text-[22px] font-extrabold
+                class="break-words text-[22px] font-extrabold
                        leading-tight tracking-[-0.02em]
                        text-neutral-950 dark:text-white">
                 {{ $previewTitle }}
             </h2>
-
 
             <p
                 class="mt-2 line-clamp-3
@@ -242,11 +264,84 @@
 
 
         {{-- =====================================================
+            BRAND
+        ====================================================== --}}
+
+        @if ($hasLocalBrand)
+
+            <div
+                class="mt-5 rounded-2xl border
+                       border-orange-100 bg-orange-50 p-4
+                       dark:border-orange-500/10
+                       dark:bg-orange-500/5">
+
+                <p class="text-[10px] font-bold uppercase
+                           tracking-wider text-orange-500">
+                    Brand
+                </p>
+
+                @if (filled($previewLocalBrandName))
+                    <p
+                        class="mt-1 text-sm font-extrabold
+                               text-neutral-900 dark:text-white">
+                        {{ $previewLocalBrandName }}
+                    </p>
+                @endif
+
+                @if (filled($previewLocalBrandNameAr))
+                    <p class="mt-0.5 text-sm font-semibold
+                               text-neutral-500 dark:text-neutral-400"
+                        dir="rtl">
+                        {{ $previewLocalBrandNameAr }}
+                    </p>
+                @endif
+
+                <span
+                    class="mt-2 inline-flex rounded-full
+                           bg-orange-500/10 px-2.5 py-1
+                           text-[10px] font-bold
+                           text-orange-600
+                           dark:text-orange-400">
+                    Local Brand
+                </span>
+
+            </div>
+        @elseif ($hasExistingBrand)
+            <div class="mt-5 rounded-2xl bg-neutral-50 p-4
+                       dark:bg-neutral-900">
+
+                <p class="text-[10px] font-bold uppercase
+                           tracking-wider text-neutral-400">
+                    Brand
+                </p>
+
+                @if (filled($previewBrand?->brand_name))
+                    <p
+                        class="mt-1 text-sm font-extrabold
+                               text-neutral-900 dark:text-white">
+                        {{ $previewBrand->brand_name }}
+                    </p>
+                @endif
+
+                @if (filled($previewBrand?->brand_name_ar))
+                    <p class="mt-0.5 text-sm font-semibold
+                               text-neutral-500 dark:text-neutral-400"
+                        dir="rtl">
+                        {{ $previewBrand->brand_name_ar }}
+                    </p>
+                @endif
+
+            </div>
+
+        @endif
+
+
+        {{-- =====================================================
             PRICE + STOCK
         ====================================================== --}}
+
         <div class="mt-5 flex items-end justify-between">
 
-            {{-- Price --}}
             <div>
 
                 <p
@@ -273,8 +368,6 @@
 
             </div>
 
-
-            {{-- Stock --}}
             <div class="text-right">
 
                 <p
@@ -298,16 +391,14 @@
         {{-- =====================================================
             QUICK INFO
         ====================================================== --}}
+
         <div class="mt-5 grid grid-cols-2 gap-2.5">
 
-            {{-- Condition --}}
             <div class="rounded-2xl bg-neutral-50 p-3.5
                        dark:bg-neutral-900">
 
-                <p
-                    class="text-[10px] font-bold
-                           uppercase tracking-wider
-                           text-neutral-400">
+                <p class="text-[10px] font-bold uppercase
+                           tracking-wider text-neutral-400">
                     Condition
                 </p>
 
@@ -319,15 +410,11 @@
 
             </div>
 
-
-            {{-- Pricing --}}
             <div class="rounded-2xl bg-neutral-50 p-3.5
                        dark:bg-neutral-900">
 
-                <p
-                    class="text-[10px] font-bold
-                           uppercase tracking-wider
-                           text-neutral-400">
+                <p class="text-[10px] font-bold uppercase
+                           tracking-wider text-neutral-400">
                     Pricing
                 </p>
 
@@ -345,11 +432,6 @@
         {{-- =====================================================
             FEATURES
         ====================================================== --}}
-        @php
-            $validFeatures = collect($features ?? [])
-                ->filter(fn($feature) => is_string($feature) && trim($feature) !== '')
-                ->values();
-        @endphp
 
         @if ($validFeatures->isNotEmpty())
 
@@ -368,7 +450,6 @@
                     </span>
 
                 </div>
-
 
                 <div class="flex flex-wrap gap-2">
 
@@ -394,11 +475,6 @@
         {{-- =====================================================
             KEYWORDS
         ====================================================== --}}
-        @php
-            $validKeywords = collect($keywords ?? [])
-                ->filter(fn($keyword) => is_string($keyword) && trim($keyword) !== '')
-                ->values();
-        @endphp
 
         @if ($validKeywords->isNotEmpty())
 
@@ -408,7 +484,6 @@
                            text-neutral-900 dark:text-white">
                     Search keywords
                 </h4>
-
 
                 <div class="flex flex-wrap gap-2">
 
@@ -420,7 +495,7 @@
                                    text-neutral-600
                                    dark:bg-neutral-800
                                    dark:text-neutral-300">
-                            #{{ ltrim(trim($keyword), '#') }}
+                            #{{ ltrim($keyword, '#') }}
                         </span>
                     @endforeach
 
@@ -434,6 +509,7 @@
         {{-- =====================================================
             SHOPPER TRUST
         ====================================================== --}}
+
         <div
             class="mt-6 flex items-center gap-3
                    rounded-2xl border
@@ -443,13 +519,12 @@
                    dark:bg-emerald-500/5">
 
             <div
-                class="flex h-9 w-9 shrink-0
-                       items-center justify-center
-                       rounded-full bg-emerald-500
+                class="flex h-9 w-9 shrink-0 items-center
+                       justify-center rounded-full
+                       bg-emerald-500
                        text-sm font-bold text-white">
                 ✓
             </div>
-
 
             <div>
 
@@ -476,6 +551,7 @@
         {{-- =====================================================
             CTA
         ====================================================== --}}
+
         <div class="mt-5">
 
             <button type="button" disabled
@@ -489,16 +565,11 @@
                        shadow-lg shadow-orange-500/20
                        opacity-90">
 
-                <span class="text-base">
-                    🛒
-                </span>
+                <span class="text-base">🛒</span>
 
-                <span>
-                    Buy Now
-                </span>
+                <span>Buy Now</span>
 
             </button>
-
 
             <p
                 class="mt-2 text-center

@@ -31,4 +31,9 @@ class SubCategory extends Model
     {
         return $this->belongsTo(Category::class, 'category_id'); // Relacion uno a muchos inversa.
     }
+
+    public function brands(): HasMany
+    {
+        return $this->hasMany(Brand::class, 'subcategory_id');
+    }
 }

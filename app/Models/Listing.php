@@ -80,7 +80,7 @@ class Listing extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'sku' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
+            'sku' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
@@ -112,12 +112,29 @@ class Listing extends Model
 
     public function brand(): BelongsTo
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'id');
+        return $this->belongsTo(
+            Brand::class,
+            'brand_id',
+            'id'
+        );
+    }
+
+    public function subcategory(): BelongsTo
+    {
+        return $this->belongsTo(
+            Subcategory::class,
+            'subcategory_id',
+            'id'
+        );
     }
 
     public function subcategories(): BelongsTo
     {
-        return $this->belongsTo(Subcategory::class, 'subcategory_id');
+        return $this->belongsTo(
+            Subcategory::class,
+            'subcategory_id',
+            'id'
+        );
     }
 
     public function state(): BelongsTo
@@ -182,14 +199,49 @@ class Listing extends Model
             ->saveSlugsTo('slug');
     }
 
-    public function getUrlAttribute()
+    public function getUrlAttribute(): string
     {
+        // =========================================================
+        // BRAND
+        // =========================================================
+
+        if ($this->brand_id && $this->brand) {
+
+            // Existing database brand
+            $brandSlug = $this->brand->slug
+                ?: \Illuminate\Support\Str::slug(
+                    $this->brand->brand_name
+                );
+        } elseif (filled($this->local_brand_name)) {
+
+            // Local seller brand
+            $brandSlug = \Illuminate\Support\Str::slug(
+                $this->local_brand_name
+            );
+        } else {
+
+            // Unbranded product
+            $brandSlug = 'unbranded';
+        }
+
+        // =========================================================
+        // URL
+        // =========================================================
+
         return route('listing.show', [
-            'shop' => $this->shop->slug,
-            'section' => $this->section->slug,
-            'category' => $this->category->slug,
-            'subcategories' => optional($this->subcategories)->slug ?? 'all',
-            'brand' => optional($this->brand)->slug ?? 'general',
+            'shop' => $this->shop?->slug ?? 'shop',
+
+            'section' => $this->section?->slug ?? 'section',
+
+            'category' => $this->category?->slug ?? 'category',
+
+            // IMPORTANT:
+            // Route parameter is "subcategories",
+            // but Listing relationship is "subcategory".
+            'subcategories' => $this->subcategory?->slug ?? 'all',
+
+            'brand' => $brandSlug,
+
             'listing' => $this->slug,
         ]);
     }
