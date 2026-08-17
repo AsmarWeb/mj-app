@@ -70,7 +70,6 @@ class Shop extends Model
                 'pending_balance' => 0,
                 'total_earned' => 0,
             ]);
-
         });
     }
 

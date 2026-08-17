@@ -293,15 +293,35 @@
 
                         <div class="relative mt-2">
 
+                            {{-- Currency --}}
                             <span
                                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-sm font-black text-orange-500">
-                                AED
+                                {{ $currency }}
                             </span>
 
                             <input type="number" step="0.01" min="1" wire:model="price" placeholder="0.00"
                                 class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-14 pr-4 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
                         </div>
+
+                        {{-- Currency information --}}
+                        <p class="mt-2 text-xs text-slate-400">
+                            <span lang="en">
+                                Product price is in your shop currency:
+                                <strong class="text-orange-500">
+                                    {{ $currency }}
+                                </strong>
+                            </span>
+
+                            <span class="mx-1">|</span>
+
+                            <span dir="rtl" lang="ar">
+                                سعر المنتج بعملة متجرك:
+                                <strong class="text-orange-500">
+                                    {{ $currency }}
+                                </strong>
+                            </span>
+                        </p>
 
                         @error('price')
                             <p class="mt-2 text-sm text-red-500">{{ $message }}</p>

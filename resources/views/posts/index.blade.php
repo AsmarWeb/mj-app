@@ -1119,7 +1119,8 @@ justify-center
 
                                         <p class="text-orange-500 font-bold">
 
-                                            AED {{ number_format($product->price) }}
+                                            {{ $product->currency }}
+                                            {{ number_format((float) ($product->price ?? 0), 2) }}
 
                                         </p>
 

@@ -49,6 +49,7 @@ class Listing extends Model
         'sku',
         'slug',
         'price',
+        'currency',
         'quantity',
         'description',
         'features',
@@ -244,5 +245,10 @@ class Listing extends Model
 
             'listing' => $this->slug,
         ]);
+    }
+
+    public function getCurrencyAttribute(): string
+    {
+        return $this->shop?->currency ?? 'AED';
     }
 }

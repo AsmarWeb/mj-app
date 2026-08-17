@@ -100,7 +100,7 @@
 
                                 <span class="text-2xl font-black text-orange-500">
 
-                                    AED {{ number_format($product->price) }}
+                                    {{ $product->currency }} {{ number_format((float) ($product->price ?? 0), 2) }}
 
                                 </span>
 

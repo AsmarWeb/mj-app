@@ -26,6 +26,7 @@ class CreateListing extends Component
     public $title_ar = '';
     public $description = '';
     public $price;
+    public $currency = 'AED';
     public $quantity = 1;
 
     // =========================================================
@@ -117,6 +118,17 @@ class CreateListing extends Component
         if (! $shop) {
             abort(403, 'Please create a shop first.');
         }
+
+        /*
+     * IMPORTANT:
+     * Product currency always comes from the seller's shop.
+     *
+     * Do NOT use:
+     * $this->shop
+     *
+     * because this component does not have a $shop property.
+     */
+        $this->currency = $shop->currency ?: 'AED';
 
         $this->subscription = $shop->subscriptions()
             ->where('status', 'active')
@@ -625,6 +637,15 @@ class CreateListing extends Component
             return;
         }
 
+        /*
+     * =====================================================
+     * CURRENCY
+     * =====================================================
+     *
+     * Product currency ALWAYS follows shop currency.
+     */
+        $this->currency = $shop->currency ?: 'AED';
+
         $subscription = $shop->subscriptions()
             ->where('status', 'active')
             ->with('plan')
@@ -786,6 +807,7 @@ class CreateListing extends Component
         $listing->description = trim($this->description);
 
         $listing->price = $this->price;
+        $listing->currency = $this->currency;
         $listing->quantity = $this->quantity;
 
         $listing->section_id = (int) $this->section_id;

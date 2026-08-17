@@ -15,11 +15,14 @@ class EditController extends Controller
      */
     public function edit(Listing $listing)
     {
+        $shop = Auth::user()->shop;
+
         // Only owner can edit
         abort_if($listing->user_id !== Auth::id(), 403);
 
         return view('listings.edit', [
             'listing' => $listing,
+            'currency' => $shop?->currency ?? 'AED',
         ]);
     }
 
@@ -67,13 +70,12 @@ class EditController extends Controller
             if ($listing->image) {
 
                 Storage::disk('public')
-                    ->delete('products/'.$listing->image);
-
+                    ->delete('products/' . $listing->image);
             }
 
             $imageName = time()
-                .'.'
-                .$request->image->extension();
+                . '.'
+                . $request->image->extension();
 
             $request->image->storeAs(
                 'products',
@@ -82,7 +84,6 @@ class EditController extends Controller
             );
 
             $validated['image'] = $imageName;
-
         }
 
         /*

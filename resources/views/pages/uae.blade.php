@@ -1015,7 +1015,7 @@
 
                                                 @if ($formattedPrice !== null)
                                                     <span class="product-price">
-                                                        AED {{ $formattedPrice }}
+                                                        {{ $product->currency }} {{ $formattedPrice }}
                                                     </span>
                                                 @else
                                                     <span class="product-price text-sm text-slate-400">

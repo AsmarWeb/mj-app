@@ -6,12 +6,12 @@
 
 <x-main-layout>
 
-    @section('title', $isArabic ? 'الخدمات | مُروَّج.كم' : 'Services | Murwaj.com')
+    @section('title', $isArabic ? 'الخدمات | مُروَّج.كم' : 'Services | murwaj')
     @section('description',
         $isArabic
         ? 'اكتشف الخدمات المتاحة على مُروَّج.كم.'
         : 'Discover the services available on
-        Murwaj.com.')
+        murwaj.com.')
 
         <x-slot name="header">
             <x-main-header></x-main-header>

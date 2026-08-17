@@ -57,7 +57,7 @@ class ShopController extends Controller
             'banner' => null,
             'published_at' => now(),
             'is_active' => true,
-        ]); 
+        ]);
 
         switch ($step) {
 
@@ -148,7 +148,7 @@ class ShopController extends Controller
                                 'payment_provider' => 'free',
                                 'payment_id' => null,
                                 'type' => 'default',
-                                'stripe_id' => 'free_'.Str::uuid(),
+                                'stripe_id' => 'free_' . Str::uuid(),
                                 'stripe_status' => 'active',
                                 'stripe_price' => null,
                                 'quantity' => 1,
@@ -173,7 +173,6 @@ class ShopController extends Controller
                     }
 
                     $user->notify(new ShopCreatedNotification($shop));
-
                 });
 
                 return redirect()->route('shop', ['slug' => $shop->slug])->with('success', 'Congratulations! Your shop is now live.');
@@ -209,6 +208,18 @@ class ShopController extends Controller
             'allow_phone' => ['nullable', 'boolean'],
             'allow_whatsapp' => ['nullable', 'boolean'],
         ]);
+
+        // Prevent currency changes after products exist.
+        if (
+            $shop->currency !== $validated['currency'] &&
+            $shop->listings()->exists()
+        ) {
+            return back()
+                ->withErrors([
+                    'currency' => 'Currency cannot be changed after products have been added.',
+                ])
+                ->withInput();
+        }
 
         if ($request->hasFile('logo')) {
 
@@ -263,7 +274,7 @@ class ShopController extends Controller
         $title = $shop ? $shop->name : 'Create your shop';
         $description = $shop ? $shop->description : 'Create a polished shop on Murwaj and start selling your products.';
         $keywords = $shop
-            ? trim("$shop->name, ".optional($shop->city)->name.', '.optional($shop->section)->name)
+            ? trim("$shop->name, " . optional($shop->city)->name . ', ' . optional($shop->section)->name)
             : 'shop, murwaj, create online shop';
 
         $bannerImage = $shop && $shop->banner ? Storage::url($shop->banner) : null;
@@ -367,41 +378,39 @@ class ShopController extends Controller
 
     public function creators(Request $request)
     {
-    $search = trim($request->input('q', ''));
+        $search = trim($request->input('q', ''));
 
-    $shops = Shop::query()
-        ->with([
-            'user',
-        ])
-        ->withCount('listings')
-        ->when($search !== '', function ($query) use ($search) {
+        $shops = Shop::query()
+            ->with([
+                'user',
+            ])
+            ->withCount('listings')
+            ->when($search !== '', function ($query) use ($search) {
 
-            $query->where(function ($q) use ($search) {
+                $query->where(function ($q) use ($search) {
 
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('name_ar', 'like', "%{$search}%")
-                    ->orWhere('slug', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery
-                            ->where('name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
-
-            });
-
-        })
-        ->latest()
-        ->paginate(12)
-        ->withQueryString();
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('name_ar', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery
+                                ->where('name', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
 
         // SEO
-    
+
         $title = 'murwaj';
-    
+
         $description = 'murwaj is an advertising group, to help your business grow through digital marketing.';
 
         $keywords = 'murwaj.com, buy electronics, computers, apparel, fashion accessories, shoes, watches, furniture, home and kitchen goods, beauty, personal care, grocery, gourmet food.';
-    
+
         return view('shop.creators', compact('shops', 'title', 'description', 'keywords'));
     }
 
@@ -434,7 +443,7 @@ class ShopController extends Controller
             ->setPaper('a4');
 
         return $pdf->download(
-            $shop->slug.'-business-card.pdf'
+            $shop->slug . '-business-card.pdf'
         );
     }
 

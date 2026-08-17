@@ -375,6 +375,7 @@ class ExploreController extends Controller
 
     public function uae(Request $request)
     {
+
         /*
     |--------------------------------------------------------------------------
     | Local & Traditional Products in UAE

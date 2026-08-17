@@ -607,7 +607,7 @@
 
                                         <span class="font-semibold text-gray-900 dark:text-white">
 
-                                            AED {{ number_format($total, 2) }}
+                                            {{ $currency }} {{ number_format($total, 2) }}
 
                                         </span>
 
@@ -654,7 +654,7 @@
 
                                             <p class="text-2xl font-black text-orange-600">
 
-                                                AED {{ number_format($total, 2) }}
+                                                {{ $currency }} {{ number_format($total, 2) }}
 
                                             </p>
 

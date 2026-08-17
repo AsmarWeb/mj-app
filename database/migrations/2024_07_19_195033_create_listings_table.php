@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('title_ar');
             $table->string('slug');
             $table->string('price');
+            $table->string('currency', 3)->default('AED');
             $table->integer('quantity')->default(1);
             $table->text('description')->nullable();
             $table->json('features')->nullable();

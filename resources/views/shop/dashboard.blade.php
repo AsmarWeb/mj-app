@@ -525,7 +525,7 @@
 
 
                                             <td class="px-4 py-5 text-sm font-bold text-[#211d19]">
-                                                ${{ number_format($listing->price, 2) }}
+                                                {{ $listing->currency }} {{ number_format($listing->price, 2) }}
                                             </td>
 
 

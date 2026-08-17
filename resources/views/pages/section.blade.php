@@ -333,7 +333,8 @@
                                        font-black
                                        text-orange-500">
 
-                                        AED {{ number_format((float) ($product->price ?? 0), 2) }}
+                                        {{ $product->currency }}
+                                        {{ number_format((float) ($product->price ?? 0), 2) }}
 
                                     </span>
 

@@ -533,7 +533,8 @@
 
                                                     <span class="text-xl font-black text-gray-900 dark:text-white">
 
-                                                        ${{ number_format((float) ($product->price ?? 0), 2) }}
+                                                        {{ $product->currency }}
+                                                        {{ number_format((float) ($product->price ?? 0), 2) }}
 
                                                     </span>
 
@@ -702,7 +703,8 @@
                                         <div class="mt-5 flex items-center justify-between gap-4">
 
                                             <span class="text-xl font-black text-gray-900 dark:text-white">
-                                                ${{ number_format((float) ($product->price ?? 0), 2) }}
+                                                {{ $product->currency }}
+                                                {{ number_format((float) ($product->price ?? 0), 2) }}
                                             </span>
 
                                             <a href="{{ $product->url ?? '#' }}"
@@ -1111,7 +1113,7 @@
                                     <div class="mt-5 flex items-center justify-between">
 
                                         <span class="text-xl font-black text-gray-900 dark:text-white">
-                                            ${{ number_format((float) ($product->price ?? 0), 2) }}
+                                            {{ $product->currency }} {{ number_format((float) ($product->price ?? 0), 2) }}
                                         </span>
 
                                         <a href="{{ $product->url ?? '#' }}"

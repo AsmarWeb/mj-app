@@ -526,6 +526,10 @@
 
                     </div>
 
+                    @php
+                        $hasListings = $shop?->listings()->exists();
+                        $currentCurrency = old('currency', $shop?->currency ?? 'AED');
+                    @endphp
 
                     <div class="p-6 sm:p-8">
 
@@ -541,55 +545,58 @@
 
                                 </label>
 
-                                <select name="currency" id="currency"
+                                <select name="currency" id="currency" {{ $hasListings ? 'disabled' : '' }}
                                     class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
-                                    <option value="AED"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'AED' ? 'selected' : '' }}>
+                                    <option value="AED" {{ $currentCurrency === 'AED' ? 'selected' : '' }}>
                                         🇦🇪 AED — United Arab Emirates Dirham | الدرهم الإماراتي
                                     </option>
 
-                                    <option value="USD"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'USD' ? 'selected' : '' }}>
+                                    <option value="USD" {{ $currentCurrency === 'USD' ? 'selected' : '' }}>
                                         🇺🇸 USD — US Dollar | الدولار الأمريكي
                                     </option>
 
-                                    <option value="EUR"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'EUR' ? 'selected' : '' }}>
+                                    <option value="EUR" {{ $currentCurrency === 'EUR' ? 'selected' : '' }}>
                                         🇪🇺 EUR — Euro | اليورو
                                     </option>
 
-                                    <option value="GBP"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'GBP' ? 'selected' : '' }}>
+                                    <option value="GBP" {{ $currentCurrency === 'GBP' ? 'selected' : '' }}>
                                         🇬🇧 GBP — British Pound | الجنيه الإسترليني
                                     </option>
 
-                                    <option value="SAR"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'SAR' ? 'selected' : '' }}>
+                                    <option value="SAR" {{ $currentCurrency === 'SAR' ? 'selected' : '' }}>
                                         🇸🇦 SAR — Saudi Riyal | الريال السعودي
                                     </option>
 
-                                    <option value="KWD"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'KWD' ? 'selected' : '' }}>
+                                    <option value="KWD" {{ $currentCurrency === 'KWD' ? 'selected' : '' }}>
                                         🇰🇼 KWD — Kuwaiti Dinar | الدينار الكويتي
                                     </option>
 
-                                    <option value="QAR"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'QAR' ? 'selected' : '' }}>
+                                    <option value="QAR" {{ $currentCurrency === 'QAR' ? 'selected' : '' }}>
                                         🇶🇦 QAR — Qatari Riyal | الريال القطري
                                     </option>
 
-                                    <option value="BHD"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'BHD' ? 'selected' : '' }}>
+                                    <option value="BHD" {{ $currentCurrency === 'BHD' ? 'selected' : '' }}>
                                         🇧🇭 BHD — Bahraini Dinar | الدينار البحريني
                                     </option>
 
-                                    <option value="OMR"
-                                        {{ old('currency', $shop?->currency ?? 'AED') === 'OMR' ? 'selected' : '' }}>
+                                    <option value="OMR" {{ $currentCurrency === 'OMR' ? 'selected' : '' }}>
                                         🇴🇲 OMR — Omani Rial | الريال العماني
                                     </option>
 
                                 </select>
+
+                                @if ($hasListings)
+                                    <input type="hidden" name="currency" value="{{ $currentCurrency }}">
+
+                                    <p class="mt-2 text-xs text-amber-600 dark:text-amber-400">
+                                        Currency cannot be changed after products have been added.
+                                        |
+                                        <span dir="rtl">
+                                            لا يمكن تغيير العملة بعد إضافة المنتجات.
+                                        </span>
+                                    </p>
+                                @endif
 
                                 @error('currency')
                                     <p class="mt-2 text-sm text-red-500">
