@@ -7,8 +7,6 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CountryController;
-use App\Http\Controllers\Admin\CreatorsController;
-use App\Http\Controllers\Admin\DevelopersController;
 use App\Http\Controllers\Admin\DigitalProductController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\InvoiceController;
@@ -56,7 +54,6 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SupplierDashboardController;
 use App\Http\Controllers\SupplierInvitationController;
 use App\Http\Controllers\User\EditController;
-use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WishlistController;
 use App\Livewire\Admin\Listing\CreateComponent;
 use Illuminate\Support\Facades\Route;
@@ -143,7 +140,6 @@ Route::get('/uae', [ExploreController::class, 'uae'])->name('uae');
 Route::get('/categories', [ListingCategoryController::class, 'index'])->name('categories');
 Route::get('/countries', [ShopCountryController::class, 'index'])->name('countries');
 Route::get('about', [HomeController::class, 'about'])->name('about');
-Route::resource('users', UsersController::class)->only('show', 'edit', 'update')->middleware('auth');
 // Route::resource('shop', ShopController::class)->only('show','edit','update')->middleware('auth');
 
 Route::middleware(['auth', 'verified', 'phone.verified'])->group(function () {
