@@ -51,9 +51,7 @@ class SearchResults extends Component
                         ->orWhere('title_ar', 'like', '%' . $this->search . '%')
                         ->orWhere('description', 'like', '%' . $this->search . '%')
                         ->orWhereJsonContains('keywords', $this->search);
-
                 });
-
             })
             ->with([
                 'brand',
@@ -77,9 +75,7 @@ class SearchResults extends Component
 
                     $q->where('title', 'like', '%' . $this->search . '%')
                         ->orWhere('description', 'like', '%' . $this->search . '%');
-
                 });
-
             })
             ->with([
                 'supplier',
@@ -102,11 +98,9 @@ class SearchResults extends Component
             $this->globalSearchUrl =
                 'https://www.google.com/search?q=' .
                 urlencode($this->search);
-
         } else {
 
             $this->globalSearchUrl = null;
-
         }
 
         return view('livewire.search-results', [
