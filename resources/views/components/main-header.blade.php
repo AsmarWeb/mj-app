@@ -702,7 +702,7 @@
 
                             <p class="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
                                 {{ __('header.locale') }}
-                            </p>
+                            </p> 
 
                         </div>
 

@@ -17,7 +17,7 @@ return [
         'login' => 'انضم إلي',
     ],
 
-    'locale' => 'English',
+    'locale' => 'اللغة',
 
     'main' => [
         'discover' => 'اكتشف',

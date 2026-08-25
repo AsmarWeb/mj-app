@@ -17,7 +17,7 @@ return [
         'login' => 'Join me',
     ],
 
-    'locale' => 'العربية',
+    'locale' => 'Language',
 
     'main' => [
         'discover' => 'Explore',
