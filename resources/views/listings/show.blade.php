@@ -1270,40 +1270,40 @@
     @push('schema')
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "Product",
 
-            "name": @json($listing->title),
+            "name": {!! json_encode($listing->title, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!},
 
             "description": @json(strip_tags($listing->description ?? '')),
 
-            "url": @json($productUrl),
+            "url": {!! json_encode($productUrl, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!},
 
             "image": [
-                @json($productImage)
+                {!! json_encode($productImage, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}
             ],
 
-            "sku": @json($listing->sku),
+            "sku": {!! json_encode($listing->sku, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!},
 
             @if ($brandName)
             "brand": {
                 "@type": "Brand",
-                "name": @json($brandName)
+                "name": {!! json_encode($brandName, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}
             },
             @endif
 
             @if ($categoryName)
-            "category": @json($categoryName),
+            "category": {!! json_encode($categoryName, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!},
             @endif
 
             "offers": {
                 "@type": "Offer",
 
-                "url": @json($productUrl),
+                "url": {!! json_encode($productUrl, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!},
 
                 "price": "{{ number_format($listing->price, 2, '.', '') }}",
 
-                "priceCurrency": @json($currency),
+                "priceCurrency": {!! json_encode($currency, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!},
 
                 "availability": "{{ $isAvailable
                     ? 'https://schema.org/InStock'
