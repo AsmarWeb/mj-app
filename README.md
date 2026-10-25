@@ -24,10 +24,10 @@ Sail runs PHP 8.3. CI tests PHP against SQLite/MySQL and clean frontend builds o
 
 ## Local setup
 
-The GitHub repository may still be named `mj-app` until its owner renames it. The product/package name is **murwaj**.
+The repository and product/package name are **murwaj**. Existing installations can keep their local `mj-app` folder.
 
 ```sh
-git clone https://github.com/AsmarWeb/mj-app.git murwaj
+git clone https://github.com/AsmarWeb/murwaj.git murwaj
 cd murwaj
 composer install
 cp .env.example .env
@@ -122,6 +122,8 @@ npm audit
 Do not share `node_modules` between macOS and Linux/Sail. Each platform needs its own optional Rollup binary. The lock includes native dependencies for both platforms; keep both lock files under version control.
 
 ## GitHub Actions and deployment
+
+Verified baseline: commit `b603a8c` passed PHP/MySQL, PHP/SQLite and Linux/macOS Intel frontend jobs in [Actions run 40197258662](https://github.com/AsmarWeb/murwaj/actions/runs/40197258662). This is CI evidence for that commit, not a production acceptance test.
 
 **Tests** runs on pushes, pull requests and manual requests. **Deploy** is manual, restricted to `main`, and depends on Tests. It never runs on an ordinary push.
 

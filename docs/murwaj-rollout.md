@@ -22,7 +22,7 @@ php artisan queue:restart
 
 For an existing Sail installation prefix Composer/Artisan with `./vendor/bin/sail`; use native npm on macOS or an isolated container dependency directory. Restart `raslo-queue` and `raslo-scheduler` using both Compose files. The update contains no new schema migration, but `migrate` safely verifies all previous migrations are present. Do not use `migrate:fresh`.
 
-New application code requires Laravel 12 and the updated lock. Run Composer installation before executing the updated app. Locks are resolved for PHP 8.2; the existing Sail runtime is PHP 8.3. Application tests passed on PHP 8.4 here; verify your actual host before deployment.
+New application code requires Laravel 12 and the updated lock. Run Composer installation before executing the updated app. Locks are resolved for PHP 8.2; the existing Sail runtime is PHP 8.3. Local application tests passed on PHP 8.4; baseline b603a8c also passed PHP 8.3 CI against SQLite and MySQL. Verify your actual host before deployment.
 
 ## Digital-file migration
 
@@ -32,16 +32,14 @@ The public-storage exposure is not fixed for existing files merely by installing
 
 ## Rename GitHub repository
 
-The connector used for this review has no repository-administration/rename tool, and the browser session is signed out. **The GitHub repository has not been renamed by this package.**
-
-As the owner, open the existing repository's Settings → General → Repository name, enter `murwaj`, and choose Rename. Then update your local remote:
+The repository is now [AsmarWeb/murwaj](https://github.com/AsmarWeb/murwaj). For an existing checkout, update the remote:
 
 ```sh
 git remote set-url origin https://github.com/AsmarWeb/murwaj.git
 git remote -v
 ```
 
-Do not rename Docker volumes, queues, database files, payment IDs or existing Raslo references. Keep the local `mj-app` folder for this rollout. If another repository already uses `murwaj`, resolve that collision rather than overwriting it. Review external GitHub integrations/deploy hooks after a rename. README clone instructions use the existing URL until the owner completes this step.
+Do not rename Docker volumes, queues, database files, payment IDs or existing Raslo references. Keep the local `mj-app` folder for this rollout. Review external GitHub integrations/deploy hooks after a rename. README clone instructions now use the canonical murwaj URL.
 
 ## Historical SSH failure
 
