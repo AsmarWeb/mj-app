@@ -131,6 +131,12 @@ class Shop extends Model
             ->latest('id');
     }
 
+    public function scopePublicCatalog($query)
+    {
+        return $query->where('is_active', true)->where('is_completed', true)
+            ->whereNotNull('published_at')->where('published_at', '<=', now())->whereNull('deleted_at');
+    }
+
     public function scopePublished($query)
     {
         $query->where('published_at', '<=', Carbon::now());
@@ -143,7 +149,7 @@ class Shop extends Model
 
     public function setPublishedAtAttribute($date)
     {
-        $this->attributes['published_at'] = Carbon::now();
+        $this->attributes['published_at'] = $date === null || $date === '' ? null : $this->fromDateTime($date);
     }
 
     public function getSlugOptions(): SlugOptions

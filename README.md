@@ -63,6 +63,10 @@ Back up the database and storage before updating. Keep `.env`, `APP_KEY`, databa
 
 Changing the GitHub name does not require renaming your local folder. Keep the current folder/Compose project during rollout: renaming it can select different Docker volumes. If changing `APP_NAME` on an existing installation, preserve the existing `SESSION_COOKIE`/cache prefix where needed or expect users to sign in again. Never regenerate `APP_KEY` to rename the platform.
 
+## Public catalog API
+
+Read-only `/api/v1/shops` and `/api/v1/listings` expose only visible catalog records, with pagination, search and shared rate limits. Download the contract at `/api/v1/openapi.json`; see [API behavior and compatibility changes](docs/catalog-api.md). Legacy `/api/shops` and `/api/listings` now use the same guarded responses.
+
 ## Merchant memberships
 
 Free, Basic and Pro memberships are separate from Raslo Enterprise access. See [pricing repairs, plan defaults and rollout](docs/membership-pricing-audit.md). Billing uses the configured Cashier currency, verified Stripe prices, durable checkout attempts and a Stripe Billing Portal button for existing memberships. Run the new migration before enabling these routes.
