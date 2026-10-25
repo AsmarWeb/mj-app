@@ -11,9 +11,9 @@
 
         $currentPlanId = $currentPlan?->id;
 
-        $hasActiveSubscription = $subscription !== null && $currentPlan !== null;
+        $hasActiveSubscription = $subscription !== null && $currentPlan !== null && !$currentPlan->is_free;
 
-        $isFreePlan = !$hasActiveSubscription;
+        $isFreePlan = $currentPlan?->is_free === true;
 
         $locale = app()->getLocale();
         $isArabic = $locale === 'ar';
@@ -179,7 +179,7 @@
 
 
                         <h1 class="mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl">
-                            {{ $currentPlan?->name ?? __('plans.free_plan') }}
+                            {{ $currentPlan?->name ?? __('plans.no_membership') }}
                         </h1>
 
 
@@ -193,7 +193,7 @@
                             </p>
                         @else
                             <p class="mt-5 max-w-2xl text-base leading-7 text-stone-300">
-                                {{ __('plans.free_plan_message') }}
+                                {{ $isFreePlan ? __('plans.free_plan_message') : __('plans.choose_premium_message') }}
                             </p>
                         @endif
 
@@ -261,7 +261,7 @@
                                     </div>
                                 @else
                                     <div class="text-sm font-bold text-orange-300">
-                                        {{ __('plans.free_membership') }}
+                                        {{ $isFreePlan ? __('plans.free_membership') : __('plans.no_membership') }}
                                     </div>
                                 @endif
 
@@ -288,6 +288,14 @@
         {{-- ================================================= --}}
         {{-- PLANS INTRO --}}
         {{-- ================================================= --}}
+
+        @if ($hasStripeCustomer)
+            <form method="POST" action="{{ route('subscription.portal') }}" class="relative mx-auto max-w-7xl px-4 pb-6">
+                @csrf
+                <button class="rounded-xl border border-stone-300 bg-white px-5 py-3 font-semibold">{{ __('plans.manage_billing') }}</button>
+                <p class="mt-2 text-sm text-stone-500">{{ __('plans.billing_help') }}</p>
+            </form>
+        @endif
 
         <section class="relative z-10 mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
 
@@ -332,6 +340,7 @@
                 {{-- FREE PLAN --}}
                 {{-- ================================================= --}}
 
+                @if ($freePlan)
                 <div
                     class="group relative flex flex-col overflow-hidden rounded-[2rem] border bg-white transition duration-300
                     {{ $isFreePlan
@@ -375,7 +384,7 @@
                         <div class="mt-8 flex items-end gap-2">
 
                             <span class="text-5xl font-black tracking-tight text-slate-950">
-                                $0
+                                {{ strtoupper(config('cashier.currency')) }} 0
                             </span>
 
                             <span class="mb-2 text-sm font-medium text-stone-400">
@@ -406,7 +415,7 @@
                                     class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">
                                     ✓
                                 </span>
-                                <span>{{ __('plans.one_active_product') }}</span>
+                                <span>{{ __('plans.product_count', ['count' => $freePlan->listing_limit]) }}</span>
                             </li>
 
                             <li class="flex items-center gap-3">
@@ -414,7 +423,7 @@
                                     class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">
                                     ✓
                                 </span>
-                                <span>{{ __('plans.storage_100_mb') }}</span>
+                                <span>{{ __('plans.storage_amount', ['amount' => $freePlan->storage_limit]) }}</span>
                             </li>
 
                             <li class="flex items-center gap-3">
@@ -422,7 +431,10 @@
                                     class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-600">
                                     ✓
                                 </span>
-                                <span>{{ __('plans.listings_30_days') }}</span>
+                                <span>{{ __('plans.listing_days', ['days' => $freePlan->listing_duration]) }}</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span>✓</span><span>{{ __('plans.monthly_orders', ['count' => $freePlan->order_limit ?: __('plans.unlimited')]) }}</span>
                             </li>
 
                             <li class="flex items-center gap-3 text-stone-400">
@@ -468,6 +480,8 @@
 
                 </div>
 
+
+                @endif
 
                 {{-- ================================================= --}}
                 {{-- PAID PLANS --}}
@@ -559,7 +573,7 @@
                             <div class="mt-8 flex items-end gap-2">
 
                                 <span class="text-5xl font-black tracking-tight text-slate-950">
-                                    ${{ number_format((float) $plan->price, 2) }}
+                                    {{ strtoupper(config('cashier.currency')) }} {{ number_format((float) $plan->price, 2) }}
                                 </span>
 
                                 <span class="mb-2 text-sm font-medium text-stone-400">
@@ -644,58 +658,23 @@
                                 </li>
 
 
-                                <li class="flex items-start gap-3">
-
-                                    <span
-                                        class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
-                                        ✓
-                                    </span>
-
-                                    <span>
-
-                                        {{ __('plans.featured_listings') }}
-
-                                        <strong class="font-bold text-slate-950">
-                                            {{ $plan->featured_limit ?? __('plans.unlimited') }}
-                                        </strong>
-
-                                    </span>
-
-                                </li>
-
-
-                                <li class="flex items-start gap-3">
-
-                                    @if ($plan->video_upload)
-                                        <span
-                                            class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-600">
-                                            ✓
-                                        </span>
-
-                                        <span>
-                                            {{ __('plans.video_uploads_included') }}
-                                        </span>
-                                    @else
-                                        <span
-                                            class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-red-400">
-                                            ×
-                                        </span>
-
-                                        <span class="text-stone-400">
-                                            {{ __('plans.no_video_uploads') }}
-                                        </span>
-                                    @endif
-
-                                </li>
-
                             </ul>
 
+
+                            <p class="mt-4 text-sm text-stone-600">{{ __('plans.monthly_orders', ['count' => $plan->order_limit ?: __('plans.unlimited')]) }}</p>
 
                             {{-- CTA --}}
 
                             <div class="mt-auto pt-9">
 
-                                @if ($isCurrentPlan)
+                                @if ($hasActiveSubscription)
+                                    <form method="POST" action="{{ route('subscription.portal') }}">
+                                        @csrf
+                                        <button class="w-full rounded-2xl bg-stone-900 px-5 py-4 font-bold text-white">{{ __('plans.manage_billing') }}</button>
+                                    </form>
+                                @elseif (!$plan->stripe_price)
+                                    <p class="text-sm text-stone-500">{{ __('plans.checkout_unavailable') }}</p>
+                                @elseif ($isCurrentPlan)
                                     <button type="button" disabled
                                         class="w-full cursor-not-allowed rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-bold text-emerald-700">
 

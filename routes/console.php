@@ -3,7 +3,12 @@
 use App\Jobs\PollRasloShipment;
 use App\Models\DigitalProduct;
 use App\Models\Order;
+use App\Models\PlanCheckoutAttempt;
 use App\Models\RasloShipment;
+use App\Models\Subscription;
+use App\Services\Billing\PlanCheckout;
+use App\Services\Billing\SubscriptionGateway;
+use App\Services\Billing\SubscriptionSync;
 use App\Services\Checkout\PhysicalCheckoutService;
 use App\Services\Checkout\StripeCheckoutGateway;
 use App\Services\Digital\DigitalFiles;
@@ -123,3 +128,59 @@ Artisan::command('digital:secure-files {--apply : Move referenced downloads to p
 
     return $failed ? 1 : 0;
 })->purpose('Privatize existing digital downloads; dry run unless --apply is supplied');
+
+// Provider reads only: recover missed subscription events without initiating charges.
+Artisan::command('membership:sync', function () {
+    $failed = 0;
+    Subscription::where('stripe_id', 'like', 'sub_%')->with('user')->chunkById(100, function ($rows) use (&$failed) {
+        foreach ($rows as $row) {
+            try {
+                app(SubscriptionSync::class)->sync($row->stripe_id, $row->user->stripe_id);
+            } catch (Throwable $e) {
+                $failed++;
+            }
+        }
+    });
+    PlanCheckoutAttempt::whereNotNull('stripe_session_id')->chunkById(100, function ($rows) use (&$failed) {
+        foreach ($rows as $attempt) {
+            try {
+                $session = app(SubscriptionGateway::class)->session($attempt->stripe_session_id);
+                app(PlanCheckout::class)->assertSession($attempt, $session);
+                if (($session['status'] ?? null) === 'complete' && is_string($session['subscription'] ?? null)) {
+                    app(SubscriptionSync::class)->sync($session['subscription'], $session['customer']);
+                }
+            } catch (Throwable $e) {
+                $failed++;
+            }
+        }
+    });
+    $this->info('Subscription reconciliation finished. Failures: '.$failed);
+
+    return $failed ? 1 : 0;
+});
+Schedule::command('membership:sync')->everyFiveMinutes()->withoutOverlapping();
+
+Artisan::command('membership:recover {session : Existing Stripe Checkout session ID}', function () {
+    $id = $this->argument('session');
+    if (! preg_match('/^cs_[A-Za-z0-9_]+$/D', $id)) {
+        $this->error('Invalid session ID.');
+
+        return 1;
+    }
+    try {
+        $session = app(SubscriptionGateway::class)->session($id);
+        $attempt = PlanCheckoutAttempt::where('token', $session['client_reference_id'] ?? '')->firstOrFail();
+        app(PlanCheckout::class)->assertSession($attempt, $session);
+        $attempt->update(['stripe_session_id' => $session['id']]);
+        if (($session['status'] ?? null) === 'complete' && is_string($session['subscription'] ?? null)) {
+            app(SubscriptionSync::class)->sync($session['subscription'], $session['customer']);
+        }
+        $this->info('Existing checkout recovered. No payment or new session was created.');
+
+        return 0;
+    } catch (Throwable $e) {
+        $this->error('Could not verify that session against a saved membership checkout.');
+
+        return 1;
+    }
+});

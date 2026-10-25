@@ -63,6 +63,10 @@ Back up the database and storage before updating. Keep `.env`, `APP_KEY`, databa
 
 Changing the GitHub name does not require renaming your local folder. Keep the current folder/Compose project during rollout: renaming it can select different Docker volumes. If changing `APP_NAME` on an existing installation, preserve the existing `SESSION_COOKIE`/cache prefix where needed or expect users to sign in again. Never regenerate `APP_KEY` to rename the platform.
 
+## Merchant memberships
+
+Free, Basic and Pro memberships are separate from Raslo Enterprise access. See [pricing repairs, plan defaults and rollout](docs/membership-pricing-audit.md). Billing uses the configured Cashier currency, verified Stripe prices, durable checkout attempts and a Stripe Billing Portal button for existing memberships. Run the new migration before enabling these routes.
+
 ## Stripe test checkout
 
 Set your own Stripe test credentials and webhook signing secret; never commit them. Forward Stripe events to the application's actual URL and port:

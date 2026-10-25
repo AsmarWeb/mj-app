@@ -68,6 +68,12 @@ class PhysicalCheckoutTest extends TestCase
             throw new \RuntimeException('Missing fixture');
         })->byDefault();
         $this->app->instance(StripeCheckoutGateway::class, $this->gateway);
+        \App\Models\Plan::firstOrCreate(['slug' => 'free'], ['name' => 'Free', 'price' => 0, 'is_free' => true,
+            'is_active' => true, 'listing_limit' => 5, 'listing_duration' => 30, 'order_limit' => 5, 'storage_limit' => 100]);
+        \Illuminate\Support\Facades\Event::listen('eloquent.created: '.Shop::class, function ($shop) {
+            $shop->subscriptions()->create(['user_id' => $shop->user_id, 'plan_id' => \App\Models\Plan::where('slug', 'free')->value('id'),
+                'type' => 'default', 'stripe_id' => 'free_'.$shop->id, 'stripe_status' => 'active', 'status' => 'active', 'payment_provider' => 'free']);
+        });
     }
 
     private function listing(array $overrides = []): Listing
@@ -408,10 +414,19 @@ class PhysicalCheckoutTest extends TestCase
         }
         $listing = $this->listing();
         $order = Order::create(['order_number' => 'LEGACY-1', 'shop_id' => $listing->shop_id, 'user_id' => $this->buyer->id, 'total' => '10.00']);
-        $this->artisan('migrate:rollback', ['--step' => 2, '--force' => true])->assertExitCode(0);
+        // Exercise these two migrations explicitly; unrelated newer migrations must not change the test target.
+        $migrations = [
+            require database_path('migrations/2026_10_25_120000_create_raslo_store_bridge.php'),
+            require database_path('migrations/2026_10_24_160000_add_checkout_delivery_readiness.php'),
+        ];
+        foreach ($migrations as $migration) {
+            $migration->down();
+        }
         $this->assertFalse(Schema::hasColumn('orders', 'checkout_token'));
         $this->assertDatabaseHas('orders', ['id' => $order->id]);
-        $this->artisan('migrate', ['--force' => true])->assertExitCode(0);
+        foreach (array_reverse($migrations) as $migration) {
+            $migration->up();
+        }
         $this->assertNull($order->fresh()->checkout_token);
     }
 
@@ -566,4 +581,21 @@ class PhysicalCheckoutTest extends TestCase
 
         return $this->call('POST', '/stripe/webhook', [], [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_STRIPE_SIGNATURE' => $signature], $json);
     }
+    public function test_free_order_quota_counts_reserved_orders_and_expiry_releases_capacity(): void
+    {
+        $listing = $this->listing(['quantity' => 20]);
+        $shop = $listing->shop;
+        for ($i = 0; $i < 5; $i++) {
+            Order::create(['user_id' => User::factory()->create()->id, 'shop_id' => $shop->id, 'order_number' => 'QUOTA-'.$i,
+                'payment_status' => 'pending', 'status' => 'pending', 'inventory_reserved' => true, 'total' => '1.00']);
+        }
+        $this->cart($listing);
+        $this->actingAs($this->buyer)->post(route('checkout.store'), $this->address()+['shop_id' => $shop->id])->assertSessionHasErrors('cart');
+        $this->assertSame(0, $this->creates);
+        $this->assertSame(20, $listing->fresh()->quantity);
+        Order::where('order_number', 'QUOTA-0')->update(['inventory_reserved' => false, 'payment_status' => 'failed', 'status' => 'cancelled']);
+        $this->start($listing);
+        $this->assertSame(1, $this->creates);
+    }
+
 }

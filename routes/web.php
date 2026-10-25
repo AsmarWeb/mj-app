@@ -421,12 +421,11 @@ Route::middleware('auth')->group(function () {
         [SubscriptionController::class, 'checkout']
     )->name('subscription.checkout');
 
+    Route::post('/subscription/portal', [SubscriptionController::class, 'portal'])->name('subscription.portal');
+
     Route::get(
         '/subscription/success',
-        function () {
-
-            return view('subscription.success');
-        }
+        [SubscriptionController::class, 'success']
     )
         ->name('subscription.success');
 });

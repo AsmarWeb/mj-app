@@ -170,43 +170,27 @@ class User extends Authenticatable implements LaratrustUser, MustVerifyEmail
         ])->save();
     }
 
-    public function storageUsed()
+    public function storageUsed(): int
     {
-        return $this->listings()
-            ->sum(function ($listing) {
-
-                $size = 0;
-
-                // Main image
-                if ($listing->image) {
-
-                    $path = storage_path(
-                        'app/public/products/'.$listing->image
-                    );
-
-                    if (file_exists($path)) {
-                        $size += filesize($path);
-                    }
+        $disk = \Illuminate\Support\Facades\Storage::disk('public');
+        $paths = [];
+        foreach ($this->listing()->get() as $listing) {
+            foreach (array_merge([$listing->image], (array) $listing->images) as $name) {
+                if (is_string($name) && $name !== '' && ! str_contains($name, '..') && ! str_contains($name, '\\')) {
+                    $paths[] = 'products/'.ltrim($name, '/');
                 }
-
-                // Gallery images
-                if ($listing->images) {
-
-                    foreach ($listing->images as $image) {
-
-                        $path = storage_path(
-                            'app/public/products/'.$image
-                        );
-
-                        if (file_exists($path)) {
-                            $size += filesize($path);
-                        }
-                    }
-                }
-
-                return $size;
-
-            });
+            }
+            if (is_string($listing->video) && $listing->video !== '' && ! str_contains($listing->video, '..') && ! str_contains($listing->video, '\\')) {
+                $paths[] = 'products/videos/'.ltrim($listing->video, '/');
+            }
+        }
+        $bytes = 0;
+        foreach (array_unique($paths) as $path) {
+            if ($disk->exists($path)) {
+                $bytes += $disk->size($path);
+            }
+        }
+        return $bytes;
     }
 
     public function storageUsedMB()

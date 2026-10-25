@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plan;
-use App\Models\User;
+use App\Services\Billing\SubscriptionSync;
 use App\Services\Checkout\PhysicalCheckoutService;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Http\Controllers\WebhookController;
@@ -19,7 +18,13 @@ class StripeWebhookController extends WebhookController
 
     protected function handleCheckoutSessionCompleted(array $payload)
     {
-        app(PhysicalCheckoutService::class)->synchronize($payload['data']['object']);
+        $session = $payload['data']['object'];
+        if (($session['mode'] ?? null) === 'subscription' && is_string($session['subscription'] ?? null)
+            && is_string($session['customer'] ?? null)) {
+            app(SubscriptionSync::class)->sync($session['subscription'], $session['customer']);
+        } else {
+            app(PhysicalCheckoutService::class)->synchronize($session);
+        }
 
         return response('OK', 200);
     }
@@ -36,75 +41,24 @@ class StripeWebhookController extends WebhookController
 
     protected function handleCustomerSubscriptionCreated(array $payload)
     {
-        $response = parent::handleCustomerSubscriptionCreated($payload);
-
-        $this->syncPlan($payload);
-
-        return $response;
+        return $this->syncSubscription($payload);
     }
 
     protected function handleCustomerSubscriptionUpdated(array $payload)
     {
-        $response = parent::handleCustomerSubscriptionUpdated($payload);
-
-        $this->syncPlan($payload);
-
-        return $response;
-
+        return $this->syncSubscription($payload);
     }
 
-    protected function syncPlan(array $payload)
+    protected function handleCustomerSubscriptionDeleted(array $payload)
     {
-        $stripeSubscription = $payload['data']['object'];
+        return $this->syncSubscription($payload);
+    }
 
-        // Find user using Stripe customer ID
-        $user = User::where(
-            'stripe_id',
-            $stripeSubscription['customer']
-        )->first();
+    private function syncSubscription(array $payload)
+    {
+        $data = $payload['data']['object'];
+        app(SubscriptionSync::class)->sync($data['id'], $data['customer']);
 
-        if (! $user) {
-            return;
-        }
-
-        // Real Stripe subscription ID
-        $stripeId = $stripeSubscription['id'];
-
-        // Find Cashier subscription
-        $subscription = $user->subscriptions()
-            ->where('stripe_id', $stripeId)
-            ->first();
-
-        if (! $subscription) {
-            return;
-        }
-
-        // Stripe price ID
-        $priceId = $stripeSubscription['items']['data'][0]['price']['id'];
-
-        // Find your plan
-        $plan = Plan::where(
-            'stripe_price',
-            $priceId
-        )->first();
-
-        if (! $plan) {
-            return;
-        }
-
-        // Delete the old free subscription
-        $user->subscriptions()
-            ->where('payment_provider', 'free')
-            ->update([
-                'status' => 'expired',
-            ]);
-
-        // Update the new Stripe subscription
-        $subscription->update([
-            'shop_id' => $user->shop->id,
-            'plan_id' => $plan->id,
-            'payment_provider' => 'stripe',
-            'status' => 'active',
-        ]);
+        return response('OK', 200);
     }
 }

@@ -28,6 +28,8 @@ class PhysicalCheckoutService
         }
         $order = DB::transaction(function () use ($user, $shop, $address) {
             User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            // Serialize quota reservations across different buyers of this store.
+            $shop = Shop::whereKey($shop->id)->lockForUpdate()->firstOrFail();
             $cart = $user->cart()->lockForUpdate()->first();
             $items = $cart?->items()->where('shop_id', $shop->id)->orderBy('listing_id')->lockForUpdate()->get();
             if (! $items || $items->isEmpty()) {
@@ -76,6 +78,11 @@ class PhysicalCheckoutService
             }
             if (Order::where('user_id', $user->id)->where('shop_id', $shop->id)->where('inventory_reserved', true)->lockForUpdate()->exists()) {
                 throw ValidationException::withMessages(['cart' => 'Resume or cancel the existing checkout for this store before creating another.']);
+            }
+            if (! $shop->canReceiveOrder()) {
+                throw ValidationException::withMessages(['cart' => app()->getLocale() === 'ar'
+                    ? 'وصل المتجر إلى حد الطلبات في خطته أو لا توجد عضوية سارية. تواصل مع المتجر.'
+                    : 'This store has reached its plan order limit or has no valid membership. Contact the store.']);
             }
             $order = Order::create([
                 'order_number' => 'MW-'.Str::upper(Str::random(12)), 'user_id' => $user->id, 'shop_id' => $shop->id,

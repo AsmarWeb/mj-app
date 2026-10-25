@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Shop;
+use App\Models\Subscription;
 use App\Observers\ShopObserver;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Cashier::useSubscriptionModel(Subscription::class);
         Shop::observe(ShopObserver::class);
     }
 }

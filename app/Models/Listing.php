@@ -123,7 +123,7 @@ class Listing extends Model
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(
-            Subcategory::class,
+            SubCategory::class,
             'subcategory_id',
             'id'
         );
@@ -132,7 +132,7 @@ class Listing extends Model
     public function subcategories(): BelongsTo
     {
         return $this->belongsTo(
-            Subcategory::class,
+            SubCategory::class,
             'subcategory_id',
             'id'
         );

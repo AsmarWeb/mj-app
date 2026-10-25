@@ -1120,6 +1120,7 @@
             {{-- VIDEO --}}
             {{-- ===================================================== --}}
 
+            @if ($plan && !$plan->is_free)
             <div
                 class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 sm:p-8">
 
@@ -1158,6 +1159,8 @@
 
             </div>
 
+
+            @endif
 
             {{-- ===================================================== --}}
             {{-- PUBLISH --}}

@@ -6,7 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Section;
-use App\Models\Subcategory;
+use App\Models\SubCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -292,7 +292,7 @@ class CreateComponent extends Component
                     $this->section_id
                 )->get(),
 
-                'subcategories' => Subcategory::where(
+                'subcategories' => SubCategory::where(
                     'category_id',
                     $this->category_id
                 )->get(),
