@@ -7,6 +7,8 @@ use App\Models\Cart;
 use App\Models\Invoice;
 use App\Models\Listing;
 use App\Models\Order;
+use App\Models\RasloConnection;
+use App\Models\RasloShipment;
 use App\Models\Shop;
 use App\Models\User;
 use App\Services\Checkout\AedAmount;
@@ -16,6 +18,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
 use Mockery;
@@ -399,11 +402,47 @@ class PhysicalCheckoutTest extends TestCase
         }
         $listing = $this->listing();
         $order = Order::create(['order_number' => 'LEGACY-1', 'shop_id' => $listing->shop_id, 'user_id' => $this->buyer->id, 'total' => '10.00']);
-        $this->artisan('migrate:rollback', ['--step' => 1, '--force' => true])->assertExitCode(0);
+        $this->artisan('migrate:rollback', ['--step' => 2, '--force' => true])->assertExitCode(0);
         $this->assertFalse(Schema::hasColumn('orders', 'checkout_token'));
         $this->assertDatabaseHas('orders', ['id' => $order->id]);
         $this->artisan('migrate', ['--force' => true])->assertExitCode(0);
         $this->assertNull($order->fresh()->checkout_token);
+    }
+
+    public function test_enabled_raslo_connection_captures_before_payment_and_releases_outbox_only_when_paid(): void
+    {
+        $listing = $this->listing();
+        $this->cart($listing);
+        $connection = RasloConnection::create(['shop_id' => $listing->shop_id, 'public_id' => (string) Str::uuid(),
+            'remote_id' => 71, 'enabled' => true, 'api_key' => 'raslo_delivery_'.str_repeat('a', 64), 'verified_at' => now()]);
+        $order = $this->start($listing);
+        $this->assertDatabaseHas('raslo_shipments', ['order_id' => $order->id, 'state' => 'awaiting_payment']);
+        $shipment = RasloShipment::where('order_id', $order->id)->firstOrFail();
+        $this->assertSame('dubai', $shipment->payload['recipient']['emirate']);
+        app(PhysicalCheckoutService::class)->synchronize($this->paid($order));
+        $this->assertSame('pending', $shipment->fresh()->state);
+        app(PhysicalCheckoutService::class)->synchronize($this->paid($order));
+        $this->assertDatabaseCount('raslo_shipments', 1);
+    }
+
+    public function test_invalid_raslo_snapshot_stops_checkout_before_any_payment_is_created(): void
+    {
+        $listing = $this->listing();
+        $this->cart($listing);
+        RasloConnection::create(['shop_id' => $listing->shop_id, 'public_id' => (string) Str::uuid(),
+            'remote_id' => 72, 'enabled' => true, 'api_key' => 'raslo_delivery_'.str_repeat('a', 64), 'verified_at' => now()]);
+        $address = $this->address();
+        $address['address_line'] = 'x';
+        try {
+            app(PhysicalCheckoutService::class)->start($this->buyer, $listing->shop_id, $address);
+            $this->fail('Invalid address accepted');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('address_line', $e->errors());
+        }
+        $this->assertSame(0, $this->creates);
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertDatabaseCount('raslo_shipments', 0);
+        $this->assertSame(10, $listing->fresh()->quantity);
     }
 
     private function webhook(string $type, array $session)

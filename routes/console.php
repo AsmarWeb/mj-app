@@ -1,8 +1,11 @@
 <?php
 
+use App\Jobs\PollRasloShipment;
 use App\Models\Order;
+use App\Models\RasloShipment;
 use App\Services\Checkout\PhysicalCheckoutService;
 use App\Services\Checkout\StripeCheckoutGateway;
+use App\Services\Raslo\RasloWorker;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -49,3 +52,29 @@ Artisan::command('checkout:reconcile {--session= : Recover a verified physical c
     return $failed ? 1 : 0;
 });
 Schedule::command('checkout:reconcile')->everyFiveMinutes()->withoutOverlapping();
+
+Artisan::command('raslo:send-due', function () {
+    $this->info('Queued: '.app(RasloWorker::class)->due());
+});
+Artisan::command('raslo:poll', function () {
+    RasloShipment::whereNotNull('remote_id')->where('state', 'sent')
+        ->where(fn ($q) => $q->whereNull('last_polled_at')->orWhere('last_polled_at', '<=', now()->subMinutes(5)))
+        ->orderBy('id')->chunkById(100, function ($rows) {
+            foreach ($rows as $row) {
+                if (! $row->connection->enabled) {
+                    continue;
+                }
+                if (! RasloShipment::whereKey($row->id)->where(fn ($q) => $q->whereNull('last_polled_at')->orWhere('last_polled_at', '<=', now()->subMinutes(5)))->update(['last_polled_at' => now()])) {
+                    continue;
+                }
+                try {
+                    PollRasloShipment::dispatch($row->id);
+                } catch (Throwable $e) {
+                    RasloShipment::whereKey($row->id)->update(['last_polled_at' => null, 'error_code' => 'QUEUE_UNAVAILABLE']);
+                }
+            }
+        });
+    $this->info('Polling finished.');
+});
+Schedule::command('raslo:send-due')->everyMinute()->withoutOverlapping();
+Schedule::command('raslo:poll')->everyFiveMinutes()->withoutOverlapping();

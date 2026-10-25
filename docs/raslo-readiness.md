@@ -1,5 +1,7 @@
 # mj-app: checkout repairs before Raslo integration
 
+Historical preparation stage. The subsequent opt-in bridge is now described in [raslo-order-bridge.md](raslo-order-bridge.md).
+
 This update prepares **physical listing orders** for a Raslo adapter. It does not send any order to Raslo, store a Raslo key, or claim production readiness for every marketplace module.
 
 ## Changes

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\EnsurePhoneIsVerified;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\SupplierMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -25,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'stripe/webhook',
+            'integrations/raslo/events/*',
         ]);
 
         $middleware->alias([
@@ -32,8 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => Permission::class,
             'ability' => Ability::class,
             'phone.verified' => EnsurePhoneIsVerified::class,
-            'supplier' => \App\Http\Middleware\SupplierMiddleware::class,
-            'maintenance.check' => \App\Http\Middleware\CheckMaintenanceMode::class,
+            'supplier' => SupplierMiddleware::class,
+            'maintenance.check' => CheckMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

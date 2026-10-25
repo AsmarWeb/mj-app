@@ -68,4 +68,9 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Checkout and Raslo readiness
 
-See [docs/raslo-readiness.md](docs/raslo-readiness.md) for the checkout repairs, new migration, Stripe events, reconciliation, acceptance tests and remaining integration/release limits. Raslo order submission is not enabled by this update.
+See [docs/raslo-readiness.md](docs/raslo-readiness.md) for the checkout repairs, new migration, Stripe events, reconciliation, acceptance tests and remaining integration/release limits. That document describes the earlier preparation stage. The opt-in delivery bridge is documented in [docs/raslo-order-bridge.md](docs/raslo-order-bridge.md).
+
+
+## Raslo store delivery bridge
+
+Store owners can configure a dedicated Raslo Delivery API connection, automatically forward new eligible paid physical UAE/AED orders, and follow delivery state separately from payment. See [setup, queue/recovery and acceptance steps](docs/raslo-order-bridge.md). Buyers can use Profile → My deliveries.

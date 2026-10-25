@@ -45,6 +45,11 @@ class Order extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function rasloShipment()
+    {
+        return $this->hasOne(RasloShipment::class);
+    }
+
     public function customer()
     {
         return $this->belongsTo(User::class, 'user_id');

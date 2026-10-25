@@ -7,6 +7,7 @@ use App\Models\Listing;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Models\User;
+use App\Services\Raslo\RasloBridge;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -100,6 +101,8 @@ class PhysicalCheckoutService
                 'cancel_url' => route('checkout', ['shop_id' => $shop->id]),
             ]]);
 
+            app(RasloBridge::class)->capture($order);
+
             return $order;
         }, 3);
 
@@ -190,6 +193,7 @@ class PhysicalCheckoutService
                 }
                 $order->fill(['checkout_state' => 'expired', 'checkout_key' => null, 'inventory_reserved' => false,
                     'payment_status' => 'failed', 'status' => 'cancelled'])->save();
+                app(RasloBridge::class)->expired($order);
 
                 return;
             }
@@ -227,6 +231,7 @@ class PhysicalCheckoutService
                     }
                 }
             }
+            app(RasloBridge::class)->paid($order);
         }, 3);
     }
 }

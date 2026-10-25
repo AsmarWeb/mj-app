@@ -29,6 +29,7 @@
 
 
             @foreach ($orders as $order)
+                @if($order->rasloShipment)<a class="block text-orange-600" href="{{ route('raslo.tracking',$order) }}">{{ app()->getLocale()==='ar'?'متابعة التوصيل':'Delivery details' }}</a>@endif
                 <div class="bg-white dark:bg-gray-800 shadow rounded-2xl p-6">
 
 

@@ -41,6 +41,8 @@ use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\PodDigitalCheckoutController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\Raslo\RasloSettingsController;
+use App\Http\Controllers\Raslo\RasloWebhookController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Seller\StripeConnectController;
@@ -634,3 +636,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     Route::delete('/developers/{developer}', [AdminDeveloperController::class, 'destroy'])
         ->name('developers.destroy');
 });
+
+Route::middleware(['auth', 'verified', 'phone.verified', 'role:seller|administrator'])->group(function () {
+    Route::get('/seller/raslo', [RasloSettingsController::class, 'show'])->name('raslo.settings');
+    Route::post('/seller/raslo', [RasloSettingsController::class, 'update'])->middleware('throttle:10,1')->name('raslo.settings.update');
+    Route::post('/seller/raslo/orders/{order}/retry', [RasloSettingsController::class, 'retry'])->middleware('throttle:10,1')->name('raslo.retry');
+});
+Route::get('/orders/{order}/delivery', [RasloSettingsController::class, 'tracking'])->middleware('auth')->name('raslo.tracking');
+Route::post('/integrations/raslo/events/{connection}', RasloWebhookController::class)->middleware('throttle:120,1')->name('raslo.events');
+
+Route::get('/my-deliveries', [RasloSettingsController::class, 'deliveries'])->middleware('auth')->name('raslo.my-deliveries');

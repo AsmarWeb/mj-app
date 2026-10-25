@@ -1,4 +1,7 @@
 <x-app-layout>
+    @if(auth()->user()?->shop)
+        <div class="mx-auto max-w-7xl px-4 pt-5"><a href="{{ route('raslo.settings') }}" class="inline-block rounded-xl bg-orange-600 px-5 py-3 font-bold text-white">{{ app()->getLocale()==='ar'?'ربط توصيل رسلو':'Raslo delivery integration' }}</a></div>
+    @endif
 
     <div class="min-h-screen bg-[#faf7f2] text-[#211d19]">
 
