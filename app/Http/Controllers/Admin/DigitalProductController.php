@@ -7,8 +7,8 @@ use App\Models\DigitalCategory;
 use App\Models\DigitalProduct;
 use App\Models\Download;
 use App\Models\Supplier;
+use App\Services\Digital\DigitalFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DigitalProductController extends Controller
@@ -179,7 +179,7 @@ class DigitalProductController extends Controller
             $request->file('file')
                 ->store(
                     'digital-products/files',
-                    'public'
+                    'digital'
                 );
 
         }
@@ -376,11 +376,7 @@ class DigitalProductController extends Controller
 
         abort_unless($product->is_free || auth()->user()->downloads()->where('digital_product_id', $product->id)->where('paid', true)->exists(), 403);
 
-        return Storage::disk('public')
-            ->download(
-                $product->file,
-                basename($product->file)
-            );
+        return app(DigitalFiles::class)->download($product);
 
     }
 }

@@ -33,8 +33,8 @@ class CheckoutSecurityTest extends TestCase
 
     public function test_paid_file_routes_require_ownership_and_paid_entitlement(): void
     {
-        Storage::fake('public');
-        Storage::disk('public')->put('paid.zip', 'fixture');
+        Storage::fake('digital');
+        Storage::disk('digital')->put('paid.zip', 'fixture');
         $buyer = User::factory()->create();
         $other = User::factory()->create();
         $product = $this->product();

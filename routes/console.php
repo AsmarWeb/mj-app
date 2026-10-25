@@ -1,10 +1,12 @@
 <?php
 
 use App\Jobs\PollRasloShipment;
+use App\Models\DigitalProduct;
 use App\Models\Order;
 use App\Models\RasloShipment;
 use App\Services\Checkout\PhysicalCheckoutService;
 use App\Services\Checkout\StripeCheckoutGateway;
+use App\Services\Digital\DigitalFiles;
 use App\Services\Raslo\RasloEndpoint;
 use App\Services\Raslo\RasloWorker;
 use Illuminate\Foundation\Inspiring;
@@ -99,3 +101,25 @@ Artisan::command('raslo:check', function () {
 
     return in_array(false, $checks, true) ? 1 : 0;
 })->purpose('Check local Raslo automation configuration without sending requests');
+
+Artisan::command('digital:secure-files {--apply : Move referenced downloads to private storage after hash verification}', function () {
+    $failed = 0;
+    DigitalProduct::whereNotNull('file')->where('type', 'digital')->orderBy('id')->chunkById(50, function ($products) use (&$failed) {
+        foreach ($products as $product) {
+            if (! $this->option('apply')) {
+                $this->line('Review product '.$product->id.': use --apply to secure its referenced file.');
+
+                continue;
+            }
+            try {
+                app(DigitalFiles::class)->secure($product);
+                $this->info('Secured product '.$product->id);
+            } catch (Throwable $error) {
+                $failed++;
+                $this->error('Product '.$product->id.': migration failed; inspect storage permissions, missing files or conflicting copies.');
+            }
+        }
+    });
+
+    return $failed ? 1 : 0;
+})->purpose('Privatize existing digital downloads; dry run unless --apply is supplied');

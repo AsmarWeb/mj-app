@@ -30,6 +30,13 @@ return [
 
     'disks' => [
 
+        'digital' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/digital'),
+            'visibility' => 'private',
+            'throw' => true,
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

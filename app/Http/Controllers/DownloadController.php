@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Download;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Digital\DigitalFiles;
 
 class DownloadController extends Controller
 {
@@ -23,9 +23,6 @@ class DownloadController extends Controller
 
         $product->increment('downloads');
 
-        return Storage::disk('public')->download(
-            $product->file,
-            basename($product->file)
-        );
+        return app(DigitalFiles::class)->download($product);
     }
 }
