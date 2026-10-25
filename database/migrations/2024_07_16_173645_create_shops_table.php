@@ -47,7 +47,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('step')->default(1);
             $table->boolean('is_completed')->default(false);
             $table->boolean('is_active')->default(false);
-            $table->boolean('verified')->default(false)->after('is_active');
+            $table->boolean('verified')->default(false);
             $table->timestamp('verified_at')->nullable();
             $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->char('code', 3);
             $table->char('phone_code', 3);
-            $table->string('flag', 20)->nullable()->after('code');
+            $table->string('flag', 20)->nullable();
             $table->string('name', 255);
             $table->string('name_ar', 255);
             $table->string('slug');
