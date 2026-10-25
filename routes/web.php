@@ -282,6 +282,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::post('/checkout/{order}/resume', [CheckoutController::class, 'resume'])->middleware('throttle:10,1')->name('checkout.resume');
+    Route::post('/checkout/{order}/cancel', [CheckoutController::class, 'cancel'])->middleware('throttle:10,1')->name('checkout.cancel');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
+
     Route::get(
         '/checkout',
         [CheckoutController::class, 'checkout']
@@ -336,7 +340,6 @@ Route::get(
     [SupplierInvitationController::class, 'accept']
 )->name('supplier.invitation');
 
-
 Route::post(
     '/supplier/invitation/{token}',
     [SupplierInvitationController::class, 'store']
@@ -344,17 +347,14 @@ Route::post(
 
 Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
 
-
     Route::get(
         '/dashboard',
         [
             SupplierDashboardController::class,
-            'index'
+            'index',
         ]
     )
         ->name('dashboard');
-
-
 
     Route::get(
         '/products',
@@ -367,9 +367,6 @@ Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->na
     )
         ->name('products.index');
 
-
-
-
     Route::get(
         '/orders',
         function () {
@@ -380,9 +377,6 @@ Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->na
         }
     )
         ->name('orders.index');
-
-
-
 
     Route::get(
         '/payouts',
@@ -537,12 +531,12 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('auth')->post(
         '/digital-products/{slug}/checkout',
-        [DigitalProductController::class, 'checkout']
+        [PodDigitalCheckoutController::class, 'checkoutProduct']
     )->name('digital-products.checkout');
 
     Route::get(
         '/digital-products/{slug}/success',
-        [DigitalProductController::class, 'success']
+        [PodDigitalCheckoutController::class, 'successProduct']
     )->name('digital-products.success');
 
     Route::middleware('auth')->get(

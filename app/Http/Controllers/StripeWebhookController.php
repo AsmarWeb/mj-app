@@ -4,10 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Plan;
 use App\Models\User;
+use App\Services\Checkout\PhysicalCheckoutService;
+use Illuminate\Http\Request;
 use Laravel\Cashier\Http\Controllers\WebhookController;
 
 class StripeWebhookController extends WebhookController
 {
+    public function handleWebhook(Request $request)
+    {
+        abort_unless(filled(config('cashier.webhook.secret')), 503, 'Webhook signing is not configured.');
+
+        return parent::handleWebhook($request);
+    }
+
+    protected function handleCheckoutSessionCompleted(array $payload)
+    {
+        app(PhysicalCheckoutService::class)->synchronize($payload['data']['object']);
+
+        return response('OK', 200);
+    }
+
+    protected function handleCheckoutSessionAsyncPaymentSucceeded(array $payload)
+    {
+        return $this->handleCheckoutSessionCompleted($payload);
+    }
+
+    protected function handleCheckoutSessionExpired(array $payload)
+    {
+        return $this->handleCheckoutSessionCompleted($payload);
+    }
+
     protected function handleCustomerSubscriptionCreated(array $payload)
     {
         $response = parent::handleCustomerSubscriptionCreated($payload);

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Listing;
+use App\Services\Checkout\CartService;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -25,14 +25,14 @@ class CartController extends Controller
             ]);
         }
 
-        $shops = $cart->items
+        $shops = $cart->items->filter(fn ($item) => $item->listing && $item->listing->shop)
             ->groupBy(function ($item) {
 
                 return $item->listing->shop_id;
 
             });
 
-        $total = $cart->items->sum(function ($item) {
+        $total = $shops->flatten(1)->sum(function ($item) {
 
             return $item->price * $item->quantity;
 
@@ -44,17 +44,11 @@ class CartController extends Controller
         ));
     }
 
-    public function increase(CartItem $item)
+    public function increase(CartItem $item, CartService $carts)
     {
-        abort_unless(
-            $item->cart->user_id == auth()->id(),
-            403
-        );
+        $carts->increase(auth()->user(), $item);
 
-        if ($item->quantity >= $item->listing->quantity) {
-            return back()->with('error', 'Maximum available stock reached.');
-        }
-        $item->increment('quantity');
+        return back();
     }
 
     public function decrease(CartItem $item)
@@ -83,54 +77,11 @@ class CartController extends Controller
         return back()->with('success', 'Item removed from basket.');
     }
 
-    public function add(Request $request, Listing $listing)
+    public function add(Request $request, Listing $listing, CartService $carts)
     {
-        $user = auth()->user();
+        $data = $request->validate(['quantity' => ['sometimes', 'integer', 'min:1', 'max:99']]);
+        $carts->add($request->user(), $listing->id, (int) ($data['quantity'] ?? 1));
 
-        $cart = Cart::firstOrCreate([
-            'user_id' => $user->id,
-        ]);
-
-        $item = $cart->items()
-            ->where('listing_id', $listing->id)
-            ->first();
-
-        if ($item) {
-
-            $newQuantity = $item->quantity + ($request->quantity ?? 1);
-
-            if ($newQuantity > $listing->quantity) {
-
-                return back()->with(
-                    'error',
-                    'Not enough stock available.'
-                );
-
-            }
-
-            $item->update([
-                'quantity' => $newQuantity,
-            ]);
-
-        } else {
-
-            $cart->items()->create([
-
-                'listing_id' => $listing->id,
-
-                'shop_id' => $listing->shop_id,
-
-                'quantity' => $request->quantity ?? 1,
-
-                'price' => $listing->price,
-
-            ]);
-
-        }
-
-        return back()->with(
-            'success',
-            'Product added to cart'
-        );
+        return back()->with('success', 'Product added to cart');
     }
 }

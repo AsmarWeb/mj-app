@@ -30,6 +30,7 @@ return new class extends Migration
 
             $table->index(['user_id', 'stripe_status']);
         });
+        Schema::table('payments', fn (Blueprint $table) => $table->foreign('subscription_id')->references('id')->on('subscriptions')->cascadeOnDelete());
     }
 
     /**
@@ -37,6 +38,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('payments', fn (Blueprint $table) => $table->dropForeign(['subscription_id']));
         Schema::dropIfExists('subscriptions');
     }
 };

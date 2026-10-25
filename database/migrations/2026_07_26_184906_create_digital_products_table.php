@@ -20,7 +20,7 @@ return new class extends Migration
             |--------------------------------------------------------------------------
             */
 
-            $table->enum('type', ['digital','pod','service',])->default('digital');
+            $table->enum('type', ['digital', 'pod', 'service'])->default('digital');
 
             /*
             |--------------------------------------------------------------------------
@@ -92,13 +92,12 @@ return new class extends Migration
             |--------------------------------------------------------------------------
             */
 
-
-            $table->foreignId('supplier_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('supplier_id')->nullable();
 
             $table->string('base_product')->nullable();
             // T-Shirt, Mug, Hoodie...
 
-            $table->decimal('base_cost',10,2)->nullable();
+            $table->decimal('base_cost', 10, 2)->nullable();
 
             $table->json('sizes')->nullable();
             // ["S","M","L","XL"]
@@ -123,7 +122,6 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('digital_categories')
                 ->nullOnDelete();
-            
 
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
@@ -153,6 +151,8 @@ return new class extends Migration
 
             $table->timestamps();
         });
+        Schema::table('order_items', fn (Blueprint $table) => $table->foreign('digital_product_id')->references('id')->on('digital_products')->nullOnDelete());
+        Schema::table('downloads', fn (Blueprint $table) => $table->foreign('digital_product_id')->references('id')->on('digital_products')->cascadeOnDelete());
     }
 
     /**
@@ -160,6 +160,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('order_items', fn (Blueprint $table) => $table->dropForeign(['digital_product_id']));
+        Schema::table('downloads', fn (Blueprint $table) => $table->dropForeign(['digital_product_id']));
         Schema::dropIfExists('digital_products');
     }
 };

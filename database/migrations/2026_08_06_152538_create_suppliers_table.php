@@ -14,123 +14,124 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             // Supplier owner / account
-    $table->foreignId('user_id')
-        ->nullable()
-        ->constrained()
-        ->nullOnDelete();
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
 
-    // Invitation
-    $table->uuid('invite_token')
-        ->nullable()
-        ->unique();
+            // Invitation
+            $table->uuid('invite_token')
+                ->nullable()
+                ->unique();
 
-    $table->timestamp('invited_at')
-        ->nullable();
+            $table->timestamp('invited_at')
+                ->nullable();
 
-    // =========================================================
-    // BASIC INFORMATION
-    // =========================================================
+            // =========================================================
+            // BASIC INFORMATION
+            // =========================================================
 
-    $table->string('name');
+            $table->string('name');
 
-    $table->string('company')
-        ->nullable();
+            $table->string('company')
+                ->nullable();
 
-    $table->string('email')
-        ->nullable();
+            $table->string('email')
+                ->nullable();
 
-    $table->string('phone')
-        ->nullable();
+            $table->string('phone')
+                ->nullable();
 
-    $table->string('whatsapp')
-        ->nullable();
+            $table->string('whatsapp')
+                ->nullable();
 
-    // =========================================================
-    // UAE INFORMATION
-    // =========================================================
+            // =========================================================
+            // UAE INFORMATION
+            // =========================================================
 
-    $table->string('country')
-        ->default('UAE');
+            $table->string('country')
+                ->default('UAE');
 
-    $table->string('emirate')
-        ->nullable();
+            $table->string('emirate')
+                ->nullable();
 
-    $table->text('address')
-        ->nullable();
+            $table->text('address')
+                ->nullable();
 
-    $table->string('vat_number')
-        ->nullable();
+            $table->string('vat_number')
+                ->nullable();
 
-    // =========================================================
-    // SUPPLIER TYPE
-    // =========================================================
+            // =========================================================
+            // SUPPLIER TYPE
+            // =========================================================
 
-    $table->enum('supplier_type', [
-        'pod',
-        'manufacturer',
-        'wholesaler',
-        'distributor',
-        'local'
-    ])->default('pod');
+            $table->enum('supplier_type', [
+                'pod',
+                'manufacturer',
+                'wholesaler',
+                'distributor',
+                'local',
+            ])->default('pod');
 
-    $table->enum('type', [
-        'local',
-        'printful',
-        'printify',
-        'other'
-    ])->default('local');
+            $table->enum('type', [
+                'local',
+                'printful',
+                'printify',
+                'other',
+            ])->default('local');
 
-    // =========================================================
-    // WEBSITE
-    // =========================================================
+            // =========================================================
+            // WEBSITE
+            // =========================================================
 
-    $table->string('website')
-        ->nullable();
+            $table->string('website')
+                ->nullable();
 
-    // =========================================================
-    // API / INTEGRATION
-    // =========================================================
+            // =========================================================
+            // API / INTEGRATION
+            // =========================================================
 
-    $table->text('api_key')
-        ->nullable();
+            $table->text('api_key')
+                ->nullable();
 
-    $table->text('api_secret')
-        ->nullable();
+            $table->text('api_secret')
+                ->nullable();
 
-    $table->string('api_base_url')
-        ->nullable();
+            $table->string('api_base_url')
+                ->nullable();
 
-    $table->boolean('api_enabled')
-        ->default(false);
+            $table->boolean('api_enabled')
+                ->default(false);
 
-    // =========================================================
-    // MARKETPLACE
-    // =========================================================
+            // =========================================================
+            // MARKETPLACE
+            // =========================================================
 
-    $table->decimal('commission', 10, 2)
-        ->default(0);
+            $table->decimal('commission', 10, 2)
+                ->default(0);
 
-    $table->enum('commission_type', [
-        'percentage',
-        'fixed'
-    ])->default('percentage');
+            $table->enum('commission_type', [
+                'percentage',
+                'fixed',
+            ])->default('percentage');
 
-    // =========================================================
-    // STATUS
-    // =========================================================
+            // =========================================================
+            // STATUS
+            // =========================================================
 
-    $table->enum('status', [
-        'active',
-        'inactive',
-        'pending',
-        'suspended'
-    ])->default('active');
+            $table->enum('status', [
+                'active',
+                'inactive',
+                'pending',
+                'suspended',
+            ])->default('active');
 
-    // =========================================================
-    // TIMESTAMPS
-    // =========================================================
+            // =========================================================
+            // TIMESTAMPS
+            // =========================================================
             $table->timestamps();
         });
+        Schema::table('digital_products', fn (Blueprint $table) => $table->foreign('supplier_id')->references('id')->on('suppliers')->nullOnDelete());
     }
 
     /**
@@ -138,6 +139,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('digital_products', fn (Blueprint $table) => $table->dropForeign(['supplier_id']));
         Schema::dropIfExists('suppliers');
     }
 };

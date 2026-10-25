@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Rules\NotReservedUsername;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,8 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
-        $user->addRole('user');
+        $role = Role::firstOrCreate(['name' => 'user'], ['display_name' => 'User']);
+        $user->addRole($role);
 
         return $user;
     }

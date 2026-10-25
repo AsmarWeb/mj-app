@@ -13,7 +13,7 @@ class DownloadController extends Controller
             ->where('token', $token)
             ->firstOrFail();
 
-        abort_unless($download->user_id === auth()->id(), 403);
+        abort_unless((int) $download->user_id === (int) auth()->id() && $download->paid, 403);
 
         $product = $download->product;
 

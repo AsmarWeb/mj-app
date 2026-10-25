@@ -3,23 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\DigitalProductPurchased;
 use App\Models\DigitalCategory;
 use App\Models\DigitalProduct;
 use App\Models\Download;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Stripe\Checkout\Session;
-use Stripe\Stripe;
-
 
 class DigitalProductController extends Controller
 {
-
-
     /*
     |--------------------------------------------------------------------------
     | Products
@@ -30,29 +23,27 @@ class DigitalProductController extends Controller
     {
 
         $products = DigitalProduct::with([
-                'digitalCategory',
-                'supplier'
-            ])
-            ->when($request->search,function($query) use($request){
+            'digitalCategory',
+            'supplier',
+        ])
+            ->when($request->search, function ($query) use ($request) {
 
-                $query->where('title','like','%'.$request->search.'%')
-                    ->orWhere('title_ar','like','%'.$request->search.'%');
-
-            })
-            ->when($request->type,function($query) use($request){
-
-                $query->where('type',$request->type);
+                $query->where('title', 'like', '%'.$request->search.'%')
+                    ->orWhere('title_ar', 'like', '%'.$request->search.'%');
 
             })
-            ->when($request->status,function($query) use($request){
+            ->when($request->type, function ($query) use ($request) {
 
-                $query->where('status',$request->status);
+                $query->where('type', $request->type);
+
+            })
+            ->when($request->status, function ($query) use ($request) {
+
+                $query->where('status', $request->status);
 
             })
             ->latest()
             ->paginate(20);
-
-
 
         return view(
             'admin.digital-products.index',
@@ -60,10 +51,6 @@ class DigitalProductController extends Controller
         );
 
     }
-
-
-
-
 
     /*
     |--------------------------------------------------------------------------
@@ -78,19 +65,15 @@ class DigitalProductController extends Controller
             'status',
             'active'
         )
-        ->orderBy('category_name')
-        ->get();
-
-
+            ->orderBy('category_name')
+            ->get();
 
         $suppliers = Supplier::where(
             'status',
             'active'
         )
-        ->orderBy('name')
-        ->get();
-
-
+            ->orderBy('name')
+            ->get();
 
         return view(
             'admin.digital-products.create',
@@ -102,11 +85,6 @@ class DigitalProductController extends Controller
 
     }
 
-
-
-
-
-
     /*
     |--------------------------------------------------------------------------
     | Store Product
@@ -116,97 +94,60 @@ class DigitalProductController extends Controller
     public function store(Request $request)
     {
 
-
         $request->validate([
 
+            'type' => 'required|in:digital,pod,service',
 
-            'type'=>'required|in:digital,pod,service',
+            'digital_category_id' => 'nullable|exists:digital_categories,id',
 
+            'title' => 'required|string|max:255',
 
-            'digital_category_id'=>
-            'nullable|exists:digital_categories,id',
+            'title_ar' => 'nullable|string|max:255',
 
+            'description' => 'required|string',
 
-            'title'=>'required|string|max:255',
+            'description_ar' => 'nullable|string',
 
-            'title_ar'=>'nullable|string|max:255',
+            'price' => 'required|numeric|min:0',
 
-
-            'description'=>'required|string',
-
-            'description_ar'=>'nullable|string',
-
-
-
-            'price'=>'required|numeric|min:0',
-
-
-
-            'image'=>
-            'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-
-
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
 
             /*
             Digital only
             */
 
             'file' => [
-    'nullable',
-    'file',
-    'max:102400',
-    'required_if:type,digital',
-],
-
-
+                'nullable',
+                'file',
+                'max:102400',
+                'required_if:type,digital',
+            ],
 
             /*
             POD only
             */
 
-            'supplier_id'=>
-            'required_if:type,pod|nullable|exists:suppliers,id',
+            'supplier_id' => 'required_if:type,pod|nullable|exists:suppliers,id',
 
+            'base_product' => 'required_if:type,pod|nullable|string',
 
-            'base_product'=>
-            'required_if:type,pod|nullable|string',
+            'base_cost' => 'required_if:type,pod|nullable|numeric',
 
+            'sizes' => 'nullable|array',
 
-            'base_cost'=>
-            'required_if:type,pod|nullable|numeric',
-
-
-
-            'sizes'=>'nullable|array',
-
-            'colors'=>'nullable|array',
-
-
-
+            'colors' => 'nullable|array',
 
             /*
             Common
             */
 
-            'gallery.*'=>
-            'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
 
+            'license' => 'nullable|in:personal,commercial,extended',
 
-
-            'license'=>
-            'nullable|in:personal,commercial,extended',
-
-
-
-            'status'=>
-            'required|in:draft,published,archived',
-
+            'status' => 'required|in:draft,published,archived',
 
         ]);
-
-
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -214,17 +155,11 @@ class DigitalProductController extends Controller
         |--------------------------------------------------------------------------
         */
 
-
         $image = $request->file('image')
             ->store(
                 'digital-products/images',
                 'public'
             );
-
-
-
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -232,28 +167,22 @@ class DigitalProductController extends Controller
         |--------------------------------------------------------------------------
         */
 
-
         $file = null;
 
-
-        if(
+        if (
             $request->type === 'digital'
             &&
             $request->hasFile('file')
-        ){
+        ) {
 
             $file =
             $request->file('file')
-            ->store(
-                'digital-products/files',
-                'public'
-            );
+                ->store(
+                    'digital-products/files',
+                    'public'
+                );
 
         }
-
-
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -261,15 +190,11 @@ class DigitalProductController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        $gallery = [];
 
-        $gallery=[];
+        if ($request->hasFile('gallery')) {
 
-
-        if($request->hasFile('gallery')){
-
-
-            foreach($request->file('gallery') as $photo){
-
+            foreach ($request->file('gallery') as $photo) {
 
                 $gallery[] =
                 $photo->store(
@@ -277,14 +202,9 @@ class DigitalProductController extends Controller
                     'public'
                 );
 
-
             }
 
         }
-
-
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -292,178 +212,111 @@ class DigitalProductController extends Controller
         |--------------------------------------------------------------------------
         */
 
-
         DigitalProduct::create([
 
+            'type' => $request->type,
 
-            'type'=>$request->type,
+            'digital_category_id' => $request->digital_category_id,
 
+            'title' => $request->title,
 
+            'title_ar' => $request->title_ar,
 
-            'digital_category_id'=>
-            $request->digital_category_id,
+            'description' => $request->description,
 
+            'description_ar' => $request->description_ar,
 
-
-            'title'=>$request->title,
-
-            'title_ar'=>$request->title_ar,
-
-
-
-            'description'=>$request->description,
-
-            'description_ar'=>$request->description_ar,
-
-
-
-            'slug'=>
-            Str::slug($request->title)
+            'slug' => Str::slug($request->title)
             .'-'
             .Str::random(6),
 
+            'price' => $request->price,
 
+            'is_free' => $request->price <= 0,
 
+            'image' => $image,
 
-            'price'=>$request->price,
-
-            'is_free'=>$request->price <= 0,
-
-
-
-            'image'=>$image,
-
-            'file'=>$file,
-
-
-
-
+            'file' => $file,
 
             /*
             Digital
             */
 
-            'version'=>$request->version,
+            'version' => $request->version,
 
-            'compatible_with'=>$request->compatible_with,
+            'compatible_with' => $request->compatible_with,
 
-            'file_size'=>$request->file_size,
+            'file_size' => $request->file_size,
 
-            'included_files'=>$request->included_files,
+            'included_files' => $request->included_files,
 
-
-
-            'license'=>
-            $request->license ?? 'personal',
-
-
-
+            'license' => $request->license ?? 'personal',
 
             /*
             POD
             */
 
-
-            'supplier_id'=>
-            $request->type === 'pod'
+            'supplier_id' => $request->type === 'pod'
             ? $request->supplier_id
             : null,
 
-
-
-            'base_product'=>
-            $request->type === 'pod'
+            'base_product' => $request->type === 'pod'
             ? $request->base_product
             : null,
 
-
-
-            'base_cost'=>
-            $request->type === 'pod'
+            'base_cost' => $request->type === 'pod'
             ? $request->base_cost
             : null,
 
-
-
-            'sizes'=>
-            $request->type === 'pod'
+            'sizes' => $request->type === 'pod'
             ? $request->sizes
             : null,
 
-
-
-            'colors'=>
-            $request->type === 'pod'
+            'colors' => $request->type === 'pod'
             ? $request->colors
             : null,
 
+            'preview_url' => $request->preview_url,
 
+            'video_url' => $request->video_url,
 
+            'requirements' => $request->requirements,
 
+            'installation' => $request->installation,
 
-            'preview_url'=>$request->preview_url,
+            'changelog' => $request->changelog,
 
-            'video_url'=>$request->video_url,
-
-
-
-            'requirements'=>$request->requirements,
-
-            'installation'=>$request->installation,
-
-            'changelog'=>$request->changelog,
-
-
-
-            'gallery'=>$gallery,
-
-
-
-
+            'gallery' => $gallery,
 
             /*
             Marketplace
             */
 
+            'downloads' => 0,
 
-            'downloads'=>0,
+            'favorites' => 0,
 
-            'favorites'=>0,
+            'rating' => 0,
 
-            'rating'=>0,
-
-            'reviews'=>0,
-
-
+            'reviews' => 0,
 
             /*
             Admin owner
             */
 
+            'user_id' => auth()->id(),
 
-            'user_id'=>auth()->id(),
+            'owner_type' => 'admin',
 
-            'owner_type'=>'admin',
+            'commission' => 0,
 
-            'commission'=>0,
+            'requires_approval' => false,
 
-            'requires_approval'=>false,
+            'featured' => $request->boolean('featured'),
 
-
-
-            'featured'=>
-            $request->boolean('featured'),
-
-
-
-            'status'=>$request->status,
-
-
+            'status' => $request->status,
 
         ]);
-
-
-
 
         return redirect()
             ->route('digital-products.index')
@@ -472,13 +325,7 @@ class DigitalProductController extends Controller
                 'Product created successfully.'
             );
 
-
     }
-
-
-
-
-
 
     /*
     |--------------------------------------------------------------------------
@@ -486,23 +333,20 @@ class DigitalProductController extends Controller
     |--------------------------------------------------------------------------
     */
 
-
     public function show($slug)
     {
 
         $product =
         DigitalProduct::with([
             'digitalCategory',
-            'supplier'
+            'supplier',
         ])
-        ->whereSlug($slug)
-        ->where(
-            'status',
-            'published'
-        )
-        ->firstOrFail();
-
-
+            ->whereSlug($slug)
+            ->where(
+                'status',
+                'published'
+            )
+            ->firstOrFail();
 
         return view(
             'admin.digital-products.show',
@@ -511,36 +355,26 @@ class DigitalProductController extends Controller
 
     }
 
-
-
-
-
-
-
     /*
     |--------------------------------------------------------------------------
     | Download
     |--------------------------------------------------------------------------
     */
 
-
     public function download($slug)
     {
 
-
         $product =
         DigitalProduct::whereSlug($slug)
-        ->firstOrFail();
+            ->firstOrFail();
 
-
-
-        if($product->type !== 'digital'){
+        if ($product->type !== 'digital') {
 
             abort(404);
 
         }
 
-
+        abort_unless($product->is_free || auth()->user()->downloads()->where('digital_product_id', $product->id)->where('paid', true)->exists(), 403);
 
         return Storage::disk('public')
             ->download(
@@ -548,9 +382,5 @@ class DigitalProductController extends Controller
                 basename($product->file)
             );
 
-
     }
-
-
-
 }

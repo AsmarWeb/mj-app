@@ -530,7 +530,7 @@
                             </div>
 
 
-                            <a href="{{ route('digital-products.checkout', $listing->slug) }}"
+                            <a href="{{ route('digital-products.show', $listing->slug) }}"
                                 class="mt-5 block rounded-xl bg-purple-600 px-6 py-4 text-center font-bold text-white transition hover:bg-purple-700">
                                 {{ $labels['buy_download'] }}
                             </a>

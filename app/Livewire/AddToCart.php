@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Cart;
 use App\Models\Listing;
+use App\Services\Checkout\CartService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -36,26 +37,8 @@ class AddToCart extends Component
             return redirect()->route('login');
         }
 
-        $cart = Cart::firstOrCreate([
-            'user_id' => Auth::id(),
-        ]);
-
-        $item = $cart->items()->where('listing_id', $this->listing->id)->first();
-
-        if ($item) {
-            $item->increment('quantity', $this->quantity);
-        } else {
-            $cart->items()->create([
-
-                'listing_id' => $this->listing->id,
-
-                'shop_id' => $this->listing->shop_id,
-
-                'price' => $this->listing->price,
-
-                'quantity' => $this->quantity,
-            ]);
-        }
+        $this->validate(['quantity' => ['required', 'integer', 'min:1', 'max:99']]);
+        app(CartService::class)->add(Auth::user(), $this->listing->id, (int) $this->quantity);
 
         $this->added = true;
 

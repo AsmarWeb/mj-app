@@ -10,10 +10,11 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+          extensions: pdo_sqlite, sqlite3, mbstring, gd, intl, zip, bcmath
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20.10.0
+          node-version: 22
       - name: Copy .env
         run: cp .env.example .env
       - name: Install composer Dependencies
@@ -23,6 +24,10 @@ jobs:
       - name: Setup Project
         run: |
           npm run build
+      - name: Test before deployment
+        run: |
+          php artisan key:generate
+          php artisan test
       - name: Deploy PHP to Server
         if: ${{ success() }}
         uses: appleboy/ssh-action@master

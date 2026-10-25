@@ -38,7 +38,7 @@ return new class extends Migration
             $table->unsignedBigInteger('views')->default(0);
             $table->datetime('published_at')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->unique();
-            $table->foreignId('plan_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('plan_id')->nullable();
             $table->string('stripe_account_id')->nullable();
             $table->boolean('stripe_connected')->default(false);
             $table->foreignIdFor(User::class, 'updated_by')->nullable();
