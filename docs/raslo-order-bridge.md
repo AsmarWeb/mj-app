@@ -1,3 +1,5 @@
+> Shipping selection update: new orders are automatically forwarded only when their products use **Raslo** shipping. Existing products are unchanged. Read [checkout and automation setup](raslo-checkout-experience.md) first. Existing shipment snapshots remain valid.
+
 # mj-app → Raslo delivery bridge
 
 This update is for **mj-app only**, on top of `mj-raslo-readiness-update`. No Raslo server or mobile patch is required. It does not synchronize catalog products or modify Stripe payments, commission, refunds or checkout shipping charges.

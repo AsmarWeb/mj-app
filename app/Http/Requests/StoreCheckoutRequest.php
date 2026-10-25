@@ -36,11 +36,33 @@ class StoreCheckoutRequest extends FormRequest
             'emirate' => ['required', Rule::in(['abu_dhabi', 'dubai', 'sharjah', 'ajman', 'umm_al_quwain', 'ras_al_khaimah', 'fujairah'])],
             'city' => ['required', 'string', 'max:120'],
             'area' => ['required', 'string', 'max:120'],
-            'address_line' => ['required', 'string', 'max:500'],
+            'address_line' => ['required', 'string', 'min:5', 'max:500'],
             'building' => ['required', 'string', 'max:120'],
             'unit' => ['nullable', 'string', 'max:60'],
             'landmark' => ['nullable', 'string', 'max:200'],
             'delivery_notes' => ['nullable', 'string', 'max:500'],
         ];
+    }
+
+    public function messages(): array
+    {
+        if (app()->getLocale() !== 'ar') {
+            return ['recipient_phone.regex' => 'Enter a valid UAE phone, such as 050 123 4567 or +971501234567.',
+                'address_line.min' => 'Add at least 5 characters of street and address details.'];
+        }
+
+        return ['required' => 'حقل :attribute مطلوب.', 'string' => 'أدخل نصًا صالحًا في :attribute.',
+            'max.string' => 'يجب ألا يتجاوز :attribute عدد :max حرفًا.', 'integer' => 'اختر قيمة صحيحة لحقل :attribute.',
+            'recipient_phone.regex' => 'أدخل رقم هاتف إماراتيًا صحيحًا مثل 0501234567 أو ‎+971501234567.',
+            'emirate.in' => 'اختر إحدى إمارات الدولة من القائمة.', 'shop_id.exists' => 'اختر متجرًا متاحًا من السلة.',
+            'address_line.min' => 'أضف 5 أحرف على الأقل لتوضيح الشارع والعنوان.'];
+    }
+
+    public function attributes(): array
+    {
+        return app()->getLocale() === 'ar' ? ['shop_id' => 'المتجر', 'recipient_name' => 'اسم المستلم',
+            'recipient_phone' => 'هاتف المستلم', 'emirate' => 'الإمارة', 'city' => 'المدينة', 'area' => 'المنطقة',
+            'address_line' => 'العنوان', 'building' => 'المبنى', 'unit' => 'الوحدة', 'landmark' => 'المعلم القريب',
+            'delivery_notes' => 'تعليمات التوصيل'] : [];
     }
 }

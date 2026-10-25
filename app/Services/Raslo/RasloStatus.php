@@ -8,6 +8,20 @@ use RuntimeException;
 
 class RasloStatus
 {
+    public static function label(?string $value): string
+    {
+        $states = ['awaiting_payment' => ['بانتظار الدفع', 'Awaiting payment'], 'pending' => ['بانتظار الإرسال', 'Queued'],
+            'retry' => ['ستتم إعادة المحاولة', 'Retry scheduled'], 'processing' => ['قيد الإرسال', 'Sending'], 'sent' => ['تم الربط', 'Connected'],
+            'review' => ['يحتاج مراجعة', 'Needs attention'], 'pending_pricing' => ['بانتظار التسعير', 'Awaiting pricing'],
+            'priced' => ['بانتظار الموافقة على السعر', 'Awaiting price approval'], 'accepted' => ['تم قبول السعر', 'Price approved'],
+            'assigned' => ['تم تعيين السائق', 'Driver assigned'], 'picked_up' => ['تم الاستلام', 'Picked up'], 'in_transit' => ['في الطريق', 'In transit'],
+            'delivered' => ['تم التسليم', 'Delivered'], 'completed' => ['اكتمل التوصيل', 'Completed'], 'cancelled' => ['ملغي', 'Cancelled'],
+            'delivery_failed' => ['تعذر التوصيل', 'Delivery unsuccessful'], 'rescheduled' => ['أعيدت الجدولة', 'Rescheduled']];
+
+        return $states[$value][app()->getLocale() === 'ar' ? 0 : 1]
+            ?? (app()->getLocale() === 'ar' ? 'بانتظار تحديث التوصيل' : 'Awaiting delivery update');
+    }
+
     public function apply(RasloShipment $row, array $data, bool $poll = false): void
     {
         if (! is_string($data['id'] ?? null) || ! Str::isUuid($data['id']) || ($row->remote_id && $row->remote_id !== $data['id'])

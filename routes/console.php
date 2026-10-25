@@ -5,6 +5,7 @@ use App\Models\Order;
 use App\Models\RasloShipment;
 use App\Services\Checkout\PhysicalCheckoutService;
 use App\Services\Checkout\StripeCheckoutGateway;
+use App\Services\Raslo\RasloEndpoint;
 use App\Services\Raslo\RasloWorker;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -78,3 +79,23 @@ Artisan::command('raslo:poll', function () {
 });
 Schedule::command('raslo:send-due')->everyMinute()->withoutOverlapping();
 Schedule::command('raslo:poll')->everyFiveMinutes()->withoutOverlapping();
+
+// Local diagnostics only: no credential output, payments or delivery requests.
+Artisan::command('raslo:check', function () {
+    $checks = [];
+    try {
+        app(RasloEndpoint::class)->base();
+        $checks['Raslo HTTPS API address'] = true;
+    } catch (Throwable $error) {
+        $checks['Raslo HTTPS API address'] = false;
+    }
+    $connection = config('queue.default');
+    $checks['Durable queue (database or Redis)'] = in_array($connection, ['database', 'redis'], true);
+    $checks['Queue lease exceeds job timeout'] = (int) config('queue.connections.'.$connection.'.retry_after', 0) > 60;
+    foreach ($checks as $name => $ok) {
+        $this->line(($ok ? 'OK: ' : 'CHECK: ').$name);
+    }
+    $this->line('Local configuration only. Confirm that queue workers, scheduler and Stripe webhook are running.');
+
+    return in_array(false, $checks, true) ? 1 : 0;
+})->purpose('Check local Raslo automation configuration without sending requests');

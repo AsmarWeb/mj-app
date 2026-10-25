@@ -8,6 +8,8 @@ use App\Models\RasloConnection;
 use App\Models\Shop;
 use App\Services\Raslo\RasloBridge;
 use App\Services\Raslo\RasloClient;
+use App\Services\Raslo\RasloEndpoint;
+use App\Services\Raslo\RasloStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -102,6 +104,18 @@ class RasloSettingsController extends Controller
     {
         abort_unless((int) $order->user_id === (int) $request->user()->id || (int) $order->shop?->user_id === (int) $request->user()->id, 404);
 
-        return response()->view('raslo.tracking', ['order' => $order->load('rasloShipment')])->header('Cache-Control', 'no-store')->header('Referrer-Policy', 'no-referrer');
+        $order->load('rasloShipment');
+        if ($request->expectsJson()) {
+            $shipment = $order->rasloShipment;
+
+            return response()->json([
+                'status_label' => RasloStatus::label($shipment?->delivery_status ?: $shipment?->state),
+                'tracking_number' => $shipment?->tracking_number,
+                'tracking_url' => app(RasloEndpoint::class)->tracking($shipment?->tracking_url),
+                'updated_at' => $shipment?->updated_at?->timezone('Asia/Dubai')->format('Y-m-d H:i'),
+            ])->header('Cache-Control', 'no-store')->header('Referrer-Policy', 'no-referrer');
+        }
+
+        return response()->view('raslo.tracking', ['order' => $order])->header('Cache-Control', 'no-store')->header('Referrer-Policy', 'no-referrer');
     }
 }

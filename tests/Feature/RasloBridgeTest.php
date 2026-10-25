@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Jobs\PollRasloShipment;
 use App\Jobs\SendRasloShipment;
+use App\Livewire\Seller\CreateListing;
 use App\Models\Listing;
 use App\Models\Order;
 use App\Models\RasloConnection;
@@ -19,6 +20,7 @@ use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Mockery;
@@ -57,7 +59,7 @@ class RasloBridgeTest extends TestCase
     {
         $order = Order::create(['user_id' => User::factory()->create()->id, 'shop_id' => $this->shop->id, 'order_number' => 'TEST-'.Str::random(8),
             'total' => '24.70', 'payment_status' => 'paid', 'status' => 'processing', 'checkout_token' => (string) Str::uuid(), 'checkout_currency' => 'AED',
-            'shipping_address' => ['country' => 'AE', 'recipient_name' => 'Test Recipient', 'recipient_phone' => '+971501234567', 'city' => 'Dubai',
+            'shipping_address' => ['shipping_method' => 'Raslo', 'country' => 'AE', 'recipient_name' => 'Test Recipient', 'recipient_phone' => '+971501234567', 'city' => 'Dubai',
                 'emirate' => 'dubai', 'area' => 'Al Barsha', 'address_line' => 'Test street 1', 'building' => 'Building 2', 'unit' => '12']]);
         $listing = Listing::forceCreate(['shop_id' => $this->shop->id, 'title' => 'Parcel', 'title_ar' => 'طرد', 'price' => '12.35', 'quantity' => 3, 'image' => 'x.png',
             'slug' => 'parcel-'.Str::random(5), 'price_condition' => 'fixed', 'condition' => 'new', 'status' => 'published']);
@@ -130,6 +132,7 @@ class RasloBridgeTest extends TestCase
     public function test_no_backfill_occurs_on_enable_and_unpaid_cannot_be_manually_sent(): void
     {
         $order = $this->order();
+        $order->update(['shipping_address' => array_diff_key($order->shipping_address, ['shipping_method' => true])]);
         $this->assertNull(app(RasloBridge::class)->capture($order));
         $this->connection();
         app(RasloBridge::class)->paid($order);
@@ -174,7 +177,7 @@ class RasloBridgeTest extends TestCase
         $this->fakeHttp(['*' => Http::failedConnection()]);
         app(RasloWorker::class)->send($row->id);
         $this->assertSame('retry', $row->fresh()->state);
-        $row->order->update(['shipping_address' => ['country' => 'AE', 'recipient_name' => 'Changed after send']]);
+        $row->order->update(['shipping_address' => ['shipping_method' => 'Raslo', 'country' => 'AE', 'recipient_name' => 'Changed after send']]);
         $row->refresh()->update(['next_attempt_at' => now()->subSecond()]);
         $this->fakeHttp(['*' => Http::response(['data' => $this->data($row)], 201)]);
         app(RasloWorker::class)->send($row->id);
@@ -364,6 +367,78 @@ class RasloBridgeTest extends TestCase
         $row = $this->bind($this->shipment());
         $this->actingAs($row->order->customer)->get('/my-deliveries')->assertOk()->assertSee($row->order->order_number);
         $this->actingAs(User::factory()->create())->get('/my-deliveries')->assertOk()->assertDontSee($row->order->order_number);
+    }
+
+    public function test_local_status_refresh_is_owned_and_never_returns_recipient_or_credentials(): void
+    {
+        $row = $this->bind($this->shipment());
+        $this->actingAs($row->order->customer)->getJson('/orders/'.$row->order_id.'/delivery')
+            ->assertOk()->assertHeader('Cache-Control', 'no-store, private')
+            ->assertJsonPath('status_label', 'Awaiting price approval')
+            ->assertDontSee('Test Recipient')->assertDontSee('+971501234567')->assertDontSee('raslo_delivery_');
+        $this->actingAs(User::factory()->create())->getJson('/orders/'.$row->order_id.'/delivery')->assertNotFound();
+    }
+
+    public function test_merchant_fulfilled_order_cannot_be_manually_rerouted_to_raslo(): void
+    {
+        $this->connection();
+        $order = $this->order();
+        $order->update(['shipping_address' => array_replace($order->shipping_address, ['shipping_method' => 'Merchant'])]);
+        $this->actingAs($this->seller)->post('/seller/raslo/orders/'.$order->id.'/retry')->assertSessionHasErrors('raslo');
+        $this->assertDatabaseCount('raslo_shipments', 0);
+    }
+
+    public function test_seller_shipping_validation_enforces_own_verified_connection_and_known_methods(): void
+    {
+        $this->actingAs($this->seller);
+        $rules = (new CreateListing)->getRules()['shipping_method'];
+        $validate = fn ($value) => Validator::make(['shipping_method' => $value], ['shipping_method' => $rules]);
+        $this->assertTrue($validate('Raslo')->fails());
+        $this->assertTrue($validate('Untrusted shipping')->fails());
+        $this->assertFalse($validate('Pickup')->fails());
+        $connection = $this->connection();
+        $this->assertFalse($validate('Raslo')->fails());
+        $connection->update(['enabled' => false]);
+        $this->assertTrue($validate('Raslo')->fails());
+    }
+
+    public function test_workspace_and_profile_links_render_in_their_existing_action_groups(): void
+    {
+        $this->withoutVite();
+        $this->actingAs($this->seller)->get('/dashboard')->assertOk()
+            ->assertSeeInOrder(['Quick Actions', 'Raslo delivery integration', 'Add Product']);
+        $this->get('/profile')->assertOk()->assertSeeInOrder(['My deliveries', 'Edit Profile']);
+    }
+
+    public function test_automation_check_fails_for_sync_queue_and_accepts_durable_configuration(): void
+    {
+        config(['queue.default' => 'sync']);
+        $this->artisan('raslo:check')->assertExitCode(1);
+        config(['queue.default' => 'database']);
+        $this->artisan('raslo:check')->assertExitCode(0);
+    }
+
+    public function test_edit_product_validates_raslo_readiness_on_server_before_saving(): void
+    {
+        $this->actingAs($this->seller);
+        $order = $this->order();
+        $listing = $order->items()->first()->listing;
+        $input = ['title' => 'Parcel', 'description' => 'Physical parcel', 'price' => '12.35',
+            'quantity' => 3, 'condition' => 'new', 'price_condition' => 'fixed', 'shipping_method' => 'Raslo', 'delivery_days' => 2];
+        $this->put('/seller/listing/'.$listing->id, $input)->assertSessionHasErrors('shipping_method');
+        $this->connection();
+        $this->put('/seller/listing/'.$listing->id, $input)->assertRedirect(route('profile'));
+        $this->assertSame('Raslo', $listing->fresh()->shipping_method);
+        $this->put('/seller/listing/'.$listing->id, array_replace($input, ['shipping_method' => 'Untrusted']))
+            ->assertSessionHasErrors('shipping_method');
+        $this->assertSame('Raslo', $listing->fresh()->shipping_method);
+    }
+
+    public function test_raslo_capture_fails_closed_if_connection_is_removed_after_readiness_check(): void
+    {
+        $order = $this->order();
+        $this->expectException(ValidationException::class);
+        app(RasloBridge::class)->capture($order);
     }
 
     private function fakeHttp(array $responses): void

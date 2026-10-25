@@ -238,11 +238,7 @@ class CreateListing extends Component
                 'max:50',
             ],
 
-            'shipping_method' => [
-                'required',
-                'string',
-                'max:255',
-            ],
+            'shipping_method' => \App\Services\Checkout\ShippingMethod::rules(Auth::user()?->shop),
 
             'delivery_days' => [
                 'required',

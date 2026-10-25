@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "test:frontend": "node --test tests/frontend/*.test.mjs"
     },
     "devDependencies": {
         "@tailwindcss/aspect-ratio": "^0.4.2",

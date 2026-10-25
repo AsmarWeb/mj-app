@@ -936,18 +936,19 @@
                     {{-- SHIPPING METHOD --}}
                     <div>
 
-                        <label class="mb-2 block font-bold text-slate-700 dark:text-slate-300">
+                        <label for="shipping_method" class="mb-2 block font-bold text-slate-700 dark:text-slate-300">
                             {{ __('Shipping Method') }}
                         </label>
 
-                        <select wire:model="shipping_method"
+                        <select id="shipping_method" wire:model="shipping_method"
                             class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
                             <option value="">
                                 {{ __('Select shipping method') }}
                             </option>
 
-                            <option value="Standard Shipping">
+                            <option value="Raslo" @disabled(!\App\Services\Checkout\ShippingMethod::ready(auth()->user()?->shop))>{{ app()->getLocale()==='ar'?'رسلو · توصيل داخل الإمارات':'Raslo · UAE delivery' }}</option>
+                                    <option value="Standard Shipping">
                                 {{ __('Standard UAE Delivery') }}
                             </option>
 
@@ -964,6 +965,9 @@
                             </option>
 
                         </select>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ app()->getLocale()==='ar'?'اختر رسلو لإرسال طلبات هذا المنتج تلقائيًا بعد تأكيد الدفع. يتطلب ربطًا مفعّلًا ومتحققًا منه وعملة AED. طرق الشحن الأخرى ينظمها المتجر.':'Choose Raslo to forward this product’s orders automatically after confirmed payment. Requires an enabled, verified AED connection. Other methods are fulfilled by the store.' }}</p>
+                        <a href="{{ route('raslo.settings') }}" class="mt-2 inline-block font-bold text-orange-600 underline">{{ app()->getLocale()==='ar'?'إعداد ربط رسلو ومتابعة الطلبات':'Set up Raslo & manage deliveries' }}</a>
+
 
                         @error('shipping_method')
                             <span class="mt-2 block text-sm text-red-500">

@@ -52,6 +52,19 @@ class PhysicalCheckoutService
                 $snapshots[] = ['item' => $item, 'listing' => $listing, 'fils' => $fils];
                 $total += $fils * $item->quantity;
             }
+            // Freeze fulfillment with the order; later product edits cannot reroute a paid order.
+            $rasloCount = count(array_filter($snapshots, fn ($row) => $row['listing']->shipping_method === ShippingMethod::RASLO));
+            if ($rasloCount && $rasloCount !== count($snapshots)) {
+                throw ValidationException::withMessages(['cart' => app()->getLocale() === 'ar'
+                    ? 'لا يمكن جمع منتجات رسلو وطرق الشحن الأخرى في طلب واحد. افصلها في السلة.'
+                    : 'Raslo and other shipping methods cannot share one checkout. Separate these items in your basket.']);
+            }
+            if ($rasloCount && ! ShippingMethod::ready($shop)) {
+                throw ValidationException::withMessages(['cart' => app()->getLocale() === 'ar'
+                    ? 'توصيل رسلو غير متاح لهذا المتجر حاليًا. تواصل مع المتجر قبل الدفع.'
+                    : 'Raslo delivery is unavailable for this store. Contact the store before paying.']);
+            }
+            $address['shipping_method'] = $rasloCount ? ShippingMethod::RASLO : 'Merchant';
             if ($total > 99999999) {
                 throw ValidationException::withMessages(['cart' => 'Order total exceeds the checkout limit.']);
             }

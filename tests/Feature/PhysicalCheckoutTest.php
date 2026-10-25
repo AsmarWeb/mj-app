@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\PollRasloShipment;
+use App\Jobs\SendRasloShipment;
 use App\Livewire\AddToCart;
 use App\Models\Cart;
 use App\Models\Invoice;
@@ -14,9 +16,13 @@ use App\Models\User;
 use App\Services\Checkout\AedAmount;
 use App\Services\Checkout\PhysicalCheckoutService;
 use App\Services\Checkout\StripeCheckoutGateway;
+use App\Services\Raslo\RasloEndpoint;
+use App\Services\Raslo\RasloWorker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -411,7 +417,7 @@ class PhysicalCheckoutTest extends TestCase
 
     public function test_enabled_raslo_connection_captures_before_payment_and_releases_outbox_only_when_paid(): void
     {
-        $listing = $this->listing();
+        $listing = $this->listing(['shipping_method' => 'Raslo']);
         $this->cart($listing);
         $connection = RasloConnection::create(['shop_id' => $listing->shop_id, 'public_id' => (string) Str::uuid(),
             'remote_id' => 71, 'enabled' => true, 'api_key' => 'raslo_delivery_'.str_repeat('a', 64), 'verified_at' => now()]);
@@ -427,7 +433,7 @@ class PhysicalCheckoutTest extends TestCase
 
     public function test_invalid_raslo_snapshot_stops_checkout_before_any_payment_is_created(): void
     {
-        $listing = $this->listing();
+        $listing = $this->listing(['shipping_method' => 'Raslo']);
         $this->cart($listing);
         RasloConnection::create(['shop_id' => $listing->shop_id, 'public_id' => (string) Str::uuid(),
             'remote_id' => 72, 'enabled' => true, 'api_key' => 'raslo_delivery_'.str_repeat('a', 64), 'verified_at' => now()]);
@@ -443,6 +449,113 @@ class PhysicalCheckoutTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
         $this->assertDatabaseCount('raslo_shipments', 0);
         $this->assertSame(10, $listing->fresh()->quantity);
+    }
+
+    public function test_pickup_and_standard_shipping_are_not_forwarded_even_with_an_enabled_connection(): void
+    {
+        foreach (['Pickup', 'Standard Shipping', 'Free Shipping', 'Express Shipping'] as $method) {
+            $listing = $this->listing(['shipping_method' => $method]);
+            $this->cart($listing);
+            RasloConnection::create(['shop_id' => $listing->shop_id, 'public_id' => (string) Str::uuid(),
+                'remote_id' => $listing->shop_id, 'enabled' => true, 'api_key' => 'raslo_delivery_'.str_repeat('a', 64), 'verified_at' => now()]);
+            $order = $this->start($listing);
+            $this->assertSame('Merchant', $order->shipping_address['shipping_method']);
+            app(PhysicalCheckoutService::class)->synchronize($this->paid($order));
+        }
+        $this->assertDatabaseCount('raslo_shipments', 0);
+    }
+
+    public function test_raslo_checkout_refuses_disabled_connection_before_reserving_stock_or_creating_payment(): void
+    {
+        $listing = $this->listing(['shipping_method' => 'Raslo']);
+        $this->cart($listing);
+        $this->actingAs($this->buyer)->postJson('/checkout', ['shop_id' => $listing->shop_id] + $this->address())
+            ->assertUnprocessable()->assertJsonValidationErrors('cart');
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertSame(0, $this->creates);
+        $this->assertSame(10, $listing->fresh()->quantity);
+    }
+
+    public function test_mixed_raslo_and_pickup_checkout_is_rejected_without_charging(): void
+    {
+        $listing = $this->listing(['shipping_method' => 'Raslo']);
+        $pickup = $this->listing(['shop_id' => $listing->shop_id, 'shipping_method' => 'Pickup']);
+        $this->cart($listing);
+        $this->cart($pickup);
+        $this->actingAs($this->buyer)->postJson('/checkout', ['shop_id' => $listing->shop_id] + $this->address())
+            ->assertUnprocessable()->assertJsonValidationErrors('cart');
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertSame(0, $this->creates);
+        $this->assertSame(10, $listing->fresh()->quantity);
+    }
+
+    public function test_paid_raslo_order_is_forwarded_and_polled_by_scheduled_jobs_without_manual_retry(): void
+    {
+        Queue::fake();
+        config(['raslo.api_base_url' => 'https://raslo.example/api/integrations/v1']);
+        $endpoint = Mockery::mock(RasloEndpoint::class)->makePartial();
+        $endpoint->shouldReceive('options')->andReturn([]);
+        $this->app->instance(RasloEndpoint::class, $endpoint);
+        Http::preventStrayRequests();
+        $listing = $this->listing(['shipping_method' => 'Raslo']);
+        $this->cart($listing);
+        RasloConnection::create(['shop_id' => $listing->shop_id, 'public_id' => (string) Str::uuid(),
+            'remote_id' => 71, 'enabled' => true, 'api_key' => 'raslo_delivery_'.str_repeat('a', 64), 'verified_at' => now()]);
+        $order = $this->start($listing);
+        // A later listing change must not alter this checkout's frozen fulfillment.
+        $listing->update(['shipping_method' => 'Pickup']);
+        $session = $this->paid($order);
+        $this->webhook('checkout.session.completed', $session)->assertOk();
+        $shipment = $order->rasloShipment;
+        $payload = ['id' => (string) Str::uuid(), 'external_order_id' => $shipment->external_order_id,
+            'sequence' => 1, 'status' => 'priced', 'tracking_number' => 'RS-AUTO', 'delivery_fee' => '25.00', 'requires_price_approval' => true];
+        Http::fake(function ($request) use ($payload) {
+            return Http::response(['data' => $request->method() === 'POST'
+                ? $payload : array_replace($payload, ['sequence' => 2, 'status' => 'completed', 'requires_price_approval' => false])], $request->method() === 'POST' ? 201 : 200);
+        });
+        $this->artisan('raslo:send-due')->assertExitCode(0);
+        Queue::assertPushed(SendRasloShipment::class, function ($job) {
+            $job->handle(app(RasloWorker::class));
+
+            return true;
+        });
+        $this->assertSame('sent', $shipment->fresh()->state);
+        $this->webhook('checkout.session.completed', $session)->assertOk();
+        $this->assertDatabaseCount('raslo_shipments', 1);
+        $this->travel(6)->minutes();
+        $this->artisan('raslo:poll')->assertExitCode(0);
+        Queue::assertPushed(PollRasloShipment::class, function ($job) {
+            $job->handle(app(RasloWorker::class));
+
+            return true;
+        });
+        $this->assertSame('completed', $shipment->fresh()->delivery_status);
+        $this->assertSame('25.00', $shipment->fresh()->delivery_fee);
+        $this->assertSame('paid', $order->fresh()->payment_status);
+        $this->assertSame('processing', $order->fresh()->status);
+        Http::assertSentCount(2);
+    }
+
+    public function test_address_validation_is_the_same_in_both_locales_and_preserves_input(): void
+    {
+        $listing = $this->listing();
+        $this->cart($listing);
+        foreach (['ar', 'en'] as $locale) {
+            app()->setLocale($locale);
+            $this->actingAs($this->buyer)->withSession(['locale' => $locale])->get('/checkout')->assertOk()->assertSee('autocomplete="shipping tel"', false)
+                ->assertSee('for="address_line"', false)->assertSee($locale === 'ar' ? 'إلى أين نوصّل طلبك؟' : 'Where shall we deliver?');
+        }
+        $this->postJson('/checkout', ['shop_id' => $listing->shop_id, 'address_line' => 'x'] + $this->address())
+            ->assertUnprocessable()->assertJsonValidationErrors('address_line');
+        $this->assertDatabaseCount('orders', 0);
+    }
+
+    public function test_invalid_price_renders_unavailable_store_instead_of_breaking_address_page(): void
+    {
+        $listing = $this->listing(['price' => '-1.00']);
+        $this->cart($listing);
+        $this->actingAs($this->buyer)->get('/checkout')->assertOk()->assertSee('Checkout is unavailable for this store.');
+        $this->assertDatabaseCount('orders', 0);
     }
 
     private function webhook(string $type, array $session)

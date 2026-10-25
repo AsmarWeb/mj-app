@@ -1,4 +1,5 @@
 import "./bootstrap";
+import "./raslo-tracking";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
@@ -23,7 +24,7 @@ app.use(createPinia());
 app.component("language-switcher", LanguageSwitcher);
 
 // Mount Vue
-app.mount("#app");
+if (document.getElementById("app")) app.mount("#app");
 
 // Dark Mode
 const themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");

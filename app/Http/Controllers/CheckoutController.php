@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCheckoutRequest;
 use App\Models\Order;
+use App\Services\Checkout\AedAmount;
 use App\Services\Checkout\PhysicalCheckoutService;
+use App\Services\Checkout\ShippingMethod;
 use App\Services\Checkout\StripeCheckoutGateway;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Stripe\Exception\ApiErrorException;
 
 class CheckoutController extends Controller
@@ -19,7 +22,28 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
 
-        return view('checkout.address', ['shops' => $shops, 'selectedShop' => $request->integer('shop_id'),
+        $shippingSummaries = $shops->map(function ($items) {
+            $rasloCount = $items->filter(fn ($item) => $item->listing->shipping_method === 'Raslo')->count();
+            $total = 0;
+            $valid = true;
+            foreach ($items as $item) {
+                try {
+                    $unit = AedAmount::fils($item->listing->getRawOriginal('price'));
+                    $valid = $valid && $unit > 0 && $item->quantity > 0;
+                    $total += $unit * $item->quantity;
+                } catch (ValidationException $error) {
+                    $valid = false;
+                }
+            }
+            $mixed = $rasloCount > 0 && $rasloCount < $items->count();
+            $raslo = $rasloCount === $items->count();
+            $ready = ! $raslo || ShippingMethod::ready($items->first()->listing->shop);
+
+            return ['total' => $valid ? AedAmount::decimal($total) : null,
+                'raslo' => $raslo, 'mixed' => $mixed, 'ready' => $ready, 'available' => $valid && ! $mixed && $ready];
+        });
+
+        return view('checkout.address', ['shops' => $shops, 'shippingSummaries' => $shippingSummaries, 'selectedShop' => $request->integer('shop_id'),
             'pendingOrders' => $request->user()->orders()->where('inventory_reserved', true)->get()]);
     }
 

@@ -74,3 +74,8 @@ See [docs/raslo-readiness.md](docs/raslo-readiness.md) for the checkout repairs,
 ## Raslo store delivery bridge
 
 Store owners can configure a dedicated Raslo Delivery API connection, automatically forward new eligible paid physical UAE/AED orders, and follow delivery state separately from payment. See [setup, queue/recovery and acceptance steps](docs/raslo-order-bridge.md). Buyers can use Profile → My deliveries.
+
+
+## Checkout, shipping and delivery automation
+
+Merchants can now select **Raslo** as a product shipping method after verifying their AED connection. Other shipping methods stay merchant fulfilled. Find the integration in **Workspace → Quick Actions**, and customer deliveries beside **Edit Profile**. See [address UX, fulfillment rules and persistent Sail workers](docs/raslo-checkout-experience.md) before enabling new orders. Delivery pricing approval in Raslo remains required.

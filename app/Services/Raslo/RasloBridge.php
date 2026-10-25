@@ -5,6 +5,7 @@ namespace App\Services\Raslo;
 use App\Models\Order;
 use App\Models\RasloConnection;
 use App\Models\RasloShipment;
+use App\Services\Checkout\ShippingMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -17,13 +18,22 @@ class RasloBridge
         if ($existing = RasloShipment::where('order_id', $order->id)->first()) {
             return $existing;
         }
-        $connection = RasloConnection::where('shop_id', $order->shop_id)->where('enabled', true)->lockForUpdate()->first();
+        $method = $order->shipping_address['shipping_method'] ?? null;
+        if ($method !== ShippingMethod::RASLO) {
+            if ($manual && $method !== null) {
+                throw ValidationException::withMessages(['raslo' => 'This order uses merchant shipping or pickup, not Raslo.']);
+            }
+            if (! $manual) {
+                return null;
+            }
+        }
+        $connection = RasloConnection::where('shop_id', $order->shop_id)->where('enabled', true)->whereNotNull('verified_at')->lockForUpdate()->first();
         if (! $connection) {
-            if ($manual) {
+            if ($manual || $method === ShippingMethod::RASLO) {
                 throw ValidationException::withMessages(['raslo' => 'Enable the store connection first.']);
             }
 
-return null;
+            return null;
         }
         $a = $order->shipping_address;
         if ($order->checkout_currency !== 'AED' || ! $order->checkout_token || ! is_array($a) || ($a['country'] ?? null) !== 'AE'

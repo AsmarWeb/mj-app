@@ -1,9 +1,4 @@
 <x-app-layout>
-    <div class="mx-auto max-w-7xl px-4 pt-5"><a href="{{ route('raslo.my-deliveries') }}" class="inline-block rounded-xl border border-orange-500 px-5 py-3 font-bold text-orange-600">{{ app()->getLocale()==='ar'?'توصيل طلباتي':'My deliveries' }}</a></div>
-    @if(auth()->user()?->shop)
-        <div class="mx-auto max-w-7xl px-4 pt-5"><a href="{{ route('raslo.settings') }}" class="inline-block rounded-xl bg-orange-600 px-5 py-3 font-bold text-white">{{ app()->getLocale()==='ar'?'ربط توصيل رسلو':'Raslo delivery integration' }}</a></div>
-    @endif
-
     <div class="min-h-screen bg-gray-50 dark:bg-neutral-950 py-10">
 
         <div class="max-w-7xl mx-auto px-4 space-y-8">
@@ -151,6 +146,8 @@ text-sm
 
 
 
+                        <div class="flex flex-wrap items-center gap-3">
+                        <a href="{{ route('raslo.my-deliveries') }}" class="rounded-2xl border border-orange-300 bg-orange-50 px-6 py-3 text-sm font-bold text-orange-800 transition hover:bg-orange-100">{{ app()->getLocale()==='ar'?'توصيل طلباتي':'My deliveries' }}</a>
                         <a href="{{ route('profile.show') }}"
                             class="
 bg-orange-500
@@ -164,9 +161,10 @@ shadow-lg
 transition
 ">
 
-                            ✏️ Edit Profile
+                            ✏️ {{ app()->getLocale()==='ar'?'تعديل الملف الشخصي':'Edit Profile' }}
 
                         </a>
+                        </div>
 
 
 

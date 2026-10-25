@@ -1,0 +1,36 @@
+# Optional Sail workers. Run together with docker-compose.yml; no extra public ports.
+services:
+    raslo-queue:
+        image: sail-8.3/app
+        working_dir: /var/www/html
+        command: [php, artisan, 'queue:work', '--tries=1', '--timeout=60', '--sleep=3', '--max-time=3600']
+        restart: unless-stopped
+        stop_grace_period: 75s
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+        networks: [sail]
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_started
+    raslo-scheduler:
+        image: sail-8.3/app
+        working_dir: /var/www/html
+        command: [php, artisan, 'schedule:work']
+        restart: unless-stopped
+        stop_grace_period: 75s
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+        networks: [sail]
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_started
