@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\CustomerCartController;
+use App\Http\Controllers\Api\CustomerOrderController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\MobileAuthController;
 use App\Http\Controllers\Api\ShopController;
 use App\Http\Middleware\CatalogResponse;
 use App\Http\Middleware\MobileAuthResponse;
+use App\Http\Middleware\MobileLocale;
 use App\Http\Middleware\RequireMobileToken;
 use App\Http\Resources\AuthUserResource;
 use Illuminate\Http\Request;
@@ -24,6 +27,19 @@ Route::prefix('v1/auth')->name('api.v1.auth.')->middleware(MobileAuthResponse::c
         Route::post('/email/verification-notification', [MobileAuthController::class, 'resendVerification'])
             ->middleware('throttle:mobile-verification')->name('verification.send');
     });
+});
+
+Route::prefix('v1')->name('api.v1.customer.')->middleware([
+    MobileAuthResponse::class, 'auth:sanctum', RequireMobileToken::class, 'throttle:mobile-account', MobileLocale::class,
+])->group(function () {
+    Route::get('/cart', [CustomerCartController::class, 'show'])->name('cart.show');
+    Route::post('/cart/items', [CustomerCartController::class, 'add'])->name('cart.add');
+    Route::patch('/cart/items/{item}', [CustomerCartController::class, 'update'])->whereNumber('item')->name('cart.update');
+    Route::delete('/cart/items/{item}', [CustomerCartController::class, 'remove'])->whereNumber('item')->name('cart.remove');
+    Route::delete('/cart', [CustomerCartController::class, 'clear'])->name('cart.clear');
+    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->whereNumber('order')->name('orders.show');
+    Route::get('/orders/{order}/delivery', [CustomerOrderController::class, 'delivery'])->whereNumber('order')->name('orders.delivery');
 });
 
 Route::middleware([CatalogResponse::class, 'throttle:catalog'])->group(function () {
