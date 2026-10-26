@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Billing\SubscriptionSync;
+use App\Services\Checkout\DigitalCheckoutService;
 use App\Services\Checkout\PhysicalCheckoutService;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Http\Controllers\WebhookController;
@@ -22,6 +23,8 @@ class StripeWebhookController extends WebhookController
         if (($session['mode'] ?? null) === 'subscription' && is_string($session['subscription'] ?? null)
             && is_string($session['customer'] ?? null)) {
             app(SubscriptionSync::class)->sync($session['subscription'], $session['customer']);
+        } elseif (app(DigitalCheckoutService::class)->accepts($session)) {
+            app(DigitalCheckoutService::class)->synchronize($session, $payload['type'] ?? null);
         } else {
             app(PhysicalCheckoutService::class)->synchronize($session);
         }
@@ -30,6 +33,11 @@ class StripeWebhookController extends WebhookController
     }
 
     protected function handleCheckoutSessionAsyncPaymentSucceeded(array $payload)
+    {
+        return $this->handleCheckoutSessionCompleted($payload);
+    }
+
+    protected function handleCheckoutSessionAsyncPaymentFailed(array $payload)
     {
         return $this->handleCheckoutSessionCompleted($payload);
     }
