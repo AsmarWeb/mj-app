@@ -1,0 +1,46 @@
+name: Bug report / بلاغ خطأ
+description: Report a reproducible application problem without sensitive data.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "For security vulnerabilities, read SECURITY.md and report privately. Never paste .env, tokens, payment or customer data."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / المشكلة
+      description: What happened and which user flow is affected?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce / خطوات التكرار
+      description: Use test accounts and synthetic data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior / المتوقع والفعلي
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / البيئة
+      description: Commit/branch, OS, PHP, Node, database engine, browser and Docker/Sail if applicable. No credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence / أدلة بعد إخفاء البيانات
+      description: Minimal logs or screenshots with all personal data and secrets removed.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and removed secrets and personal data.
+          required: true
