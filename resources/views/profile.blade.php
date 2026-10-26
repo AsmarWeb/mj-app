@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <div class="min-h-screen bg-gray-50 dark:bg-neutral-950 py-10">
 
         <div class="max-w-7xl mx-auto px-4 space-y-8">
@@ -147,6 +146,8 @@ text-sm
 
 
 
+                        <div class="flex flex-wrap items-center gap-3">
+                        <a href="{{ route('raslo.my-deliveries') }}" class="rounded-2xl border border-orange-300 bg-orange-50 px-6 py-3 text-sm font-bold text-orange-800 transition hover:bg-orange-100">{{ app()->getLocale()==='ar'?'توصيل طلباتي':'My deliveries' }}</a>
                         <a href="{{ route('profile.show') }}"
                             class="
 bg-orange-500
@@ -160,9 +161,10 @@ shadow-lg
 transition
 ">
 
-                            ✏️ Edit Profile
+                            ✏️ {{ app()->getLocale()==='ar'?'تعديل الملف الشخصي':'Edit Profile' }}
 
                         </a>
+                        </div>
 
 
 

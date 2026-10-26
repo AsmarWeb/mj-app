@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('resumes', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->unique()->nullable()->after('id');
+            $table->string('slug')->unique()->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             // Personal Information
             $table->string('full_name');

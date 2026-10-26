@@ -15,7 +15,7 @@ class MainHeader extends Component
      */
     public function render(): View|Closure|string
     {
-        $setting = Setting::find(1);
+        $setting = Setting::find(1) ?? new Setting;
         $sections = Section::orderBy('name', 'ASC')->where('status', 'active')->inRandomOrder()->get()->take(12);
 
         return view('components.main-header', ['setting' => $setting, 'sections' => $sections]);

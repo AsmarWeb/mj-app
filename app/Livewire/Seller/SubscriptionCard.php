@@ -11,7 +11,8 @@ class SubscriptionCard extends Component
         $shop = auth()->user()->shop;
 
         $subscription = $shop?->subscriptions()
-            ->where('status', 'active')
+            ->entitled()
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")
             ->with('plan')
             ->latest()
             ->first();

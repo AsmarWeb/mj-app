@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'monthly_orders' => ':count orders per calendar month',
+    'product_count' => ':count Active Products',
+    'storage_amount' => ':amount MB Storage',
+    'listing_days' => 'Listings live for :days days',
+    'no_membership' => 'No active membership',
+    'manage_billing' => 'Manage billing',
+    'checkout_unavailable' => 'Contact support to configure this plan.',
+    'billing_help' => 'Update payment details, change plans or cancel in Stripe. Payment issues must be resolved before creating another subscription.',
 
     'page_title' => 'Pricing | Murwaj',
 

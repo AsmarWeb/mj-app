@@ -126,8 +126,15 @@ class Shop extends Model
     public function activeSubscription()
     {
         return $this->hasOne(Subscription::class)
-            ->where('status', 'active')
-            ->latestOfMany();
+            ->entitled()
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")
+            ->latest('id');
+    }
+
+    public function scopePublicCatalog($query)
+    {
+        return $query->where('is_active', true)->where('is_completed', true)
+            ->whereNotNull('published_at')->where('published_at', '<=', now())->whereNull('deleted_at');
     }
 
     public function scopePublished($query)
@@ -142,7 +149,7 @@ class Shop extends Model
 
     public function setPublishedAtAttribute($date)
     {
-        $this->attributes['published_at'] = Carbon::now();
+        $this->attributes['published_at'] = $date === null || $date === '' ? null : $this->fromDateTime($date);
     }
 
     public function getSlugOptions(): SlugOptions
@@ -184,26 +191,24 @@ class Shop extends Model
 
     public function canReceiveOrder()
     {
-        // No plan = no orders
-        if (! $this->plan) {
+        $plan = $this->activeSubscription?->plan;
+        if (! $plan) {
             return false;
         }
 
         // Unlimited orders
-        if ($this->plan->order_limit == 0) {
+        if ($plan->order_limit == 0) {
             return true;
         }
 
+        // Calendar-month quota includes pending stock reservations, preventing concurrent unpaid checkouts from bypassing it.
         $ordersThisPeriod = $this->orders()
-            ->whereIn('status', [
-                'processing',
-                'completed',
-            ])
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
+            ->where(fn ($q) => $q->where('payment_status', 'paid')->orWhere('inventory_reserved', true))
             ->count();
 
-        return $ordersThisPeriod < $this->plan->order_limit;
+        return $ordersThisPeriod < $plan->order_limit;
     }
 
     public function stripeReady()

@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "asmarweb/murwaj",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "murwaj: a UAE marketplace with merchant storefronts, secure checkout and Raslo delivery integration.",
     "keywords": [
         "laravel",
         "framework"
@@ -15,7 +15,7 @@
         "drewm/mailchimp-api": "^2.5",
         "endroid/qr-code": "^6.0",
         "laravel/cashier": "^16.6",
-        "laravel/framework": "^11.9",
+        "laravel/framework": "^12.69.3",
         "laravel/jetstream": "^5.1",
         "laravel/sanctum": "^4.3",
         "laravel/socialite": "^5.29",
@@ -78,14 +78,10 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.2.0"
         }
-    },
-    "audit": {
-        "ignore": [
-            "PKSA-3r5d-mb8f-1qw9",
-            "PKSA-m5cs-t1y6-qpcs",
-            "PKSA-mdq4-51ck-6kdq"
-        ]
     },
     "minimum-stability": "stable",
     "prefer-stable": true

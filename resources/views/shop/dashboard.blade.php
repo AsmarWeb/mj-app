@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <div class="min-h-screen bg-[#faf7f2] text-[#211d19]">
 
         {{-- ========================================================= --}}
@@ -257,7 +256,7 @@
                         </div>
 
                         <p class="mt-6 truncate text-3xl font-black tracking-tight text-[#211d19]">
-                            {{ $plan->name }}
+                            {{ $plan?->name ?? (app()->getLocale()==='ar'?'لا توجد خطة نشطة':'No active plan') }}
                         </p>
 
                         <a href="{{ route('plans.index') }}"
@@ -333,20 +332,20 @@
                                     </p>
 
                                     <h3 class="mt-1 text-2xl font-black text-[#211d19]">
-                                        {{ $plan->name }} Plan
+                                        {{ $plan?->name ?? (app()->getLocale()==='ar'?'لا توجد خطة نشطة':'No active plan') }}
                                     </h3>
 
                                 </div>
 
                                 <div class="rounded-full bg-green-50 px-4 py-2 text-sm font-bold text-green-700">
-                                    ● Active
+                                    {{ $plan ? (app()->getLocale()==='ar'?'● نشط':'● Active') : (app()->getLocale()==='ar'?'اختر خطة':'Choose a plan') }}
                                 </div>
 
                             </div>
 
 
                             @php
-                                $percentage = ($publishedListings / max($plan->listing_limit, 1)) * 100;
+                                $percentage = ($publishedListings / max($plan?->listing_limit ?? 0, 1)) * 100;
                             @endphp
 
 
@@ -359,7 +358,7 @@
                                     </span>
 
                                     <span class="font-bold text-[#211d19]">
-                                        {{ $publishedListings }} / {{ $plan->listing_limit }}
+                                        {{ $publishedListings }} / {{ $plan?->listing_limit ?? 0 }}
                                     </span>
 
                                 </div>
@@ -381,7 +380,7 @@
                                         {{ number_format(min($percentage, 100), 0) }}% of product limit used
                                     </span>
 
-                                    @if ($subscription->ends_at)
+                                    @if ($subscription?->ends_at)
                                         <span>
                                             Expires {{ $subscription->ends_at->format('M d, Y') }}
                                         </span>
@@ -631,7 +630,7 @@
 
                                     <p class="mt-7 text-3xl font-black">
                                         {{ $shop->currency ?? '$' }}
-                                        {{ number_format($wallet->available_balance, 2) }}
+                                        {{ number_format($wallet?->available_balance ?? 0, 2) }}
                                     </p>
 
                                     <p class="mt-2 text-xs text-white/60">
@@ -666,7 +665,7 @@
 
                                     <p class="mt-7 text-3xl font-black">
                                         {{ $shop->currency ?? '$' }}
-                                        {{ number_format($wallet->pending_balance, 2) }}
+                                        {{ number_format($wallet?->pending_balance ?? 0, 2) }}
                                     </p>
 
                                     <p class="mt-2 text-xs text-white/60">
@@ -701,7 +700,7 @@
 
                                     <p class="mt-7 text-3xl font-black">
                                         {{ $shop->currency ?? '$' }}
-                                        {{ number_format($wallet->total_earned, 2) }}
+                                        {{ number_format($wallet?->total_earned ?? 0, 2) }}
                                     </p>
 
                                     <p class="mt-2 text-xs text-white/60">
@@ -954,6 +953,10 @@
 
 
                             <div class="mt-5 space-y-3">
+                                <a href="{{ route('raslo.settings') }}" class="flex items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-bold text-emerald-950 transition hover:bg-emerald-100">
+                                    <span><span class="block">{{ app()->getLocale()==='ar'?'ربط توصيل رسلو':'Raslo delivery integration' }}</span><span class="mt-1 block text-xs font-normal">{{ app()->getLocale()==='ar'?'الربط والطلبات وتتبع الشحنات':'Connection, orders & shipment tracking' }}</span></span><span aria-hidden="true">↗</span>
+                                </a>
+
 
                                 <a href="{{ route('seller.create') }}"
                                     class="flex items-center justify-between rounded-2xl bg-[#211d19] px-5 py-4 text-sm font-bold text-white transition hover:bg-orange-600">

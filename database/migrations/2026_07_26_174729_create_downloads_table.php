@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('downloads', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('digital_product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('digital_product_id');
             $table->string('token')->unique();
             $table->boolean('paid')->default(false);
             $table->timestamp('paid_at')->nullable();

@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'monthly_orders' => ':count طلبات لكل شهر تقويمي',
+    'product_count' => ':count منتجات نشطة',
+    'storage_amount' => ':amount ميغابايت للتخزين',
+    'listing_days' => 'مدة الإعلان :days يومًا',
+    'no_membership' => 'لا توجد عضوية نشطة',
+    'manage_billing' => 'إدارة الاشتراك والدفع',
+    'checkout_unavailable' => 'تواصل مع الدعم لإعداد الاشتراك بهذه الخطة.',
+    'billing_help' => 'حدّث وسيلة الدفع أو غيّر الخطة أو ألغِ الاشتراك عبر Stripe. عالج الاشتراك السابق قبل إنشاء اشتراك آخر.',
 
     'page_title' => 'الأسعار | مُروَّج.كم',
 

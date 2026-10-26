@@ -123,7 +123,7 @@ class Listing extends Model
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(
-            Subcategory::class,
+            SubCategory::class,
             'subcategory_id',
             'id'
         );
@@ -132,7 +132,7 @@ class Listing extends Model
     public function subcategories(): BelongsTo
     {
         return $this->belongsTo(
-            Subcategory::class,
+            SubCategory::class,
             'subcategory_id',
             'id'
         );
@@ -183,14 +183,17 @@ class Listing extends Model
     }
 
     /**
-     * Scope a query to only include active products.
+     * Scope a query to only include publicly visible products.
      *
      * @param  Builder  $query
-     * @return void
+     * @return Builder
      */
     public function scopeActive($query)
     {
-        $query->where('status', 1);
+        return $query->where('active', true)->where('status', 'published')
+            ->whereNotNull('published_at')->where('published_at', '<=', now())
+            ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
+            ->whereHas('shop', fn ($q) => $q->publicCatalog());
     }
 
     public function getSlugOptions(): SlugOptions

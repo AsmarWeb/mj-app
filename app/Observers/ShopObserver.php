@@ -11,7 +11,7 @@ class ShopObserver
      */
     public function created(Shop $shop): void
     {
-        $shop->wallet()->create();
+        $shop->wallet()->firstOrCreate([], ['available_balance' => 0, 'pending_balance' => 0, 'total_earned' => 0]);
     }
 
     /**

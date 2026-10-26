@@ -3,227 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
+use App\Models\PlanCheckoutAttempt;
+use App\Services\Billing\PlanCheckout;
+use App\Services\Billing\SubscriptionGateway;
+use App\Services\Billing\SubscriptionSync;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class SubscriptionController extends Controller
 {
-    /**
-     * Display subscription plans.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $user = auth()->user();
-
-        /*
-         * Get all active paid plans.
-         */
-        $plans = Plan::query()
-            ->where('is_active', true)
-            ->where('is_free', false)
-            ->orderByDesc('is_popular')
-            ->orderBy('price')
-            ->get();
-
-        /*
-         * Get the user's current active default subscription.
-         *
-         * Only active/trialing subscriptions count as current.
-         */
-        $subscription = $user->subscriptions()
-            ->where('type', 'default')
-            ->whereIn('stripe_status', ['active', 'trialing'])
-            ->latest('created_at')
-            ->first();
-
-        /*
-         * The subscription is the source of truth.
-         *
-         * Get the exact plan attached to subscription.plan_id.
-         */
-        $currentPlan = null;
-
-        if ($subscription && $subscription->plan_id) {
-            $currentPlan = Plan::find($subscription->plan_id);
-        }
+        $subscription = $request->user()->subscriptions()->entitled()->with('plan')
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")->latest('id')->first();
 
         return view('plans.index', [
-            'plans' => $plans,
-            'subscription' => $subscription,
-            'currentPlan' => $currentPlan,
+            // is_popular does not exist in the plans schema.
+            'plans' => Plan::where('is_active', true)->where('is_free', false)->orderBy('price')->get(),
+            'subscription' => $subscription, 'currentPlan' => $subscription?->plan,
+            'freePlan' => Plan::where('is_active', true)->where('is_free', true)->where('price', 0)->first(),
+            'hasStripeCustomer' => filled($request->user()->stripe_id),
         ]);
     }
 
-
-    /**
-     * Checkout / change subscription.
-     */
-    public function checkout(Request $request, Plan $plan)
+    public function checkout(Request $request, Plan $plan, PlanCheckout $checkout)
     {
-        $user = auth()->user();
-
-        /*
-         * User must create a shop first.
-         */
-        if (!$user->shop()->exists()) {
-            return redirect()
-                ->route('shop.create')
-                ->with(
-                    'error',
-                    'Please create your shop before choosing a subscription plan.'
-                );
+        if (! $request->user()->shop()->exists()) {
+            return redirect()->route('shop.create', 1)->with('error', 'Create your shop before subscribing.');
         }
-
-        /*
-         * Make sure the selected plan is available.
-         */
-        if (!$plan->is_active || $plan->is_free) {
-            return redirect()
-                ->route('plans.index')
-                ->with(
-                    'error',
-                    'This plan is not available.'
-                );
+        try {
+            return redirect()->away($checkout->start($request->user(), $plan));
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            // Do not expose credentials/provider payloads through error pages or flashed input.
+            return back()->withErrors(['billing' => 'Billing is unavailable. Retry the same plan later; do not start another payment.']);
         }
+    }
 
-        /*
-         * Get the current active default subscription.
-         */
-        $subscription = $user->subscriptions()
-            ->where('type', 'default')
-            ->whereIn('stripe_status', ['active', 'trialing'])
-            ->latest('created_at')
-            ->first();
-
-        /*
-         * EXISTING ACTIVE STRIPE SUBSCRIPTION
-         *
-         * Change the existing Stripe subscription instead of
-         * creating a second subscription.
-         */
-        if (
-            $subscription &&
-            $subscription->payment_provider === 'stripe' &&
-            in_array(
-                $subscription->stripe_status,
-                ['active', 'trialing'],
-                true
-            )
-        ) {
-            /*
-             * User is already on this exact plan.
-             */
-            if (
-                $subscription->plan_id &&
-                (int) $subscription->plan_id === (int) $plan->id
-            ) {
-                return redirect()
-                    ->route('plans.index')
-                    ->with(
-                        'error',
-                        'You are already on the ' . $plan->name . ' plan.'
-                    );
+    public function portal(Request $request, SubscriptionGateway $gateway)
+    {
+        abort_unless($request->user()->shop && $request->user()->stripe_id, 403);
+        try {
+            $url = $gateway->portal($request->user()->stripe_id, route('plans.index'));
+            if (! str_starts_with($url, 'https://billing.stripe.com/')) {
+                throw new \RuntimeException('Unexpected billing destination.');
             }
 
-            /*
-             * Get the Cashier subscription.
-             */
-            $cashierSubscription = $user->subscription('default');
+            return redirect()->away($url);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['billing' => 'Cannot open billing management. Please contact support.']);
+        }
+    }
 
-            if (!$cashierSubscription) {
-                return redirect()
-                    ->route('plans.index')
-                    ->with(
-                        'error',
-                        'Your Stripe subscription could not be found.'
-                    );
-            }
-
-            /*
-             * Stripe subscription change.
-             */
+    public function success(Request $request, SubscriptionGateway $gateway, PlanCheckout $checkout, SubscriptionSync $sync)
+    {
+        // A redirect or selected_plan_id session value never grants a paid plan.
+        $request->session()->forget('selected_plan_id');
+        $attempt = PlanCheckoutAttempt::where('user_id', $request->user()->id)->first();
+        if ($attempt && $request->filled('session_id')) {
             try {
-                $cashierSubscription->swap(
-                    $plan->stripe_price
-                );
-
-                /*
-                 * Keep the local subscription synchronized.
-                 */
-                $subscription->update([
-                    'plan_id' => $plan->id,
-                    'stripe_price' => $plan->stripe_price,
-                    'payment_provider' => 'stripe',
-                ]);
-
-                return redirect()
-                    ->route('plans.index')
-                    ->with(
-                        'success',
-                        'Your subscription has been changed to ' . $plan->name . '.'
-                    );
+                $request->validate(['session_id' => 'required|string|max:255|regex:/^cs_[A-Za-z0-9_]+$/D']);
+                $session = $gateway->session($request->string('session_id')->toString());
+                $checkout->assertSession($attempt, $session);
+                if (($session['status'] ?? null) === 'complete' && is_string($session['subscription'] ?? null)) {
+                    $sync->sync($session['subscription'], $session['customer']);
+                }
             } catch (\Throwable $e) {
-                report($e);
-
-                return redirect()
-                    ->route('plans.index')
-                    ->with(
-                        'error',
-                        'Unable to change your subscription. Please try again.'
-                    );
+                return redirect()->route('plans.index')->withErrors(['billing' => 'Payment confirmation is pending. The signed Stripe webhook will update membership; do not pay again.']);
             }
         }
 
-        /*
-         * FREE USER
-         *
-         * Create a new Stripe Checkout session.
-         */
-        session([
-            'selected_plan_id' => $plan->id,
-        ]);
-
-        return $user
-            ->newSubscription(
-                'default',
-                $plan->stripe_price
-            )
-            ->checkout([
-                'success_url' => route('subscription.success'),
-                'cancel_url' => route('plans.index'),
-            ]);
-    }
-
-
-    /**
-     * Stripe checkout success.
-     */
-    public function success()
-    {
-        $user = auth()->user();
-
-        $selectedPlanId = session('selected_plan_id');
-
-        if ($selectedPlanId) {
-            $subscription = $user->subscriptions()
-                ->where('type', 'default')
-                ->latest('created_at')
-                ->first();
-
-            if ($subscription) {
-                $subscription->update([
-                    'plan_id' => $selectedPlanId,
-                    'payment_provider' => 'stripe',
-                ]);
-            }
-        }
-
-        session()->forget('selected_plan_id');
-
-        return redirect()
-            ->route('dashboard')
-            ->with(
-                'success',
-                'Your payment was received. Your subscription is being activated.'
-            );
+        return redirect()->route('plans.index')->with('success', 'Membership refreshed. Paid access requires confirmed Stripe subscription status.');
     }
 }

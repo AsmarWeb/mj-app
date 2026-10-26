@@ -1,7 +1,7 @@
-<x-ai>
+<x-main-layout>
 
 
     <div id="app"></div>
 
 
-</x-ai>
+</x-main-layout>

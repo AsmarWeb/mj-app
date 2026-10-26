@@ -41,6 +41,8 @@ use App\Http\Controllers\ListingCategoryController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\PodDigitalCheckoutController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\Raslo\RasloSettingsController;
+use App\Http\Controllers\Raslo\RasloWebhookController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Seller\StripeConnectController;
@@ -282,6 +284,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::post('/checkout/{order}/resume', [CheckoutController::class, 'resume'])->middleware('throttle:10,1')->name('checkout.resume');
+    Route::post('/checkout/{order}/cancel', [CheckoutController::class, 'cancel'])->middleware('throttle:10,1')->name('checkout.cancel');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
+
     Route::get(
         '/checkout',
         [CheckoutController::class, 'checkout']
@@ -336,7 +342,6 @@ Route::get(
     [SupplierInvitationController::class, 'accept']
 )->name('supplier.invitation');
 
-
 Route::post(
     '/supplier/invitation/{token}',
     [SupplierInvitationController::class, 'store']
@@ -344,17 +349,14 @@ Route::post(
 
 Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
 
-
     Route::get(
         '/dashboard',
         [
             SupplierDashboardController::class,
-            'index'
+            'index',
         ]
     )
         ->name('dashboard');
-
-
 
     Route::get(
         '/products',
@@ -367,9 +369,6 @@ Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->na
     )
         ->name('products.index');
 
-
-
-
     Route::get(
         '/orders',
         function () {
@@ -380,9 +379,6 @@ Route::middleware(['auth', 'supplier', 'role:supplier'])->prefix('supplier')->na
         }
     )
         ->name('orders.index');
-
-
-
 
     Route::get(
         '/payouts',
@@ -425,12 +421,11 @@ Route::middleware('auth')->group(function () {
         [SubscriptionController::class, 'checkout']
     )->name('subscription.checkout');
 
+    Route::post('/subscription/portal', [SubscriptionController::class, 'portal'])->name('subscription.portal');
+
     Route::get(
         '/subscription/success',
-        function () {
-
-            return view('subscription.success');
-        }
+        [SubscriptionController::class, 'success']
     )
         ->name('subscription.success');
 });
@@ -537,12 +532,12 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('auth')->post(
         '/digital-products/{slug}/checkout',
-        [DigitalProductController::class, 'checkout']
+        [PodDigitalCheckoutController::class, 'checkoutProduct']
     )->name('digital-products.checkout');
 
     Route::get(
         '/digital-products/{slug}/success',
-        [DigitalProductController::class, 'success']
+        [PodDigitalCheckoutController::class, 'successProduct']
     )->name('digital-products.success');
 
     Route::middleware('auth')->get(
@@ -640,3 +635,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'manage',
     Route::delete('/developers/{developer}', [AdminDeveloperController::class, 'destroy'])
         ->name('developers.destroy');
 });
+
+Route::middleware(['auth', 'verified', 'phone.verified', 'role:seller|administrator'])->group(function () {
+    Route::get('/seller/raslo', [RasloSettingsController::class, 'show'])->name('raslo.settings');
+    Route::post('/seller/raslo', [RasloSettingsController::class, 'update'])->middleware('throttle:10,1')->name('raslo.settings.update');
+    Route::post('/seller/raslo/orders/{order}/retry', [RasloSettingsController::class, 'retry'])->middleware('throttle:10,1')->name('raslo.retry');
+});
+Route::get('/orders/{order}/delivery', [RasloSettingsController::class, 'tracking'])->middleware('auth')->name('raslo.tracking');
+Route::post('/integrations/raslo/events/{connection}', RasloWebhookController::class)->middleware('throttle:120,1')->name('raslo.events');
+
+Route::get('/my-deliveries', [RasloSettingsController::class, 'deliveries'])->middleware('auth')->name('raslo.my-deliveries');

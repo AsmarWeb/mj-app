@@ -38,7 +38,7 @@ return new class extends Migration
             $table->unsignedBigInteger('views')->default(0);
             $table->datetime('published_at')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->unique();
-            $table->foreignId('plan_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('plan_id')->nullable();
             $table->string('stripe_account_id')->nullable();
             $table->boolean('stripe_connected')->default(false);
             $table->foreignIdFor(User::class, 'updated_by')->nullable();
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('step')->default(1);
             $table->boolean('is_completed')->default(false);
             $table->boolean('is_active')->default(false);
-            $table->boolean('verified')->default(false)->after('is_active');
+            $table->boolean('verified')->default(false);
             $table->timestamp('verified_at')->nullable();
             $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

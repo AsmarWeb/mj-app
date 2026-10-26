@@ -1,66 +1,189 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# murwaj.com | مروج.كوم
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Get Found. Sell Smarter. Scale Your Creativity and Productivity.**
 
-## About Laravel
+**منصّة مروج.كوم للبيع عبر الإنترنت، لمساعدة أعمالك على النمو من خلال التسويق الرقمي.**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## About murwaj
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+murwaj brings online selling and digital marketing together to help businesses, merchants and creators get discovered, showcase their products and grow their online presence. Built with a focus on the UAE market, the platform combines merchant storefronts, physical products and digital content, with an optional **Raslo / رسلو** delivery integration for eligible orders.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Our vision is to help you:
 
-## Learning Laravel
+- **Get Found** — build your online presence and make products easier to discover.
+- **Sell Smarter** — simplify product presentation, checkout and store management.
+- **Grow Your Business** — connect online commerce with digital marketing.
+- **Scale Your Creativity and Productivity** — simplify everyday workflows and focus on creating value.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## عن مروج.كوم
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+مروج.كوم منصّة تجمع التجارة الإلكترونية والتسويق الرقمي لمساعدة أصحاب الأعمال والتجّار والمبدعين على عرض منتجاتهم، والوصول إلى العملاء، وتنمية أعمالهم عبر الإنترنت.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+نطوّر المنصّة مع التركيز على سوق الإمارات، لتجمع المتاجر والمنتجات المادية والمحتوى الرقمي، مع تكامل اختياري مع **رسلو** لتوصيل الطلبات المؤهّلة.
 
-## Laravel Sponsors
+رؤيتنا هي مساعدتك على:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **الوصول إلى عملائك** — ببناء حضور رقمي يسهّل اكتشاف أعمالك ومنتجاتك.
+- **البيع بذكاء** — بتبسيط عرض المنتجات وإتمام الشراء وإدارة المتجر.
+- **تنمية أعمالك** — بربط البيع عبر الإنترنت بالتسويق الرقمي.
+- **توسيع إبداعك وإنتاجيتك** — بتبسيط المهام اليومية وإتاحة وقت أكبر لتطوير أعمالك.
 
-### Premium Partners
+## Development status | حالة التطوير
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+The platform is under active development. The vision above describes its direction; it does not mean every marketing or automation capability is available today. The sections below describe the development branch and are not a production-readiness certification. See the [audit and remaining work](docs/audit-2026-10-25.md).
+
+المنصّة قيد التطوير والتجربة. يوضّح التعريف أعلاه رؤيتها، ولا يعني اكتمال جميع أدوات التسويق أو الأتمتة. تعرض الأقسام التالية وظائف فرع التطوير والقيود الحالية، ولا تُعدّ نتائج الاختبارات اعتمادًا لجاهزية الإطلاق.
+
+## Community | المجتمع
+
+- [Contributing / المساهمة](CONTRIBUTING.md)
+- [Code of conduct / قواعد السلوك](CODE_OF_CONDUCT.md)
+- [Security policy / سياسة الأمان](SECURITY.md)
+- [Support / الدعم](SUPPORT.md)
+- [Roadmap / خارطة الطريق](ROADMAP.md)
+- [Changelog / سجل التغييرات](CHANGELOG.md)
+- [MIT License / الترخيص](LICENSE)
+
+## What works
+
+- Merchant storefronts, product listings, baskets, subscriptions and customer accounts.
+- Physical checkout per store using current server-side prices, integer fils, stock reservations and signed Stripe payment confirmation.
+- UAE recipient address fields, Arabic phone digits, Arabic/English address UI and separate payment for each store.
+- Dedicated, encrypted Raslo credentials per merchant; explicit **Raslo** product shipping; automatic forwarding of eligible paid AED/UAE orders.
+- Frozen delivery requests, stable idempotency keys, bounded retries, signed status events and periodic recovery polling.
+- Workspace → Quick Actions → **Raslo delivery integration**; Profile → **My deliveries** beside Edit Profile.
+- Digital-file downloads through authenticated entitlement checks and **private storage**. Existing public files require the migration command below.
+
+Raslo delivery state is independent of the marketplace order/payment state. A `completed` delivery does not automatically change a `processing` marketplace order. Raslo pricing still needs the merchant's approval. **Raslo delivery fees are not added to customer Stripe checkout in this release.**
+
+## Stack and requirements
+
+Laravel 12, PHP 8.2+, Livewire 3, Jetstream/Fortify, Sanctum, Laratrust, MySQL or SQLite, Redis/database queues, Vue 3, Tailwind 3 and Vite 6. Use **Node 22 or 24** and Composer 2. Dependencies are pinned by both lock files; use `composer install` and `npm ci --include=optional`.
+
+Sail runs PHP 8.3. CI tests PHP against SQLite/MySQL and clean frontend builds on Linux/macOS Intel. Composer resolves against PHP 8.2 to keep its lock compatible with supported local PHP versions.
+
+## Local setup
+
+The repository and product/package name are **murwaj**. Existing installations can keep their local `mj-app` folder.
+
+```sh
+git clone https://github.com/AsmarWeb/murwaj.git murwaj
+cd murwaj
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+For a fresh local SQLite installation, set the following values in `.env`:
+
+```env
+APP_NAME=murwaj
+APP_URL=http://localhost
+DB_CONNECTION=sqlite
+QUEUE_CONNECTION=database
+```
+
+Create `database/database.sqlite` if absent, then:
+
+```sh
+php artisan migrate
+php artisan storage:link
+npm ci --include=optional
+npm run build
+php artisan serve
+```
+
+`storage:link` exposes product images, not the private digital disk. Never place private downloads inside `public/` or `storage/app/public/`.
+
+For Sail, start your existing stack with `./vendor/bin/sail up -d`; use `./vendor/bin/sail artisan ...` for PHP commands. MySQL installations must set real `DB_HOST=mysql`, `DB_DATABASE`, `DB_USERNAME` and `DB_PASSWORD`. SQLite does not use MySQL credentials; Compose warnings about them do not prove an application database error.
+
+### Existing installations and renaming
+
+Back up the database and storage before updating. Keep `.env`, `APP_KEY`, database paths/volumes, payment keys, Raslo keys, order references and callback identities. Do **not** run `migrate:fresh` on an existing installation.
+
+Changing the GitHub name does not require renaming your local folder. Keep the current folder/Compose project during rollout: renaming it can select different Docker volumes. If changing `APP_NAME` on an existing installation, preserve the existing `SESSION_COOKIE`/cache prefix where needed or expect users to sign in again. Never regenerate `APP_KEY` to rename the platform.
+
+## Public catalog API
+
+Read-only `/api/v1/shops` and `/api/v1/listings` expose only visible catalog records, with pagination, search and shared rate limits. Download the contract at `/api/v1/openapi.json`; see [API behavior and compatibility changes](docs/catalog-api.md). Legacy `/api/shops` and `/api/listings` now use the same guarded responses.
+
+## Merchant memberships
+
+Free, Basic and Pro memberships are separate from Raslo Enterprise access. See [pricing repairs, plan defaults and rollout](docs/membership-pricing-audit.md). Billing uses the configured Cashier currency, verified Stripe prices, durable checkout attempts and a Stripe Billing Portal button for existing memberships. Run the new migration before enabling these routes.
+
+## Stripe test checkout
+
+Set your own Stripe test credentials and webhook signing secret; never commit them. Forward Stripe events to the application's actual URL and port:
+
+```sh
+stripe listen --forward-to http://localhost/stripe/webhook
+```
+
+Use the `whsec_…` printed by that listener in `STRIPE_WEBHOOK_SECRET`, then clear configuration and restart workers. A paid event must reach the application; returning from Checkout is not the payment authority. See [checkout readiness](docs/raslo-readiness.md) for recovery and boundaries. Do not use test keys or temporary tunnels for production.
+
+## Raslo delivery integration
+
+1. Configure `RASLO_API_BASE_URL` with the Raslo backend's HTTPS origin plus `/api/integrations/v1`; configure `RASLO_TRACKING_HOSTS` with approved tracking hostnames.
+2. In Raslo, create a dedicated paid Enterprise delivery connection and select its UAE pickup address.
+3. In murwaj's merchant Workspace, open **Raslo delivery integration**, enter the dedicated Delivery API key, verify and enable the connection.
+4. Create/edit products and explicitly choose **Raslo** under Shipping Method. Existing products retain their current shipping method. Mixed Raslo/non-Raslo products from the same store must be separated into checkouts.
+5. Keep the Stripe webhook, queue and scheduler running. Only confirmed paid, eligible new orders are forwarded. No backfill occurs just because the connection is enabled.
+
+For local Sail workers:
+
+```sh
+./vendor/bin/sail artisan raslo:check
+docker compose -f docker-compose.yml -f docker-compose.raslo.yml up -d --no-deps raslo-queue raslo-scheduler
+```
+
+Stop equivalent manually running workers/schedulers before switching. These services require the existing Sail image/network and configured queue backend; `--no-deps` does not start Redis or MySQL if your configuration needs them. Docker must remain running.
+
+The scheduler queues forwarding every minute and status checks every five minutes. The delivery detail page refreshes locally saved status every 30 seconds while visible. For faster status updates configure the signed Raslo webhook on a stable HTTPS murwaj domain, retaining polling for recovery. A temporary tunnel's hostname changes when recreated: update configuration, clear caches and restart **all** application worker services.
+
+See [bridge contract and recovery](docs/raslo-order-bridge.md) and [shipping UX and acceptance test](docs/raslo-checkout-experience.md). Shopify is not a ready-made connector in this project.
+
+## Secure existing digital files
+
+New digital uploads use `storage/app/private/digital`. The application never falls back to public storage for downloads. If you have existing digital files, back up storage and run:
+
+```sh
+php artisan digital:secure-files
+php artisan digital:secure-files --apply
+```
+
+The first command is a dry run. `--apply` copies only referenced digital-product files, verifies SHA-256 equality, then removes the public copy. A conflicting private file or missing source produces an error and preserves existing bytes. Do not enable paid digital downloads before this migration succeeds. Clear CDN caches and remove separately published copies if you previously distributed their public URLs. See [security rollout](docs/murwaj-rollout.md).
+
+## Tests and builds
+
+```sh
+composer validate --strict
+php artisan test
+npm ci --include=optional
+npm run test:frontend
+npm run build
+php artisan view:cache
+php artisan route:cache
+composer audit
+npm audit
+```
+
+Do not share `node_modules` between macOS and Linux/Sail. Each platform needs its own optional Rollup binary. The lock includes native dependencies for both platforms; keep both lock files under version control.
+
+## GitHub Actions and deployment
+
+Verified baseline: commit `b603a8c` passed PHP/MySQL, PHP/SQLite and Linux/macOS Intel frontend jobs in [Actions run 40197258662](https://github.com/AsmarWeb/murwaj/actions/runs/40197258662). This is CI evidence for that commit, not a production acceptance test.
+
+**Tests** runs on pushes, pull requests and manual requests. **Deploy** is manual, restricted to `main`, and depends on Tests. It never runs on an ordinary push.
+
+The latest historical deployment failed SSH authentication; source changes cannot repair the host's `authorized_keys` or a wrong private key. Configure the `production` environment as described in [deployment setup](docs/murwaj-rollout.md). The workflow validates required values, uses a supplied known-hosts entry, deploys the checked commit and stops on command failures. It is not an atomic release/rollback system; back up and stage-test before a production deployment.
+
+## Next priorities
+
+- Stable HTTPS staging, verified webhooks, backups and a full browser/device acceptance test.
+- Resolve remaining moderate Tailwind/PostCSS build-tool advisories through a reviewed Tailwind 4 migration.
+- Complete digital/POD payment fulfillment via webhooks, refund/cancellation operations and automated monitoring before launching those modules.
+- Add merchant delivery quotes/checkout-fee policy only after defining who pays; add Shopify after the current bridge is stable.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+See [CONTRIBUTING.md](CONTRIBUTING.md). Never include `.env`, private keys, payment credentials, customer exports or uploaded documents in commits or issue reports.

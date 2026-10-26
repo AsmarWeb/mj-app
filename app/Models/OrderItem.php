@@ -9,6 +9,7 @@ class OrderItem extends Model
     protected $fillable = [
 
         'order_id',
+        'source_cart_item_id',
         'digital_product_id',
         'listing_id',
         'listing_name',
@@ -21,7 +22,7 @@ class OrderItem extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
-    } 
+    }
 
     public function listing()
     {

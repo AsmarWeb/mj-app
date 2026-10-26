@@ -38,7 +38,7 @@ class MainHero extends Component
      */
     public function render(): View|Closure|string
     {
-        $setting = Setting::find(1);
+        $setting = Setting::find(1) ?? new Setting;
 
         $shops = Shop::with('user')->take(3)
             ->get();

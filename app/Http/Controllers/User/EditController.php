@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Listing;
+use App\Services\Checkout\ShippingMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -50,7 +51,7 @@ class EditController extends Controller
             'price_condition' => 'required',
 
             // Shipping
-            'shipping_method' => 'required|string|max:255',
+            'shipping_method' => ShippingMethod::rules($request->user()->shop),
 
             'delivery_days' => 'required|integer|min:1',
 
@@ -70,12 +71,12 @@ class EditController extends Controller
             if ($listing->image) {
 
                 Storage::disk('public')
-                    ->delete('products/' . $listing->image);
+                    ->delete('products/'.$listing->image);
             }
 
             $imageName = time()
-                . '.'
-                . $request->image->extension();
+                .'.'
+                .$request->image->extension();
 
             $request->image->storeAs(
                 'products',

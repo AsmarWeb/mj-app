@@ -28,6 +28,7 @@ return new class extends Migration
             $table->enum('billing_period', ['monthly', 'yearly'])->default('monthly');
             $table->timestamps();
         });
+        Schema::table('shops', fn (Blueprint $table) => $table->foreign('plan_id')->references('id')->on('plans')->nullOnDelete());
     }
 
     /**
@@ -35,6 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('shops', fn (Blueprint $table) => $table->dropForeign(['plan_id']));
         Schema::dropIfExists('plans');
     }
 };

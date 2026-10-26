@@ -2,294 +2,108 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
-use App\Models\InvoiceItem;
+use App\Http\Requests\StoreCheckoutRequest;
 use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Shop;
+use App\Services\Checkout\AedAmount;
+use App\Services\Checkout\PhysicalCheckoutService;
+use App\Services\Checkout\ShippingMethod;
+use App\Services\Checkout\StripeCheckoutGateway;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Stripe\Account;
-use Stripe\Checkout\Session;
-use Stripe\Stripe;
+use Illuminate\Validation\ValidationException;
+use Stripe\Exception\ApiErrorException;
 
 class CheckoutController extends Controller
 {
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $user = auth()->user();
-
-        $cart = $user->cart;
-
-        if (! $cart || $cart->items->isEmpty()) {
-
-            return redirect()
-                ->route('cart.index')
-                ->with('error', 'Your cart is empty');
-
+        $cart = $request->user()->cart()->with('items.listing.shop')->first();
+        $shops = $cart?->items->filter(fn ($item) => $item->listing && $item->listing->shop)->groupBy('shop_id') ?? collect();
+        if ($shops->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
 
-        Stripe::setApiKey(config('cashier.secret'));
-
-        $shopItems = $cart->items->groupBy('shop_id');
-
-        $orderIds = [];
-
-        foreach ($shopItems as $shopId => $items) {
-
-            $shop = Shop::findOrFail($shopId);
-
-            if (! $shop->stripe_account_id) {
-
-                return back()->with(
-                    'error',
-                    "{$shop->name} has not connected Stripe."
-                );
-
-            }
-
-            $account = Account::retrieve(
-                $shop->stripe_account_id
-            );
-
-            if (
-                ! $account->charges_enabled ||
-                ! $account->payouts_enabled
-            ) {
-
-                return back()->with(
-                    'error',
-                    "{$shop->name} must complete Stripe onboarding."
-                );
-
-            }
-
-            $lineItems = [];
-
-            $subtotal = 0;
-
+        $shippingSummaries = $shops->map(function ($items) {
+            $rasloCount = $items->filter(fn ($item) => $item->listing->shipping_method === 'Raslo')->count();
+            $total = 0;
+            $valid = true;
             foreach ($items as $item) {
-
-                $subtotal +=
-                    $item->price * $item->quantity;
-
-                $lineItems[] = [
-
-                    'price_data' => [
-
-                        'currency' => 'aed',
-
-                        'product_data' => [
-                            'name' => $item->listing->title,
-                        ],
-
-                        'unit_amount' => intval($item->price * 100),
-
-                    ],
-
-                    'quantity' => $item->quantity,
-
-                ];
-
+                try {
+                    $unit = AedAmount::fils($item->listing->getRawOriginal('price'));
+                    $valid = $valid && $unit > 0 && $item->quantity > 0;
+                    $total += $unit * $item->quantity;
+                } catch (ValidationException $error) {
+                    $valid = false;
+                }
             }
+            $mixed = $rasloCount > 0 && $rasloCount < $items->count();
+            $raslo = $rasloCount === $items->count();
+            $ready = ! $raslo || ShippingMethod::ready($items->first()->listing->shop);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Create Order
-            |--------------------------------------------------------------------------
-            */
+            return ['total' => $valid ? AedAmount::decimal($total) : null,
+                'raslo' => $raslo, 'mixed' => $mixed, 'ready' => $ready, 'available' => $valid && ! $mixed && $ready];
+        });
 
-            $order = Order::create([
-
-                'order_number' => 'MW-'.strtoupper(Str::random(10)),
-
-                'user_id' => $user->id,
-
-                'shop_id' => $shop->id,
-
-                'subtotal' => $subtotal,
-
-                'total' => $subtotal,
-
-                'payment_method' => 'stripe',
-
-                'payment_status' => 'pending',
-
-            ]);
-
-            $orderIds[] = $order->id;
-
-            foreach ($items as $item) {
-
-                OrderItem::create([
-
-                    'order_id' => $order->id,
-
-                    'listing_id' => $item->listing_id,
-
-                    'listing_name' => $item->listing->title,
-
-                    'price' => $item->price,
-
-                    'quantity' => $item->quantity,
-
-                    'total' => $item->price * $item->quantity,
-
-                ]);
-
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Stripe Checkout
-            |--------------------------------------------------------------------------
-            */
-
-            $commission =
-                $subtotal *
-                config('revenue.commission')
-                / 100;
-
-            $session = Session::create([
-
-                'payment_method_types' => [
-                    'card',
-                ],
-
-                'line_items' => $lineItems,
-
-                'mode' => 'payment',
-
-                'payment_intent_data' => [
-
-                    'application_fee_amount' => intval($commission * 100),
-
-                    'transfer_data' => [
-
-                        'destination' => $shop->stripe_account_id,
-
-                    ],
-
-                ],
-
-                'metadata' => [
-
-                    'order_ids' => implode(',', $orderIds),
-
-                ],
-
-                'success_url' => route(
-                    'checkout.success',
-                    $order->id
-                )
-                    .'?session_id={CHECKOUT_SESSION_ID}',
-
-                'cancel_url' => route('cart.index'),
-
-            ]);
-
-            return redirect($session->url);
-
-        }
-
+        return view('checkout.address', ['shops' => $shops, 'shippingSummaries' => $shippingSummaries, 'selectedShop' => $request->integer('shop_id'),
+            'pendingOrders' => $request->user()->orders()->where('inventory_reserved', true)->get()]);
     }
 
-    public function success(Order $order, Request $request)
+    public function store(StoreCheckoutRequest $request, PhysicalCheckoutService $checkout)
     {
-
-        Stripe::setApiKey(config('cashier.secret'));
-
-        $session = Session::retrieve(
-            $request->session_id
-        );
-
-        $orderIds = explode(
-            ',',
-            $session->metadata->order_ids
-        );
-
-        $orders = Order::with([
-            'shop',
-            'items',
-        ])
-            ->whereIn('id', $orderIds)
-            ->get();
-
-        foreach ($orders as $order) {
-
-            if ($order->payment_status === 'paid') {
-                continue;
-            }
-
-            $order->update([
-
-                'payment_status' => 'paid',
-
-                'status' => 'processing',
-
-                'paid_at' => now(),
-
-            ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | Create Invoice
-            |--------------------------------------------------------------------------
-            */
-
-            $invoice = Invoice::create([
-
-                'shop_id' => $order->shop_id,
-
-                'order_id' => $order->id,
-
-                'invoice_number' => 'INV-'.strtoupper(Str::random(8)),
-
-                'customer_name' => $order->user->name,
-
-                'customer_email' => $order->user->email,
-
-                'customer_phone' => $order->user->phone ?? null,
-
-                'subtotal' => $order->subtotal,
-
-                'tax' => 0,
-
-                'total' => $order->total,
-
-                'status' => 'paid',
-
-            ]);
-
-            foreach ($order->items as $item) {
-
-                InvoiceItem::create([
-
-                    'invoice_id' => $invoice->id,
-
-                    'title' => $item->listing_name,
-
-                    'quantity' => $item->quantity,
-
-                    'price' => $item->price,
-
-                    'total' => $item->total,
-
-                ]);
-
-            }
-
+        $data = $request->validated();
+        $address = array_diff_key($data, ['shop_id' => true]);
+        $address['country'] = 'AE';
+        try {
+            $result = $checkout->start($request->user(), (int) $data['shop_id'], $address);
+        } catch (ApiErrorException $error) {
+            // No provider payload or recipient details are logged or exposed.
+            return back()->withInput()->withErrors(['cart' => 'Payment provider unavailable. Retry the same checkout; do not start another payment.']);
         }
 
-        auth()->user()
-            ->cart
-            ->items()
-            ->delete();
+        return redirect()->away($result['url']);
+    }
 
-        return view(
-            'checkout.success',
-            compact('orders')
-        );
+    public function resume(Order $order, Request $request, PhysicalCheckoutService $checkout)
+    {
+        $this->authorizeCheckout($order, $request);
+        try {
+            $result = $checkout->resume($order);
+        } catch (ApiErrorException $error) {
+            return back()->withErrors(['cart' => 'Payment provider unavailable. Retry this checkout later.']);
+        }
 
+        return redirect()->away($result['url']);
+    }
+
+    public function cancel(Order $order, Request $request, PhysicalCheckoutService $checkout)
+    {
+        $this->authorizeCheckout($order, $request);
+        try {
+            $checkout->cancel($order);
+        } catch (ApiErrorException $error) {
+            return back()->withErrors(['cart' => 'Could not confirm cancellation. Stock remains held until Stripe confirms expiry.']);
+        }
+
+        return redirect()->route('checkout')->with('success', 'Checkout status refreshed. Paid orders remain valid; expired checkouts release their stock.');
+    }
+
+    private function authorizeCheckout(Order $order, Request $request): void
+    {
+        abort_unless((int) $order->user_id === (int) $request->user()->id, 403);
+        abort_unless($order->checkout_token && $order->checkout_currency === 'AED' && $order->checkout_payload, 404);
+    }
+
+    public function success(Order $order, Request $request, PhysicalCheckoutService $checkout, StripeCheckoutGateway $gateway)
+    {
+        abort_unless((int) $order->user_id === (int) $request->user()->id, 403);
+        $request->validate(['session_id' => ['required', 'string', 'max:255', 'regex:/^cs_[A-Za-z0-9_]+$/D']]);
+        $session = $gateway->retrieve($request->string('session_id')->toString());
+        $checkout->assertIdentity($order, $session);
+        $checkout->synchronize($session);
+        $order->refresh();
+        if (! $order->isPaid()) {
+            return redirect()->route('cart.index')->with('error', 'Payment has not been confirmed.');
+        }
+
+        return view('checkout.success', ['orders' => collect([$order->load('shop', 'items')])]);
     }
 }

@@ -12,9 +12,8 @@ class PlanSeeder extends Seeder
      */
     public function run(): void
     {
-        Plan::create([
+        Plan::firstOrCreate(['slug' => 'free'], [
             'name' => 'Free',
-            'slug' => 'free',
             'price' => 0,
 
             'stripe_price' => null,
@@ -32,12 +31,11 @@ class PlanSeeder extends Seeder
             'billing_period' => 'monthly',
         ]);
 
-        Plan::create([
+        Plan::firstOrCreate(['slug' => 'basic'], [
             'name' => 'Basic',
-            'slug' => 'basic',
             'price' => 9.99,
 
-            'stripe_price' => 'price_1Ttm9sBPzsfZpB0FoJvMz9aK',
+            'stripe_price' => config('membership.basic_price'),
 
             'listing_limit' => 50,
             'listing_duration' => 60,
@@ -52,12 +50,11 @@ class PlanSeeder extends Seeder
             'billing_period' => 'monthly',
         ]);
 
-        Plan::create([
+        Plan::firstOrCreate(['slug' => 'pro'], [
             'name' => 'Pro',
-            'slug' => 'pro',
             'price' => 29.99,
 
-            'stripe_price' => 'price_1TtmBhBPzsfZpB0Ffxy6hi5c',
+            'stripe_price' => config('membership.pro_price'),
 
             'listing_limit' => 500,
             'listing_duration' => 90,
@@ -72,23 +69,5 @@ class PlanSeeder extends Seeder
             'billing_period' => 'monthly',
         ]);
 
-        // Plan::create([
-        //     'name' => 'Business Yearly',
-        //     'slug' => 'business-yearly',
-        //     'price' => 299.99,
-
-        //     'stripe_price' => 'price_BUSINESS_YEARLY_FROM_STRIPE',
-
-        //     'listing_limit' => 2000,
-        //     'order_limit' => 5000,
-        //     'storage_limit' => 100000,
-
-        //     'custom_domain' => true,
-        //     'mobile_app' => true,
-
-        //     'is_active' => true,
-        //     'is_free' => false,
-        //     'billing_period' => 'yearly',
-        // ]);
     }
 }

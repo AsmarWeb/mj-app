@@ -1,49 +1,85 @@
 name: Deploy
-
+# Deploy is explicit. Normal pushes run Tests and never connect to production.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: murwaj-production
+  cancel-in-progress: false
 jobs:
-  build:
+  checks:
+    uses: ./.github/workflows/tests.yml
+  deploy:
+    needs: checks
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: production
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+      DEPLOY_PHP: ${{ vars.DEPLOY_PHP }}
     steps:
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20.10.0
-      - name: Copy .env
-        run: cp .env.example .env
-      - name: Install composer Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      - name: Install node dependencies
-        run: npm ci
-      - name: Setup Project
+      - uses: actions/checkout@v4
+      - name: Validate deployment configuration
+        shell: bash
         run: |
-          npm run build
-      - name: Deploy PHP to Server
-        if: ${{ success() }}
-        uses: appleboy/ssh-action@master
+          set -euo pipefail
+          for field in SSH_HOST SSH_USERNAME SSH_PORT SSH_KEY SSH_KNOWN_HOSTS DEPLOY_PATH DEPLOY_PHP; do
+            if [[ -z "${!field}" ]]; then echo "::error::$field is missing in production configuration"; exit 1; fi
+          done
+          [[ "$SSH_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
+          [[ "$SSH_USERNAME" =~ ^[a-zA-Z0-9_-]+$ ]]
+          [[ "$SSH_PORT" =~ ^[0-9]+$ ]]
+          [[ "$DEPLOY_PATH" =~ ^/[a-zA-Z0-9_./-]+$ ]]
+          [[ "$DEPLOY_PHP" =~ ^/[a-zA-Z0-9_./-]+$ ]]
+      - uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_KEY }}
-          script_stop: true
-          script: |
-            cd domains
-            cd murwaj.com
-            git pull
-            php composer.phar install
-            php artisan migrate --force
-      - name: Install SSH key
+          node-version: 22
+          cache: npm
+      - run: npm ci --include=optional
+      - run: npm run build
+      - name: Configure SSH
+        shell: bash
         run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      - name: Copy Build Files to Target Server
+          set -euo pipefail
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          ssh-keygen -y -P '' -f ~/.ssh/id_deploy > /dev/null
+      - name: Deploy checked commit and matching assets
+        shell: bash
         run: |
-          rsync -r -e "ssh -p ${{ secrets.SSH_PORT }}" ${{ github.workspace }}/public/build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/domains/murwaj.com/public/build
+          set -euo pipefail
+          SSH_ARGS=(-i "$HOME/.ssh/id_deploy" -p "$SSH_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=20)
+          ssh "${SSH_ARGS[@]}" "$SSH_USERNAME@$SSH_HOST" "bash -s -- '$DEPLOY_PATH' '$DEPLOY_PHP' '$GITHUB_SHA'" <<'REMOTE'
+          set -euo pipefail
+          cd "$1"
+          test -f .env
+          test -f artisan
+          test -f composer.phar
+          test "$(git branch --show-current)" = main
+          test -z "$(git status --porcelain --untracked-files=no)"
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$3"
+          git merge --ff-only "$3"
+          "$2" composer.phar install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          REMOTE
+          rsync -rz -e "ssh -i $HOME/.ssh/id_deploy -p $SSH_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes" public/build/ "$SSH_USERNAME@$SSH_HOST:$DEPLOY_PATH/public/build/"
+          ssh "${SSH_ARGS[@]}" "$SSH_USERNAME@$SSH_HOST" "bash -s -- '$DEPLOY_PATH' '$DEPLOY_PHP'" <<'REMOTE'
+          set -euo pipefail
+          cd "$1"
+          "$2" artisan migrate --force
+          "$2" artisan config:clear
+          "$2" artisan view:cache
+          "$2" artisan queue:restart
+          REMOTE
+      - name: Remove temporary SSH files
+        if: always()
+        run: rm -f ~/.ssh/id_deploy ~/.ssh/known_hosts

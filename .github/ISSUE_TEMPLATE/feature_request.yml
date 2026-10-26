@@ -1,0 +1,33 @@
+name: Feature request / اقتراح ميزة
+description: Suggest an improvement for murwaj merchants, creators or customers.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem / مشكلة المستخدم
+      description: Who needs this and what are they trying to achieve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior / الحل المقترح
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives / البدائل
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria / معايير القبول
+      description: How would we verify that the improvement works?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: UAE, language and integration considerations
+      description: Mention Arabic/English, RTL, accessibility, payments or Raslo if relevant. No private data.

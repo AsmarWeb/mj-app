@@ -579,6 +579,8 @@
                                 <select id="shipping_method" name="shipping_method"
                                     class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
 
+                                    <option value="" @selected(!old('shipping_method', $listing->shipping_method))>{{ app()->getLocale()==='ar'?'اختر طريقة الشحن':'Choose shipping method' }}</option>
+                                    <option value="Raslo" @disabled(!\App\Services\Checkout\ShippingMethod::ready(auth()->user()?->shop)) @selected(old('shipping_method', $listing->shipping_method) === 'Raslo')>{{ app()->getLocale()==='ar'?'رسلو · توصيل داخل الإمارات':'Raslo · UAE delivery' }}</option>
                                     <option value="Standard Shipping"
                                         {{ old('shipping_method', $listing->shipping_method) == 'Standard Shipping' ? 'selected' : '' }}>
                                         Standard Shipping | الشحن العادي
@@ -600,6 +602,9 @@
                                     </option>
 
                                 </select>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ app()->getLocale()==='ar'?'اختر رسلو لإرسال طلبات هذا المنتج تلقائيًا بعد تأكيد الدفع. يتطلب ربطًا مفعّلًا ومتحققًا منه وعملة AED. طرق الشحن الأخرى ينظمها المتجر.':'Choose Raslo to forward this product’s orders automatically after confirmed payment. Requires an enabled, verified AED connection. Other methods are fulfilled by the store.' }}</p>
+                        <a href="{{ route('raslo.settings') }}" class="mt-2 inline-block font-bold text-orange-600 underline">{{ app()->getLocale()==='ar'?'إعداد ربط رسلو ومتابعة الطلبات':'Set up Raslo & manage deliveries' }}</a>
+
 
                             </div>
 

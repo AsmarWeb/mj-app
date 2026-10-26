@@ -137,7 +137,7 @@ class ShopController extends Controller
                     // Create a free subscription if one doesn't exist
                     if (! $shop->subscriptions()->exists()) {
 
-                        $freePlan = Plan::where('price', 0)->first();
+                        $freePlan = Plan::where('is_free', true)->where('is_active', true)->where('price', 0)->first();
 
                         if ($freePlan) {
 
@@ -296,7 +296,8 @@ class ShopController extends Controller
         }
 
         $subscription = $shop->subscriptions()
-            ->where('status', 'active')
+            ->entitled()
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")
             ->latest()
             ->with('plan')
             ->first();

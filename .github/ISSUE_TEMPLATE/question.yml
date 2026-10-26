@@ -1,0 +1,24 @@
+name: Question / سؤال
+description: Ask a technical usage or contribution question.
+title: "[Question]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Read README.md and SUPPORT.md first. This is a public form; do not share credentials or customer/order details."
+  - type: textarea
+    id: question
+    attributes:
+      label: Question / السؤال
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you read or tried / ما قرأته أو جرّبته
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Relevant environment / البيئة
+      description: Commit/branch and relevant versions only; no secrets.

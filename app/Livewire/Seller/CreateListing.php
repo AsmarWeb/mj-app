@@ -6,7 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Section;
-use App\Models\Subcategory;
+use App\Models\SubCategory;
 use App\Notifications\ListingCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -131,7 +131,8 @@ class CreateListing extends Component
         $this->currency = $shop->currency ?: 'AED';
 
         $this->subscription = $shop->subscriptions()
-            ->where('status', 'active')
+            ->entitled()
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")
             ->with('plan')
             ->latest()
             ->first();
@@ -238,11 +239,7 @@ class CreateListing extends Component
                 'max:50',
             ],
 
-            'shipping_method' => [
-                'required',
-                'string',
-                'max:255',
-            ],
+            'shipping_method' => \App\Services\Checkout\ShippingMethod::rules(Auth::user()?->shop),
 
             'delivery_days' => [
                 'required',
@@ -257,6 +254,7 @@ class CreateListing extends Component
             ],
 
             'video' => [
+                \Illuminate\Validation\Rule::prohibitedIf(Auth::user()?->shop?->activeSubscription?->plan?->is_free === true),
                 'nullable',
                 'file',
                 'mimes:mp4,mov,webm',
@@ -509,7 +507,8 @@ class CreateListing extends Component
         }
 
         $subscription = $shop->subscriptions()
-            ->where('status', 'active')
+            ->entitled()
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")
             ->with('plan')
             ->latest()
             ->first();
@@ -525,52 +524,7 @@ class CreateListing extends Component
 
         $plan = $subscription->plan;
 
-        $usedStorage = 0;
-
-        $listings = Listing::where('user_id', $user->id)->get();
-
-        foreach ($listings as $listing) {
-
-            if ($listing->image) {
-                $path = storage_path(
-                    'app/public/products/' .
-                        ltrim($listing->image, '/')
-                );
-
-                if (is_file($path)) {
-                    $usedStorage += filesize($path);
-                }
-            }
-
-            if (is_array($listing->images)) {
-                foreach ($listing->images as $image) {
-
-                    if (! is_string($image) || $image === '') {
-                        continue;
-                    }
-
-                    $path = storage_path(
-                        'app/public/products/' .
-                            ltrim($image, '/')
-                    );
-
-                    if (is_file($path)) {
-                        $usedStorage += filesize($path);
-                    }
-                }
-            }
-
-            if ($listing->video) {
-                $path = storage_path(
-                    'app/public/products/videos/' .
-                        ltrim($listing->video, '/')
-                );
-
-                if (is_file($path)) {
-                    $usedStorage += filesize($path);
-                }
-            }
-        }
+        $usedStorage = $user->storageUsed();
 
         $newStorage = 0;
 
@@ -647,7 +601,8 @@ class CreateListing extends Component
         $this->currency = $shop->currency ?: 'AED';
 
         $subscription = $shop->subscriptions()
-            ->where('status', 'active')
+            ->entitled()
+            ->orderByRaw("CASE WHEN payment_provider = 'stripe' THEN 0 ELSE 1 END")
             ->with('plan')
             ->latest()
             ->first();
@@ -1026,7 +981,7 @@ class CreateListing extends Component
                     )
                     ->get(),
 
-                'subcategories' => Subcategory::query()
+                'subcategories' => SubCategory::query()
                     ->orderBy(
                         $locale === 'ar'
                             ? 'subcategory_name_ar'
