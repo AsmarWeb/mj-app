@@ -14,7 +14,10 @@ class StoreCheckoutRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $phone = strtr((string) $this->input('recipient_phone'), array_combine(
+        if (! is_string($this->input('recipient_phone'))) {
+            return;
+        }
+        $phone = strtr($this->input('recipient_phone'), array_combine(
             preg_split('//u', '٠١٢٣٤٥٦٧٨٩', -1, PREG_SPLIT_NO_EMPTY), str_split('0123456789')
         ));
         $phone = preg_replace('/[\s()\-]+/u', '', $phone);
@@ -32,7 +35,7 @@ class StoreCheckoutRequest extends FormRequest
         return [
             'shop_id' => ['required', 'integer', 'exists:shops,id'],
             'recipient_name' => ['required', 'string', 'max:120'],
-            'recipient_phone' => ['required', 'regex:/^\+971[0-9]{8,9}$/D'],
+            'recipient_phone' => ['required', 'string', 'regex:/^\+971[0-9]{8,9}$/D'],
             'emirate' => ['required', Rule::in(['abu_dhabi', 'dubai', 'sharjah', 'ajman', 'umm_al_quwain', 'ras_al_khaimah', 'fujairah'])],
             'city' => ['required', 'string', 'max:120'],
             'area' => ['required', 'string', 'max:120'],

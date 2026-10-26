@@ -56,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
             Limit::perHour(3)->by('mobile-verification-hour:'.$request->user()->id),
         ]);
 
+        RateLimiter::for('mobile-checkout', fn (Request $request) => Limit::perMinute(10)->by('mobile-checkout:'.$request->user()->id));
+
         Cashier::useSubscriptionModel(Subscription::class);
         Shop::observe(ShopObserver::class);
         RateLimiter::for('catalog', fn (Request $request) => Limit::perMinute(max(1, min(1000, (int) config('catalog_api.rate_limit', 60))))->by('catalog:'.$request->ip()));

@@ -4,7 +4,9 @@ use App\Http\Controllers\Api\CustomerCartController;
 use App\Http\Controllers\Api\CustomerOrderController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\MobileAuthController;
+use App\Http\Controllers\Api\MobileCheckoutController;
 use App\Http\Controllers\Api\ShopController;
+use App\Http\Controllers\MobileCheckoutReturnController;
 use App\Http\Middleware\CatalogResponse;
 use App\Http\Middleware\MobileAuthResponse;
 use App\Http\Middleware\MobileLocale;
@@ -12,6 +14,11 @@ use App\Http\Middleware\RequireMobileToken;
 use App\Http\Resources\AuthUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Public stateless navigation bridge; the signature is not proof of payment.
+Route::get('/mobile/checkout/return/{order}/{outcome}', MobileCheckoutReturnController::class)
+    ->whereNumber('order')->whereIn('outcome', ['returned', 'closed'])
+    ->middleware(['signed', 'throttle:60,1'])->name('mobile.checkout.return');
 
 Route::get('/user', fn (Request $request) => response()->json((new AuthUserResource($request->user()))->resolve($request)))
     ->middleware([MobileAuthResponse::class, 'auth:sanctum']);
@@ -32,6 +39,12 @@ Route::prefix('v1/auth')->name('api.v1.auth.')->middleware(MobileAuthResponse::c
 Route::prefix('v1')->name('api.v1.customer.')->middleware([
     MobileAuthResponse::class, 'auth:sanctum', RequireMobileToken::class, 'throttle:mobile-account', MobileLocale::class,
 ])->group(function () {
+    Route::middleware('throttle:mobile-checkout')->group(function () {
+        Route::post('/checkout', [MobileCheckoutController::class, 'store'])->name('checkout.store');
+        Route::post('/checkout/{order}/resume', [MobileCheckoutController::class, 'resume'])->whereNumber('order')->name('checkout.resume');
+        Route::post('/checkout/{order}/refresh', [MobileCheckoutController::class, 'refresh'])->whereNumber('order')->name('checkout.refresh');
+        Route::post('/checkout/{order}/cancel', [MobileCheckoutController::class, 'cancel'])->whereNumber('order')->name('checkout.cancel');
+    });
     Route::get('/cart', [CustomerCartController::class, 'show'])->name('cart.show');
     Route::post('/cart/items', [CustomerCartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/items/{item}', [CustomerCartController::class, 'update'])->whereNumber('item')->name('cart.update');
