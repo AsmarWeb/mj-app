@@ -9,6 +9,8 @@ use App\Models\Subscription;
 use App\Services\Billing\PlanCheckout;
 use App\Services\Billing\SubscriptionGateway;
 use App\Services\Billing\SubscriptionSync;
+use App\Services\Checkout\DigitalCheckoutGateway;
+use App\Services\Checkout\DigitalCheckoutService;
 use App\Services\Checkout\PhysicalCheckoutService;
 use App\Services\Checkout\StripeCheckoutGateway;
 use App\Services\Digital\DigitalFiles;
@@ -184,3 +186,57 @@ Artisan::command('membership:recover {session : Existing Stripe Checkout session
         return 1;
     }
 });
+
+// Read Stripe's authoritative state and retry pending POD notices; never create payments here.
+Artisan::command('digital:reconcile {--session= : Recover one verified digital/POD session}', function () {
+    $checkout = app(DigitalCheckoutService::class);
+    if ($id = $this->option('session')) {
+        try {
+            $session = app(DigitalCheckoutGateway::class)->retrieve($id);
+            if (! $checkout->accepts($session)) {
+                $this->error('Not a digital/POD checkout session.');
+
+                return 1;
+            }
+            $checkout->synchronize($session);
+            $this->info('Session reconciled.');
+
+            return 0;
+        } catch (Throwable $error) {
+            $this->error('Reconciliation failed; inspect the order and Stripe before retrying.');
+
+            return 1;
+        }
+    }
+    $failed = 0;
+    Order::where('checkout_currency', 'USD')->whereNotNull('checkout_token')
+        ->whereHas('items', fn ($q) => $q->whereNotNull('digital_product_id'))
+        ->where(fn ($q) => $q->where('payment_status', 'pending')->orWhere('checkout_state', 'paid_notice_pending'))
+        ->orderBy('id')->chunkById(100, function ($orders) use ($checkout, &$failed) {
+            foreach ($orders as $order) {
+                if ($order->isPaid()) {
+                    $checkout->notifySupplier($order->id);
+                    if ($order->fresh()->checkout_state === 'paid_notice_pending') {
+                        $failed++;
+                    }
+
+                    continue;
+                }
+                if (! $order->stripe_checkout_session_id) {
+                    $failed++;
+                    $this->warn("Order {$order->id}: missing saved session; inspect Stripe by client reference before another purchase.");
+
+                    continue;
+                }
+                try {
+                    $checkout->synchronize(app(DigitalCheckoutGateway::class)->retrieve($order->stripe_checkout_session_id));
+                } catch (Throwable $error) {
+                    $failed++;
+                    $this->error("Order {$order->id}: reconciliation failed; inspect Stripe before retrying.");
+                }
+            }
+        });
+
+    return $failed ? 1 : 0;
+})->purpose('Recover digital/POD payments and pending supplier notifications');
+Schedule::command('digital:reconcile')->everyFiveMinutes()->withoutOverlapping();

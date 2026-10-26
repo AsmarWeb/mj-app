@@ -57,7 +57,7 @@ class CheckoutSecurityTest extends TestCase
             'checkout_token' => 'test-token', 'checkout_currency' => 'USD', 'stripe_checkout_session_id' => 'cs_digital']);
         $order->items()->create(['digital_product_id' => $product->id, 'listing_name' => $product->title, 'price' => '19.99', 'quantity' => 1, 'total' => '19.99']);
         $session = ['object' => 'checkout.session', 'id' => 'cs_digital', 'client_reference_id' => 'test-token', 'mode' => 'payment',
-            'status' => 'complete', 'payment_status' => 'paid', 'currency' => 'usd', 'amount_total' => 1999,
+            'status' => 'complete', 'payment_status' => 'paid', 'payment_intent' => 'pi_digital', 'currency' => 'usd', 'amount_total' => 1999,
             'metadata' => ['order_id' => $order->id, 'product_id' => $product->id]];
         $this->fakeStripe($session);
         $this->actingAs($other)->get('/checkout/pod-digital/success?session_id=cs_digital')->assertForbidden();
