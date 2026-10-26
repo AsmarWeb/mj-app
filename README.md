@@ -1,8 +1,48 @@
-# murwaj | مُروَّج
+# murwaj.com | مروج.كوم
 
-A UAE-focused marketplace for merchant storefronts, physical products and digital content, with secure AED checkout and an opt-in **Raslo / رسلو** delivery bridge.
+**Get Found. Sell Smarter. Scale Your Creativity and Productivity.**
 
-**Current stage: development pilot.** Physical checkout and Raslo flows have automated coverage and have been exercised locally. This is not a production-readiness certification; see the [audit and remaining work](docs/audit-2026-10-25.md).
+**منصّة مروج.كوم للبيع عبر الإنترنت، لمساعدة أعمالك على النمو من خلال التسويق الرقمي.**
+
+## About murwaj
+
+murwaj brings online selling and digital marketing together to help businesses, merchants and creators get discovered, showcase their products and grow their online presence. Built with a focus on the UAE market, the platform combines merchant storefronts, physical products and digital content, with an optional **Raslo / رسلو** delivery integration for eligible orders.
+
+Our vision is to help you:
+
+- **Get Found** — build your online presence and make products easier to discover.
+- **Sell Smarter** — simplify product presentation, checkout and store management.
+- **Grow Your Business** — connect online commerce with digital marketing.
+- **Scale Your Creativity and Productivity** — simplify everyday workflows and focus on creating value.
+
+## عن مروج.كوم
+
+مروج.كوم منصّة تجمع التجارة الإلكترونية والتسويق الرقمي لمساعدة أصحاب الأعمال والتجّار والمبدعين على عرض منتجاتهم، والوصول إلى العملاء، وتنمية أعمالهم عبر الإنترنت.
+
+نطوّر المنصّة مع التركيز على سوق الإمارات، لتجمع المتاجر والمنتجات المادية والمحتوى الرقمي، مع تكامل اختياري مع **رسلو** لتوصيل الطلبات المؤهّلة.
+
+رؤيتنا هي مساعدتك على:
+
+- **الوصول إلى عملائك** — ببناء حضور رقمي يسهّل اكتشاف أعمالك ومنتجاتك.
+- **البيع بذكاء** — بتبسيط عرض المنتجات وإتمام الشراء وإدارة المتجر.
+- **تنمية أعمالك** — بربط البيع عبر الإنترنت بالتسويق الرقمي.
+- **توسيع إبداعك وإنتاجيتك** — بتبسيط المهام اليومية وإتاحة وقت أكبر لتطوير أعمالك.
+
+## Development status | حالة التطوير
+
+The platform is under active development. The vision above describes its direction; it does not mean every marketing or automation capability is available today. The sections below describe the development branch and are not a production-readiness certification. See the [audit and remaining work](docs/audit-2026-10-25.md).
+
+المنصّة قيد التطوير والتجربة. يوضّح التعريف أعلاه رؤيتها، ولا يعني اكتمال جميع أدوات التسويق أو الأتمتة. تعرض الأقسام التالية وظائف فرع التطوير والقيود الحالية، ولا تُعدّ نتائج الاختبارات اعتمادًا لجاهزية الإطلاق.
+
+## Community | المجتمع
+
+- [Contributing / المساهمة](CONTRIBUTING.md)
+- [Code of conduct / قواعد السلوك](CODE_OF_CONDUCT.md)
+- [Security policy / سياسة الأمان](SECURITY.md)
+- [Support / الدعم](SUPPORT.md)
+- [Roadmap / خارطة الطريق](ROADMAP.md)
+- [Changelog / سجل التغييرات](CHANGELOG.md)
+- [MIT License / الترخيص](LICENSE)
 
 ## What works
 
