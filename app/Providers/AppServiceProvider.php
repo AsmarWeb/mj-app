@@ -37,6 +37,25 @@ class AppServiceProvider extends ServiceProvider
             Limit::perMinute(20)->by('phone-check-ip:'.$request->ip()),
         ]);
 
+        RateLimiter::for('mobile-login', function (Request $request) {
+            $email = $request->input('email');
+            $identity = hash('sha256', is_string($email) ? mb_strtolower(trim($email)) : 'invalid');
+
+            return [
+                Limit::perMinute(5)->by('mobile-login:'.$identity.'|'.$request->ip()),
+                Limit::perMinute(20)->by('mobile-login-ip:'.$request->ip()),
+            ];
+        });
+        RateLimiter::for('mobile-register', fn (Request $request) => [
+            Limit::perMinute(3)->by('mobile-register:'.$request->ip()),
+            Limit::perHour(5)->by('mobile-register-hour:'.$request->ip()),
+        ]);
+        RateLimiter::for('mobile-account', fn (Request $request) => Limit::perMinute(60)->by('mobile-account:'.$request->user()->id));
+        RateLimiter::for('mobile-verification', fn (Request $request) => [
+            Limit::perMinute(1)->by('mobile-verification:'.$request->user()->id),
+            Limit::perHour(3)->by('mobile-verification-hour:'.$request->user()->id),
+        ]);
+
         Cashier::useSubscriptionModel(Subscription::class);
         Shop::observe(ShopObserver::class);
         RateLimiter::for('catalog', fn (Request $request) => Limit::perMinute(max(1, min(1000, (int) config('catalog_api.rate_limit', 60))))->by('catalog:'.$request->ip()));
