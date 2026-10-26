@@ -9,27 +9,43 @@ use App\Models\Shop;
 use App\Models\User;
 use App\Services\Raslo\RasloBridge;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 class PhysicalCheckoutService
 {
     public function __construct(private StripeCheckoutGateway $gateway) {}
 
-    public function start(User $user, int $shopId, array $address): array
+    public function start(User $user, int $shopId, array $address, ?string $mobileKey = null): array
     {
-        $shop = Shop::findOrFail($shopId);
+        $mobileToken = $mobileKey === null ? null : Uuid::uuid5(Uuid::NAMESPACE_URL, 'murwaj:mobile:'.$user->id.':'.$mobileKey)->toString();
+        $requestAddress = $address;
+        ksort($requestAddress);
+        $requestHash = hash('sha256', json_encode([$shopId, $requestAddress], JSON_THROW_ON_ERROR));
+        if ($mobileToken && ($existing = $user->orders()->where('checkout_token', $mobileToken)->first())) {
+            $this->assertMobileRequest($existing, $requestHash);
+
+            return $this->mobileResult($existing);
+        }
+        $shop = Shop::when($mobileToken !== null, fn ($q) => $q->publicCatalog())->findOrFail($shopId);
         if (! $shop->is_active || $shop->currency !== 'AED' || ! $shop->stripe_account_id) {
             throw ValidationException::withMessages(['shop_id' => 'Choose an active AED store with Stripe connected.']);
         }
         if (! $this->gateway->accountReady($shop->stripe_account_id)) {
             throw ValidationException::withMessages(['shop_id' => 'This store must complete Stripe onboarding.']);
         }
-        $order = DB::transaction(function () use ($user, $shop, $address) {
+        $order = DB::transaction(function () use ($user, $shop, $address, $mobileToken, $requestHash) {
             User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            if ($mobileToken && ($existing = $user->orders()->where('checkout_token', $mobileToken)->lockForUpdate()->first())) {
+                $this->assertMobileRequest($existing, $requestHash);
+
+                return $existing;
+            }
             // Serialize quota reservations across different buyers of this store.
-            $shop = Shop::whereKey($shop->id)->lockForUpdate()->firstOrFail();
+            $shop = Shop::when($mobileToken !== null, fn ($q) => $q->publicCatalog())->whereKey($shop->id)->lockForUpdate()->firstOrFail();
             $cart = $user->cart()->lockForUpdate()->first();
             $items = $cart?->items()->where('shop_id', $shop->id)->orderBy('listing_id')->lockForUpdate()->get();
             if (! $items || $items->isEmpty()) {
@@ -41,7 +57,7 @@ class PhysicalCheckoutService
             $snapshots = [];
             $total = 0;
             foreach ($items as $item) {
-                $listing = Listing::whereKey($item->listing_id)->lockForUpdate()->first();
+                $listing = Listing::when($mobileToken !== null, fn ($q) => $q->active())->whereKey($item->listing_id)->lockForUpdate()->first();
                 if (! $listing || (int) $listing->shop_id !== $shop->id || ! $listing->active || $listing->status !== 'published'
                     || ($listing->expires_at && $listing->expires_at->isPast()) || ($listing->published_at && $listing->published_at->isFuture())
                     || $item->quantity < 1 || $item->quantity > 99) {
@@ -73,6 +89,9 @@ class PhysicalCheckoutService
             $fingerprint = hash('sha256', json_encode([$user->id, $shop->id, $address,
                 array_map(fn ($row) => [$row['item']->id, $row['item']->quantity, $row['listing']->id, $row['fils']], $snapshots),
             ], JSON_THROW_ON_ERROR));
+            if ($mobileToken) {
+                $fingerprint = hash('sha256', $fingerprint.'|mobile|'.$mobileToken);
+            }
             if ($existing = Order::where('checkout_key', $fingerprint)->lockForUpdate()->first()) {
                 return $existing;
             }
@@ -88,7 +107,7 @@ class PhysicalCheckoutService
                 'order_number' => 'MW-'.Str::upper(Str::random(12)), 'user_id' => $user->id, 'shop_id' => $shop->id,
                 'subtotal' => AedAmount::decimal($total), 'total' => AedAmount::decimal($total),
                 'payment_method' => 'stripe', 'payment_status' => 'pending', 'status' => 'pending',
-                'checkout_token' => (string) Str::uuid(), 'checkout_key' => $fingerprint,
+                'checkout_token' => $mobileToken ?? (string) Str::uuid(), 'checkout_key' => $fingerprint,
                 'checkout_state' => 'creating', 'checkout_expires_at' => now()->addHour(),
                 'inventory_reserved' => true, 'shipping_address' => $address, 'checkout_currency' => 'AED',
             ]);
@@ -115,10 +134,15 @@ class PhysicalCheckoutService
                 'mode' => 'payment', 'payment_method_types' => ['card'], 'customer_email' => $user->email,
                 'client_reference_id' => $order->checkout_token, 'line_items' => $lineItems,
                 'payment_intent_data' => ['application_fee_amount' => (int) round($total * $rate / 100), 'transfer_data' => ['destination' => $shop->stripe_account_id]],
-                'metadata' => ['checkout_kind' => 'physical_v1', 'order_id' => (string) $order->id, 'user_id' => (string) $user->id],
+                'metadata' => ['checkout_kind' => 'physical_v1', 'order_id' => (string) $order->id, 'user_id' => (string) $user->id]
+                    + ($mobileToken ? ['client_channel' => 'mobile_v1', 'mobile_request_hash' => $requestHash] : []),
                 'expires_at' => $order->checkout_expires_at->timestamp,
-                'success_url' => route('checkout.success', $order->id).'?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('checkout', ['shop_id' => $shop->id]),
+                'success_url' => $mobileToken
+                    ? URL::temporarySignedRoute('mobile.checkout.return', now()->addHours(2), ['order' => $order->id, 'outcome' => 'returned'])
+                    : route('checkout.success', $order->id).'?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => $mobileToken
+                    ? URL::temporarySignedRoute('mobile.checkout.return', now()->addHours(2), ['order' => $order->id, 'outcome' => 'closed'])
+                    : route('checkout', ['shop_id' => $shop->id]),
             ]]);
 
             app(RasloBridge::class)->capture($order);
@@ -126,12 +150,27 @@ class PhysicalCheckoutService
             return $order;
         }, 3);
 
+        return $mobileToken ? $this->mobileResult($order) : $this->resume($order);
+    }
+
+    private function assertMobileRequest(Order $order, string $hash): void
+    {
+        abort_unless(($order->checkout_payload['metadata']['client_channel'] ?? null) === 'mobile_v1'
+            && hash_equals((string) ($order->checkout_payload['metadata']['mobile_request_hash'] ?? ''), $hash), 409, 'Idempotency key already belongs to a different checkout request.');
+    }
+
+    private function mobileResult(Order $order): array
+    {
+        if (in_array($order->payment_status, ['paid', 'refunded'], true) || $order->checkout_state === 'expired') {
+            return ['order' => $order->fresh(), 'url' => null];
+        }
+
         return $this->resume($order);
     }
 
     public function resume(Order $order): array
     {
-        if ($order->payment_status === 'paid' || $order->checkout_state === 'expired') {
+        if (in_array($order->payment_status, ['paid', 'refunded'], true) || $order->checkout_state === 'expired') {
             throw ValidationException::withMessages(['cart' => 'This checkout is closed. Refresh your basket.']);
         }
         // A lost response reuses the persisted payload and Stripe idempotency key.
@@ -148,7 +187,7 @@ class PhysicalCheckoutService
             throw ValidationException::withMessages(['cart' => 'Checkout is no longer open. Refresh your basket to see its current status.']);
         }
         if (! str_starts_with($session['url'], 'https://checkout.stripe.com/')) {
-            throw new RuntimeException('Unexpected payment destination.');
+            throw new CheckoutIdentityException('Unexpected payment destination.');
         }
 
         return ['order' => $order->fresh(), 'url' => $session['url']];
@@ -180,7 +219,7 @@ class PhysicalCheckoutService
             || strtolower((string) ($session['currency'] ?? '')) !== 'aed'
             || ($session['amount_total'] ?? null) !== AedAmount::fils($order->total)
             || ($order->stripe_checkout_session_id && $order->stripe_checkout_session_id !== ($session['id'] ?? null))) {
-            throw new RuntimeException('Checkout identity, currency or total mismatch.');
+            throw new CheckoutIdentityException('Checkout identity, currency or total mismatch.');
         }
     }
 
@@ -201,7 +240,7 @@ class PhysicalCheckoutService
         DB::transaction(function () use ($session) {
             $order = Order::whereKey($session['metadata']['order_id'] ?? 0)->lockForUpdate()->firstOrFail();
             $this->assertIdentity($order, $session);
-            if ($order->payment_status === 'paid') {
+            if (in_array($order->payment_status, ['paid', 'refunded'], true)) {
                 return;
             }
             $order->stripe_checkout_session_id = $session['id'];
@@ -226,7 +265,7 @@ class PhysicalCheckoutService
                 return;
             }
             if (! $order->inventory_reserved || $order->checkout_state === 'expired' || empty($session['payment_intent'])) {
-                throw new RuntimeException('Paid checkout requires inventory reconciliation.');
+                throw new CheckoutIdentityException('Paid checkout requires inventory reconciliation.');
             }
             $order->fill(['payment_status' => 'paid', 'status' => 'processing', 'paid_at' => now(),
                 'checkout_state' => 'paid', 'checkout_key' => null, 'stripe_payment_intent_id' => $session['payment_intent'],

@@ -1,0 +1,708 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "murwaj native physical checkout",
+    "version": "1.0.0",
+    "description": "Keyed hosted Stripe checkout backed by existing Laravel inventory/payment services. See mobile-checkout.md for retry, return-link and operational boundaries."
+  },
+  "servers": [
+    {
+      "url": "https://example.test",
+      "description": "Replace with Laravel HTTPS origin."
+    }
+  ],
+  "paths": {
+    "/api/v1/checkout": {
+      "post": {
+        "operationId": "startNativeCheckout",
+        "security": [
+          {
+            "mobileBearer": []
+          }
+        ],
+        "description": "Verified email and explicit mobile:account token required. Physical AED/UAE only. Payment status comes from Stripe, not the caller.",
+        "responses": {
+          "200": {
+            "description": "Created/replayed/open/closed attempt state; inspect payment_status and checkout_url.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid/expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Verified email and explicit mobile ability required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unavailable or not an owned mobile-channel physical checkout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Idempotency conflict, missing session or reconciliation required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid address, key, cart, stock, store membership or closed resumption",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Checkout rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stripe unavailable: recover original attempt, never start another payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Persist one UUID per intended purchase and reuse it with the same normalized address/store on retry."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutAddress"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/checkout/{order}/resume": {
+      "post": {
+        "operationId": "resumeNativeCheckout",
+        "security": [
+          {
+            "mobileBearer": []
+          }
+        ],
+        "description": "Verified email and explicit mobile:account token required. Physical AED/UAE only. Payment status comes from Stripe, not the caller.",
+        "responses": {
+          "200": {
+            "description": "Created/replayed/open/closed attempt state; inspect payment_status and checkout_url.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid/expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Verified email and explicit mobile ability required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unavailable or not an owned mobile-channel physical checkout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Idempotency conflict, missing session or reconciliation required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid address, key, cart, stock, store membership or closed resumption",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Checkout rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stripe unavailable: recover original attempt, never start another payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "order",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/checkout/{order}/refresh": {
+      "post": {
+        "operationId": "refreshNativeCheckout",
+        "security": [
+          {
+            "mobileBearer": []
+          }
+        ],
+        "description": "Verified email and explicit mobile:account token required. Physical AED/UAE only. Payment status comes from Stripe, not the caller.",
+        "responses": {
+          "200": {
+            "description": "Created/replayed/open/closed attempt state; inspect payment_status and checkout_url.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid/expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Verified email and explicit mobile ability required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unavailable or not an owned mobile-channel physical checkout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Idempotency conflict, missing session or reconciliation required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid address, key, cart, stock, store membership or closed resumption",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Checkout rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stripe unavailable: recover original attempt, never start another payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "order",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/checkout/{order}/cancel": {
+      "post": {
+        "operationId": "expireNativeCheckout",
+        "security": [
+          {
+            "mobileBearer": []
+          }
+        ],
+        "description": "Verified email and explicit mobile:account token required. Physical AED/UAE only. Payment status comes from Stripe, not the caller.",
+        "responses": {
+          "200": {
+            "description": "Created/replayed/open/closed attempt state; inspect payment_status and checkout_url.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid/expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Verified email and explicit mobile ability required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unavailable or not an owned mobile-channel physical checkout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Idempotency conflict, missing session or reconciliation required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid address, key, cart, stock, store membership or closed resumption",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Checkout rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stripe unavailable: recover original attempt, never start another payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "order",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ]
+      }
+    },
+    "/api/mobile/checkout/return/{order}/{outcome}": {
+      "get": {
+        "operationId": "nativeCheckoutNavigationBridge",
+        "security": [],
+        "description": "Stateless signed navigation hint. No order details or payment authority; button uses fixed murwaj://checkout/result destination.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "in": "path",
+            "name": "outcome",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "returned",
+                "closed"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "expires",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "signature",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bilingual app-return page",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid/expired signature"
+          },
+          "429": {
+            "description": "IP rate limit"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "mobileBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Sanctum personal access token"
+      }
+    },
+    "schemas": {
+      "CheckoutAddress": {
+        "type": "object",
+        "required": [
+          "shop_id",
+          "recipient_name",
+          "recipient_phone",
+          "emirate",
+          "city",
+          "area",
+          "address_line",
+          "building"
+        ],
+        "properties": {
+          "shop_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "recipient_phone": {
+            "type": "string",
+            "description": "UAE phone; Arabic digits/local 05 or international +971/00971 are normalized."
+          },
+          "emirate": {
+            "type": "string",
+            "enum": [
+              "abu_dhabi",
+              "dubai",
+              "sharjah",
+              "ajman",
+              "umm_al_quwain",
+              "ras_al_khaimah",
+              "fujairah"
+            ]
+          },
+          "recipient_name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "area": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "address_line": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 5
+          },
+          "building": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "landmark": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "delivery_notes": {
+            "type": "string",
+            "maxLength": 500,
+            "nullable": true
+          }
+        }
+      },
+      "State": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "order_id": {
+                "type": "integer"
+              },
+              "order_number": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "payment_status": {
+                "type": "string"
+              },
+              "checkout_state": {
+                "type": "string",
+                "nullable": true
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "AED"
+                ]
+              },
+              "total": {
+                "type": "string"
+              },
+              "checkout_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "order_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
