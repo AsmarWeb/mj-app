@@ -9,14 +9,14 @@ class ShopCountryController extends Controller
     public function index()
     {
         $countries = Country::withCount([
-            'shops',
+            'shops' => fn ($q) => $q->publicCatalog(),
             'shops as verified_shops_count' => function ($q) {
-                $q->where('verified', true);
+                $q->publicCatalog()->where('verified', true);
             },
         ])
             ->with([
                 'shops' => function ($q) {
-                    $q->latest()->take(4);
+                    $q->publicCatalog()->latest()->take(4);
                 },
             ])
             ->orderBy('name')

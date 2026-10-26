@@ -150,16 +150,13 @@ Route::middleware(['auth', 'verified', 'phone.verified'])->group(function () {
     Route::get('/shop/edit', [ShopController::class, 'edit'])->name('shop.edit');
     Route::put('/shop/update', [ShopController::class, 'update'])->name('shop.update');
 
-    Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
-    Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
-
     Route::get('/shop/{slug}/business-card', [ShopController::class, 'downloadBusinessCard'])->name('shop.business-card');
     Route::get('/business-card/{slug}', [ShopController::class, 'businessCard'])->name('shop.public');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
-});
+Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop');
+Route::get('/creators', [ShopController::class, 'creators'])->name('shop.creators');
+Route::get('/{shop}/{section}/{category}/{subcategories}/{brand}/{listing}', [ExploreController::class, 'show'])->name('listing.show');
 
 Route::post('/ai/shop-description', [AIController::class, 'shopDescription'])
     ->name('ai.shop-description');

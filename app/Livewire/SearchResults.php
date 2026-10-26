@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Listing;
 use App\Models\DigitalProduct;
+use App\Models\Listing;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -25,7 +25,8 @@ class SearchResults extends Component
 
     public function mount()
     {
-        $this->search = request('search', '');
+        $search = request('q', request('search', ''));
+        $this->search = is_string($search) ? mb_substr($search, 0, 200) : '';
     }
 
     public function updatedSearch()
@@ -35,21 +36,22 @@ class SearchResults extends Component
 
     public function render()
     {
+        $this->search = is_string($this->search) ? mb_substr($this->search, 0, 200) : '';
         /*
         |--------------------------------------------------------------------------
         | Marketplace Listings
         |--------------------------------------------------------------------------
         */
 
-        $listings = Listing::query()
+        $listings = Listing::query()->active()
             ->where('status', 'published')
             ->when($this->search, function ($query) {
 
                 $query->where(function ($q) {
 
-                    $q->where('title', 'like', '%' . $this->search . '%')
-                        ->orWhere('title_ar', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%')
+                    $q->where('title', 'like', '%'.$this->search.'%')
+                        ->orWhere('title_ar', 'like', '%'.$this->search.'%')
+                        ->orWhere('description', 'like', '%'.$this->search.'%')
                         ->orWhereJsonContains('keywords', $this->search);
                 });
             })
@@ -73,8 +75,8 @@ class SearchResults extends Component
 
                 $query->where(function ($q) {
 
-                    $q->where('title', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%');
+                    $q->where('title', 'like', '%'.$this->search.'%')
+                        ->orWhere('description', 'like', '%'.$this->search.'%');
                 });
             })
             ->with([
@@ -92,11 +94,11 @@ class SearchResults extends Component
         if (
             $listings->total() == 0 &&
             $digitalProducts->count() == 0 &&
-            !empty($this->search)
+            ! empty($this->search)
         ) {
 
             $this->globalSearchUrl =
-                'https://www.google.com/search?q=' .
+                'https://www.google.com/search?q='.
                 urlencode($this->search);
         } else {
 

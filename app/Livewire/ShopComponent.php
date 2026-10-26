@@ -11,8 +11,8 @@ class ShopComponent extends Component
     #[Computed()]
     public function shops()
     {
-        return Shop::published()
-            ->with('author')
+        return Shop::publicCatalog()
+            ->with('user')
             ->orderBy('published_at')
             ->get()
             ->take(1);

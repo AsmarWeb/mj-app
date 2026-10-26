@@ -24,7 +24,7 @@ class PostController extends Controller
             ->latest()
             ->paginate(10);
 
-        $trendingProducts = Listing::with([
+        $trendingProducts = Listing::active()->with([
             'shop',
             'section',
         ])
@@ -33,7 +33,7 @@ class PostController extends Controller
             ->take(8)
             ->get();
 
-        $shops = Shop::with('user')
+        $shops = Shop::publicCatalog()->with('user')
             ->latest()
             ->take(6)
             ->get();
