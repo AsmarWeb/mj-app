@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PhoneVerification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Client;
 
 class PhoneVerificationController extends Controller
 {
@@ -14,7 +14,7 @@ class PhoneVerificationController extends Controller
         return view('auth.verify-phone');
     }
 
-    public function send(Request $request)
+    public function send(Request $request, PhoneVerification $verification)
     {
 
         $request->validate([
@@ -43,27 +43,7 @@ class PhoneVerificationController extends Controller
 
         try {
 
-            $client = new Client(
-
-                config('services.twilio.sid'),
-
-                config('services.twilio.token')
-
-            );
-
-            $client->verify
-                ->v2
-                ->services(
-                    config('services.twilio.verify_sid')
-                )
-                ->verifications
-                ->create(
-
-                    $phone,
-
-                    'sms'
-
-                );
+            $verification->send($phone);
 
             /*
             Save phone only after Twilio accepts request
@@ -90,14 +70,14 @@ class PhoneVerificationController extends Controller
         } catch (Exception $e) {
 
             Log::error(
-                'Twilio send error: '.$e->getMessage()
+                'Phone verification send failed.', ['exception_type' => get_class($e)]
             );
 
             return back()
 
                 ->withErrors([
 
-                    'phone' => $e->getMessage(),
+                    'phone' => 'Unable to send a verification code. Please try again later.',
 
                 ])
 
@@ -110,7 +90,7 @@ class PhoneVerificationController extends Controller
 
     }
 
-    public function check(Request $request)
+    public function check(Request $request, PhoneVerification $verification)
     {
 
         $request->validate([
@@ -139,33 +119,7 @@ class PhoneVerificationController extends Controller
 
         try {
 
-            $client = new Client(
-
-                config('services.twilio.sid'),
-
-                config('services.twilio.token')
-
-            );
-
-            $verification = $client->verify
-
-                ->v2
-
-                ->services(
-                    config('services.twilio.verify_sid')
-                )
-
-                ->verificationChecks
-
-                ->create([
-
-                    'to' => $user->phone,
-
-                    'code' => $request->code,
-
-                ]);
-
-            if ($verification->status === 'approved') {
+            if ($verification->approved($user->phone, $request->string('code')->toString())) {
 
                 $user->forceFill([
 
@@ -201,7 +155,7 @@ class PhoneVerificationController extends Controller
 
             Log::error(
 
-                'Twilio verify error: '.$e->getMessage()
+                'Phone verification check failed.', ['exception_type' => get_class($e)]
 
             );
 

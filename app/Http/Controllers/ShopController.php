@@ -148,7 +148,7 @@ class ShopController extends Controller
                                 'payment_provider' => 'free',
                                 'payment_id' => null,
                                 'type' => 'default',
-                                'stripe_id' => 'free_' . Str::uuid(),
+                                'stripe_id' => 'free_'.Str::uuid(),
                                 'stripe_status' => 'active',
                                 'stripe_price' => null,
                                 'quantity' => 1,
@@ -221,28 +221,33 @@ class ShopController extends Controller
                 ->withInput();
         }
 
-        if ($request->hasFile('logo')) {
+        $oldLogo = $shop->logo;
+        $newLogo = $request->hasFile('logo')
+            ? $request->file('logo')->store('shop-suggest', 'public')
+            : null;
 
-            if ($shop->logo) {
-                Storage::disk('public')->delete($shop->logo);
+        try {
+            $shop->update([
+                'name' => $validated['name'],
+                'name_ar' => $validated['name_ar'] ?? '',
+                'description' => $validated['description'] ?? null,
+                'phone' => Auth::user()->phone,
+                'whatsapp' => $validated['whatsapp'] ?? Auth::user()->phone,
+                'currency' => $validated['currency'],
+                'allow_phone' => $request->boolean('allow_phone'),
+                'allow_whatsapp' => $request->boolean('allow_whatsapp'),
+            ] + ($newLogo !== null ? ['logo' => $newLogo] : []));
+        } catch (\Throwable $error) {
+            if ($newLogo !== null) {
+                Storage::disk('public')->delete($newLogo);
             }
-
-            $validated['logo'] = $request->file('logo')
-                ->store('shop-suggest', 'public');
+            throw $error;
         }
 
-        $shop->update([
-            'name' => $validated['name'],
-            'name_ar' => $validated['name_ar'],
-            'description' => $validated['description'],
-
-            'phone' => Auth::user()->phone,
-            'whatsapp' => $validated['whatsapp'] ?? Auth::user()->phone,
-            'currency' => $request->currency,
-
-            'allow_phone' => $request->boolean('allow_phone'),
-            'allow_whatsapp' => $request->boolean('allow_whatsapp'),
-        ]);
+        // Keep the old image until the replacement is persisted successfully.
+        if ($newLogo !== null && $oldLogo && $oldLogo !== $newLogo) {
+            Storage::disk('public')->delete($oldLogo);
+        }
 
         return redirect()
             ->route('shop.edit')
@@ -274,7 +279,7 @@ class ShopController extends Controller
         $title = $shop ? $shop->name : 'Create your shop';
         $description = $shop ? $shop->description : 'Create a polished shop on Murwaj and start selling your products.';
         $keywords = $shop
-            ? trim("$shop->name, " . optional($shop->city)->name . ', ' . optional($shop->section)->name)
+            ? trim("$shop->name, ".optional($shop->city)->name.', '.optional($shop->section)->name)
             : 'shop, murwaj, create online shop';
 
         $bannerImage = $shop && $shop->banner ? Storage::url($shop->banner) : null;
@@ -444,7 +449,7 @@ class ShopController extends Controller
             ->setPaper('a4');
 
         return $pdf->download(
-            $shop->slug . '-business-card.pdf'
+            $shop->slug.'-business-card.pdf'
         );
     }
 
