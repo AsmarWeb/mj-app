@@ -256,7 +256,7 @@ class ShopController extends Controller
 
     public function show($slug)
     {
-        $shop = Shop::where('slug', $slug)
+        $shop = Shop::publicCatalog()->where('slug', $slug)
             ->with([
                 'section',
                 'city',
@@ -265,15 +265,16 @@ class ShopController extends Controller
             ->firstOrFail();
 
         $products = $shop->listings()
-            ->where('status', 'published')
+            ->active()
             ->latest()
             ->paginate(12);
 
         $categories = $shop->listings()
-            ->where('status', 'published')
+            ->active()
             ->with('category')
             ->get()
             ->pluck('category')
+            ->filter()
             ->unique('id');
 
         $title = $shop ? $shop->name : 'Create your shop';
@@ -386,23 +387,18 @@ class ShopController extends Controller
     {
         $search = trim($request->input('q', ''));
 
-        $shops = Shop::query()
+        $shops = Shop::query()->publicCatalog()
             ->with([
                 'user',
             ])
-            ->withCount('listings')
+            ->withCount(['listings' => fn ($q) => $q->active()])
             ->when($search !== '', function ($query) use ($search) {
 
                 $query->where(function ($q) use ($search) {
 
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('name_ar', 'like', "%{$search}%")
-                        ->orWhere('slug', 'like', "%{$search}%")
-                        ->orWhereHas('user', function ($userQuery) use ($search) {
-                            $userQuery
-                                ->where('name', 'like', "%{$search}%")
-                                ->orWhere('email', 'like', "%{$search}%");
-                        });
+                        ->orWhere('slug', 'like', "%{$search}%");
                 });
             })
             ->latest()

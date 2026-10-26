@@ -11,10 +11,10 @@ use App\Models\Shop;
 use App\Models\Wishlist;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ExploreController extends Controller
 {
-
     public function index(Request $request)
     {
         /*
@@ -22,7 +22,7 @@ class ExploreController extends Controller
     | Main listings
     |--------------------------------------------------------------------------
     */
-        $query = Listing::query()
+        $query = Listing::query()->active()
             ->with(['shop', 'section'])
             ->where('status', 'published');
 
@@ -37,7 +37,6 @@ class ExploreController extends Controller
             ->latest()
             ->paginate(20)
             ->withQueryString();
-
 
         /*
     |--------------------------------------------------------------------------
@@ -55,15 +54,14 @@ class ExploreController extends Controller
             ->where('status', 'active')
             ->with([
                 'listings' => function ($query) {
-                    $query->where('status', 'published')
+                    $query->active()
                         ->with('shop')
                         ->latest()
                         ->take(8);
-                }
+                },
             ])
             ->take(5)
             ->get();
-
 
         /*
     |--------------------------------------------------------------------------
@@ -74,7 +72,6 @@ class ExploreController extends Controller
             ->where('status', 'active')
             ->take(12)
             ->get();
-
 
         /*
     |--------------------------------------------------------------------------
@@ -87,13 +84,12 @@ class ExploreController extends Controller
             ->take(8)
             ->get();
 
-
         /*
     |--------------------------------------------------------------------------
     | Featured products
     |--------------------------------------------------------------------------
     */
-        $featuredProducts = Listing::query()
+        $featuredProducts = Listing::query()->active()
             ->with(['shop', 'section'])
             ->where('status', 'published')
             ->where('featured', true)
@@ -101,35 +97,32 @@ class ExploreController extends Controller
             ->take(12)
             ->get();
 
-
         /*
     |--------------------------------------------------------------------------
     | Trending products
     |--------------------------------------------------------------------------
     */
-        $trendingProducts = Listing::query()
+        $trendingProducts = Listing::query()->active()
             ->with(['shop', 'section'])
             ->where('status', 'published')
             ->latest()
             ->take(8)
             ->get();
 
-
         /*
     |--------------------------------------------------------------------------
     | Shops
     |--------------------------------------------------------------------------
     */
-        $shops = Shop::query()
+        $shops = Shop::query()->publicCatalog()
             ->with('user')
             ->withCount([
                 'listings' => function ($query) {
-                    $query->where('status', 'published');
-                }
+                    $query->active();
+                },
             ])
             ->take(8)
             ->get();
-
 
         return view('explore.index', [
             'listings' => $listings,
@@ -148,7 +141,7 @@ class ExploreController extends Controller
             ->where('status', 'active')
             ->firstOrFail();
 
-        $products = Listing::whereHas('section', function ($query) use ($section) {
+        $products = Listing::active()->whereHas('section', function ($query) use ($section) {
             $query->where('id', $section->id);
         })
             ->with([
@@ -168,7 +161,7 @@ class ExploreController extends Controller
             ? ($section->name_ar ?? $section->name)
             : $section->name;
 
-        $title = $sectionName . ' | murwaj';
+        $title = $sectionName.' | murwaj';
 
         $description = "Browse all {$sectionName} products, services and listings on Murwaj Marketplace.";
 
@@ -189,9 +182,9 @@ class ExploreController extends Controller
 
     public function category($category)
     {
-        $category = Category::where('slug', $category)->firstOrFail();
+        $category = Category::where('slug', $category)->where('status', 'active')->firstOrFail();
 
-        $products = Listing::whereHas('category', function ($query) use ($category) {
+        $products = Listing::active()->whereHas('category', function ($query) use ($category) {
             $query->where('slug', $category->slug);
         })
             ->with([
@@ -210,7 +203,7 @@ class ExploreController extends Controller
             ? ($category->category_name_ar ?? $category->category_name)
             : $category->category_name;
 
-        $title = $categoryName . ' | murwaj';
+        $title = $categoryName.' | murwaj';
         $description = "Browse all {$category->category_name} products on murwaj Marketplace.";
         $keywords = $category->category_name;
 
@@ -233,39 +226,16 @@ class ExploreController extends Controller
         // FIND LISTING
         // =========================================================
 
-        $listingModel = Listing::query()
-            ->where('slug', $listing)
+        $listingModel = Listing::active()->with(['shop', 'section', 'category', 'subcategory', 'brand'])
+            ->where('slug', $listing)->firstOrFail();
 
-            // SHOP
-            ->whereHas('shop', function ($query) use ($shop) {
-                $query->where('slug', $shop);
-            })
+        // Match the existing canonical URL, including placeholders for optional relations.
+        abort_unless($shop === ($listingModel->shop?->slug ?? 'shop')
+            && $section === ($listingModel->section?->slug ?? 'section')
+            && $category === ($listingModel->category?->slug ?? 'category')
+            && $subcategories === ($listingModel->subcategory?->slug ?? 'all'), 404);
 
-            // SECTION
-            ->whereHas('section', function ($query) use ($section) {
-                $query->where('slug', $section);
-            })
-
-            // CATEGORY
-            ->whereHas('category', function ($query) use ($category) {
-                $query->where('slug', $category);
-            })
-
-            // SUBCATEGORY
-            ->whereHas('subcategory', function ($query) use ($subcategories) {
-                $query->where('slug', $subcategories);
-            })
-
-            // LOAD RELATIONSHIPS
-            ->with([
-                'shop',
-                'section',
-                'category',
-                'subcategory',
-                'brand',
-            ])
-
-            ->firstOrFail();
+        $listingModel->load(['reviews' => fn ($q) => $q->where('approved', true)->with('user')]);
 
         // =========================================================
         // CHECK BRAND
@@ -293,7 +263,7 @@ class ExploreController extends Controller
     */
         } elseif (filled($listingModel->local_brand_name)) {
 
-            $localBrandSlug = \Illuminate\Support\Str::slug(
+            $localBrandSlug = Str::slug(
                 $listingModel->local_brand_name
             );
 
@@ -387,7 +357,6 @@ class ExploreController extends Controller
             ->where('status', 'active')
             ->firstOrFail();
 
-
         /*
     |--------------------------------------------------------------------------
     | Subcategories
@@ -399,14 +368,13 @@ class ExploreController extends Controller
             ->orderBy('id')
             ->get();
 
-
         /*
     |--------------------------------------------------------------------------
     | UAE Products
     |--------------------------------------------------------------------------
     */
 
-        $query = Listing::query()
+        $query = Listing::query()->active()
             ->with([
                 'shop',
                 'section',
@@ -419,7 +387,6 @@ class ExploreController extends Controller
             ->whereHas('category', function ($q) use ($category) {
                 $q->where('id', $category->id);
             });
-
 
         /*
     |--------------------------------------------------------------------------
@@ -441,7 +408,6 @@ class ExploreController extends Controller
             });
         }
 
-
         /*
     |--------------------------------------------------------------------------
     | Products
@@ -453,7 +419,6 @@ class ExploreController extends Controller
             ->paginate(24)
             ->withQueryString();
 
-
         /*
     |--------------------------------------------------------------------------
     | UAE SEO
@@ -464,26 +429,21 @@ class ExploreController extends Controller
             ? ($category->category_name_ar ?? $category->category_name)
             : $category->category_name;
 
-
         $title = app()->getLocale() === 'ar'
             ? 'الإمارات | مُروَّج.كم'
             : 'UAE | murwaj';
-
 
         $description = app()->getLocale() === 'ar'
             ? 'اكتشف المنتجات المحلية والتقليدية في الإمارات، بما في ذلك التمور والعطور والعود والبخور والقهوة العربية والهدايا والتذكارات والحرف اليدوية.'
             : 'Discover local and traditional products in the UAE, including dates, perfumes, oud, bakhoor, Arabic coffee, gifts, souvenirs and traditional handicrafts.';
 
-
         $keywords = app()->getLocale() === 'ar'
             ? 'المنتجات المحلية في الإمارات, المنتجات التقليدية في الإمارات, هدايا الإمارات, التمور, العود, البخور, القهوة العربية, الحرف اليدوية'
             : 'UAE local products, traditional products UAE, UAE gifts, dates, oud, bakhoor, Arabic coffee, Emirati handicrafts';
 
-
         SEOMeta::setTitle($title);
         SEOMeta::setDescription($description);
         SEOMeta::setKeywords($keywords);
-
 
         /*
     |--------------------------------------------------------------------------

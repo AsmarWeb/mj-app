@@ -641,7 +641,7 @@
                                 @endif
 
 
-                                @if ($listing->shop->phone)
+                                @if ($listing->shop->allow_phone && $listing->shop->phone)
                                     <a href="tel:{{ $listing->shop->phone }}"
                                         class="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-blue-700">
                                         {{ $labels['call_seller'] }}

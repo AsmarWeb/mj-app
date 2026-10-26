@@ -22,7 +22,7 @@ class SitemapController extends Controller
 
             'sitemap-pages.xml',
 
-            'sitemap-listings.xml',
+            'sitemap-products.xml',
 
             'sitemap-shops.xml',
 
@@ -111,7 +111,7 @@ class SitemapController extends Controller
 
         $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-        Listing::where('status', 'active')
+        Listing::active()->with(['shop', 'section', 'category', 'subcategory', 'brand'])
             ->chunk(1000, function ($listings) use (&$content) {
 
                 foreach ($listings as $listing) {
@@ -121,10 +121,7 @@ class SitemapController extends Controller
 <url>
 
 <loc>'.
-                    route(
-                        'listing.show',
-                        $listing->slug
-                    )
+                    htmlspecialchars($listing->url, ENT_XML1, 'UTF-8')
                     .'</loc>
 
 <changefreq>weekly</changefreq>
@@ -154,7 +151,7 @@ class SitemapController extends Controller
 
         $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-        Shop::where('status', 'active')
+        Shop::publicCatalog()
             ->chunk(1000, function ($shops) use (&$content) {
 
                 foreach ($shops as $shop) {
@@ -282,9 +279,9 @@ class SitemapController extends Controller
     {
         return view('sitemap.index', [
             'categories' => Category::where('status', 'active')->take(20)->get(),
-            'shops' => Shop::latest()->take(20)->get(),
-            'products' => Listing::latest()->take(20)->get(),
-            'countries' => Country::withCount('shops')
+            'shops' => Shop::publicCatalog()->latest()->take(20)->get(),
+            'products' => Listing::active()->with(['shop', 'section', 'category', 'subcategory', 'brand'])->latest()->take(20)->get(),
+            'countries' => Country::withCount(['shops' => fn ($q) => $q->publicCatalog()])
                 ->orderBy('name')
                 ->get(),
         ]);
