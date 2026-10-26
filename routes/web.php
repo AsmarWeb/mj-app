@@ -218,7 +218,7 @@ Route::get('/notifications/{notification}', function ($id) {
     }
 
     return redirect($notification->data['url'] ?? route('dashboard'));
-})->name('notifications.read');
+})->middleware('auth')->name('notifications.read');
 
 // Route::middleware(['auth', 'verified','prefix' => 'seller', 'phone.verified'])
 //     ->group(function () {
@@ -398,10 +398,10 @@ Route::middleware('auth')->group(function () {
         ->name('phone.verify');
 
     Route::post('/phone/send', [PhoneVerificationController::class, 'send'])
-        ->name('phone.send');
+        ->middleware('throttle:phone-send')->name('phone.send');
 
     Route::post('/phone/check', [PhoneVerificationController::class, 'check'])
-        ->name('phone.check');
+        ->middleware('throttle:phone-check')->name('phone.check');
 });
 
 Route::post(
